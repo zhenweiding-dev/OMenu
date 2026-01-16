@@ -27,5 +27,5 @@ def gemini(prompt: str, model: str = model) -> str:
 
 # Example usage
 if __name__ == "__main__":
-    result = gemini("Explain how AI works in a few words")
+    result = gemini("Write a short poem about architecture.")
     print(result)
