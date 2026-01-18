@@ -37,4 +37,4 @@ wheels/
 .DS_Store
 
 # Documentation
-docs/
+#docs/
