@@ -25,7 +25,7 @@ MVP version:
 # foodchoices.json
 
 {
-    "suggestedFoods": ["chicken", "broccoli", "pasta", "salad", "beef", "tofu"],
+    "suggestedFoods": ["hongshaoqiezi", "yuxiangrousi", , "tofusoup"],
     "preferFoods": ["chicken", "broccoli"],
     "aiChooseFoods": ["pasta", "salad"],
 }
