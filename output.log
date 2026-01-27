@@ -1,0 +1,1922 @@
+User Preferences: 
+{
+  "preferred_keywords": [
+    "chinese food",
+    "healthy",
+    "quick food",
+    "nutritious"
+  ],
+  "preferred_recipes/ingredients": [
+    "braised beef",
+    "noodles",
+    "tofu skin",
+    "eggs"
+  ],
+  "dietary_restrictions": [
+    "organ meat"
+  ],
+  "budget": "140USD",
+  "num_people": 2,
+  "difficulty": "medium",
+  "cook_schedule": {
+    "monday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "tuesday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "wednesday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "thursday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "friday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "saturday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "sunday": []
+  },
+  "others": [
+    "nutritious, abundant meat, suitable for home cooking"
+  ]
+}
+——————————————
+
+Meal Plan Prompt: 
+ 
+    Task: Based on the user's preferences, generate a personalized meal plan in JSON format, every meal should include recipeName, ingredients and brief description.
+    User Preferences: {
+  "preferred_keywords": [
+    "chinese food",
+    "healthy",
+    "quick food",
+    "nutritious"
+  ],
+  "preferred_recipes/ingredients": [
+    "braised beef",
+    "noodles",
+    "tofu skin",
+    "eggs"
+  ],
+  "dietary_restrictions": [
+    "organ meat"
+  ],
+  "budget": "140USD",
+  "num_people": 2,
+  "difficulty": "medium",
+  "cook_schedule": {
+    "monday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "tuesday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "wednesday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "thursday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "friday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "saturday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "sunday": []
+  },
+  "others": [
+    "nutritious, abundant meat, suitable for home cooking"
+  ]
+}
+     
+——————————————
+
+Calling Gemini API for meal plan generation...
+Extracted Meal Plan Text: 
+ ```json
+{
+  "meal_plan": {
+    "monday": {
+      "breakfast": {
+        "recipeName": "Chinese Steamed Eggs with Minced Pork",
+        "ingredients": [
+          "4 eggs",
+          "100g minced pork",
+          "Light soy sauce",
+          "Sesame oil",
+          "Spring onions"
+        ],
+        "description": "A silky, savory custard topped with seasoned minced pork. High in protein and easy to digest."
+      },
+      "lunch": {
+        "recipeName": "Classic Braised Beef Noodle Soup",
+        "ingredients": [
+          "500g beef brisket",
+          "Wheat noodles",
+          "Bok choy",
+          "Star anise",
+          "Ginger",
+          "Soy sauce"
+        ],
+        "description": "Slow-cooked tender beef in a fragrant spiced broth served over fresh noodles. Batch cooking the beef saves time for the week."
+      },
+      "dinner": {
+        "recipeName": "Stir-fried Tofu Skin with Pork Slices",
+        "ingredients": [
+          "Dry tofu skin knots",
+          "200g pork loin",
+          "Bell peppers",
+          "Garlic",
+          "Oyster sauce"
+        ],
+        "description": "A nutritious stir-fry featuring chewy tofu skin and lean pork slices, packed with plant and animal protein."
+      }
+    },
+    "tuesday": {
+      "breakfast": {
+        "recipeName": "Tomato and Egg Noodle Soup",
+        "ingredients": [
+          "2 tomatoes",
+          "2 eggs",
+          "Thin noodles",
+          "Cilantro",
+          "White pepper"
+        ],
+        "description": "A quick, comforting, and healthy Chinese breakfast staple with a tangy broth."
+      },
+      "lunch": {
+        "recipeName": "Leftover Braised Beef over Rice",
+        "ingredients": [
+          "Reserved braised beef",
+          "Steamed jasmine rice",
+          "Broccoli",
+          "Pickled mustard greens"
+        ],
+        "description": "A quick reheat of Monday's beef served over fluffy rice with steamed greens for a balanced meal."
+      },
+      "dinner": {
+        "recipeName": "Kung Pao Chicken (Traditional Style)",
+        "ingredients": [
+          "400g chicken breast",
+          "Peanuts",
+          "Dried chilies",
+          "Zucchini",
+          "Sichuan peppercorns"
+        ],
+        "description": "A classic meat-heavy dish with a perfect balance of spicy, sweet, and sour flavors."
+      }
+    },
+    "wednesday": {
+      "breakfast": {
+        "recipeName": "Egg and Chive Jianbing (Crepes)",
+        "ingredients": [
+          "Flour",
+          "Eggs",
+          "Chives",
+          "Hoisin sauce",
+          "Crispy wonton crackers"
+        ],
+        "description": "Home-style Chinese savory crepes filled with fresh eggs and aromatic chives."
+      },
+      "lunch": {
+        "recipeName": "Cold Noodles with Shredded Chicken and Tofu Skin",
+        "ingredients": [
+          "Chicken breast",
+          "Tofu skin strips",
+          "Cucumber",
+          "Peanut sauce",
+          "Garlic water"
+        ],
+        "description": "A refreshing and nutritious cold dish perfect for a quick lunch, utilizing shredded tofu skin for extra texture."
+      },
+      "dinner": {
+        "recipeName": "Beef and Broccoli Stir-fry",
+        "ingredients": [
+          "300g flank steak",
+          "Large head of broccoli",
+          "Ginger",
+          "Cornstarch",
+          "Dark soy sauce"
+        ],
+        "description": "High-protein beef slices seared quickly with crunchy broccoli in a savory brown sauce."
+      }
+    },
+    "thursday": {
+      "breakfast": {
+        "recipeName": "Savory Egg and Scallion Congee",
+        "ingredients": [
+          "Rice",
+          "Century egg (or salted egg)",
+          "Ginger",
+          "Lean pork strips",
+          "Spring onions"
+        ],
+        "description": "A slow-cooked rice porridge that is warm and nutritious, providing long-lasting energy."
+      },
+      "lunch": {
+        "recipeName": "Tofu Skin and Pork Rib Soup",
+        "ingredients": [
+          "300g pork ribs",
+          "Fresh tofu skin sheets",
+          "Goji berries",
+          "Ginger",
+          "Daikon radish"
+        ],
+        "description": "A very nutritious, clear soup focusing on the natural sweetness of the ribs and tofu skin."
+      },
+      "dinner": {
+        "recipeName": "Mapo Tofu with Minced Beef",
+        "ingredients": [
+          "Soft tofu",
+          "150g minced beef",
+          "Doubanjiang (Bean paste)",
+          "Sichuan pepper powder",
+          "Leeks"
+        ],
+        "description": "A spicy, protein-packed dish where soft tofu melts into a savory minced beef sauce."
+      }
+    },
+    "friday": {
+      "breakfast": {
+        "recipeName": "Tea Eggs and Steamed Buns",
+        "ingredients": [
+          "4 eggs",
+          "Black tea leaves",
+          "Five-spice powder",
+          "Frozen Mantou (Steamed buns)"
+        ],
+        "description": "Marinated eggs with a marbled look and herbal fragrance, paired with simple steamed buns."
+      },
+      "lunch": {
+        "recipeName": "Braised Beef Wraps",
+        "ingredients": [
+          "Remaining braised beef",
+          "Chinese pancakes or tortillas",
+          "Sliced cucumbers",
+          "Sweet bean sauce"
+        ],
+        "description": "A creative way to finish the braised beef by wrapping it in thin pancakes with crunchy vegetables."
+      },
+      "dinner": {
+        "recipeName": "Steamed Fish Fillets with Ginger and Soy",
+        "ingredients": [
+          "400g white fish fillets",
+          "Ginger slivers",
+          "Spring onions",
+          "Seasoned soy sauce for seafood",
+          "Hot oil"
+        ],
+        "description": "A very healthy, quick, and traditional preparation that preserves the nutritional value of the fish."
+      }
+    },
+    "saturday": {
+      "breakfast": {
+        "recipeName": "Egg Drop Soup with Corn and Noodles",
+        "ingredients": [
+          "Corn kernels",
+          "2 eggs",
+          "Chicken stock",
+          "Thin wheat noodles"
+        ],
+        "description": "A light and slightly sweet breakfast soup that is quick to prepare and very satisfying."
+      },
+      "lunch": {
+        "recipeName": "Stir-fried Beef with Scallions (Cong Bao Rou)",
+        "ingredients": [
+          "300g beef slices",
+          "Large quantity of scallions",
+          "Ginger",
+          "Soy sauce",
+          "Shaoxing wine"
+        ],
+        "description": "A classic high-heat stir-fry focusing on the aromatic char of scallions and tender beef."
+      },
+      "dinner": {
+        "recipeName": "Home-style Mini Hot Pot",
+        "ingredients": [
+          "Beef slices",
+          "Tofu skin knots",
+          "Leafy greens",
+          "Mushrooms",
+          "Hot pot soup base"
+        ],
+        "description": "A fun, abundant meat-and-veggie feast to end the week. Easy to customize and very nutritious."
+      }
+    },
+    "sunday": {
+      "breakfast": null,
+      "lunch": null,
+      "dinner": null
+    }
+  },
+  "notes": {
+    "budget_efficiency": "The $140 budget is optimized by buying beef and pork in bulk and utilizing tofu skin and eggs as affordable protein fillers.",
+    "health_focus": "The plan emphasizes steaming and stir-frying over deep-frying to keep meals healthy.",
+    "dietary_compliance": "No organ meats are included in any recipe."
+  }
+}
+``` 
+ ——————————————
+
+Structured Plan Prompt: 
+ 
+    Task: Convert the following meal plan into a structured JSON format according to the schema.
+    
+    Meal Plan: ```json
+{
+  "meal_plan": {
+    "monday": {
+      "breakfast": {
+        "recipeName": "Chinese Steamed Eggs with Minced Pork",
+        "ingredients": [
+          "4 eggs",
+          "100g minced pork",
+          "Light soy sauce",
+          "Sesame oil",
+          "Spring onions"
+        ],
+        "description": "A silky, savory custard topped with seasoned minced pork. High in protein and easy to digest."
+      },
+      "lunch": {
+        "recipeName": "Classic Braised Beef Noodle Soup",
+        "ingredients": [
+          "500g beef brisket",
+          "Wheat noodles",
+          "Bok choy",
+          "Star anise",
+          "Ginger",
+          "Soy sauce"
+        ],
+        "description": "Slow-cooked tender beef in a fragrant spiced broth served over fresh noodles. Batch cooking the beef saves time for the week."
+      },
+      "dinner": {
+        "recipeName": "Stir-fried Tofu Skin with Pork Slices",
+        "ingredients": [
+          "Dry tofu skin knots",
+          "200g pork loin",
+          "Bell peppers",
+          "Garlic",
+          "Oyster sauce"
+        ],
+        "description": "A nutritious stir-fry featuring chewy tofu skin and lean pork slices, packed with plant and animal protein."
+      }
+    },
+    "tuesday": {
+      "breakfast": {
+        "recipeName": "Tomato and Egg Noodle Soup",
+        "ingredients": [
+          "2 tomatoes",
+          "2 eggs",
+          "Thin noodles",
+          "Cilantro",
+          "White pepper"
+        ],
+        "description": "A quick, comforting, and healthy Chinese breakfast staple with a tangy broth."
+      },
+      "lunch": {
+        "recipeName": "Leftover Braised Beef over Rice",
+        "ingredients": [
+          "Reserved braised beef",
+          "Steamed jasmine rice",
+          "Broccoli",
+          "Pickled mustard greens"
+        ],
+        "description": "A quick reheat of Monday's beef served over fluffy rice with steamed greens for a balanced meal."
+      },
+      "dinner": {
+        "recipeName": "Kung Pao Chicken (Traditional Style)",
+        "ingredients": [
+          "400g chicken breast",
+          "Peanuts",
+          "Dried chilies",
+          "Zucchini",
+          "Sichuan peppercorns"
+        ],
+        "description": "A classic meat-heavy dish with a perfect balance of spicy, sweet, and sour flavors."
+      }
+    },
+    "wednesday": {
+      "breakfast": {
+        "recipeName": "Egg and Chive Jianbing (Crepes)",
+        "ingredients": [
+          "Flour",
+          "Eggs",
+          "Chives",
+          "Hoisin sauce",
+          "Crispy wonton crackers"
+        ],
+        "description": "Home-style Chinese savory crepes filled with fresh eggs and aromatic chives."
+      },
+      "lunch": {
+        "recipeName": "Cold Noodles with Shredded Chicken and Tofu Skin",
+        "ingredients": [
+          "Chicken breast",
+          "Tofu skin strips",
+          "Cucumber",
+          "Peanut sauce",
+          "Garlic water"
+        ],
+        "description": "A refreshing and nutritious cold dish perfect for a quick lunch, utilizing shredded tofu skin for extra texture."
+      },
+      "dinner": {
+        "recipeName": "Beef and Broccoli Stir-fry",
+        "ingredients": [
+          "300g flank steak",
+          "Large head of broccoli",
+          "Ginger",
+          "Cornstarch",
+          "Dark soy sauce"
+        ],
+        "description": "High-protein beef slices seared quickly with crunchy broccoli in a savory brown sauce."
+      }
+    },
+    "thursday": {
+      "breakfast": {
+        "recipeName": "Savory Egg and Scallion Congee",
+        "ingredients": [
+          "Rice",
+          "Century egg (or salted egg)",
+          "Ginger",
+          "Lean pork strips",
+          "Spring onions"
+        ],
+        "description": "A slow-cooked rice porridge that is warm and nutritious, providing long-lasting energy."
+      },
+      "lunch": {
+        "recipeName": "Tofu Skin and Pork Rib Soup",
+        "ingredients": [
+          "300g pork ribs",
+          "Fresh tofu skin sheets",
+          "Goji berries",
+          "Ginger",
+          "Daikon radish"
+        ],
+        "description": "A very nutritious, clear soup focusing on the natural sweetness of the ribs and tofu skin."
+      },
+      "dinner": {
+        "recipeName": "Mapo Tofu with Minced Beef",
+        "ingredients": [
+          "Soft tofu",
+          "150g minced beef",
+          "Doubanjiang (Bean paste)",
+          "Sichuan pepper powder",
+          "Leeks"
+        ],
+        "description": "A spicy, protein-packed dish where soft tofu melts into a savory minced beef sauce."
+      }
+    },
+    "friday": {
+      "breakfast": {
+        "recipeName": "Tea Eggs and Steamed Buns",
+        "ingredients": [
+          "4 eggs",
+          "Black tea leaves",
+          "Five-spice powder",
+          "Frozen Mantou (Steamed buns)"
+        ],
+        "description": "Marinated eggs with a marbled look and herbal fragrance, paired with simple steamed buns."
+      },
+      "lunch": {
+        "recipeName": "Braised Beef Wraps",
+        "ingredients": [
+          "Remaining braised beef",
+          "Chinese pancakes or tortillas",
+          "Sliced cucumbers",
+          "Sweet bean sauce"
+        ],
+        "description": "A creative way to finish the braised beef by wrapping it in thin pancakes with crunchy vegetables."
+      },
+      "dinner": {
+        "recipeName": "Steamed Fish Fillets with Ginger and Soy",
+        "ingredients": [
+          "400g white fish fillets",
+          "Ginger slivers",
+          "Spring onions",
+          "Seasoned soy sauce for seafood",
+          "Hot oil"
+        ],
+        "description": "A very healthy, quick, and traditional preparation that preserves the nutritional value of the fish."
+      }
+    },
+    "saturday": {
+      "breakfast": {
+        "recipeName": "Egg Drop Soup with Corn and Noodles",
+        "ingredients": [
+          "Corn kernels",
+          "2 eggs",
+          "Chicken stock",
+          "Thin wheat noodles"
+        ],
+        "description": "A light and slightly sweet breakfast soup that is quick to prepare and very satisfying."
+      },
+      "lunch": {
+        "recipeName": "Stir-fried Beef with Scallions (Cong Bao Rou)",
+        "ingredients": [
+          "300g beef slices",
+          "Large quantity of scallions",
+          "Ginger",
+          "Soy sauce",
+          "Shaoxing wine"
+        ],
+        "description": "A classic high-heat stir-fry focusing on the aromatic char of scallions and tender beef."
+      },
+      "dinner": {
+        "recipeName": "Home-style Mini Hot Pot",
+        "ingredients": [
+          "Beef slices",
+          "Tofu skin knots",
+          "Leafy greens",
+          "Mushrooms",
+          "Hot pot soup base"
+        ],
+        "description": "A fun, abundant meat-and-veggie feast to end the week. Easy to customize and very nutritious."
+      }
+    },
+    "sunday": {
+      "breakfast": null,
+      "lunch": null,
+      "dinner": null
+    }
+  },
+  "notes": {
+    "budget_efficiency": "The $140 budget is optimized by buying beef and pork in bulk and utilizing tofu skin and eggs as affordable protein fillers.",
+    "health_focus": "The plan emphasizes steaming and stir-frying over deep-frying to keep meals healthy.",
+    "dietary_compliance": "No organ meats are included in any recipe."
+  }
+}
+```
+    
+    Output Schema:
+    
+{{  "monday": {
+        "breakfast": {
+            "recipeName": "Scrambled Eggs with Tomato",
+            "ingredients": [
+                {"name": "eggs", "quantity": 2, "unit": "count"},
+                {"name": "tomato", "quantity": 100, "unit": "g"},
+                {"name": "oil", "quantity": 15, "unit": "ml"}
+            ],
+            "recipeDetails": "1. Beat eggs... 2. Stir fry tomato... 3. Mix together...",
+            "estimatedTime": 15,
+            "servings": 2,
+            "difficulty": "easy",
+            "totalCalories": 180
+            }
+    
+    
+    RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json blocks).
+     
+——————————————
+
+Calling Gemini API for plan structuring...
+Structured Meal Plan Response: 
+ {
+  "monday": {
+    "breakfast": {
+      "recipeName": "Chinese Steamed Eggs with Minced Pork",
+      "ingredients": [
+        {"name": "eggs", "quantity": 4, "unit": "count"},
+        {"name": "minced pork", "quantity": 100, "unit": "g"},
+        {"name": "light soy sauce", "quantity": 15, "unit": "ml"},
+        {"name": "sesame oil", "quantity": 5, "unit": "ml"},
+        {"name": "spring onions", "quantity": 10, "unit": "g"}
+      ],
+      "recipeDetails": "1. Whisk eggs with warm water (1.5:1 ratio) and salt. 2. Strain into a bowl and steam for 8-10 mins. 3. Sauté minced pork with soy sauce. 4. Top eggs with pork, sesame oil, and onions.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 350
+    },
+    "lunch": {
+      "recipeName": "Classic Braised Beef Noodle Soup",
+      "ingredients": [
+        {"name": "beef brisket", "quantity": 500, "unit": "g"},
+        {"name": "wheat noodles", "quantity": 200, "unit": "g"},
+        {"name": "bok choy", "quantity": 100, "unit": "g"},
+        {"name": "star anise", "quantity": 2, "unit": "count"},
+        {"name": "ginger", "quantity": 20, "unit": "g"},
+        {"name": "soy sauce", "quantity": 45, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Blanch beef. 2. Braise beef with ginger, star anise, and soy sauce in water for 90 mins. 3. Boil noodles and bok choy. 4. Combine beef, broth, and noodles.",
+      "estimatedTime": 100,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 650
+    },
+    "dinner": {
+      "recipeName": "Stir-fried Tofu Skin with Pork Slices",
+      "ingredients": [
+        {"name": "dry tofu skin knots", "quantity": 100, "unit": "g"},
+        {"name": "pork loin", "quantity": 200, "unit": "g"},
+        {"name": "bell peppers", "quantity": 100, "unit": "g"},
+        {"name": "garlic", "quantity": 3, "unit": "cloves"},
+        {"name": "oyster sauce", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Rehydrate tofu skin. 2. Slice pork and sear in a wok. 3. Add garlic, peppers, and tofu skin. 4. Season with oyster sauce and stir-fry until tender.",
+      "estimatedTime": 25,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 420
+    }
+  },
+  "tuesday": {
+    "breakfast": {
+      "recipeName": "Tomato and Egg Noodle Soup",
+      "ingredients": [
+        {"name": "tomatoes", "quantity": 2, "unit": "count"},
+        {"name": "eggs", "quantity": 2, "unit": "count"},
+        {"name": "thin noodles", "quantity": 100, "unit": "g"},
+        {"name": "cilantro", "quantity": 5, "unit": "g"},
+        {"name": "white pepper", "quantity": 1, "unit": "g"}
+      ],
+      "recipeDetails": "1. Sauté tomatoes until soft. 2. Add water and bring to boil. 3. Add noodles. 4. Swirl in beaten eggs and season with white pepper and cilantro.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 320
+    },
+    "lunch": {
+      "recipeName": "Leftover Braised Beef over Rice",
+      "ingredients": [
+        {"name": "reserved braised beef", "quantity": 200, "unit": "g"},
+        {"name": "steamed jasmine rice", "quantity": 300, "unit": "g"},
+        {"name": "broccoli", "quantity": 100, "unit": "g"},
+        {"name": "pickled mustard greens", "quantity": 30, "unit": "g"}
+      ],
+      "recipeDetails": "1. Reheat braised beef with a little broth. 2. Steam broccoli. 3. Serve beef and broccoli over hot rice with a side of pickles.",
+      "estimatedTime": 10,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 580
+    },
+    "dinner": {
+      "recipeName": "Kung Pao Chicken (Traditional Style)",
+      "ingredients": [
+        {"name": "chicken breast", "quantity": 400, "unit": "g"},
+        {"name": "peanuts", "quantity": 50, "unit": "g"},
+        {"name": "dried chilies", "quantity": 5, "unit": "count"},
+        {"name": "zucchini", "quantity": 100, "unit": "g"},
+        {"name": "sichuan peppercorns", "quantity": 2, "unit": "g"}
+      ],
+      "recipeDetails": "1. Cube chicken and marinate. 2. Fry chilies and peppercorns. 3. Stir-fry chicken and zucchini. 4. Toss with peanuts and a sweet-savory sauce.",
+      "estimatedTime": 30,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 520
+    }
+  },
+  "wednesday": {
+    "breakfast": {
+      "recipeName": "Egg and Chive Jianbing (Crepes)",
+      "ingredients": [
+        {"name": "flour", "quantity": 100, "unit": "g"},
+        {"name": "eggs", "quantity": 2, "unit": "count"},
+        {"name": "chives", "quantity": 20, "unit": "g"},
+        {"name": "hoisin sauce", "quantity": 20, "unit": "ml"},
+        {"name": "crispy wonton crackers", "quantity": 20, "unit": "g"}
+      ],
+      "recipeDetails": "1. Make a thin batter. 2. Spread on a pan, crack an egg on top, and sprinkle chives. 3. Flip, spread hoisin, add crackers, and fold.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 380
+    },
+    "lunch": {
+      "recipeName": "Cold Noodles with Shredded Chicken and Tofu Skin",
+      "ingredients": [
+        {"name": "chicken breast", "quantity": 150, "unit": "g"},
+        {"name": "tofu skin strips", "quantity": 100, "unit": "g"},
+        {"name": "cucumber", "quantity": 1, "unit": "count"},
+        {"name": "peanut sauce", "quantity": 30, "unit": "ml"},
+        {"name": "garlic water", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Poach and shred chicken. 2. Blanch tofu skin. 3. Shred cucumber. 4. Toss noodles and ingredients with peanut sauce and garlic water.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 440
+    },
+    "dinner": {
+      "recipeName": "Beef and Broccoli Stir-fry",
+      "ingredients": [
+        {"name": "flank steak", "quantity": 300, "unit": "g"},
+        {"name": "broccoli", "quantity": 250, "unit": "g"},
+        {"name": "ginger", "quantity": 10, "unit": "g"},
+        {"name": "cornstarch", "quantity": 5, "unit": "g"},
+        {"name": "dark soy sauce", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Slice beef thinly and coat with cornstarch/soy. 2. Blanch broccoli. 3. Sear beef in hot oil. 4. Add broccoli and ginger, toss with sauce.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 410
+    }
+  },
+  "thursday": {
+    "breakfast": {
+      "recipeName": "Savory Egg and Scallion Congee",
+      "ingredients": [
+        {"name": "rice", "quantity": 100, "unit": "g"},
+        {"name": "century egg", "quantity": 1, "unit": "count"},
+        {"name": "ginger", "quantity": 5, "unit": "g"},
+        {"name": "lean pork strips", "quantity": 50, "unit": "g"},
+        {"name": "spring onions", "quantity": 10, "unit": "g"}
+      ],
+      "recipeDetails": "1. Boil rice in water until broken down into porridge. 2. Add ginger and pork. 3. Stir in chopped century egg and top with onions.",
+      "estimatedTime": 45,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 280
+    },
+    "lunch": {
+      "recipeName": "Tofu Skin and Pork Rib Soup",
+      "ingredients": [
+        {"name": "pork ribs", "quantity": 300, "unit": "g"},
+        {"name": "fresh tofu skin sheets", "quantity": 100, "unit": "g"},
+        {"name": "goji berries", "quantity": 5, "unit": "g"},
+        {"name": "ginger", "quantity": 15, "unit": "g"},
+        {"name": "daikon radish", "quantity": 150, "unit": "g"}
+      ],
+      "recipeDetails": "1. Blanch ribs. 2. Simmer ribs, ginger, and radish for 45 mins. 3. Add tofu skin and goji berries, simmer for 15 more mins.",
+      "estimatedTime": 65,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 460
+    },
+    "dinner": {
+      "recipeName": "Mapo Tofu with Minced Beef",
+      "ingredients": [
+        {"name": "soft tofu", "quantity": 400, "unit": "g"},
+        {"name": "minced beef", "quantity": 150, "unit": "g"},
+        {"name": "doubanjiang", "quantity": 30, "unit": "g"},
+        {"name": "sichuan pepper powder", "quantity": 2, "unit": "g"},
+        {"name": "leeks", "quantity": 20, "unit": "g"}
+      ],
+      "recipeDetails": "1. Sauté beef with doubanjiang. 2. Add cubed tofu and a little broth. 3. Simmer briefly. 4. Thicken with starch slurry and top with pepper.",
+      "estimatedTime": 25,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 390
+    }
+  },
+  "friday": {
+    "breakfast": {
+      "recipeName": "Tea Eggs and Steamed Buns",
+      "ingredients": [
+        {"name": "eggs", "quantity": 4, "unit": "count"},
+        {"name": "black tea leaves", "quantity": 10, "unit": "g"},
+        {"name": "five-spice powder", "quantity": 5, "unit": "g"},
+        {"name": "frozen mantou", "quantity": 4, "unit": "count"}
+      ],
+      "recipeDetails": "1. Soft boil eggs, crack shells. 2. Simmer in tea/spice liquid. 3. Steam mantou until fluffy. 4. Serve together.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 340
+    },
+    "lunch": {
+      "recipeName": "Braised Beef Wraps",
+      "ingredients": [
+        {"name": "remaining braised beef", "quantity": 150, "unit": "g"},
+        {"name": "chinese pancakes", "quantity": 4, "unit": "count"},
+        {"name": "cucumbers", "quantity": 1, "unit": "count"},
+        {"name": "sweet bean sauce", "quantity": 20, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Slice cold beef. 2. Warm pancakes. 3. Spread sauce, add beef and cucumber strips. 4. Roll tightly and slice.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 420
+    },
+    "dinner": {
+      "recipeName": "Steamed Fish Fillets with Ginger and Soy",
+      "ingredients": [
+        {"name": "white fish fillets", "quantity": 400, "unit": "g"},
+        {"name": "ginger", "quantity": 15, "unit": "g"},
+        {"name": "spring onions", "quantity": 20, "unit": "g"},
+        {"name": "seasoned soy sauce", "quantity": 30, "unit": "ml"},
+        {"name": "hot oil", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Place fish on ginger slices. 2. Steam for 8 mins. 3. Top with spring onions and soy sauce. 4. Pour sizzling hot oil over the aromatics.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 290
+    }
+  },
+  "saturday": {
+    "breakfast": {
+      "recipeName": "Egg Drop Soup with Corn and Noodles",
+      "ingredients": [
+        {"name": "corn kernels", "quantity": 100, "unit": "g"},
+        {"name": "eggs", "quantity": 2, "unit": "count"},
+        {"name": "chicken stock", "quantity": 500, "unit": "ml"},
+        {"name": "thin wheat noodles", "quantity": 100, "unit": "g"}
+      ],
+      "recipeDetails": "1. Boil stock and corn. 2. Add noodles until cooked. 3. Slowly drizzle in beaten eggs while stirring. 4. Season and serve.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 310
+    },
+    "lunch": {
+      "recipeName": "Stir-fried Beef with Scallions (Cong Bao Rou)",
+      "ingredients": [
+        {"name": "beef slices", "quantity": 300, "unit": "g"},
+        {"name": "scallions", "quantity": 100, "unit": "g"},
+        {"name": "ginger", "quantity": 10, "unit": "g"},
+        {"name": "soy sauce", "quantity": 15, "unit": "ml"},
+        {"name": "shaoxing wine", "quantity": 10, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Marinate beef with wine and soy. 2. Stir-fry beef on high heat until browned. 3. Add large scallion sections and flash-fry until fragrant.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 430
+    },
+    "dinner": {
+      "recipeName": "Home-style Mini Hot Pot",
+      "ingredients": [
+        {"name": "beef slices", "quantity": 200, "unit": "g"},
+        {"name": "tofu skin knots", "quantity": 100, "unit": "g"},
+        {"name": "leafy greens", "quantity": 200, "unit": "g"},
+        {"name": "mushrooms", "quantity": 100, "unit": "g"},
+        {"name": "hot pot soup base", "quantity": 50, "unit": "g"}
+      ],
+      "recipeDetails": "1. Boil water with soup base. 2. Prepare ingredients on plates. 3. Cook meat and vegetables in the simmering broth at the table.",
+      "estimatedTime": 30,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 550
+    }
+  },
+  "sunday": {
+    "breakfast": null,
+    "lunch": null,
+    "dinner": null
+  }
+} 
+——————————————
+
+User Manipulated Prompt: 
+ 
+    Task: based on user's new input, previous preferences and meal plan, adjust the meal plan accordingly. DO NOT change the format of the meal plan.
+    Return exactly the same format as previous meal plan. Do minimal changes to accommodate user's new input.
+
+    User's new input: Please add dinner on Sunday with high-protein meals.
+    Previous user preferences: {
+  "preferred_keywords": [
+    "chinese food",
+    "healthy",
+    "quick food",
+    "nutritious"
+  ],
+  "preferred_recipes/ingredients": [
+    "braised beef",
+    "noodles",
+    "tofu skin",
+    "eggs"
+  ],
+  "dietary_restrictions": [
+    "organ meat"
+  ],
+  "budget": "140USD",
+  "num_people": 2,
+  "difficulty": "medium",
+  "cook_schedule": {
+    "monday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "tuesday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "wednesday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "thursday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "friday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "saturday": [
+      "breakfast",
+      "lunch",
+      "dinner"
+    ],
+    "sunday": []
+  },
+  "others": [
+    "nutritious, abundant meat, suitable for home cooking"
+  ]
+}
+    Previous meal plan: {
+  "monday": {
+    "breakfast": {
+      "recipeName": "Chinese Steamed Eggs with Minced Pork",
+      "ingredients": [
+        {"name": "eggs", "quantity": 4, "unit": "count"},
+        {"name": "minced pork", "quantity": 100, "unit": "g"},
+        {"name": "light soy sauce", "quantity": 15, "unit": "ml"},
+        {"name": "sesame oil", "quantity": 5, "unit": "ml"},
+        {"name": "spring onions", "quantity": 10, "unit": "g"}
+      ],
+      "recipeDetails": "1. Whisk eggs with warm water (1.5:1 ratio) and salt. 2. Strain into a bowl and steam for 8-10 mins. 3. Sauté minced pork with soy sauce. 4. Top eggs with pork, sesame oil, and onions.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 350
+    },
+    "lunch": {
+      "recipeName": "Classic Braised Beef Noodle Soup",
+      "ingredients": [
+        {"name": "beef brisket", "quantity": 500, "unit": "g"},
+        {"name": "wheat noodles", "quantity": 200, "unit": "g"},
+        {"name": "bok choy", "quantity": 100, "unit": "g"},
+        {"name": "star anise", "quantity": 2, "unit": "count"},
+        {"name": "ginger", "quantity": 20, "unit": "g"},
+        {"name": "soy sauce", "quantity": 45, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Blanch beef. 2. Braise beef with ginger, star anise, and soy sauce in water for 90 mins. 3. Boil noodles and bok choy. 4. Combine beef, broth, and noodles.",
+      "estimatedTime": 100,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 650
+    },
+    "dinner": {
+      "recipeName": "Stir-fried Tofu Skin with Pork Slices",
+      "ingredients": [
+        {"name": "dry tofu skin knots", "quantity": 100, "unit": "g"},
+        {"name": "pork loin", "quantity": 200, "unit": "g"},
+        {"name": "bell peppers", "quantity": 100, "unit": "g"},
+        {"name": "garlic", "quantity": 3, "unit": "cloves"},
+        {"name": "oyster sauce", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Rehydrate tofu skin. 2. Slice pork and sear in a wok. 3. Add garlic, peppers, and tofu skin. 4. Season with oyster sauce and stir-fry until tender.",
+      "estimatedTime": 25,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 420
+    }
+  },
+  "tuesday": {
+    "breakfast": {
+      "recipeName": "Tomato and Egg Noodle Soup",
+      "ingredients": [
+        {"name": "tomatoes", "quantity": 2, "unit": "count"},
+        {"name": "eggs", "quantity": 2, "unit": "count"},
+        {"name": "thin noodles", "quantity": 100, "unit": "g"},
+        {"name": "cilantro", "quantity": 5, "unit": "g"},
+        {"name": "white pepper", "quantity": 1, "unit": "g"}
+      ],
+      "recipeDetails": "1. Sauté tomatoes until soft. 2. Add water and bring to boil. 3. Add noodles. 4. Swirl in beaten eggs and season with white pepper and cilantro.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 320
+    },
+    "lunch": {
+      "recipeName": "Leftover Braised Beef over Rice",
+      "ingredients": [
+        {"name": "reserved braised beef", "quantity": 200, "unit": "g"},
+        {"name": "steamed jasmine rice", "quantity": 300, "unit": "g"},
+        {"name": "broccoli", "quantity": 100, "unit": "g"},
+        {"name": "pickled mustard greens", "quantity": 30, "unit": "g"}
+      ],
+      "recipeDetails": "1. Reheat braised beef with a little broth. 2. Steam broccoli. 3. Serve beef and broccoli over hot rice with a side of pickles.",
+      "estimatedTime": 10,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 580
+    },
+    "dinner": {
+      "recipeName": "Kung Pao Chicken (Traditional Style)",
+      "ingredients": [
+        {"name": "chicken breast", "quantity": 400, "unit": "g"},
+        {"name": "peanuts", "quantity": 50, "unit": "g"},
+        {"name": "dried chilies", "quantity": 5, "unit": "count"},
+        {"name": "zucchini", "quantity": 100, "unit": "g"},
+        {"name": "sichuan peppercorns", "quantity": 2, "unit": "g"}
+      ],
+      "recipeDetails": "1. Cube chicken and marinate. 2. Fry chilies and peppercorns. 3. Stir-fry chicken and zucchini. 4. Toss with peanuts and a sweet-savory sauce.",
+      "estimatedTime": 30,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 520
+    }
+  },
+  "wednesday": {
+    "breakfast": {
+      "recipeName": "Egg and Chive Jianbing (Crepes)",
+      "ingredients": [
+        {"name": "flour", "quantity": 100, "unit": "g"},
+        {"name": "eggs", "quantity": 2, "unit": "count"},
+        {"name": "chives", "quantity": 20, "unit": "g"},
+        {"name": "hoisin sauce", "quantity": 20, "unit": "ml"},
+        {"name": "crispy wonton crackers", "quantity": 20, "unit": "g"}
+      ],
+      "recipeDetails": "1. Make a thin batter. 2. Spread on a pan, crack an egg on top, and sprinkle chives. 3. Flip, spread hoisin, add crackers, and fold.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 380
+    },
+    "lunch": {
+      "recipeName": "Cold Noodles with Shredded Chicken and Tofu Skin",
+      "ingredients": [
+        {"name": "chicken breast", "quantity": 150, "unit": "g"},
+        {"name": "tofu skin strips", "quantity": 100, "unit": "g"},
+        {"name": "cucumber", "quantity": 1, "unit": "count"},
+        {"name": "peanut sauce", "quantity": 30, "unit": "ml"},
+        {"name": "garlic water", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Poach and shred chicken. 2. Blanch tofu skin. 3. Shred cucumber. 4. Toss noodles and ingredients with peanut sauce and garlic water.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 440
+    },
+    "dinner": {
+      "recipeName": "Beef and Broccoli Stir-fry",
+      "ingredients": [
+        {"name": "flank steak", "quantity": 300, "unit": "g"},
+        {"name": "broccoli", "quantity": 250, "unit": "g"},
+        {"name": "ginger", "quantity": 10, "unit": "g"},
+        {"name": "cornstarch", "quantity": 5, "unit": "g"},
+        {"name": "dark soy sauce", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Slice beef thinly and coat with cornstarch/soy. 2. Blanch broccoli. 3. Sear beef in hot oil. 4. Add broccoli and ginger, toss with sauce.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 410
+    }
+  },
+  "thursday": {
+    "breakfast": {
+      "recipeName": "Savory Egg and Scallion Congee",
+      "ingredients": [
+        {"name": "rice", "quantity": 100, "unit": "g"},
+        {"name": "century egg", "quantity": 1, "unit": "count"},
+        {"name": "ginger", "quantity": 5, "unit": "g"},
+        {"name": "lean pork strips", "quantity": 50, "unit": "g"},
+        {"name": "spring onions", "quantity": 10, "unit": "g"}
+      ],
+      "recipeDetails": "1. Boil rice in water until broken down into porridge. 2. Add ginger and pork. 3. Stir in chopped century egg and top with onions.",
+      "estimatedTime": 45,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 280
+    },
+    "lunch": {
+      "recipeName": "Tofu Skin and Pork Rib Soup",
+      "ingredients": [
+        {"name": "pork ribs", "quantity": 300, "unit": "g"},
+        {"name": "fresh tofu skin sheets", "quantity": 100, "unit": "g"},
+        {"name": "goji berries", "quantity": 5, "unit": "g"},
+        {"name": "ginger", "quantity": 15, "unit": "g"},
+        {"name": "daikon radish", "quantity": 150, "unit": "g"}
+      ],
+      "recipeDetails": "1. Blanch ribs. 2. Simmer ribs, ginger, and radish for 45 mins. 3. Add tofu skin and goji berries, simmer for 15 more mins.",
+      "estimatedTime": 65,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 460
+    },
+    "dinner": {
+      "recipeName": "Mapo Tofu with Minced Beef",
+      "ingredients": [
+        {"name": "soft tofu", "quantity": 400, "unit": "g"},
+        {"name": "minced beef", "quantity": 150, "unit": "g"},
+        {"name": "doubanjiang", "quantity": 30, "unit": "g"},
+        {"name": "sichuan pepper powder", "quantity": 2, "unit": "g"},
+        {"name": "leeks", "quantity": 20, "unit": "g"}
+      ],
+      "recipeDetails": "1. Sauté beef with doubanjiang. 2. Add cubed tofu and a little broth. 3. Simmer briefly. 4. Thicken with starch slurry and top with pepper.",
+      "estimatedTime": 25,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 390
+    }
+  },
+  "friday": {
+    "breakfast": {
+      "recipeName": "Tea Eggs and Steamed Buns",
+      "ingredients": [
+        {"name": "eggs", "quantity": 4, "unit": "count"},
+        {"name": "black tea leaves", "quantity": 10, "unit": "g"},
+        {"name": "five-spice powder", "quantity": 5, "unit": "g"},
+        {"name": "frozen mantou", "quantity": 4, "unit": "count"}
+      ],
+      "recipeDetails": "1. Soft boil eggs, crack shells. 2. Simmer in tea/spice liquid. 3. Steam mantou until fluffy. 4. Serve together.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 340
+    },
+    "lunch": {
+      "recipeName": "Braised Beef Wraps",
+      "ingredients": [
+        {"name": "remaining braised beef", "quantity": 150, "unit": "g"},
+        {"name": "chinese pancakes", "quantity": 4, "unit": "count"},
+        {"name": "cucumbers", "quantity": 1, "unit": "count"},
+        {"name": "sweet bean sauce", "quantity": 20, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Slice cold beef. 2. Warm pancakes. 3. Spread sauce, add beef and cucumber strips. 4. Roll tightly and slice.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 420
+    },
+    "dinner": {
+      "recipeName": "Steamed Fish Fillets with Ginger and Soy",
+      "ingredients": [
+        {"name": "white fish fillets", "quantity": 400, "unit": "g"},
+        {"name": "ginger", "quantity": 15, "unit": "g"},
+        {"name": "spring onions", "quantity": 20, "unit": "g"},
+        {"name": "seasoned soy sauce", "quantity": 30, "unit": "ml"},
+        {"name": "hot oil", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Place fish on ginger slices. 2. Steam for 8 mins. 3. Top with spring onions and soy sauce. 4. Pour sizzling hot oil over the aromatics.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 290
+    }
+  },
+  "saturday": {
+    "breakfast": {
+      "recipeName": "Egg Drop Soup with Corn and Noodles",
+      "ingredients": [
+        {"name": "corn kernels", "quantity": 100, "unit": "g"},
+        {"name": "eggs", "quantity": 2, "unit": "count"},
+        {"name": "chicken stock", "quantity": 500, "unit": "ml"},
+        {"name": "thin wheat noodles", "quantity": 100, "unit": "g"}
+      ],
+      "recipeDetails": "1. Boil stock and corn. 2. Add noodles until cooked. 3. Slowly drizzle in beaten eggs while stirring. 4. Season and serve.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 310
+    },
+    "lunch": {
+      "recipeName": "Stir-fried Beef with Scallions (Cong Bao Rou)",
+      "ingredients": [
+        {"name": "beef slices", "quantity": 300, "unit": "g"},
+        {"name": "scallions", "quantity": 100, "unit": "g"},
+        {"name": "ginger", "quantity": 10, "unit": "g"},
+        {"name": "soy sauce", "quantity": 15, "unit": "ml"},
+        {"name": "shaoxing wine", "quantity": 10, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Marinate beef with wine and soy. 2. Stir-fry beef on high heat until browned. 3. Add large scallion sections and flash-fry until fragrant.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 430
+    },
+    "dinner": {
+      "recipeName": "Home-style Mini Hot Pot",
+      "ingredients": [
+        {"name": "beef slices", "quantity": 200, "unit": "g"},
+        {"name": "tofu skin knots", "quantity": 100, "unit": "g"},
+        {"name": "leafy greens", "quantity": 200, "unit": "g"},
+        {"name": "mushrooms", "quantity": 100, "unit": "g"},
+        {"name": "hot pot soup base", "quantity": 50, "unit": "g"}
+      ],
+      "recipeDetails": "1. Boil water with soup base. 2. Prepare ingredients on plates. 3. Cook meat and vegetables in the simmering broth at the table.",
+      "estimatedTime": 30,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 550
+    }
+  },
+  "sunday": {
+    "breakfast": null,
+    "lunch": null,
+    "dinner": null
+  }
+}
+     
+——————————————
+
+Calling Gemini API for user manipulated meal plan generation...
+Manipulated Meal Plan Response: 
+ {
+  "monday": {
+    "breakfast": {
+      "recipeName": "Chinese Steamed Eggs with Minced Pork",
+      "ingredients": [
+        {"name": "eggs", "quantity": 4, "unit": "count"},
+        {"name": "minced pork", "quantity": 100, "unit": "g"},
+        {"name": "light soy sauce", "quantity": 15, "unit": "ml"},
+        {"name": "sesame oil", "quantity": 5, "unit": "ml"},
+        {"name": "spring onions", "quantity": 10, "unit": "g"}
+      ],
+      "recipeDetails": "1. Whisk eggs with warm water (1.5:1 ratio) and salt. 2. Strain into a bowl and steam for 8-10 mins. 3. Sauté minced pork with soy sauce. 4. Top eggs with pork, sesame oil, and onions.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 350
+    },
+    "lunch": {
+      "recipeName": "Classic Braised Beef Noodle Soup",
+      "ingredients": [
+        {"name": "beef brisket", "quantity": 500, "unit": "g"},
+        {"name": "wheat noodles", "quantity": 200, "unit": "g"},
+        {"name": "bok choy", "quantity": 100, "unit": "g"},
+        {"name": "star anise", "quantity": 2, "unit": "count"},
+        {"name": "ginger", "quantity": 20, "unit": "g"},
+        {"name": "soy sauce", "quantity": 45, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Blanch beef. 2. Braise beef with ginger, star anise, and soy sauce in water for 90 mins. 3. Boil noodles and bok choy. 4. Combine beef, broth, and noodles.",
+      "estimatedTime": 100,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 650
+    },
+    "dinner": {
+      "recipeName": "Stir-fried Tofu Skin with Pork Slices",
+      "ingredients": [
+        {"name": "dry tofu skin knots", "quantity": 100, "unit": "g"},
+        {"name": "pork loin", "quantity": 200, "unit": "g"},
+        {"name": "bell peppers", "quantity": 100, "unit": "g"},
+        {"name": "garlic", "quantity": 3, "unit": "cloves"},
+        {"name": "oyster sauce", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Rehydrate tofu skin. 2. Slice pork and sear in a wok. 3. Add garlic, peppers, and tofu skin. 4. Season with oyster sauce and stir-fry until tender.",
+      "estimatedTime": 25,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 420
+    }
+  },
+  "tuesday": {
+    "breakfast": {
+      "recipeName": "Tomato and Egg Noodle Soup",
+      "ingredients": [
+        {"name": "tomatoes", "quantity": 2, "unit": "count"},
+        {"name": "eggs", "quantity": 2, "unit": "count"},
+        {"name": "thin noodles", "quantity": 100, "unit": "g"},
+        {"name": "cilantro", "quantity": 5, "unit": "g"},
+        {"name": "white pepper", "quantity": 1, "unit": "g"}
+      ],
+      "recipeDetails": "1. Sauté tomatoes until soft. 2. Add water and bring to boil. 3. Add noodles. 4. Swirl in beaten eggs and season with white pepper and cilantro.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 320
+    },
+    "lunch": {
+      "recipeName": "Leftover Braised Beef over Rice",
+      "ingredients": [
+        {"name": "reserved braised beef", "quantity": 200, "unit": "g"},
+        {"name": "steamed jasmine rice", "quantity": 300, "unit": "g"},
+        {"name": "broccoli", "quantity": 100, "unit": "g"},
+        {"name": "pickled mustard greens", "quantity": 30, "unit": "g"}
+      ],
+      "recipeDetails": "1. Reheat braised beef with a little broth. 2. Steam broccoli. 3. Serve beef and broccoli over hot rice with a side of pickles.",
+      "estimatedTime": 10,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 580
+    },
+    "dinner": {
+      "recipeName": "Kung Pao Chicken (Traditional Style)",
+      "ingredients": [
+        {"name": "chicken breast", "quantity": 400, "unit": "g"},
+        {"name": "peanuts", "quantity": 50, "unit": "g"},
+        {"name": "dried chilies", "quantity": 5, "unit": "count"},
+        {"name": "zucchini", "quantity": 100, "unit": "g"},
+        {"name": "sichuan peppercorns", "quantity": 2, "unit": "g"}
+      ],
+      "recipeDetails": "1. Cube chicken and marinate. 2. Fry chilies and peppercorns. 3. Stir-fry chicken and zucchini. 4. Toss with peanuts and a sweet-savory sauce.",
+      "estimatedTime": 30,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 520
+    }
+  },
+  "wednesday": {
+    "breakfast": {
+      "recipeName": "Egg and Chive Jianbing (Crepes)",
+      "ingredients": [
+        {"name": "flour", "quantity": 100, "unit": "g"},
+        {"name": "eggs", "quantity": 2, "unit": "count"},
+        {"name": "chives", "quantity": 20, "unit": "g"},
+        {"name": "hoisin sauce", "quantity": 20, "unit": "ml"},
+        {"name": "crispy wonton crackers", "quantity": 20, "unit": "g"}
+      ],
+      "recipeDetails": "1. Make a thin batter. 2. Spread on a pan, crack an egg on top, and sprinkle chives. 3. Flip, spread hoisin, add crackers, and fold.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 380
+    },
+    "lunch": {
+      "recipeName": "Cold Noodles with Shredded Chicken and Tofu Skin",
+      "ingredients": [
+        {"name": "chicken breast", "quantity": 150, "unit": "g"},
+        {"name": "tofu skin strips", "quantity": 100, "unit": "g"},
+        {"name": "cucumber", "quantity": 1, "unit": "count"},
+        {"name": "peanut sauce", "quantity": 30, "unit": "ml"},
+        {"name": "garlic water", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Poach and shred chicken. 2. Blanch tofu skin. 3. Shred cucumber. 4. Toss noodles and ingredients with peanut sauce and garlic water.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 440
+    },
+    "dinner": {
+      "recipeName": "Beef and Broccoli Stir-fry",
+      "ingredients": [
+        {"name": "flank steak", "quantity": 300, "unit": "g"},
+        {"name": "broccoli", "quantity": 250, "unit": "g"},
+        {"name": "ginger", "quantity": 10, "unit": "g"},
+        {"name": "cornstarch", "quantity": 5, "unit": "g"},
+        {"name": "dark soy sauce", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Slice beef thinly and coat with cornstarch/soy. 2. Blanch broccoli. 3. Sear beef in hot oil. 4. Add broccoli and ginger, toss with sauce.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 410
+    }
+  },
+  "thursday": {
+    "breakfast": {
+      "recipeName": "Savory Egg and Scallion Congee",
+      "ingredients": [
+        {"name": "rice", "quantity": 100, "unit": "g"},
+        {"name": "century egg", "quantity": 1, "unit": "count"},
+        {"name": "ginger", "quantity": 5, "unit": "g"},
+        {"name": "lean pork strips", "quantity": 50, "unit": "g"},
+        {"name": "spring onions", "quantity": 10, "unit": "g"}
+      ],
+      "recipeDetails": "1. Boil rice in water until broken down into porridge. 2. Add ginger and pork. 3. Stir in chopped century egg and top with onions.",
+      "estimatedTime": 45,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 280
+    },
+    "lunch": {
+      "recipeName": "Tofu Skin and Pork Rib Soup",
+      "ingredients": [
+        {"name": "pork ribs", "quantity": 300, "unit": "g"},
+        {"name": "fresh tofu skin sheets", "quantity": 100, "unit": "g"},
+        {"name": "goji berries", "quantity": 5, "unit": "g"},
+        {"name": "ginger", "quantity": 15, "unit": "g"},
+        {"name": "daikon radish", "quantity": 150, "unit": "g"}
+      ],
+      "recipeDetails": "1. Blanch ribs. 2. Simmer ribs, ginger, and radish for 45 mins. 3. Add tofu skin and goji berries, simmer for 15 more mins.",
+      "estimatedTime": 65,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 460
+    },
+    "dinner": {
+      "recipeName": "Mapo Tofu with Minced Beef",
+      "ingredients": [
+        {"name": "soft tofu", "quantity": 400, "unit": "g"},
+        {"name": "minced beef", "quantity": 150, "unit": "g"},
+        {"name": "doubanjiang", "quantity": 30, "unit": "g"},
+        {"name": "sichuan pepper powder", "quantity": 2, "unit": "g"},
+        {"name": "leeks", "quantity": 20, "unit": "g"}
+      ],
+      "recipeDetails": "1. Sauté beef with doubanjiang. 2. Add cubed tofu and a little broth. 3. Simmer briefly. 4. Thicken with starch slurry and top with pepper.",
+      "estimatedTime": 25,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 390
+    }
+  },
+  "friday": {
+    "breakfast": {
+      "recipeName": "Tea Eggs and Steamed Buns",
+      "ingredients": [
+        {"name": "eggs", "quantity": 4, "unit": "count"},
+        {"name": "black tea leaves", "quantity": 10, "unit": "g"},
+        {"name": "five-spice powder", "quantity": 5, "unit": "g"},
+        {"name": "frozen mantou", "quantity": 4, "unit": "count"}
+      ],
+      "recipeDetails": "1. Soft boil eggs, crack shells. 2. Simmer in tea/spice liquid. 3. Steam mantou until fluffy. 4. Serve together.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 340
+    },
+    "lunch": {
+      "recipeName": "Braised Beef Wraps",
+      "ingredients": [
+        {"name": "remaining braised beef", "quantity": 150, "unit": "g"},
+        {"name": "chinese pancakes", "quantity": 4, "unit": "count"},
+        {"name": "cucumbers", "quantity": 1, "unit": "count"},
+        {"name": "sweet bean sauce", "quantity": 20, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Slice cold beef. 2. Warm pancakes. 3. Spread sauce, add beef and cucumber strips. 4. Roll tightly and slice.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 420
+    },
+    "dinner": {
+      "recipeName": "Steamed Fish Fillets with Ginger and Soy",
+      "ingredients": [
+        {"name": "white fish fillets", "quantity": 400, "unit": "g"},
+        {"name": "ginger", "quantity": 15, "unit": "g"},
+        {"name": "spring onions", "quantity": 20, "unit": "g"},
+        {"name": "seasoned soy sauce", "quantity": 30, "unit": "ml"},
+        {"name": "hot oil", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Place fish on ginger slices. 2. Steam for 8 mins. 3. Top with spring onions and soy sauce. 4. Pour sizzling hot oil over the aromatics.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 290
+    }
+  },
+  "saturday": {
+    "breakfast": {
+      "recipeName": "Egg Drop Soup with Corn and Noodles",
+      "ingredients": [
+        {"name": "corn kernels", "quantity": 100, "unit": "g"},
+        {"name": "eggs", "quantity": 2, "unit": "count"},
+        {"name": "chicken stock", "quantity": 500, "unit": "ml"},
+        {"name": "thin wheat noodles", "quantity": 100, "unit": "g"}
+      ],
+      "recipeDetails": "1. Boil stock and corn. 2. Add noodles until cooked. 3. Slowly drizzle in beaten eggs while stirring. 4. Season and serve.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 310
+    },
+    "lunch": {
+      "recipeName": "Stir-fried Beef with Scallions (Cong Bao Rou)",
+      "ingredients": [
+        {"name": "beef slices", "quantity": 300, "unit": "g"},
+        {"name": "scallions", "quantity": 100, "unit": "g"},
+        {"name": "ginger", "quantity": 10, "unit": "g"},
+        {"name": "soy sauce", "quantity": 15, "unit": "ml"},
+        {"name": "shaoxing wine", "quantity": 10, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Marinate beef with wine and soy. 2. Stir-fry beef on high heat until browned. 3. Add large scallion sections and flash-fry until fragrant.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 430
+    },
+    "dinner": {
+      "recipeName": "Home-style Mini Hot Pot",
+      "ingredients": [
+        {"name": "beef slices", "quantity": 200, "unit": "g"},
+        {"name": "tofu skin knots", "quantity": 100, "unit": "g"},
+        {"name": "leafy greens", "quantity": 200, "unit": "g"},
+        {"name": "mushrooms", "quantity": 100, "unit": "g"},
+        {"name": "hot pot soup base", "quantity": 50, "unit": "g"}
+      ],
+      "recipeDetails": "1. Boil water with soup base. 2. Prepare ingredients on plates. 3. Cook meat and vegetables in the simmering broth at the table.",
+      "estimatedTime": 30,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 550
+    }
+  },
+  "sunday": {
+    "breakfast": null,
+    "lunch": null,
+    "dinner": {
+      "recipeName": "High-Protein Beef and Tofu Skin Stir-fry with Eggs",
+      "ingredients": [
+        {"name": "flank steak", "quantity": 350, "unit": "g"},
+        {"name": "dry tofu skin", "quantity": 100, "unit": "g"},
+        {"name": "eggs", "quantity": 3, "unit": "count"},
+        {"name": "garlic", "quantity": 3, "unit": "cloves"},
+        {"name": "soy sauce", "quantity": 20, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Rehydrate tofu skin and slice beef. 2. Scramble eggs and set aside. 3. Stir-fry beef with garlic until cooked through. 4. Add tofu skin and scrambled eggs, toss with soy sauce and serve.",
+      "estimatedTime": 25,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 560
+    }
+  }
+} 
+——————————————
+
+Shopping List Prompt: 
+ 
+    Task: Convert the Meal Plan into a consolidated North American shopping list (JSON).
+    
+    CRITICAL RULES:
+    1. **MERGE AGGRESSIVELY**: Combine interchangeable ingredients into broad categories.
+       - (e.g., "Beef strips" + "Flank steak" -> "Beef (Stir-fry cut)")
+       - (e.g., "Scallions" + "Green onions" -> "Green Onions")
+    
+    2. **UNITS (North America)**:
+       - **Meat/Bulk**: MUST use 'lbs' or 'oz'. (No grams).
+       - **Produce**: MUST use 'count' or 'bunch'. (No 'stalks', 'slices').
+
+    "predefinedCategories": [
+        "proteins", "vegetables", "fruits", "grains", "dairy", "oils_condiments", "spices_seasonings", "pantry_staples", "others"
+    ],
+    
+    Meal Plan: {
+  "monday": {
+    "breakfast": {
+      "recipeName": "Chinese Steamed Eggs with Minced Pork",
+      "ingredients": [
+        {"name": "eggs", "quantity": 4, "unit": "count"},
+        {"name": "minced pork", "quantity": 100, "unit": "g"},
+        {"name": "light soy sauce", "quantity": 15, "unit": "ml"},
+        {"name": "sesame oil", "quantity": 5, "unit": "ml"},
+        {"name": "spring onions", "quantity": 10, "unit": "g"}
+      ],
+      "recipeDetails": "1. Whisk eggs with warm water (1.5:1 ratio) and salt. 2. Strain into a bowl and steam for 8-10 mins. 3. Sauté minced pork with soy sauce. 4. Top eggs with pork, sesame oil, and onions.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 350
+    },
+    "lunch": {
+      "recipeName": "Classic Braised Beef Noodle Soup",
+      "ingredients": [
+        {"name": "beef brisket", "quantity": 500, "unit": "g"},
+        {"name": "wheat noodles", "quantity": 200, "unit": "g"},
+        {"name": "bok choy", "quantity": 100, "unit": "g"},
+        {"name": "star anise", "quantity": 2, "unit": "count"},
+        {"name": "ginger", "quantity": 20, "unit": "g"},
+        {"name": "soy sauce", "quantity": 45, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Blanch beef. 2. Braise beef with ginger, star anise, and soy sauce in water for 90 mins. 3. Boil noodles and bok choy. 4. Combine beef, broth, and noodles.",
+      "estimatedTime": 100,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 650
+    },
+    "dinner": {
+      "recipeName": "Stir-fried Tofu Skin with Pork Slices",
+      "ingredients": [
+        {"name": "dry tofu skin knots", "quantity": 100, "unit": "g"},
+        {"name": "pork loin", "quantity": 200, "unit": "g"},
+        {"name": "bell peppers", "quantity": 100, "unit": "g"},
+        {"name": "garlic", "quantity": 3, "unit": "cloves"},
+        {"name": "oyster sauce", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Rehydrate tofu skin. 2. Slice pork and sear in a wok. 3. Add garlic, peppers, and tofu skin. 4. Season with oyster sauce and stir-fry until tender.",
+      "estimatedTime": 25,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 420
+    }
+  },
+  "tuesday": {
+    "breakfast": {
+      "recipeName": "Tomato and Egg Noodle Soup",
+      "ingredients": [
+        {"name": "tomatoes", "quantity": 2, "unit": "count"},
+        {"name": "eggs", "quantity": 2, "unit": "count"},
+        {"name": "thin noodles", "quantity": 100, "unit": "g"},
+        {"name": "cilantro", "quantity": 5, "unit": "g"},
+        {"name": "white pepper", "quantity": 1, "unit": "g"}
+      ],
+      "recipeDetails": "1. Sauté tomatoes until soft. 2. Add water and bring to boil. 3. Add noodles. 4. Swirl in beaten eggs and season with white pepper and cilantro.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 320
+    },
+    "lunch": {
+      "recipeName": "Leftover Braised Beef over Rice",
+      "ingredients": [
+        {"name": "reserved braised beef", "quantity": 200, "unit": "g"},
+        {"name": "steamed jasmine rice", "quantity": 300, "unit": "g"},
+        {"name": "broccoli", "quantity": 100, "unit": "g"},
+        {"name": "pickled mustard greens", "quantity": 30, "unit": "g"}
+      ],
+      "recipeDetails": "1. Reheat braised beef with a little broth. 2. Steam broccoli. 3. Serve beef and broccoli over hot rice with a side of pickles.",
+      "estimatedTime": 10,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 580
+    },
+    "dinner": {
+      "recipeName": "Kung Pao Chicken (Traditional Style)",
+      "ingredients": [
+        {"name": "chicken breast", "quantity": 400, "unit": "g"},
+        {"name": "peanuts", "quantity": 50, "unit": "g"},
+        {"name": "dried chilies", "quantity": 5, "unit": "count"},
+        {"name": "zucchini", "quantity": 100, "unit": "g"},
+        {"name": "sichuan peppercorns", "quantity": 2, "unit": "g"}
+      ],
+      "recipeDetails": "1. Cube chicken and marinate. 2. Fry chilies and peppercorns. 3. Stir-fry chicken and zucchini. 4. Toss with peanuts and a sweet-savory sauce.",
+      "estimatedTime": 30,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 520
+    }
+  },
+  "wednesday": {
+    "breakfast": {
+      "recipeName": "Egg and Chive Jianbing (Crepes)",
+      "ingredients": [
+        {"name": "flour", "quantity": 100, "unit": "g"},
+        {"name": "eggs", "quantity": 2, "unit": "count"},
+        {"name": "chives", "quantity": 20, "unit": "g"},
+        {"name": "hoisin sauce", "quantity": 20, "unit": "ml"},
+        {"name": "crispy wonton crackers", "quantity": 20, "unit": "g"}
+      ],
+      "recipeDetails": "1. Make a thin batter. 2. Spread on a pan, crack an egg on top, and sprinkle chives. 3. Flip, spread hoisin, add crackers, and fold.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 380
+    },
+    "lunch": {
+      "recipeName": "Cold Noodles with Shredded Chicken and Tofu Skin",
+      "ingredients": [
+        {"name": "chicken breast", "quantity": 150, "unit": "g"},
+        {"name": "tofu skin strips", "quantity": 100, "unit": "g"},
+        {"name": "cucumber", "quantity": 1, "unit": "count"},
+        {"name": "peanut sauce", "quantity": 30, "unit": "ml"},
+        {"name": "garlic water", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Poach and shred chicken. 2. Blanch tofu skin. 3. Shred cucumber. 4. Toss noodles and ingredients with peanut sauce and garlic water.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 440
+    },
+    "dinner": {
+      "recipeName": "Beef and Broccoli Stir-fry",
+      "ingredients": [
+        {"name": "flank steak", "quantity": 300, "unit": "g"},
+        {"name": "broccoli", "quantity": 250, "unit": "g"},
+        {"name": "ginger", "quantity": 10, "unit": "g"},
+        {"name": "cornstarch", "quantity": 5, "unit": "g"},
+        {"name": "dark soy sauce", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Slice beef thinly and coat with cornstarch/soy. 2. Blanch broccoli. 3. Sear beef in hot oil. 4. Add broccoli and ginger, toss with sauce.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 410
+    }
+  },
+  "thursday": {
+    "breakfast": {
+      "recipeName": "Savory Egg and Scallion Congee",
+      "ingredients": [
+        {"name": "rice", "quantity": 100, "unit": "g"},
+        {"name": "century egg", "quantity": 1, "unit": "count"},
+        {"name": "ginger", "quantity": 5, "unit": "g"},
+        {"name": "lean pork strips", "quantity": 50, "unit": "g"},
+        {"name": "spring onions", "quantity": 10, "unit": "g"}
+      ],
+      "recipeDetails": "1. Boil rice in water until broken down into porridge. 2. Add ginger and pork. 3. Stir in chopped century egg and top with onions.",
+      "estimatedTime": 45,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 280
+    },
+    "lunch": {
+      "recipeName": "Tofu Skin and Pork Rib Soup",
+      "ingredients": [
+        {"name": "pork ribs", "quantity": 300, "unit": "g"},
+        {"name": "fresh tofu skin sheets", "quantity": 100, "unit": "g"},
+        {"name": "goji berries", "quantity": 5, "unit": "g"},
+        {"name": "ginger", "quantity": 15, "unit": "g"},
+        {"name": "daikon radish", "quantity": 150, "unit": "g"}
+      ],
+      "recipeDetails": "1. Blanch ribs. 2. Simmer ribs, ginger, and radish for 45 mins. 3. Add tofu skin and goji berries, simmer for 15 more mins.",
+      "estimatedTime": 65,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 460
+    },
+    "dinner": {
+      "recipeName": "Mapo Tofu with Minced Beef",
+      "ingredients": [
+        {"name": "soft tofu", "quantity": 400, "unit": "g"},
+        {"name": "minced beef", "quantity": 150, "unit": "g"},
+        {"name": "doubanjiang", "quantity": 30, "unit": "g"},
+        {"name": "sichuan pepper powder", "quantity": 2, "unit": "g"},
+        {"name": "leeks", "quantity": 20, "unit": "g"}
+      ],
+      "recipeDetails": "1. Sauté beef with doubanjiang. 2. Add cubed tofu and a little broth. 3. Simmer briefly. 4. Thicken with starch slurry and top with pepper.",
+      "estimatedTime": 25,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 390
+    }
+  },
+  "friday": {
+    "breakfast": {
+      "recipeName": "Tea Eggs and Steamed Buns",
+      "ingredients": [
+        {"name": "eggs", "quantity": 4, "unit": "count"},
+        {"name": "black tea leaves", "quantity": 10, "unit": "g"},
+        {"name": "five-spice powder", "quantity": 5, "unit": "g"},
+        {"name": "frozen mantou", "quantity": 4, "unit": "count"}
+      ],
+      "recipeDetails": "1. Soft boil eggs, crack shells. 2. Simmer in tea/spice liquid. 3. Steam mantou until fluffy. 4. Serve together.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 340
+    },
+    "lunch": {
+      "recipeName": "Braised Beef Wraps",
+      "ingredients": [
+        {"name": "remaining braised beef", "quantity": 150, "unit": "g"},
+        {"name": "chinese pancakes", "quantity": 4, "unit": "count"},
+        {"name": "cucumbers", "quantity": 1, "unit": "count"},
+        {"name": "sweet bean sauce", "quantity": 20, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Slice cold beef. 2. Warm pancakes. 3. Spread sauce, add beef and cucumber strips. 4. Roll tightly and slice.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 420
+    },
+    "dinner": {
+      "recipeName": "Steamed Fish Fillets with Ginger and Soy",
+      "ingredients": [
+        {"name": "white fish fillets", "quantity": 400, "unit": "g"},
+        {"name": "ginger", "quantity": 15, "unit": "g"},
+        {"name": "spring onions", "quantity": 20, "unit": "g"},
+        {"name": "seasoned soy sauce", "quantity": 30, "unit": "ml"},
+        {"name": "hot oil", "quantity": 15, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Place fish on ginger slices. 2. Steam for 8 mins. 3. Top with spring onions and soy sauce. 4. Pour sizzling hot oil over the aromatics.",
+      "estimatedTime": 20,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 290
+    }
+  },
+  "saturday": {
+    "breakfast": {
+      "recipeName": "Egg Drop Soup with Corn and Noodles",
+      "ingredients": [
+        {"name": "corn kernels", "quantity": 100, "unit": "g"},
+        {"name": "eggs", "quantity": 2, "unit": "count"},
+        {"name": "chicken stock", "quantity": 500, "unit": "ml"},
+        {"name": "thin wheat noodles", "quantity": 100, "unit": "g"}
+      ],
+      "recipeDetails": "1. Boil stock and corn. 2. Add noodles until cooked. 3. Slowly drizzle in beaten eggs while stirring. 4. Season and serve.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 310
+    },
+    "lunch": {
+      "recipeName": "Stir-fried Beef with Scallions (Cong Bao Rou)",
+      "ingredients": [
+        {"name": "beef slices", "quantity": 300, "unit": "g"},
+        {"name": "scallions", "quantity": 100, "unit": "g"},
+        {"name": "ginger", "quantity": 10, "unit": "g"},
+        {"name": "soy sauce", "quantity": 15, "unit": "ml"},
+        {"name": "shaoxing wine", "quantity": 10, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Marinate beef with wine and soy. 2. Stir-fry beef on high heat until browned. 3. Add large scallion sections and flash-fry until fragrant.",
+      "estimatedTime": 15,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 430
+    },
+    "dinner": {
+      "recipeName": "Home-style Mini Hot Pot",
+      "ingredients": [
+        {"name": "beef slices", "quantity": 200, "unit": "g"},
+        {"name": "tofu skin knots", "quantity": 100, "unit": "g"},
+        {"name": "leafy greens", "quantity": 200, "unit": "g"},
+        {"name": "mushrooms", "quantity": 100, "unit": "g"},
+        {"name": "hot pot soup base", "quantity": 50, "unit": "g"}
+      ],
+      "recipeDetails": "1. Boil water with soup base. 2. Prepare ingredients on plates. 3. Cook meat and vegetables in the simmering broth at the table.",
+      "estimatedTime": 30,
+      "servings": 2,
+      "difficulty": "easy",
+      "totalCalories": 550
+    }
+  },
+  "sunday": {
+    "breakfast": null,
+    "lunch": null,
+    "dinner": {
+      "recipeName": "High-Protein Beef and Tofu Skin Stir-fry with Eggs",
+      "ingredients": [
+        {"name": "flank steak", "quantity": 350, "unit": "g"},
+        {"name": "dry tofu skin", "quantity": 100, "unit": "g"},
+        {"name": "eggs", "quantity": 3, "unit": "count"},
+        {"name": "garlic", "quantity": 3, "unit": "cloves"},
+        {"name": "soy sauce", "quantity": 20, "unit": "ml"}
+      ],
+      "recipeDetails": "1. Rehydrate tofu skin and slice beef. 2. Scramble eggs and set aside. 3. Stir-fry beef with garlic until cooked through. 4. Add tofu skin and scrambled eggs, toss with soy sauce and serve.",
+      "estimatedTime": 25,
+      "servings": 2,
+      "difficulty": "medium",
+      "totalCalories": 560
+    }
+  }
+}
+    
+    Output Format:
+    {
+        "ingredients": [
+            {"name": "ingredient_name", "category": "predefined_category", "total_quantity": 0, "unit": "unit"},
+            ...
+        ]
+    }
+    
+    RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json blocks).
+     
+——————————————
+
+Calling Gemini API for shopping list generation...
+Shopping List Response: 
+ {
+"ingredients": [
+{"name": "Beef (Brisket, Flank, Slices, Minced)", "category": "proteins", "total_quantity": 4, "unit": "lbs"},
+{"name": "Pork (Loin, Ribs, Strips, Minced)", "category": "proteins", "total_quantity": 1.5, "unit": "lbs"},
+{"name": "Chicken Breast", "category": "proteins", "total_quantity": 1.25, "unit": "lbs"},
+{"name": "White Fish Fillets", "category": "proteins", "total_quantity": 1, "unit": "lbs"},
+{"name": "Tofu Skin (Sheets, Knots, Strips)", "category": "proteins", "total_quantity": 18, "unit": "oz"},
+{"name": "Soft Tofu", "category": "proteins", "total_quantity": 14, "unit": "oz"},
+{"name": "Eggs", "category": "proteins", "total_quantity": 17, "unit": "count"},
+{"name": "Century Egg", "category": "proteins", "total_quantity": 1, "unit": "count"},
+{"name": "Green Onions & Leeks", "category": "vegetables", "total_quantity": 3, "unit": "bunch"},
+{"name": "Ginger Root", "category": "vegetables", "total_quantity": 3, "unit": "count"},
+{"name": "Garlic", "category": "vegetables", "total_quantity": 2, "unit": "count"},
+{"name": "Bok Choy & Leafy Greens", "category": "vegetables", "total_quantity": 2, "unit": "count"},
+{"name": "Broccoli", "category": "vegetables", "total_quantity": 2, "unit": "count"},
+{"name": "Cucumber", "category": "vegetables", "total_quantity": 2, "unit": "count"},
+{"name": "Tomatoes", "category": "vegetables", "total_quantity": 2, "unit": "count"},
+{"name": "Bell Pepper", "category": "vegetables", "total_quantity": 1, "unit": "count"},
+{"name": "Zucchini", "category": "vegetables", "total_quantity": 1, "unit": "count"},
+{"name": "Daikon Radish", "category": "vegetables", "total_quantity": 1, "unit": "count"},
+{"name": "Mushrooms", "category": "vegetables", "total_quantity": 4, "unit": "oz"},
+{"name": "Corn Kernels", "category": "vegetables", "total_quantity": 4, "unit": "oz"},
+{"name": "Cilantro & Chives", "category": "vegetables", "total_quantity": 2, "unit": "bunch"},
+{"name": "Wheat Noodles (Thin & Wide)", "category": "grains", "total_quantity": 14, "unit": "oz"},
+{"name": "Jasmine Rice", "category": "grains", "total_quantity": 14, "unit": "oz"},
+{"name": "All-Purpose Flour", "category": "grains", "total_quantity": 4, "unit": "oz"},
+{"name": "Frozen Mantou (Steamed Buns)", "category": "grains", "total_quantity": 4, "unit": "count"},
+{"name": "Chinese Pancakes", "category": "grains", "total_quantity": 4, "unit": "count"},
+{"name": "Soy Sauce (Light, Dark, Seasoned)", "category": "oils_condiments", "total_quantity": 5, "unit": "oz"},
+{"name": "Asian Cooking Pastes (Doubanjiang, Hoisin, Oyster, Bean)", "category": "oils_condiments", "total_quantity": 5, "unit": "oz"},
+{"name": "Peanut Sauce", "category": "oils_condiments", "total_quantity": 1, "unit": "oz"},
+{"name": "Sesame & Vegetable Oil", "category": "oils_condiments", "total_quantity": 2, "unit": "oz"},
+{"name": "Chicken Stock", "category": "oils_condiments", "total_quantity": 17, "unit": "oz"},
+{"name": "Shaoxing Wine", "category": "oils_condiments", "total_quantity": 1, "unit": "oz"},
+{"name": "Hot Pot Soup Base", "category": "oils_condiments", "total_quantity": 2, "unit": "oz"},
+{"name": "Whole Spices (Star Anise, Peppercorns, Dried Chilies)", "category": "spices_seasonings", "total_quantity": 2, "unit": "oz"},
+{"name": "Ground Spices (Five-Spice, White Pepper, Sichuan Powder)", "category": "spices_seasonings", "total_quantity": 1, "unit": "oz"},
+{"name": "Black Tea Leaves", "category": "spices_seasonings", "total_quantity": 1, "unit": "oz"},
+{"name": "Roasted Peanuts", "category": "pantry_staples", "total_quantity": 2, "unit": "oz"},
+{"name": "Cornstarch", "category": "pantry_staples", "total_quantity": 1, "unit": "oz"},
+{"name": "Pickled Mustard Greens", "category": "pantry_staples", "total_quantity": 2, "unit": "oz"},
+{"name": "Goji Berries", "category": "pantry_staples", "total_quantity": 1, "unit": "oz"},
+{"name": "Crispy Wonton Crackers", "category": "others", "total_quantity": 1, "unit": "oz"}
+]
+} 
+——————————————
+
