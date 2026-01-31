@@ -184,42 +184,35 @@ const STORES = {
 
 ## Gemini API Data Formats
 
-### Request: Generate Plan
+> 详细的 prompt 和解析逻辑见 [API_PROMPTS.md](./API_PROMPTS.md)
+
+### Request: UserPreferences (JSON)
 
 ```json
-{
-  "preferred_keywords": ["chinese food", "healthy"],
-  "preferred_recipes/ingredients": ["eggs", "tofu"],
-  "dietary_restrictions": ["peanut"],
-  "budget": "100USD",
-  "num_people": 2,
-  "difficulty": "medium",
-  "cook_schedule": {
-    "monday": ["breakfast", "lunch", "dinner"],
-    "tuesday": ["breakfast", "dinner"],
-    "sunday": []
-  },
-  "others": ["nutritious"]
-}
+{"keywords":["chinese food","healthy"],"mustHaveItems":["eggs","tofu"],"dislikedItems":["peanuts"],"budget":100,"numPeople":2,"difficulty":"medium","cookSchedule":{"monday":{"breakfast":true,"lunch":true,"dinner":true},"tuesday":{"breakfast":false,"lunch":true,"dinner":true}}}
 ```
 
-### Response: Meal Plan Structure
+### Response: Meal Plan
 
 ```json
 {
   "monday": {
     "breakfast": {
-      "recipeName": "Scrambled Eggs with Tomato",
+      "id": "mon-breakfast-001",
+      "name": "Scrambled Eggs with Tomato",
       "ingredients": [
-        {"name": "eggs", "quantity": 2, "unit": "count", "category": "proteins"},
-        {"name": "tomato", "quantity": 100, "unit": "g", "category": "vegetables"}
+        {"name": "eggs", "quantity": 4, "unit": "count", "category": "proteins"},
+        {"name": "tomato", "quantity": 2, "unit": "count", "category": "vegetables"},
+        {"name": "vegetable oil", "quantity": 0, "unit": "", "category": "seasonings"}
       ],
-      "recipeDetails": "1. Beat eggs... 2. Stir fry tomato...",
+      "instructions": "1. Beat eggs... 2. Stir fry tomato...",
       "estimatedTime": 15,
       "servings": 2,
       "difficulty": "easy",
-      "totalCalories": 180
-    }
+      "totalCalories": 320
+    },
+    "lunch": null,
+    "dinner": {...}
   }
 }
 ```
@@ -228,11 +221,11 @@ const STORES = {
 
 ```json
 {
-  "ingredients": [
-    {"name": "Eggs", "category": "proteins", "total_quantity": 12, "unit": "count"},
-    {"name": "Soy Sauce", "category": "seasonings", "total_quantity": 0, "unit": ""}
+  "items": [
+    {"name": "Eggs", "category": "proteins", "totalQuantity": 12, "unit": "count"},
+    {"name": "Soy Sauce", "category": "seasonings", "totalQuantity": 0, "unit": ""}
   ]
 }
 ```
 
-**Note**: `seasonings` category may have empty `total_quantity` and `unit`.
+**Note**: `seasonings` 类别 `totalQuantity=0`, `unit=""`，不显示数量。

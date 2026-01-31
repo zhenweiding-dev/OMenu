@@ -44,6 +44,25 @@ User Preferences → AI Generates Weekly Plan → User Adjusts → Generate Shop
 | [Pages & Flows](./docs/PAGES_AND_FLOWS.md) | Page structure, user flows, interactions |
 | [UI Design](./docs/UI_DESIGN.md) | Colors, typography, icons, components |
 | [Tech Stack](./docs/TECH_STACK.md) | Framework choices, deployment, API integration |
+| [API Prompts](./docs/API_PROMPTS.md) | Gemini API prompt templates, data formats |
+
+## API Testing
+
+```bash
+# View prompts only (no API call)
+python test_prompts.py
+
+# View single test case prompt (0-4)
+python test_prompts.py 0
+
+# Call Gemini API and validate response
+python test_prompts.py api
+
+# Full flow: generate → modify → shopping list
+python test_prompts.py full
+```
+
+Test cases cover: full week, weekday only, weekend brunch, solo keto, family meals.
 
 ## Quick Start
 

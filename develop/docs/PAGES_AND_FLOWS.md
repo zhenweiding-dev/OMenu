@@ -301,7 +301,7 @@ Kid-Friendly, Family-Style, Comfort Food, Budget-Friendly, BBQ, Soul Food
 ```
 🧅 Onion, 🧄 Garlic, 🌿 Cilantro, 🥒 Cucumber, 🍄 Mushrooms,
 🫑 Bell Peppers, 🍆 Eggplant, 🥬 Brussels Sprouts, 🥦 Broccoli,
-🫒 Olives, 🌿 Celery, 🥬 Kale
+🫒 Olives, 🌿 Celery, 🥬 Kale, 🌶️ Jalapeño, 🥒 pickled cucumber
 ```
 
 **Meats:**
