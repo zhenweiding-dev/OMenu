@@ -1,0 +1,273 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Base Styles ===== */
+@layer base {
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+      'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-paper text-primary-text;
+    overscroll-behavior: none;
+  }
+
+  /* Prevent pull-to-refresh on mobile */
+  html, body {
+    overscroll-behavior-y: contain;
+  }
+
+  /* Safe area insets for mobile */
+  :root {
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+/* ===== Custom Utilities ===== */
+@layer utilities {
+  /* Safe area padding */
+  .safe-top {
+    padding-top: max(env(safe-area-inset-top), 14px);
+  }
+
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 28px);
+  }
+
+  /* Hide scrollbar but keep scroll functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Touch feedback */
+  .touch-feedback {
+    @apply active:scale-[0.98] transition-transform duration-100;
+  }
+}
+
+/* ===== Custom Animations ===== */
+@layer utilities {
+  /* Fade in animation */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 300ms ease-in-out;
+  }
+
+  /* Slide up animation (for modals) */
+  @keyframes slide-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 250ms ease-out;
+  }
+
+  /* Scale in animation (for tags) */
+  @keyframes scale-in {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-scale-in {
+    animation: scale-in 150ms ease-out;
+  }
+
+  /* Loading bar animation */
+  @keyframes loading-bar {
+    0% {
+      width: 0%;
+      margin-left: 0%;
+    }
+    50% {
+      width: 60%;
+      margin-left: 20%;
+    }
+    100% {
+      width: 0%;
+      margin-left: 100%;
+    }
+  }
+
+  .animate-loading-bar {
+    animation: loading-bar 1.5s ease-in-out infinite;
+  }
+
+  /* Pulse animation (for loading states) */
+  @keyframes gentle-pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+
+  .animate-gentle-pulse {
+    animation: gentle-pulse 2s ease-in-out infinite;
+  }
+
+  /* Checkmark draw animation */
+  @keyframes checkmark-draw {
+    0% {
+      stroke-dashoffset: 24;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .animate-checkmark {
+    stroke-dasharray: 24;
+    animation: checkmark-draw 300ms ease-out forwards;
+  }
+}
+
+/* ===== Typography Classes ===== */
+@layer components {
+  .text-h1 {
+    @apply text-[26px] leading-[1.2] font-semibold;
+  }
+
+  .text-h2 {
+    @apply text-[22px] leading-[1.2] font-semibold;
+  }
+
+  .text-h3 {
+    @apply text-[16px] leading-[1.2] font-semibold;
+  }
+
+  .text-body {
+    @apply text-[15px] leading-[1.5];
+  }
+
+  .text-body-small {
+    @apply text-[13px] leading-[1.5];
+  }
+
+  .text-caption {
+    @apply text-[12px] leading-[1.3];
+  }
+
+  .text-nav-label {
+    @apply text-[11px] leading-[1.3];
+  }
+
+  .text-section-label {
+    @apply text-[11px] leading-[1.3] tracking-[0.5px];
+  }
+}
+
+/* ===== Focus Styles ===== */
+@layer base {
+  /* Remove default focus outline */
+  *:focus {
+    outline: none;
+  }
+
+  /* Add custom focus ring for keyboard navigation */
+  *:focus-visible {
+    @apply ring-2 ring-accent ring-offset-2 ring-offset-paper;
+  }
+
+  /* Input focus styles */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply border-accent;
+  }
+}
+
+/* ===== Checkbox Styles ===== */
+@layer components {
+  .checkbox-custom {
+    @apply w-[22px] h-[22px] rounded border-[1.5px] border-disabled-text bg-transparent flex items-center justify-center transition-colors cursor-pointer;
+  }
+
+  .checkbox-custom.checked {
+    @apply bg-success border-success;
+  }
+}
+
+/* ===== Scrollbar Styles (Desktop) ===== */
+@layer base {
+  /* Custom scrollbar for desktop */
+  @media (min-width: 768px) {
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      @apply bg-transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      @apply bg-divider rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      @apply bg-tag-border;
+    }
+  }
+}
+
+/* ===== iOS-specific Fixes ===== */
+@supports (-webkit-touch-callout: none) {
+  /* Fix for iOS bottom safe area */
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 28px);
+  }
+
+  /* Fix for iOS input zoom */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+/* ===== Prevent Text Selection on Interactive Elements ===== */
+@layer base {
+  button,
+  [role="button"],
+  .tag,
+  .nav-item {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* ===== Print Styles ===== */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
