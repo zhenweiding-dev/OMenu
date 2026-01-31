@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMenu UI Demo v2</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #e8e4df;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .demo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .demo-label {
+      font-size: 14px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: #FAF9F7;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+      position: relative;
+      border: 8px solid #1a1a1a;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ===== Colors - Softer Palette ===== */
+    :root {
+      --paper: #FAF9F7;
+      --paper-dark: #F5F4F1;
+      --card: #FFFFFF;
+      --primary-text: #2C2C2C;
+      --secondary-text: #7A7A7A;
+      --disabled-text: #B5B5B5;
+      --accent: #8B9469;
+      --accent-light: #A8AD8B;
+      --success: #6B9B76;
+      --error: #C67B7B;
+      --tag-bg: transparent;
+      --tag-border: #D4D0C8;
+      --tag-selected-bg: #F0EBE3;
+      --tag-selected-border: #A68A64;
+      --divider: #EEEBE6;
+    }
+
+    /* ===== Header ===== */
+    .header {
+      padding: 60px 20px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--paper);
+    }
+
+    .header-title {
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--primary-text);
+      letter-spacing: -0.5px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--primary-text);
+      stroke-width: 1.8;
+      fill: none;
+    }
+
+    /* ===== Main Content ===== */
+    .main-content {
+      flex: 1;
+      padding: 0 20px;
+      overflow-y: auto;
+      padding-bottom: 100px;
+    }
+
+    /* ===== Meal Card ===== */
+    .meal-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--divider);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary-text);
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--secondary-text);
+      margin-top: 2px;
+    }
+
+    .meal-row {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .meal-row + .meal-row {
+      border-top: 1px solid var(--divider);
+    }
+
+    .meal-icon {
+      font-size: 16px;
+      margin-right: 10px;
+      width: 24px;
+    }
+
+    .meal-info {
+      flex: 1;
+    }
+
+    .meal-name {
+      font-size: 15px;
+      color: var(--primary-text);
+      margin-bottom: 2px;
+    }
+
+    .meal-meta {
+      font-size: 12px;
+      color: var(--secondary-text);
+    }
+
+    .meal-calories {
+      font-size: 13px;
+      color: var(--secondary-text);
+    }
+
+    /* ===== Bottom Navigation ===== */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--divider);
+      padding: 8px 0 28px;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 16px;
+    }
+
+    .nav-item svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 1.8;
+      fill: none;
+    }
+
+    .nav-item.active svg {
+      stroke: var(--accent);
+    }
+
+    .nav-item:not(.active) svg {
+      stroke: var(--disabled-text);
+    }
+
+    .nav-item span {
+      font-size: 11px;
+    }
+
+    .nav-item.active span {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .nav-item:not(.active) span {
+      color: var(--disabled-text);
+    }
+
+    /* ===== Empty State ===== */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .empty-icon {
+      width: 100px;
+      height: 100px;
+      background: var(--paper-dark);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      border: 1px solid var(--divider);
+    }
+
+    .empty-icon svg {
+      width: 48px;
+      height: 48px;
+      stroke: var(--accent);
+      stroke-width: 1.5;
+      fill: none;
+    }
+
+    .empty-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary-text);
+      margin-bottom: 8px;
+    }
+
+    .empty-subtitle {
+      font-size: 14px;
+      color: var(--secondary-text);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    /* ===== Buttons ===== */
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary-text);
+      border: 1px solid var(--primary-text);
+      border-radius: 8px;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* ===== Create Flow ===== */
+    .create-header {
+      padding: 60px 20px 20px;
+      background: var(--paper);
+    }
+
+    .create-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--primary-text);
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .create-subtitle {
+      font-size: 14px;
+      color: var(--secondary-text);
+    }
+
+    /* ===== Tags - Compact Style ===== */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 16px 20px;
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      color: var(--secondary-text);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 13px;
+      border: 1px solid var(--tag-border);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tag:hover {
+      border-color: var(--accent-light);
+      color: var(--primary-text);
+    }
+
+    .tag.selected {
+      background: var(--tag-selected-bg);
+      color: var(--accent);
+      border-color: var(--tag-selected-border);
+      font-weight: 500;
+    }
+
+    .tag-add {
+      background: transparent;
+      color: var(--secondary-text);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 13px;
+      border: 1px dashed var(--tag-border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tag-add svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--secondary-text);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    /* ===== Fixed Footer ===== */
+    .fixed-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--paper);
+      padding: 16px 20px 40px;
+      border-top: 1px solid var(--divider);
+    }
+
+    .fixed-footer .btn-primary {
+      width: 100%;
+    }
+
+    /* ===== Progress Dots ===== */
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 0 16px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--divider);
+    }
+
+    .dot.active {
+      background: var(--accent);
+      width: 18px;
+      border-radius: 3px;
+    }
+
+    .dot.completed {
+      background: var(--accent);
+    }
+
+    /* ===== Section Divider ===== */
+    .section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--secondary-text);
+      padding: 16px 20px 8px;
+      background: var(--paper);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Demo 1: Home Page with Meal Plan -->
+  <div class="demo-container">
+    <div class="demo-label">Home Page - With Meal Plan</div>
+    <div class="phone-frame">
+      <div class="screen">
+        <div class="header">
+          <div class="header-title">OMenu</div>
+          <div class="header-actions">
+            <button class="icon-btn">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <button class="icon-btn">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="main-content">
+          <div class="meal-card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Monday</div>
+                <div class="card-subtitle">Jan 27</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B5B5B5" stroke-width="1.8">
+                <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+
+            <div class="meal-row">
+              <div class="meal-icon">🌅</div>
+              <div class="meal-info">
+                <div class="meal-name">Avocado Toast with Eggs</div>
+                <div class="meal-meta">15 min · Easy</div>
+              </div>
+              <div class="meal-calories">320 cal</div>
+            </div>
+
+            <div class="meal-row">
+              <div class="meal-icon">☀️</div>
+              <div class="meal-info">
+                <div class="meal-name">Grilled Chicken Salad</div>
+                <div class="meal-meta">20 min · Easy</div>
+              </div>
+              <div class="meal-calories">450 cal</div>
+            </div>
+
+            <div class="meal-row">
+              <div class="meal-icon">🌙</div>
+              <div class="meal-info">
+                <div class="meal-name">Beef Stir-fry with Rice</div>
+                <div class="meal-meta">30 min · Medium</div>
+              </div>
+              <div class="meal-calories">580 cal</div>
+            </div>
+          </div>
+
+          <div class="meal-card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Tuesday</div>
+                <div class="card-subtitle">Jan 28</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B5B5B5" stroke-width="1.8">
+                <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+
+            <div class="meal-row">
+              <div class="meal-icon">🌅</div>
+              <div class="meal-info">
+                <div class="meal-name">Greek Yogurt Parfait</div>
+                <div class="meal-meta">5 min · Easy</div>
+              </div>
+              <div class="meal-calories">280 cal</div>
+            </div>
+
+            <div class="meal-row">
+              <div class="meal-icon">☀️</div>
+              <div class="meal-info">
+                <div class="meal-name">Turkey Club Sandwich</div>
+                <div class="meal-meta">10 min · Easy</div>
+              </div>
+              <div class="meal-calories">520 cal</div>
+            </div>
+
+            <div class="meal-row">
+              <div class="meal-icon">🌙</div>
+              <div class="meal-info">
+                <div class="meal-name">Salmon with Vegetables</div>
+                <div class="meal-meta">25 min · Medium</div>
+              </div>
+              <div class="meal-calories">490 cal</div>
+            </div>
+          </div>
+
+          <div class="meal-card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Wednesday</div>
+                <div class="card-subtitle">Jan 29</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B5B5B5" stroke-width="1.8">
+                <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+
+            <div class="meal-row">
+              <div class="meal-icon">🌅</div>
+              <div class="meal-info">
+                <div class="meal-name">Overnight Oats</div>
+                <div class="meal-meta">5 min · Easy</div>
+              </div>
+              <div class="meal-calories">310 cal</div>
+            </div>
+
+            <div class="meal-row">
+              <div class="meal-icon">☀️</div>
+              <div class="meal-info">
+                <div class="meal-name">Quinoa Buddha Bowl</div>
+                <div class="meal-meta">15 min · Easy</div>
+              </div>
+              <div class="meal-calories">420 cal</div>
+            </div>
+
+            <div class="meal-row">
+              <div class="meal-icon">🌙</div>
+              <div class="meal-info">
+                <div class="meal-name">Lemon Herb Chicken</div>
+                <div class="meal-meta">35 min · Medium</div>
+              </div>
+              <div class="meal-calories">510 cal</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-nav">
+          <button class="nav-item active">
+            <!-- Fork and knife -->
+            <svg viewBox="0 0 24 24">
+              <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="7" y1="2" x2="7" y2="22" stroke-linecap="round"/>
+              <path d="M21 15V2a5 5 0 00-5 5v6h4" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="18" y1="13" x2="18" y2="22" stroke-linecap="round"/>
+            </svg>
+            <span>Today</span>
+          </button>
+          <button class="nav-item">
+            <!-- Checklist -->
+            <svg viewBox="0 0 24 24">
+              <line x1="8" y1="6" x2="21" y2="6" stroke-linecap="round"/>
+              <line x1="8" y1="12" x2="21" y2="12" stroke-linecap="round"/>
+              <line x1="8" y1="18" x2="21" y2="18" stroke-linecap="round"/>
+              <polyline points="4 6 4.5 6.5 6 5" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="4 12 4.5 12.5 6 11" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="4 18 4.5 18.5 6 17" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>List</span>
+          </button>
+          <button class="nav-item">
+            <!-- Heart -->
+            <svg viewBox="0 0 24 24">
+              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Me</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demo 2: Keywords Selection -->
+  <div class="demo-container">
+    <div class="demo-label">Create Plan - Step 2: Keywords</div>
+    <div class="phone-frame">
+      <div class="screen">
+        <div class="create-header">
+          <div class="progress-dots">
+            <div class="dot completed"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="create-title">Choose some keywords for your meal plan</div>
+          <div class="create-subtitle">Select all that apply</div>
+        </div>
+
+        <div class="main-content" style="padding-bottom: 120px;">
+          <div class="section-label">Cooking Style</div>
+          <div class="tags-container">
+            <div class="tag selected">Quick</div>
+            <div class="tag">Easy</div>
+            <div class="tag">One-Pot</div>
+            <div class="tag">Sheet Pan</div>
+            <div class="tag">Slow Cooker</div>
+            <div class="tag">Instant Pot</div>
+            <div class="tag">Grilling</div>
+            <div class="tag">Meal Prep</div>
+            <div class="tag">Under 30 Min</div>
+            <div class="tag">Weeknight</div>
+          </div>
+
+          <div class="section-label">Diet & Health</div>
+          <div class="tags-container">
+            <div class="tag selected">Healthy</div>
+            <div class="tag">Vegetarian</div>
+            <div class="tag">Vegan</div>
+            <div class="tag">Dairy-Free</div>
+            <div class="tag">Gluten-Free</div>
+            <div class="tag selected">Low-Carb</div>
+            <div class="tag">Keto</div>
+            <div class="tag selected">High-Protein</div>
+            <div class="tag">Low-Sodium</div>
+            <div class="tag">Heart-Healthy</div>
+          </div>
+
+          <div class="section-label">Cuisine</div>
+          <div class="tags-container">
+            <div class="tag">American</div>
+            <div class="tag">Italian</div>
+            <div class="tag">Mexican</div>
+            <div class="tag selected">Chinese</div>
+            <div class="tag">Japanese</div>
+            <div class="tag">Thai</div>
+            <div class="tag">Indian</div>
+            <div class="tag">Korean</div>
+            <div class="tag">Vietnamese</div>
+            <div class="tag">Mediterranean</div>
+            <div class="tag">Greek</div>
+            <div class="tag">Southern</div>
+            <div class="tag">Cajun</div>
+            <div class="tag">Tex-Mex</div>
+          </div>
+
+          <div class="section-label">Other</div>
+          <div class="tags-container">
+            <div class="tag">Kid-Friendly</div>
+            <div class="tag">Family-Style</div>
+            <div class="tag">Comfort Food</div>
+            <div class="tag">Budget-Friendly</div>
+            <div class="tag">BBQ</div>
+            <div class="tag">Soul Food</div>
+            <div class="tag-add">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
+              </svg>
+              Add
+            </div>
+          </div>
+        </div>
+
+        <div class="fixed-footer">
+          <button class="btn-primary">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demo 3: Home Page Empty State -->
+  <div class="demo-container">
+    <div class="demo-label">Home Page - Empty State</div>
+    <div class="phone-frame">
+      <div class="screen">
+        <div class="header">
+          <div class="header-title">OMenu</div>
+          <div class="header-actions">
+            <button class="icon-btn">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="main-content">
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="16" rx="2" ry="2"/>
+                <line x1="7" y1="8" x2="17" y2="8"/>
+                <line x1="7" y1="12" x2="12" y2="12"/>
+                <line x1="7" y1="16" x2="15" y2="16"/>
+              </svg>
+            </div>
+            <div class="empty-title">No meal plan yet</div>
+            <div class="empty-subtitle">Create your first weekly meal plan<br>and let AI do the planning for you</div>
+            <button class="btn-primary">Create Meal Plan</button>
+          </div>
+        </div>
+
+        <div class="bottom-nav">
+          <button class="nav-item active">
+            <!-- Fork and knife -->
+            <svg viewBox="0 0 24 24">
+              <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="7" y1="2" x2="7" y2="22" stroke-linecap="round"/>
+              <path d="M21 15V2a5 5 0 00-5 5v6h4" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="18" y1="13" x2="18" y2="22" stroke-linecap="round"/>
+            </svg>
+            <span>Today</span>
+          </button>
+          <button class="nav-item">
+            <!-- Checklist -->
+            <svg viewBox="0 0 24 24">
+              <line x1="8" y1="6" x2="21" y2="6" stroke-linecap="round"/>
+              <line x1="8" y1="12" x2="21" y2="12" stroke-linecap="round"/>
+              <line x1="8" y1="18" x2="21" y2="18" stroke-linecap="round"/>
+              <polyline points="4 6 4.5 6.5 6 5" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="4 12 4.5 12.5 6 11" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="4 18 4.5 18.5 6 17" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>List</span>
+          </button>
+          <button class="nav-item">
+            <!-- Heart -->
+            <svg viewBox="0 0 24 24">
+              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Me</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

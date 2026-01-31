@@ -32,9 +32,9 @@ Present on: **Home, Shopping, My Page**
 
 | Tab | Icon | Route | Label |
 |-----|------|-------|-------|
-| Today | Home | `/` | Today |
-| Shopping | ShoppingCart | `/shopping` | Shopping |
-| Me | User | `/me` | Me |
+| Today | Fork & Knife | `/` | Today |
+| List | Checklist | `/shopping` | List |
+| Me | Heart | `/me` | Me |
 
 ### Home Page Header Actions
 
@@ -177,20 +177,43 @@ Present on: **Home, Shopping, My Page**
 
 **Display:**
 - Header: "Choose some keywords for your meal plan"
-- Background: Food imagery
-- Content: Colorful keyword tags (multi-select)
-- Footer: Custom input + "Add" button + "Next" button
+- Subheader: "Select all that apply"
+- Content: Tags grouped by category with section labels + "+" button at the end
+- Footer: "Next" button
 
-**Default Keywords:**
+**Tag Categories:**
+
+**Cooking Style:**
 ```
-Quick, Easy, Healthy, Vegetarian, Dairy-Free, Low-Carb, 
-High-Protein, Kid-Friendly, Chinese, Italian, Mexican, 
-Japanese, Indian, Thai, Budget-Friendly, Comfort Food
+Quick, Easy, One-Pot, Sheet Pan, Slow Cooker, Instant Pot, 
+Grilling, Meal Prep, Under 30 Min, Weeknight
 ```
+
+**Diet & Health:**
+```
+Healthy, Vegetarian, Vegan, Dairy-Free, Gluten-Free, Low-Carb, 
+Keto, High-Protein, Low-Sodium, Heart-Healthy
+```
+
+**Cuisine:**
+```
+American, Italian, Mexican, Chinese, Japanese, Thai, Indian, 
+Korean, Vietnamese, Mediterranean, Greek, Southern, Cajun, Tex-Mex
+```
+
+**Other:**
+```
+Kid-Friendly, Family-Style, Comfort Food, Budget-Friendly, BBQ, Soul Food
+```
+
+**Custom Input:**
+- "+" button appears as the last tag in the "Other" section
+- Tap "+" → Show inline text input (max 20 characters)
+- Submit → Add as selected tag, input closes
 
 **Interactions:**
 - Tap tag → Toggle selection (highlight color change)
-- Type custom + tap "Add" → Add as selected tag
+- Tap "+" → Open inline input for custom keyword
 - Tap "Next" → Save to draft, navigate to Step 3
 
 **Data Saved:** `draft.keywords: string[]`
@@ -201,18 +224,53 @@ Japanese, Indian, Thai, Budget-Friendly, Comfort Food
 
 **Display:**
 - Header: "Select something you must have"
-- Background: Food imagery
-- Content: Items with icons (multi-select)
-- Footer: Custom input + "Add" button + "Next" button
+- Subheader: "Select all that apply"
+- Content: Items grouped by category with section labels + "+" button at the end
+- Footer: "Next" button
 
-**Default Options (with icons):**
+**Item Categories:**
+
+**Proteins:**
 ```
-🥚 Eggs, 🍞 Bread, 🥛 Milk, 🧀 Cheese, 🍗 Chicken, 
-🐟 Fish, 🍚 Rice, 🍝 Pasta, 🫘 Beans, 🥜 Nuts,
-🥩 Beef, 🐷 Pork, 🦐 Shrimp, 🥦 Broccoli, 🍳 Tofu
+🥚 Eggs, 🥓 Bacon, 🍗 Chicken, 🦃 Turkey, 🥩 Beef, 🐷 Pork, 
+🍖 Steak, 🐟 Salmon, 🐟 Tuna, 🦐 Shrimp, 🍳 Tofu
 ```
 
-**Interactions:** Same as Step 2
+**Grains & Carbs:**
+```
+🍞 Bread, 🍚 Rice, 🍝 Pasta, 🥔 Potatoes, 🥣 Oatmeal, 🥞 Pancakes
+```
+
+**Dairy:**
+```
+🥛 Milk, 🧀 Cheese, 🥛 Yogurt, 🧈 Butter
+```
+
+**Vegetables:**
+```
+🥦 Broccoli, 🥕 Carrots, 🥗 Salad, 🌽 Corn, 🥑 Avocado
+```
+
+**Meal Types:**
+```
+🍕 Pizza, 🌮 Tacos, 🍔 Burgers, 🥪 Sandwiches, 🌯 Wraps, 
+🍜 Soup, 🍱 Bowls, 🥙 Pita
+```
+
+**Pantry:**
+```
+🫘 Beans, 🥜 Peanut Butter, 🥜 Nuts
+```
+
+**Custom Input:**
+- "+" button appears as the last item in the list
+- Tap "+" → Show inline text input (max 20 characters)
+- Submit → Add as selected item, input closes
+
+**Interactions:**
+- Tap item → Toggle selection
+- Tap "+" → Open inline input for custom item
+- Tap "Next" → Save to draft, navigate to Step 4
 
 **Data Saved:** `draft.mustHaveItems: string[]`
 
@@ -222,18 +280,59 @@ Japanese, Indian, Thai, Budget-Friendly, Comfort Food
 
 **Display:**
 - Header: "Select things you don't like"
-- Background: Icons of default items
-- Content: Items with icons (multi-select)
-- Footer: Custom input + "Add" button + "Next" button
+- Subheader: "Select all that apply"
+- Content: Items grouped by category with section labels + "+" button at the end
+- Footer: "Next" button
 
-**Default Options (with icons):**
+**Item Categories:**
+
+**Common Allergens:**
 ```
-🥜 Peanut, 🥒 Cucumber, 🧄 Garlic, 🦐 Seafood, 
-🌶️ Spicy, 🫚 Ginger, 🌿 Cilantro, 🍄 Mushroom,
-🧅 Onion, 🥛 Lactose, 🌾 Gluten, 🥚 Eggs
+🥜 Peanuts, 🌰 Tree Nuts, 🥛 Dairy/Lactose, 🌾 Gluten, 
+🥚 Eggs, 🦐 Shellfish, 🐟 Fish, 🌱 Soy
 ```
 
-**Interactions:** Same as Step 2
+**Seafood:**
+```
+🦑 Squid, 🐙 Octopus, 🦞 Lobster, 🦀 Crab
+```
+
+**Vegetables:**
+```
+🧅 Onion, 🧄 Garlic, 🌿 Cilantro, 🥒 Cucumber, 🍄 Mushrooms,
+🫑 Bell Peppers, 🍆 Eggplant, 🥬 Brussels Sprouts, 🥦 Broccoli,
+🫒 Olives, 🌿 Celery, 🥬 Kale
+```
+
+**Meats:**
+```
+🐷 Pork, 🥩 Red Meat, 🍖 Organ Meat, 🦴 Bone-in Meat
+```
+
+**Flavors & Textures:**
+```
+🌶️ Spicy Food, 🫚 Ginger, 🥥 Coconut, 🥗 Raw Vegetables
+```
+
+**Cooking Styles:**
+```
+🛢️ Fried Food, 🧈 Butter, 🥛 Heavy Cream, 🍺 Alcohol in Cooking
+```
+
+**Other:**
+```
+🧃 Artificial Sweeteners, 🧂 High Sodium
+```
+
+**Custom Input:**
+- "+" button appears as the last item in the list
+- Tap "+" → Show inline text input (max 20 characters)
+- Submit → Add as selected item, input closes
+
+**Interactions:**
+- Tap item → Toggle selection
+- Tap "+" → Open inline input for custom item
+- Tap "Next" → Save to draft, navigate to Step 5
 
 **Data Saved:** `draft.dislikedItems: string[]`
 
@@ -245,8 +344,8 @@ Japanese, Indian, Thai, Budget-Friendly, Comfort Food
 - Header: "The meal plan is for [n] people with $[X] budget and [difficulty] to cook"
 - Content:
   - People: Number with -/+ buttons (1-10)
-  - Budget: Scrollable slider ($50-$500, step $10)
-  - Difficulty: 3-option selector (Easy/Medium/Hard)
+  - Budget: Vertical scrollable picker ($50-$500, step $10)
+  - Difficulty: Vertical scrollable picker (Easy / Medium / Hard)
 - Footer: "Next" button
 
 **Defaults:**
@@ -254,10 +353,21 @@ Japanese, Indian, Thai, Budget-Friendly, Comfort Food
 - Budget: $100
 - Difficulty: Medium
 
+**Picker Style:**
+All three use similar vertical scroll/swipe picker UI:
+```
+       ┌─────────┐
+       │   $90   │  ← dimmed
+       │  $100   │  ← selected (highlighted)
+       │  $110   │  ← dimmed
+       └─────────┘
+```
+
 **Interactions:**
-- Tap -/+ → Adjust people count
-- Drag slider → Adjust budget
-- Tap difficulty option → Select
+- Tap -/+ → Adjust people count (1-10 range)
+- Swipe up/down on Budget picker → Change budget value
+- Swipe up/down on Difficulty picker → Change difficulty level
+- Tap "Next" → Save to draft, navigate to Step 6
 
 **Data Saved:** `draft.numPeople`, `draft.budget`, `draft.difficulty`
 
@@ -267,24 +377,41 @@ Japanese, Indian, Thai, Budget-Friendly, Comfort Food
 
 **Display:**
 - Header: "Choose meals to plan"
+- Subheader hint: "Select at least one meal to continue"
 - Content: 7×3 grid (days × meals)
-- Footer: "Generate Plan" button
+- Footer: "Generate Plan" button (disabled until at least 1 meal selected)
 
 **Grid Layout:**
 ```
-           Breakfast  Lunch  Dinner
-Monday        [ ]      [ ]     [ ]
-Tuesday       [ ]      [ ]     [ ]
-Wednesday     [ ]      [ ]     [ ]
-Thursday      [ ]      [ ]     [ ]
-Friday        [ ]      [ ]     [ ]
-Saturday      [ ]      [ ]     [ ]
-Sunday        [ ]      [ ]     [ ]
+              Breakfast  Lunch  Dinner
+Monday           [ ]      [ ]     [ ]
+  Jan 27
+Tuesday          [ ]      [ ]     [ ]
+  Jan 28
+Wednesday        [ ]      [ ]     [ ]
+  Jan 29
+Thursday         [ ]      [ ]     [ ]
+  Jan 30
+Friday           [ ]      [ ]     [ ]
+  Jan 31
+Saturday         [ ]      [ ]     [ ]
+  Feb 1
+Sunday           [ ]      [ ]     [ ]
+  Feb 2
 ```
+
+- Day name in regular weight
+- Date (e.g., "Jan 27") in smaller, lighter text below day name
+- Dates are calculated from the upcoming Monday
+
+**Validation:**
+- At least 1 meal must be selected
+- "Generate Plan" button disabled (grayed out) if no meals selected
+- Show hint text when nothing selected: "Select at least one meal to continue"
 
 **Interactions:**
 - Tap cell → Toggle selection (unselected ↔ selected with color)
-- Tap "Generate Plan" → Save draft, call Gemini API, navigate to Step 7
+- Tap "Generate Plan" (when enabled) → Save draft, call Gemini API, navigate to Step 7
 
 **Data Saved:** `draft.cookSchedule: CookSchedule`
 
@@ -296,15 +423,16 @@ Sunday        [ ]      [ ]     [ ]
 - Animated chef cooking different foods (center)
 - Text: "Generating your meal plan..."
 - Secondary button: "Go to Home" (bottom)
+- Subtext under button: "Don't worry, we'll keep working on it in the background"
 
 **Behavior:**
 - API call runs in background
 - On success → Navigate to Step 8 (Plan Overview)
 - On error after 30s → Show error message + "Go to Home" button
-- User taps "Go to Home" → Return to Home, generation continues in background
+- User taps "Go to Home" → Show confirmation toast: "Your meal plan will be ready when you come back!" → Return to Home, generation continues in background
 
 **Error Message:**
-"It's taking longer than usual. We're working on it. You can go back and check later."
+"It's taking longer than usual. We're working on it. You can go back and we'll have it ready for you soon."
 
 ---
 
@@ -337,9 +465,17 @@ Sunday        [ ]      [ ]     [ ]
 - "Chat to Modify" → Open chat input for modification requests
 - "Generate Shopping List" → Navigate to Step 10
 
+**Chat to Modify:**
+- Opens text input field at bottom of screen
+- Character limit: 200 characters
+- Placeholder: "Tell us what to change..."
+- Show character count: "0/200"
+- Send button disabled when empty or over limit
+- On submit → Send to Gemini, return to Step 7 for regeneration
+
 **Interactions:**
 - Tap any meal row → Open Recipe Detail modal (Step 9)
-- Tap "Chat to Modify" → Show input field, send to Gemini, return to Step 7 for regeneration
+- Tap "Chat to Modify" → Show input field with 200 char limit
 - Tap "Generate Shopping List" → Navigate to Step 10
 
 ---
@@ -430,19 +566,35 @@ localStorage.setItem('omenu_meal_plan_draft', JSON.stringify({
 
 ### Resume Logic
 
-On app open or navigate to `/create`:
+**Important:** User always lands on Home page when opening the app, NOT directly into the create flow.
+
+Resume only happens when user navigates to `/create`:
 
 ```typescript
+// On navigate to /create
 const draft = localStorage.getItem('omenu_meal_plan_draft');
 if (draft) {
   const parsed = JSON.parse(draft);
-  // Navigate to parsed.currentStep with pre-filled data
+  // Show resume prompt: "Continue where you left off?"
+  // If yes → Navigate to parsed.currentStep with pre-filled data
+  // If no → Clear draft and start fresh from Step 1
 }
+```
+
+**Resume Prompt UI:**
+```
+┌─────────────────────────────────┐
+│  You have an unfinished plan   │
+│                                 │
+│  Continue where you left off?   │
+│                                 │
+│  [Start Fresh]  [Continue]      │
+└─────────────────────────────────┘
 ```
 
 ### Clear Draft
 
-After successful plan generation:
+After successful plan generation (Step 8 loads):
 
 ```typescript
 localStorage.removeItem('omenu_meal_plan_draft');
@@ -470,7 +622,13 @@ When user leaves Step 7 (Loading) to go Home:
 
 | Scenario | User Feedback | Action |
 |----------|---------------|--------|
-| API timeout (>30s) | "Taking longer than usual..." | Show "Go Home" button |
+| API timeout (>30s) | "Taking longer than usual. We'll keep trying in the background." | Show "Go Home" button |
+| User taps "Go Home" during timeout | Toast: "We'll notify you when it's ready!" | Continue retry in background |
 | API error | "Something went wrong" | Show "Try Again" button |
 | Invalid response | "Couldn't understand the response" | Show "Try Again" button |
 | Network offline | "No internet connection" | Show retry when back online |
+
+**Background Retry Logic:**
+- On timeout, if user goes home, system continues retrying up to 3 times
+- On eventual success → Save plan, update status to 'ready'
+- On eventual failure → Save status as 'error', show error on next Home visit
