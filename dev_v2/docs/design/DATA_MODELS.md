@@ -186,7 +186,7 @@ class UserPreferences(BaseModel):
     mustHaveItems: List[str] = []
     dislikedItems: List[str] = []
     numPeople: int = Field(ge=1, le=10, default=2)
-    budget: int = Field(ge=10, le=1000, default=100)
+    budget: int = Field(ge=50, le=500, default=100)
     difficulty: Difficulty = Difficulty.medium
     cookSchedule: CookSchedule
 ```
@@ -297,6 +297,29 @@ class ShoppingList(BaseModel):
 
 ---
 
+### Menu Book (Frontend Only)
+
+A MenuBook represents a complete weekly package containing both the meal plan and its corresponding shopping list. Each MenuBook has a one-to-one relationship with a ShoppingList.
+
+**TypeScript**
+```typescript
+interface MenuBook {
+  id: string;                          // Unique identifier for the week
+  weekStartDate: string;               // ISO 8601 date (Monday)
+  weekEndDate: string;                 // ISO 8601 date (Sunday)
+  mealPlan: MealPlan;                  // Weekly meal plan
+  shoppingList: ShoppingList | null;   // Corresponding shopping list (null if not yet generated)
+  createdAt: string;                   // ISO 8601 timestamp
+}
+```
+
+**Relationship:**
+- One MenuBook = One Week = One MealPlan + One ShoppingList
+- When viewing Shopping Page, it displays the shopping list for the currently selected MenuBook
+- When meal plan is modified, the shopping list should be regenerated
+
+---
+
 ### Meal Plan Draft (Frontend Only)
 
 Stores intermediate state during plan creation for resume capability.
@@ -304,7 +327,7 @@ Stores intermediate state during plan creation for resume capability.
 **TypeScript**
 ```typescript
 interface MealPlanDraft {
-  currentStep: number;                 // Steps 1-7
+  currentStep: number;                 // Steps 1-8
   keywords: string[];
   mustHaveItems: string[];
   dislikedItems: string[];
@@ -421,7 +444,7 @@ All generated data is returned from the backend API. The MVP does not persist da
 | Field | Validation |
 |-------|------------|
 | `numPeople` | Integer, 1-10 |
-| `budget` | Integer, 10-1000 (USD) |
+| `budget` | Integer, 50-500 (USD), step $10 |
 | `difficulty` | Enum: easy, medium, hard |
 | `cookSchedule` | At least one meal selected |
 
@@ -436,7 +459,18 @@ All generated data is returned from the backend API. The MVP does not persist da
 
 | Field | Validation |
 |-------|------------|
-| `id` | Format: `{day}-{meal}-{number}` |
+| `id` | Format: `{day}-{meal}-{number}` (e.g., `mon-breakfast-001`) |
 | `estimatedTime` | Integer, > 0 |
 | `servings` | Integer, > 0 |
 | `totalCalories` | Integer, >= 0 |
+
+---
+
+## ID Format Conventions
+
+| Entity | Prefix | Example |
+|--------|--------|---------|
+| Meal Plan | `mp_` | `mp_abc123` |
+| Shopping List | `sl_` | `sl_xyz789` |
+| Shopping Item | `item_` | `item_001` |
+| Recipe | `{day}-{meal}-{number}` | `mon-breakfast-001` |

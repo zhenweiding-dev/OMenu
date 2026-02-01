@@ -4,6 +4,15 @@ This document describes the Python FastAPI backend architecture for OMenu.
 
 ---
 
+## MVP Architecture Note
+
+> **Stateless Backend**: For MVP, the backend is a pure AI generation service with no database.
+> - All data persistence is handled by the frontend (IndexedDB)
+> - Backend receives generation requests, calls Gemini API, returns structured data
+> - No user accounts, no server-side storage
+
+---
+
 ## Technology Stack
 
 | Technology | Version | Purpose |
@@ -92,7 +101,8 @@ app.include_router(shopping.router, prefix="/api/shopping-lists", tags=["Shoppin
 async def health_check():
     return {
         "status": "ok",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "timestamp": datetime.utcnow().isoformat()
     }
 ```
 
@@ -117,7 +127,7 @@ settings = Settings()
 
 ```python
 from pydantic import BaseModel, Field
-from typing import Optional, List, Literal
+from typing import Optional, List
 from datetime import datetime
 from enum import Enum
 
@@ -137,6 +147,11 @@ class IngredientCategory(str, Enum):
     seasonings = "seasonings"
     pantry_staples = "pantry_staples"
     others = "others"
+
+class MealPlanStatus(str, Enum):
+    generating = "generating"
+    ready = "ready"
+    error = "error"
 
 # ===== Meal Schedule =====
 
@@ -161,7 +176,7 @@ class UserPreferences(BaseModel):
     mustHaveItems: List[str] = []
     dislikedItems: List[str] = []
     numPeople: int = Field(ge=1, le=10, default=2)
-    budget: int = Field(ge=10, le=1000, default=100)
+    budget: int = Field(ge=50, le=500, default=100)  # USD, step $10
     difficulty: Difficulty = Difficulty.medium
     cookSchedule: CookSchedule
 
@@ -176,11 +191,11 @@ class Ingredient(BaseModel):
 # ===== Recipe =====
 
 class Recipe(BaseModel):
-    id: str
+    id: str  # Format: {day}-{meal}-{number}, e.g., "mon-breakfast-001"
     name: str
     ingredients: List[Ingredient]
     instructions: str
-    estimatedTime: int
+    estimatedTime: int  # Minutes
     servings: int
     difficulty: Difficulty
     totalCalories: int
@@ -206,13 +221,8 @@ class WeekDays(BaseModel):
 
 # ===== Meal Plan =====
 
-class MealPlanStatus(str, Enum):
-    generating = "generating"
-    ready = "ready"
-    error = "error"
-
 class MealPlan(BaseModel):
-    id: str
+    id: str  # Prefix: "mp_"
     createdAt: datetime
     status: MealPlanStatus
     preferences: UserPreferences
@@ -221,15 +231,16 @@ class MealPlan(BaseModel):
 # ===== Shopping List =====
 
 class ShoppingItem(BaseModel):
-    id: str
+    id: str  # Prefix: "item_"
     name: str
     category: IngredientCategory
-    totalQuantity: float
-    unit: str
+    totalQuantity: float  # 0 for seasonings (not displayed in UI)
+    unit: str  # Empty string for seasonings
     purchased: bool = False
+    isManuallyAdded: Optional[bool] = None
 
 class ShoppingList(BaseModel):
-    id: str
+    id: str  # Prefix: "sl_"
     mealPlanId: str
     createdAt: datetime
     items: List[ShoppingItem]
@@ -242,7 +253,7 @@ class GenerateMealPlanRequest(BaseModel):
     mustHaveItems: List[str] = []
     dislikedItems: List[str] = []
     numPeople: int = Field(ge=1, le=10, default=2)
-    budget: int = Field(ge=10, le=1000, default=100)
+    budget: int = Field(ge=50, le=500, default=100)  # USD, step $10
     difficulty: Difficulty = Difficulty.medium
     cookSchedule: CookSchedule
 
@@ -280,6 +291,16 @@ import re
 genai.configure(api_key=settings.gemini_api_key)
 
 
+class GeminiError(Exception):
+    """Raised when Gemini API returns an error."""
+    pass
+
+
+class ParseError(Exception):
+    """Raised when response parsing fails."""
+    pass
+
+
 class GeminiService:
     def __init__(self):
         self.model = genai.GenerativeModel('gemini-1.5-flash')
@@ -303,7 +324,6 @@ class GeminiService:
     def _extract_text_from_response(self, response) -> str:
         """
         Extract text content from Gemini API response.
-        Based on original prompt_simple.py implementation.
         """
         try:
             if hasattr(response, 'candidates') and response.candidates:
@@ -326,32 +346,20 @@ class GeminiService:
         if not text:
             raise ParseError("Empty response from Gemini")
         
-        # Remove markdown code blocks
+        # Remove markdown code blocks if present
         cleaned = text.strip()
-        cleaned = re.sub(r'^```json\s*\n?', '', cleaned, flags=re.IGNORECASE)
-        cleaned = re.sub(r'^```\s*\n?', '', cleaned)
-        cleaned = re.sub(r'\n?```\s*$', '', cleaned)
+        if cleaned.startswith("```json"):
+            cleaned = cleaned[7:]
+        elif cleaned.startswith("```"):
+            cleaned = cleaned[3:]
+        if cleaned.endswith("```"):
+            cleaned = cleaned[:-3]
         cleaned = cleaned.strip()
-        
-        # Extract JSON object
-        match = re.search(r'\{[\s\S]*\}', cleaned)
-        if match:
-            cleaned = match.group(0)
         
         try:
             return json.loads(cleaned)
         except json.JSONDecodeError as e:
             raise ParseError(f"Failed to parse JSON: {str(e)}")
-
-
-class GeminiError(Exception):
-    """Raised when Gemini API call fails."""
-    pass
-
-
-class ParseError(Exception):
-    """Raised when response parsing fails."""
-    pass
 
 
 # Singleton instance
@@ -361,114 +369,140 @@ gemini_service = GeminiService()
 ### services/prompts.py
 
 ```python
-"""
-Prompt templates for Gemini API.
-Based on original prompt_simple.py - uses two-step generation for meal plans.
-"""
+from app.models.schemas import MealPlan, UserPreferences, CookSchedule
 
-# ===== Schema Templates =====
 
-meal_plan_structure = """{
-    "monday": {
-        "breakfast": {
-            "id": "mon-breakfast-001",
-            "name": "Scrambled Eggs with Tomato",
-            "ingredients": [
-                {"name": "eggs", "quantity": 2, "unit": "count", "category": "proteins"},
-                {"name": "tomato", "quantity": 100, "unit": "g", "category": "vegetables"},
-                {"name": "oil", "quantity": 15, "unit": "ml", "category": "seasonings"}
-            ],
-            "instructions": "1. Beat eggs... 2. Stir fry tomato... 3. Mix together...",
-            "estimatedTime": 15,
-            "servings": 2,
-            "difficulty": "easy",
-            "totalCalories": 180
-        },
-        "lunch": { ... },
-        "dinner": { ... }
-    },
-    "tuesday": { ... },
+def meal_plan_prompt(preferences: UserPreferences) -> str:
+    """
+    Generate prompt for natural language meal plan (Step 1 of 2-step process).
+    """
+    schedule_str = _format_cook_schedule(preferences.cookSchedule)
+    
+    return f"""You are a professional meal planner. Create a weekly meal plan based on these preferences:
+
+**Preferences:**
+- Keywords/Style: {', '.join(preferences.keywords) if preferences.keywords else 'Any'}
+- Must include: {', '.join(preferences.mustHaveItems) if preferences.mustHaveItems else 'None specified'}
+- Avoid: {', '.join(preferences.dislikedItems) if preferences.dislikedItems else 'None'}
+- Number of people: {preferences.numPeople}
+- Weekly budget: ${preferences.budget} USD
+- Difficulty level: {preferences.difficulty.value}
+
+**Schedule (meals to plan):**
+{schedule_str}
+
+Please create a detailed meal plan. For each scheduled meal, include:
+1. Recipe name
+2. Ingredients with quantities
+3. Brief cooking instructions
+4. Estimated cooking time
+5. Estimated calories per serving
+
+Format your response as a clear, organized meal plan."""
+
+
+def structured_plan_prompt(natural_plan: str, preferences: UserPreferences) -> str:
+    """
+    Generate prompt to convert natural language plan to structured JSON (Step 2 of 2-step process).
+    """
+    return f"""Convert this meal plan into the exact JSON structure below.
+
+**Natural Language Meal Plan:**
+{natural_plan}
+
+**Required JSON Structure:**
+{{
+  "monday": {{
+    "breakfast": {{ "id": "mon-breakfast-001", "name": "...", "ingredients": [...], "instructions": "...", "estimatedTime": 15, "servings": {preferences.numPeople}, "difficulty": "easy|medium|hard", "totalCalories": 350 }} | null,
+    "lunch": {{ ... }} | null,
+    "dinner": {{ ... }} | null
+  }},
+  "tuesday": {{ ... }},
+  ...
+  "sunday": {{ ... }}
+}}
+
+**Ingredient Structure:**
+{{ "name": "eggs", "quantity": 4, "unit": "count", "category": "proteins|vegetables|fruits|grains|dairy|seasonings|pantry_staples|others" }}
+
+**Rules:**
+- Use null for meals not in the schedule
+- Seasonings (oils, sauces, spices) have quantity: 0, unit: ""
+- ID format: {{day}}-{{meal}}-{{number}} (e.g., "mon-breakfast-001")
+- Instructions as single string with numbered steps
+
+RETURN ONLY THE RAW JSON OBJECT. No markdown, no explanation."""
+
+
+def modification_prompt(modification: str, current_plan: str, preferences: str) -> str:
+    """
+    Generate prompt for modifying an existing meal plan.
+    """
+    return f"""Modify this meal plan based on the user's request.
+
+**User Request:**
+{modification}
+
+**Current Preferences:**
+{preferences}
+
+**Current Plan:**
+{current_plan}
+
+Apply the user's requested changes while maintaining the same JSON structure.
+Only change what's necessary to fulfill the request.
+
+RETURN ONLY THE MODIFIED JSON OBJECT. No markdown, no explanation."""
+
+
+def shopping_list_prompt(meal_plan: MealPlan) -> str:
+    """
+    Generate prompt for shopping list generation.
+    """
+    plan_json = meal_plan.model_dump_json(indent=2)
+    
+    return f"""Generate a consolidated shopping list from this meal plan.
+
+**Meal Plan:**
+{plan_json}
+
+**Required JSON Structure:**
+{{
+  "items": [
+    {{ "name": "Chicken Breast", "category": "proteins", "totalQuantity": 2, "unit": "lbs" }},
+    {{ "name": "Soy Sauce", "category": "seasonings", "totalQuantity": 0, "unit": "" }},
     ...
-}"""
+  ]
+}}
+
+**Rules:**
+- Combine same ingredients across meals (sum quantities)
+- Valid categories: proteins, vegetables, fruits, grains, dairy, seasonings, pantry_staples, others
+- Seasonings: totalQuantity = 0, unit = "" (quantity not displayed in UI)
+- Round quantities to practical shopping amounts
+
+RETURN ONLY THE RAW JSON OBJECT. No markdown, no explanation."""
 
 
-def meal_plan_prompt(user_preferences: str) -> str:
-    """
-    Step 1: Generate natural language meal plan.
-    Keep prompt simple - let model be creative.
-    """
-    return f"""
-    Task: Based on the user's preferences, generate a personalized meal plan in JSON format, every meal should include recipeName, ingredients and brief description.
-    User Preferences: {user_preferences}
-    """
-
-
-def generate_structured_plan_prompt(extracted_plan: str) -> str:
-    """
-    Step 2: Convert natural language plan to structured JSON.
-    """
-    return f"""
-    Task: Convert the following meal plan into a structured JSON format according to the schema.
+def _format_cook_schedule(schedule: CookSchedule) -> str:
+    """Format cook schedule as readable string."""
+    days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    lines = []
     
-    Meal Plan: {extracted_plan}
+    for day in days:
+        day_schedule = getattr(schedule, day)
+        meals = []
+        if day_schedule.breakfast:
+            meals.append("breakfast")
+        if day_schedule.lunch:
+            meals.append("lunch")
+        if day_schedule.dinner:
+            meals.append("dinner")
+        
+        if meals:
+            lines.append(f"- {day.capitalize()}: {', '.join(meals)}")
     
-    Output Schema:
-    {meal_plan_structure}
-    
-    RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json blocks).
-    """
-
-
-def user_manipulation_prompt(
-    user_input: str,
-    user_preferences: str,
-    previous_plan: str
-) -> str:
-    """
-    Modify existing plan based on user request.
-    """
-    return f"""
-    Task: based on user's new input, previous preferences and meal plan, adjust the meal plan accordingly. DO NOT change the format of the meal plan.
-    Return exactly the same format as previous meal plan. Do minimal changes to accommodate user's new input.
-
-    User's new input: {user_input}
-    Previous user preferences: {user_preferences}
-    Previous meal plan: {previous_plan}
-    """
-
-
-def generate_shopping_list_prompt(structured_plan: str) -> str:
-    """
-    Generate consolidated shopping list from meal plan.
-    """
-    return f"""
-    Task: Convert the Meal Plan into a consolidated North American shopping list (JSON).
-    
-    CRITICAL RULES:
-    1. **MERGE AGGRESSIVELY**: Combine interchangeable ingredients into broad categories.
-       - (e.g., "Beef strips" + "Flank steak" -> "Beef (Stir-fry cut)")
-       - (e.g., "Scallions" + "Green onions" -> "Green Onions")
-    
-    2. **UNITS (North America)**:
-       - **Meat/Bulk**: MUST use 'lbs' or 'oz'. (No grams).
-       - **Produce**: MUST use 'count' or 'bunch'. (No 'stalks', 'slices').
-
-    "predefinedCategories": [
-        "proteins", "vegetables", "fruits", "grains", "dairy", "seasonings", "pantry_staples", "others"
-    ],
-    
-    Meal Plan: {structured_plan}
-    
-    Output Format:
-    {{
-        "items": [
-            {{"name": "ingredient_name", "category": "predefined_category", "totalQuantity": 0, "unit": "unit"}},
-            ...
-        ]
-    }}
-    
-    RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json blocks).
-    """
+    return '\n'.join(lines) if lines else "- No meals scheduled"
 ```
 
 ### routers/meal_plans.py
@@ -477,7 +511,6 @@ def generate_shopping_list_prompt(structured_plan: str) -> str:
 from fastapi import APIRouter, HTTPException
 from datetime import datetime
 import uuid
-import json
 
 from app.models.schemas import (
     GenerateMealPlanRequest,
@@ -485,78 +518,58 @@ from app.models.schemas import (
     MealPlan,
     MealPlanStatus,
     WeekDays,
+    UserPreferences
 )
 from app.services.gemini import gemini_service, GeminiError, ParseError
-from app.services.prompts import (
-    meal_plan_prompt,
-    generate_structured_plan_prompt,
-    user_manipulation_prompt,
-)
+from app.services.prompts import meal_plan_prompt, structured_plan_prompt, modification_prompt
 from app.utils.validators import validate_meal_plan
 
 router = APIRouter()
 
 
-def convert_schedule_to_array_format(cook_schedule: dict) -> dict:
-    """
-    Convert boolean schedule format to array format for Gemini prompt.
-    
-    Input:  {"monday": {"breakfast": True, "lunch": True, "dinner": False}}
-    Output: {"monday": ["breakfast", "lunch"]}
-    """
-    result = {}
-    for day, meals in cook_schedule.items():
-        selected = [meal for meal, enabled in meals.items() if enabled]
-        result[day] = selected
-    return result
-
-
 @router.post("/generate", response_model=MealPlan)
 async def generate_meal_plan(request: GenerateMealPlanRequest):
     """
-    Generate a new meal plan using two-step process:
-    1. Generate natural language meal plan
-    2. Convert to structured JSON
+    Generate a new meal plan using two-step Gemini API process.
+    Step 1: Generate natural language plan
+    Step 2: Convert to structured JSON
     """
     try:
-        # Build preferences for prompt (convert schedule to array format)
-        preferences_dict = {
-            "keywords": request.keywords,
-            "mustHaveItems": request.mustHaveItems,
-            "dislikedItems": request.dislikedItems,
-            "budget": request.budget,
-            "numPeople": request.numPeople,
-            "difficulty": request.difficulty,
-            "cookSchedule": convert_schedule_to_array_format(
-                request.cookSchedule.model_dump()
-            ),
-        }
-        preferences_str = json.dumps(preferences_dict, ensure_ascii=False, indent=2)
+        # Build preferences object
+        preferences = UserPreferences(
+            keywords=request.keywords,
+            mustHaveItems=request.mustHaveItems,
+            dislikedItems=request.dislikedItems,
+            numPeople=request.numPeople,
+            budget=request.budget,
+            difficulty=request.difficulty,
+            cookSchedule=request.cookSchedule
+        )
         
-        # Step 1: Generate natural language meal plan
-        step1_prompt = meal_plan_prompt(preferences_str)
-        natural_plan = await gemini_service.generate(step1_prompt)
+        # Step 1: Generate natural language plan
+        natural_prompt = meal_plan_prompt(preferences)
+        natural_plan = await gemini_service.generate(natural_prompt)
         
         if not natural_plan:
-            raise HTTPException(status_code=500, detail="Empty response from meal plan generation")
+            raise GeminiError("Empty response from Gemini (Step 1)")
         
         # Step 2: Convert to structured JSON
-        step2_prompt = generate_structured_plan_prompt(natural_plan)
-        structured_response = await gemini_service.generate(step2_prompt)
+        structure_prompt = structured_plan_prompt(natural_plan, preferences)
+        structured_response = await gemini_service.generate(structure_prompt)
         
-        # Parse structured response
+        # Parse JSON response
         days_data = gemini_service.parse_json_response(structured_response)
+        
+        # Extract days if nested in full plan structure
+        if "days" in days_data:
+            days_data = days_data["days"]
         
         # Validate structure
         if not validate_meal_plan(days_data):
-            raise HTTPException(status_code=500, detail="Invalid meal plan structure from AI")
+            raise ParseError("Invalid meal plan structure from AI")
         
         # Build response
         plan_id = f"mp_{uuid.uuid4().hex[:12]}"
-        
-        from app.models.schemas import UserPreferences
-        preferences = UserPreferences(**request.model_dump())
-        
         meal_plan = MealPlan(
             id=plan_id,
             createdAt=datetime.utcnow(),
@@ -568,11 +581,11 @@ async def generate_meal_plan(request: GenerateMealPlanRequest):
         return meal_plan
         
     except GeminiError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+        raise HTTPException(status_code=503, detail={"code": "GEMINI_ERROR", "message": str(e)})
     except ParseError as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"code": "PARSE_ERROR", "message": str(e)})
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+        raise HTTPException(status_code=500, detail={"code": "INTERNAL_ERROR", "message": f"Unexpected error: {str(e)}"})
 
 
 @router.post("/{plan_id}/modify", response_model=MealPlan)
@@ -582,17 +595,11 @@ async def modify_meal_plan(plan_id: str, request: ModifyMealPlanRequest):
     Single API call - modifies the structured plan directly.
     """
     try:
-        # Convert preferences to string
-        preferences_str = request.currentPlan.preferences.model_dump_json(indent=2)
-        
-        # Convert current plan to string
-        previous_plan_str = request.currentPlan.model_dump_json(indent=2)
-        
         # Generate modification prompt
-        prompt = user_manipulation_prompt(
-            user_input=request.modification,
-            user_preferences=preferences_str,
-            previous_plan=previous_plan_str
+        prompt = modification_prompt(
+            modification=request.modification,
+            current_plan=request.currentPlan.model_dump_json(indent=2),
+            preferences=request.currentPlan.preferences.model_dump_json(indent=2)
         )
         
         # Call Gemini
@@ -609,7 +616,7 @@ async def modify_meal_plan(plan_id: str, request: ModifyMealPlanRequest):
         
         # Validate
         if not validate_meal_plan(days_data):
-            raise HTTPException(status_code=500, detail="Invalid meal plan structure from AI")
+            raise ParseError("Invalid meal plan structure from AI")
         
         # Build response with same ID
         meal_plan = MealPlan(
@@ -623,9 +630,11 @@ async def modify_meal_plan(plan_id: str, request: ModifyMealPlanRequest):
         return meal_plan
         
     except GeminiError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+        raise HTTPException(status_code=503, detail={"code": "GEMINI_ERROR", "message": str(e)})
     except ParseError as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"code": "PARSE_ERROR", "message": str(e)})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail={"code": "INTERNAL_ERROR", "message": str(e)})
 ```
 
 ### routers/shopping.py
@@ -642,17 +651,18 @@ from app.models.schemas import (
     IngredientCategory
 )
 from app.services.gemini import gemini_service, GeminiError, ParseError
-from app.services.prompts import generate_shopping_list_prompt
+from app.services.prompts import shopping_list_prompt
 from app.utils.validators import validate_shopping_list
 
 router = APIRouter()
+
 
 @router.post("/generate", response_model=ShoppingList)
 async def generate_shopping_list(request: GenerateShoppingListRequest):
     """Generate a shopping list from a meal plan."""
     try:
         # Generate prompt
-        prompt = generate_shopping_list_prompt(request.mealPlan)
+        prompt = shopping_list_prompt(request.mealPlan)
         
         # Call Gemini
         response_text = await gemini_service.generate(prompt)
@@ -662,7 +672,7 @@ async def generate_shopping_list(request: GenerateShoppingListRequest):
         
         # Validate
         if not validate_shopping_list(list_data):
-            raise HTTPException(status_code=500, detail="Invalid shopping list structure from AI")
+            raise ParseError("Invalid shopping list structure from AI")
         
         # Build response
         list_id = f"sl_{uuid.uuid4().hex[:12]}"
@@ -688,14 +698,20 @@ async def generate_shopping_list(request: GenerateShoppingListRequest):
         return shopping_list
         
     except GeminiError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+        raise HTTPException(status_code=503, detail={"code": "GEMINI_ERROR", "message": str(e)})
     except ParseError as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={"code": "PARSE_ERROR", "message": str(e)})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail={"code": "INTERNAL_ERROR", "message": str(e)})
 ```
 
 ### utils/validators.py
 
 ```python
+"""
+Response validation helpers for Gemini API responses.
+"""
+
 VALID_CATEGORIES = [
     "proteins", "vegetables", "fruits", "grains",
     "dairy", "seasonings", "pantry_staples", "others"
@@ -703,6 +719,7 @@ VALID_CATEGORIES = [
 
 DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 MEALS = ["breakfast", "lunch", "dinner"]
+VALID_DIFFICULTIES = ["easy", "medium", "hard"]
 
 
 def validate_recipe(recipe: dict) -> bool:
@@ -719,16 +736,35 @@ def validate_recipe(recipe: dict) -> bool:
         if field not in recipe:
             return False
     
+    # Validate difficulty
+    if recipe.get("difficulty") not in VALID_DIFFICULTIES:
+        return False
+    
+    # Validate ingredients
     if not isinstance(recipe.get("ingredients"), list):
         return False
     
     for ingredient in recipe["ingredients"]:
-        required_ing = ["name", "quantity", "unit", "category"]
-        for field in required_ing:
-            if field not in ingredient:
-                return False
-        if ingredient["category"] not in VALID_CATEGORIES:
+        if not validate_ingredient(ingredient):
             return False
+    
+    return True
+
+
+def validate_ingredient(ingredient: dict) -> bool:
+    """Validate a single ingredient object."""
+    required_fields = ["name", "quantity", "unit", "category"]
+    
+    for field in required_fields:
+        if field not in ingredient:
+            return False
+    
+    if ingredient["category"] not in VALID_CATEGORIES:
+        return False
+    
+    # Quantity must be a number
+    if not isinstance(ingredient.get("quantity"), (int, float)):
+        return False
     
     return True
 
@@ -815,8 +851,16 @@ ENVIRONMENT=development
 ### Development
 
 ```bash
+# Create virtual environment
+python -m venv venv
+
 # Activate virtual environment
-source venv/bin/activate
+source venv/bin/activate  # Linux/macOS
+# or
+.\venv\Scripts\activate  # Windows
+
+# Install dependencies
+pip install -r requirements.txt
 
 # Run with hot reload
 uvicorn app.main:app --reload --port 8000
@@ -848,6 +892,40 @@ pytest tests/test_prompts.py -v
 
 ```bash
 pytest tests/ --cov=app --cov-report=html
+```
+
+---
+
+## API Testing with cURL
+
+### Health Check
+
+```bash
+curl http://localhost:8000/api/health
+```
+
+### Generate Meal Plan
+
+```bash
+curl -X POST http://localhost:8000/api/meal-plans/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "keywords": ["healthy", "quick"],
+    "mustHaveItems": ["chicken", "rice"],
+    "dislikedItems": ["mushrooms"],
+    "numPeople": 2,
+    "budget": 100,
+    "difficulty": "medium",
+    "cookSchedule": {
+      "monday": {"breakfast": false, "lunch": true, "dinner": true},
+      "tuesday": {"breakfast": false, "lunch": true, "dinner": true},
+      "wednesday": {"breakfast": false, "lunch": true, "dinner": true},
+      "thursday": {"breakfast": false, "lunch": true, "dinner": true},
+      "friday": {"breakfast": false, "lunch": true, "dinner": true},
+      "saturday": {"breakfast": true, "lunch": true, "dinner": true},
+      "sunday": {"breakfast": true, "lunch": true, "dinner": false}
+    }
+  }'
 ```
 
 ---

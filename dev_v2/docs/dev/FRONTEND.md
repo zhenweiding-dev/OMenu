@@ -44,7 +44,9 @@ frontend/
 │   │   │   └── PageContainer.tsx
 │   │   │
 │   │   ├── home/                 # Home page components
-│   │   │   ├── MealPlanCard.tsx
+│   │   │   ├── DailyMenuCard.tsx
+│   │   │   ├── MenuBookCard.tsx
+│   │   │   ├── SwipeIndicator.tsx
 │   │   │   └── EmptyState.tsx
 │   │   │
 │   │   ├── shopping/             # Shopping page components
@@ -70,10 +72,9 @@ frontend/
 │   │       └── VerticalPicker.tsx
 │   │
 │   ├── pages/                    # Route page components
-│   │   ├── HomePage.tsx
+│   │   ├── HomePage.tsx          # Menu Open + Menu Closed (state toggle)
 │   │   ├── ShoppingPage.tsx
 │   │   ├── MyPage.tsx
-│   │   ├── PlansPage.tsx
 │   │   └── CreatePlanPage.tsx
 │   │
 │   ├── stores/                   # Zustand stores (UI state only)
@@ -112,12 +113,17 @@ frontend/
 
 ## API Service
 
-The frontend communicates with the backend through a centralized API service.
+The frontend communicates with the backend through a centralized API service with **2-minute timeout** for all generation endpoints.
 
 ### services/api.ts
 
 ```typescript
+import type { UserPreferences, MealPlan, ShoppingList } from '@/types';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+// API timeout: 2 minutes for generation endpoints
+const GENERATION_TIMEOUT = 120000;
 
 // ===== Types =====
 
@@ -125,6 +131,13 @@ interface ApiError {
   code: string;
   message: string;
   details?: Array<{ field?: string; message: string }>;
+}
+
+class ApiTimeoutError extends Error {
+  constructor() {
+    super('Request timed out. Please try again.');
+    this.name = 'ApiTimeoutError';
+  }
 }
 
 // ===== Helper =====
@@ -140,9 +153,33 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return response.json();
 }
 
+async function fetchWithTimeout(
+  url: string,
+  options: RequestInit,
+  timeout: number
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    return response;
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new ApiTimeoutError();
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 // ===== API Functions =====
 
-export async function healthCheck(): Promise<{ status: string }> {
+export async function healthCheck(): Promise<{ status: string; version: string }> {
   const response = await fetch(`${API_BASE_URL}/api/health`);
   return handleResponse(response);
 }
@@ -150,11 +187,15 @@ export async function healthCheck(): Promise<{ status: string }> {
 export async function generateMealPlan(
   preferences: UserPreferences
 ): Promise<MealPlan> {
-  const response = await fetch(`${API_BASE_URL}/api/meal-plans/generate`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(preferences),
-  });
+  const response = await fetchWithTimeout(
+    `${API_BASE_URL}/api/meal-plans/generate`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(preferences),
+    },
+    GENERATION_TIMEOUT
+  );
   return handleResponse(response);
 }
 
@@ -163,11 +204,15 @@ export async function modifyMealPlan(
   modification: string,
   currentPlan: MealPlan
 ): Promise<MealPlan> {
-  const response = await fetch(`${API_BASE_URL}/api/meal-plans/${planId}/modify`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ modification, currentPlan }),
-  });
+  const response = await fetchWithTimeout(
+    `${API_BASE_URL}/api/meal-plans/${planId}/modify`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ modification, currentPlan }),
+    },
+    GENERATION_TIMEOUT
+  );
   return handleResponse(response);
 }
 
@@ -175,13 +220,19 @@ export async function generateShoppingList(
   mealPlanId: string,
   mealPlan: MealPlan
 ): Promise<ShoppingList> {
-  const response = await fetch(`${API_BASE_URL}/api/shopping-lists/generate`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ mealPlanId, mealPlan }),
-  });
+  const response = await fetchWithTimeout(
+    `${API_BASE_URL}/api/shopping-lists/generate`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mealPlanId, mealPlan }),
+    },
+    GENERATION_TIMEOUT
+  );
   return handleResponse(response);
 }
+
+export { ApiTimeoutError };
 ```
 
 ---
@@ -190,23 +241,39 @@ export async function generateShoppingList(
 
 Frontend uses Zustand for **UI state only**. All generated data (meal plans, shopping lists) comes from the backend.
 
+> **Note**: v3.5 architecture:
+> - Each **MenuBook** (weekly plan) has a one-to-one relationship with a **ShoppingList**
+> - `isMenuOpen` state toggles between Menu Open and Menu Closed views within the Home Page
+> - When switching weeks, both the meal plan and shopping list switch together
+
 ### stores/useAppStore.ts
 
 ```typescript
 import { create } from 'zustand';
+import type { MealPlan, ShoppingList, MenuBook } from '@/types';
 
 interface AppState {
-  // Current meal plan (from backend)
-  currentPlan: MealPlan | null;
-  setCurrentPlan: (plan: MealPlan | null) => void;
+  // Menu Books (each week's plan + shopping list)
+  menuBooks: MenuBook[];
+  addMenuBook: (book: MenuBook) => void;
+  updateMenuBook: (id: string, updates: Partial<MenuBook>) => void;
+  deleteMenuBook: (id: string) => void;  // Long-press delete, removes ShoppingList too
   
-  // Current shopping list (from backend)
-  currentShoppingList: ShoppingList | null;
-  setCurrentShoppingList: (list: ShoppingList | null) => void;
+  // Currently selected week
+  currentWeekId: string | null;
+  setCurrentWeekId: (id: string | null) => void;
   
-  // View mode toggle (Daily View vs Plan View)
-  viewMode: 'daily' | 'plan';
-  setViewMode: (mode: 'daily' | 'plan') => void;
+  // Computed: current menu book (meal plan + shopping list)
+  getCurrentMenuBook: () => MenuBook | null;
+  
+  // Menu Open/Closed toggle (Home Page view state)
+  isMenuOpen: boolean;
+  setIsMenuOpen: (open: boolean) => void;
+  toggleMenuView: () => void;
+  
+  // Current day index for swipe navigation (0-6, Monday-Sunday)
+  currentDayIndex: number;
+  setCurrentDayIndex: (index: number) => void;
   
   // Loading states
   isGenerating: boolean;
@@ -218,15 +285,36 @@ interface AppState {
   clearError: () => void;
 }
 
-export const useAppStore = create<AppState>((set) => ({
-  currentPlan: null,
-  setCurrentPlan: (plan) => set({ currentPlan: plan }),
+export const useAppStore = create<AppState>((set, get) => ({
+  // Menu Books storage
+  menuBooks: [],
+  addMenuBook: (book) => set((state) => ({ 
+    menuBooks: [...state.menuBooks, book],
+    currentWeekId: book.id,  // Auto-select newly created
+  })),
+  updateMenuBook: (id, updates) => set((state) => ({
+    menuBooks: state.menuBooks.map(book => 
+      book.id === id ? { ...book, ...updates } : book
+    ),
+  })),
   
-  currentShoppingList: null,
-  setCurrentShoppingList: (list) => set({ currentShoppingList: list }),
+  // Current week selection
+  currentWeekId: null,
+  setCurrentWeekId: (id) => set({ currentWeekId: id }),
   
-  viewMode: 'daily',
-  setViewMode: (mode) => set({ viewMode: mode }),
+  // Computed: get current menu book
+  getCurrentMenuBook: () => {
+    const { menuBooks, currentWeekId } = get();
+    return menuBooks.find(book => book.id === currentWeekId) || null;
+  },
+  
+  // Menu Open is default view
+  isMenuOpen: true,
+  setIsMenuOpen: (open) => set({ isMenuOpen: open }),
+  toggleMenuView: () => set((state) => ({ isMenuOpen: !state.isMenuOpen })),
+  
+  currentDayIndex: 0,
+  setCurrentDayIndex: (index) => set({ currentDayIndex: Math.max(0, Math.min(6, index)) }),
   
   isGenerating: false,
   setIsGenerating: (status) => set({ isGenerating: status }),
@@ -242,63 +330,186 @@ export const useAppStore = create<AppState>((set) => ({
 ```typescript
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import type { CookSchedule, Difficulty } from '@/types';
+
+type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+type MealType = 'breakfast' | 'lunch' | 'dinner';
 
 interface DraftState {
+  // State
   currentStep: number;
   keywords: string[];
   mustHaveItems: string[];
   dislikedItems: string[];
   numPeople: number;
   budget: number;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: Difficulty;
   cookSchedule: CookSchedule;
   lastUpdated: string;
   
-  // Actions
+  // Step navigation
   setStep: (step: number) => void;
+  
+  // Keywords actions
   setKeywords: (keywords: string[]) => void;
+  addKeyword: (keyword: string) => void;
+  removeKeyword: (keyword: string) => void;
+  
+  // Must-have items actions
   setMustHaveItems: (items: string[]) => void;
+  addMustHaveItem: (item: string) => void;
+  removeMustHaveItem: (item: string) => void;
+  
+  // Disliked items actions
   setDislikedItems: (items: string[]) => void;
+  addDislikedItem: (item: string) => void;
+  removeDislikedItem: (item: string) => void;
+  
+  // Settings actions
   setNumPeople: (n: number) => void;
   setBudget: (b: number) => void;
-  setDifficulty: (d: 'easy' | 'medium' | 'hard') => void;
+  setDifficulty: (d: Difficulty) => void;
+  
+  // Schedule actions
   setCookSchedule: (schedule: CookSchedule) => void;
+  toggleMeal: (day: DayOfWeek, meal: MealType) => void;
+  selectAllMeals: () => void;
+  deselectAllMeals: () => void;
+  
+  // Computed
+  getSelectedMealCount: () => number;
+  
+  // Reset
   resetDraft: () => void;
 }
 
+const initialCookSchedule: CookSchedule = {
+  monday: { breakfast: false, lunch: false, dinner: false },
+  tuesday: { breakfast: false, lunch: false, dinner: false },
+  wednesday: { breakfast: false, lunch: false, dinner: false },
+  thursday: { breakfast: false, lunch: false, dinner: false },
+  friday: { breakfast: false, lunch: false, dinner: false },
+  saturday: { breakfast: false, lunch: false, dinner: false },
+  sunday: { breakfast: false, lunch: false, dinner: false },
+};
+
 const initialState = {
   currentStep: 1,
-  keywords: [],
-  mustHaveItems: [],
-  dislikedItems: [],
+  keywords: [] as string[],
+  mustHaveItems: [] as string[],
+  dislikedItems: [] as string[],
   numPeople: 2,
   budget: 100,
-  difficulty: 'medium' as const,
-  cookSchedule: {
-    monday: { breakfast: false, lunch: false, dinner: false },
-    tuesday: { breakfast: false, lunch: false, dinner: false },
-    wednesday: { breakfast: false, lunch: false, dinner: false },
-    thursday: { breakfast: false, lunch: false, dinner: false },
-    friday: { breakfast: false, lunch: false, dinner: false },
-    saturday: { breakfast: false, lunch: false, dinner: false },
-    sunday: { breakfast: false, lunch: false, dinner: false },
-  },
+  difficulty: 'medium' as Difficulty,
+  cookSchedule: initialCookSchedule,
   lastUpdated: new Date().toISOString(),
 };
 
 export const useDraftStore = create<DraftState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
       
-      setStep: (step) => set({ currentStep: step, lastUpdated: new Date().toISOString() }),
+      // Step navigation
+      setStep: (step) => set({ 
+        currentStep: Math.max(1, Math.min(8, step)), 
+        lastUpdated: new Date().toISOString() 
+      }),
+      
+      // Keywords
       setKeywords: (keywords) => set({ keywords, lastUpdated: new Date().toISOString() }),
+      addKeyword: (keyword) => {
+        const { keywords } = get();
+        if (!keywords.includes(keyword)) {
+          set({ keywords: [...keywords, keyword], lastUpdated: new Date().toISOString() });
+        }
+      },
+      removeKeyword: (keyword) => {
+        const { keywords } = get();
+        set({ keywords: keywords.filter(k => k !== keyword), lastUpdated: new Date().toISOString() });
+      },
+      
+      // Must-have items
       setMustHaveItems: (items) => set({ mustHaveItems: items, lastUpdated: new Date().toISOString() }),
+      addMustHaveItem: (item) => {
+        const { mustHaveItems } = get();
+        if (!mustHaveItems.includes(item)) {
+          set({ mustHaveItems: [...mustHaveItems, item], lastUpdated: new Date().toISOString() });
+        }
+      },
+      removeMustHaveItem: (item) => {
+        const { mustHaveItems } = get();
+        set({ mustHaveItems: mustHaveItems.filter(i => i !== item), lastUpdated: new Date().toISOString() });
+      },
+      
+      // Disliked items
       setDislikedItems: (items) => set({ dislikedItems: items, lastUpdated: new Date().toISOString() }),
-      setNumPeople: (n) => set({ numPeople: n, lastUpdated: new Date().toISOString() }),
-      setBudget: (b) => set({ budget: b, lastUpdated: new Date().toISOString() }),
+      addDislikedItem: (item) => {
+        const { dislikedItems } = get();
+        if (!dislikedItems.includes(item)) {
+          set({ dislikedItems: [...dislikedItems, item], lastUpdated: new Date().toISOString() });
+        }
+      },
+      removeDislikedItem: (item) => {
+        const { dislikedItems } = get();
+        set({ dislikedItems: dislikedItems.filter(i => i !== item), lastUpdated: new Date().toISOString() });
+      },
+      
+      // Settings with validation
+      setNumPeople: (n) => set({ 
+        numPeople: Math.max(1, Math.min(10, n)), 
+        lastUpdated: new Date().toISOString() 
+      }),
+      setBudget: (b) => {
+        // Round to nearest 10, clamp to 50-500
+        const rounded = Math.round(b / 10) * 10;
+        const clamped = Math.max(50, Math.min(500, rounded));
+        set({ budget: clamped, lastUpdated: new Date().toISOString() });
+      },
       setDifficulty: (d) => set({ difficulty: d, lastUpdated: new Date().toISOString() }),
+      
+      // Schedule
       setCookSchedule: (schedule) => set({ cookSchedule: schedule, lastUpdated: new Date().toISOString() }),
+      toggleMeal: (day, meal) => {
+        const { cookSchedule } = get();
+        const newSchedule = {
+          ...cookSchedule,
+          [day]: {
+            ...cookSchedule[day],
+            [meal]: !cookSchedule[day][meal],
+          },
+        };
+        set({ cookSchedule: newSchedule, lastUpdated: new Date().toISOString() });
+      },
+      selectAllMeals: () => {
+        const allSelected: CookSchedule = {
+          monday: { breakfast: true, lunch: true, dinner: true },
+          tuesday: { breakfast: true, lunch: true, dinner: true },
+          wednesday: { breakfast: true, lunch: true, dinner: true },
+          thursday: { breakfast: true, lunch: true, dinner: true },
+          friday: { breakfast: true, lunch: true, dinner: true },
+          saturday: { breakfast: true, lunch: true, dinner: true },
+          sunday: { breakfast: true, lunch: true, dinner: true },
+        };
+        set({ cookSchedule: allSelected, lastUpdated: new Date().toISOString() });
+      },
+      deselectAllMeals: () => {
+        set({ cookSchedule: initialCookSchedule, lastUpdated: new Date().toISOString() });
+      },
+      
+      // Computed
+      getSelectedMealCount: () => {
+        const { cookSchedule } = get();
+        let count = 0;
+        Object.values(cookSchedule).forEach(day => {
+          if (day.breakfast) count++;
+          if (day.lunch) count++;
+          if (day.dinner) count++;
+        });
+        return count;
+      },
+      
+      // Reset
       resetDraft: () => set({ ...initialState, lastUpdated: new Date().toISOString() }),
     }),
     {
@@ -307,6 +518,65 @@ export const useDraftStore = create<DraftState>()(
     }
   )
 );
+```
+
+### stores/useShoppingStore.ts
+
+```typescript
+import { create } from 'zustand';
+import type { ShoppingItem, IngredientCategory } from '@/types';
+
+interface ShoppingState {
+  // Local modifications (not yet synced to backend)
+  purchasedItems: Set<string>;  // Item IDs that are checked off
+  manualItems: ShoppingItem[];  // Manually added items
+  
+  // Actions
+  togglePurchased: (itemId: string) => void;
+  addManualItem: (name: string, category: IngredientCategory, quantity?: number, unit?: string) => void;
+  removeManualItem: (itemId: string) => void;
+  clearPurchased: () => void;
+  reset: () => void;
+}
+
+export const useShoppingStore = create<ShoppingState>((set, get) => ({
+  purchasedItems: new Set(),
+  manualItems: [],
+  
+  togglePurchased: (itemId) => {
+    const { purchasedItems } = get();
+    const newSet = new Set(purchasedItems);
+    if (newSet.has(itemId)) {
+      newSet.delete(itemId);
+    } else {
+      newSet.add(itemId);
+    }
+    set({ purchasedItems: newSet });
+  },
+  
+  addManualItem: (name, category, quantity = 0, unit = '') => {
+    const { manualItems } = get();
+    const newItem: ShoppingItem = {
+      id: `manual_${Date.now()}`,
+      name,
+      category,
+      totalQuantity: quantity,
+      unit,
+      purchased: false,
+      isManuallyAdded: true,
+    };
+    set({ manualItems: [...manualItems, newItem] });
+  },
+  
+  removeManualItem: (itemId) => {
+    const { manualItems } = get();
+    set({ manualItems: manualItems.filter(item => item.id !== itemId) });
+  },
+  
+  clearPurchased: () => set({ purchasedItems: new Set() }),
+  
+  reset: () => set({ purchasedItems: new Set(), manualItems: [] }),
+}));
 ```
 
 ---
@@ -330,7 +600,7 @@ export type IngredientCategory =
   | 'pantry_staples'
   | 'others';
 
-// ===== Meal Schedule =====
+// ===== Schedule =====
 
 export interface MealSelection {
   breakfast: boolean;
@@ -391,6 +661,18 @@ export interface DayMeals {
   dinner: Recipe | null;
 }
 
+// ===== Week Days =====
+
+export interface WeekDays {
+  monday: DayMeals;
+  tuesday: DayMeals;
+  wednesday: DayMeals;
+  thursday: DayMeals;
+  friday: DayMeals;
+  saturday: DayMeals;
+  sunday: DayMeals;
+}
+
 // ===== Meal Plan =====
 
 export type MealPlanStatus = 'generating' | 'ready' | 'error';
@@ -400,15 +682,7 @@ export interface MealPlan {
   createdAt: string;
   status: MealPlanStatus;
   preferences: UserPreferences;
-  days: {
-    monday: DayMeals;
-    tuesday: DayMeals;
-    wednesday: DayMeals;
-    thursday: DayMeals;
-    friday: DayMeals;
-    saturday: DayMeals;
-    sunday: DayMeals;
-  };
+  days: WeekDays;
 }
 
 // ===== Shopping List =====
@@ -420,6 +694,7 @@ export interface ShoppingItem {
   totalQuantity: number;
   unit: string;
   purchased: boolean;
+  isManuallyAdded?: boolean;
 }
 
 export interface ShoppingList {
@@ -428,6 +703,12 @@ export interface ShoppingList {
   createdAt: string;
   items: ShoppingItem[];
 }
+
+// ===== Day of Week Type =====
+
+export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+
+export const DAYS_OF_WEEK: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 ```
 
 ---
@@ -441,14 +722,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ShoppingPage from './pages/ShoppingPage';
 import MyPage from './pages/MyPage';
-import PlansPage from './pages/PlansPage';
 import CreatePlanPage from './pages/CreatePlanPage';
 
 const router = createBrowserRouter([
-  { path: '/', element: <HomePage /> },
+  { path: '/', element: <HomePage /> },           // Menu Open/Closed (toggle via state)
   { path: '/shopping', element: <ShoppingPage /> },
   { path: '/me', element: <MyPage /> },
-  { path: '/plans', element: <PlansPage /> },
   { path: '/create', element: <CreatePlanPage /> },
 ]);
 
@@ -468,6 +747,8 @@ For frontend-only development, use mock data when backend is unavailable.
 ### utils/mockData.ts
 
 ```typescript
+import type { MealPlan, ShoppingList } from '@/types';
+
 export const mockMealPlan: MealPlan = {
   id: 'mp_mock123',
   createdAt: new Date().toISOString(),
@@ -482,7 +763,11 @@ export const mockMealPlan: MealPlan = {
     cookSchedule: {
       monday: { breakfast: true, lunch: true, dinner: true },
       tuesday: { breakfast: false, lunch: true, dinner: true },
-      // ...
+      wednesday: { breakfast: false, lunch: true, dinner: true },
+      thursday: { breakfast: false, lunch: true, dinner: true },
+      friday: { breakfast: false, lunch: true, dinner: true },
+      saturday: { breakfast: true, lunch: true, dinner: true },
+      sunday: { breakfast: true, lunch: true, dinner: false },
     },
   },
   days: {
@@ -493,17 +778,23 @@ export const mockMealPlan: MealPlan = {
         ingredients: [
           { name: 'Eggs', quantity: 4, unit: 'count', category: 'proteins' },
           { name: 'Bread', quantity: 2, unit: 'slices', category: 'grains' },
+          { name: 'Butter', quantity: 0, unit: '', category: 'seasonings' },
         ],
-        instructions: '1. Beat eggs...',
+        instructions: '1. Beat eggs with salt\n2. Toast bread\n3. Scramble eggs in butter\n4. Serve with toast',
         estimatedTime: 10,
         servings: 2,
         difficulty: 'easy',
         totalCalories: 350,
       },
-      lunch: { /* ... */ },
-      dinner: { /* ... */ },
+      lunch: null,
+      dinner: null,
     },
-    // ... other days
+    tuesday: { breakfast: null, lunch: null, dinner: null },
+    wednesday: { breakfast: null, lunch: null, dinner: null },
+    thursday: { breakfast: null, lunch: null, dinner: null },
+    friday: { breakfast: null, lunch: null, dinner: null },
+    saturday: { breakfast: null, lunch: null, dinner: null },
+    sunday: { breakfast: null, lunch: null, dinner: null },
   },
 };
 
@@ -530,7 +821,7 @@ export async function generateMealPlan(preferences: UserPreferences): Promise<Me
     return mockMealPlan;
   }
   
-  // Real API call...
+  // Real API call with timeout...
 }
 ```
 
@@ -564,23 +855,32 @@ export default {
         paper: '#FAF9F7',
         'paper-dark': '#F5F4F1',
         card: '#FFFFFF',
+        'card-header': '#F8F6F2',
         'primary-text': '#2C2C2C',
         'secondary-text': '#7A7A7A',
         'disabled-text': '#B5B5B5',
         accent: '#8B9469',
         'accent-light': '#A8AD8B',
+        'accent-orange': '#D97706',
+        'accent-orange-light': '#FEF3E2',
         success: '#6B9B76',
         error: '#C67B7B',
         divider: '#EEEBE6',
         'tag-border': '#D4D0C8',
         'tag-selected-bg': '#F0EBE3',
         'tag-selected-border': '#A68A64',
+        // Meal icon backgrounds
+        'meal-breakfast': '#FEF3E2',
+        'meal-lunch': '#E8F5E9',
+        'meal-dinner': '#EDE7F6',
       },
       borderRadius: {
-        card: '12px',
+        card: '20px',
+        'card-sm': '12px',
         button: '8px',
         tag: '6px',
         modal: '24px',
+        'meal-icon': '12px',
       },
       spacing: {
         'safe-bottom': '28px',
@@ -589,6 +889,16 @@ export default {
         'nav-label': '11px',
         'section-label': '11px',
         tag: '13px',
+        'header-title': '12px',
+        'weekday-title': '24px',
+        'meal-type': '11px',
+      },
+      letterSpacing: {
+        'header': '1.5px',
+      },
+      boxShadow: {
+        'card': '0 4px 20px rgba(0,0,0,0.06)',
+        'card-sm': '0 2px 12px rgba(0,0,0,0.06)',
       },
     },
   },

@@ -16,6 +16,31 @@ User Preferences → AI Generates Weekly Plan → User Adjusts → Generate Shop
 
 ---
 
+## Documentation Index
+
+| Folder | File | Description |
+|--------|------|-------------|
+| **Root** | `README.md` | Project overview (this file) |
+| | `TECH_STACK.md` | Technologies and versions |
+| | `CHANGELOG.md` | Version history |
+| | `IMPLEMENTATION_CHECKLIST.md` | Development progress tracker |
+| **design/** | `PAGES_AND_FLOWS.md` | Pages, user flows, interactions |
+| | `UI_DESIGN.md` | Visual design, colors, components |
+| | `DATA_MODELS.md` | TypeScript + Pydantic data structures |
+| **dev/** | `FRONTEND.md` | React frontend architecture |
+| | `BACKEND.md` | FastAPI backend architecture |
+| | `API_SPEC.md` | REST API endpoints |
+| | `API_PROMPTS.md` | Gemini prompt design |
+| **testing/** | `TEST_SPECIFICATION.md` | Test strategy |
+| | `TEST_CHECKLIST.md` | Test checklist |
+| | `test_instruction.md` | Test execution guide |
+| | `test-mocks.ts` | Mock data |
+| | `test-handlers.ts` | MSW request handlers |
+| | `e2e-tests.spec.ts` | E2E test cases |
+| **demo/** | `omenu-ui-demo-v4.html` | Static UI prototype |
+
+---
+
 ## Architecture
 
 OMenu uses a **separated frontend-backend architecture** for better maintainability, testability, and cross-platform support.

@@ -1,12 +1,29 @@
 # Pages and User Flows
 
-## App Structure (v3.4 - Menu Book Concept)
+This document describes all pages, states, and user flows in OMenu.
+
+---
+
+## Key Design Decisions
+
+| Decision | Value |
+|----------|-------|
+| **Week Starts On** | Monday |
+| **Shopping List Generation** | User clicks "Shopping List" button after Meal Plan generated (not auto-generated) |
+| **Data Storage (MVP)** | Pure local storage (IndexedDB), backend is stateless AI service |
+| **Draft Persistence** | Saved when user exits Create flow mid-way, restored when returning to `/create` |
+| **Delete MenuBook** | Long-press on MenuBook card → Confirm → Delete MenuBook + ShoppingList together |
+| **Data Cleanup** | No automatic cleanup; display all local data |
+
+---
+
+## App Structure (v3.5 - Menu Book Concept)
 
 ```
 App
-├── Home Page (/) - Menu Book
-│   ├── Menu Open (default) - 当周每日详情，左右滑动
-│   └── Menu Closed - 所有菜单本网格
+├── Home Page (/)
+│   ├── Menu Open (default) - Current week daily view with swipe navigation
+│   └── Menu Closed - Grid of all menu books
 ├── Shopping Page (/shopping)
 ├── My Page (/me)
 └── Create Plan Flow (/create)
@@ -17,7 +34,7 @@ App
     ├── Step 5: People & Budget (Sentence Style)
     ├── Step 6: Schedule Grid
     ├── Step 7: Generating (Loading)
-    ├── Step 8: Plan Generated (复用 Menu Open + 双按钮)
+    ├── Step 8: Plan Generated (Reuse Menu Open + Dual Buttons)
     ├── Step 9: Recipe Detail (Modal)
     ├── Step 10: Shopping List Loading
     └── Step 11: Shopping List Result
@@ -43,29 +60,31 @@ Present on: **Home, Shopping, My Page**
 |----------|---------|--------|
 | Top Left | "THIS WEEK" (title) | - |
 | Top Left (sub) | Date range (e.g., "Jan 27 – Feb 2") | - |
-| Top Right | Grid icon button | Navigate to Menu Closed view |
+| Top Right | Grid icon button | Toggle to Menu Closed view |
 
 ### Menu Closed Header
 
 | Position | Element | Action |
 |----------|---------|--------|
-| Top Left | Back button | Return to Menu Open |
+| Top Left | Back button | Toggle to Menu Open view |
 | Center | "MY MENUS" (title) | - |
 
 ---
 
 ## Page Specifications
 
-### 1. Home Page (`/`) - Menu Book
+### 1. Home Page (`/`) - Menu Open
 
-**Core Concept:** 将周计划比作一本餐厅菜单，打开菜单看每日详情，关闭菜单看所有菜单本。
+**Core Concept:** Think of the weekly plan as a restaurant menu book. Open the menu to see daily details, close it to see all menu books.
 
-**Two View States:**
+**Two View States (within Home Page):**
 
 | State | Description |
 |-------|-------------|
-| **Menu Open** (default) | 当周菜单打开，展示每日详情卡片，左右滑动切换日期 |
-| **Menu Closed** | 所有菜单本网格，每本代表一周，点击打开 |
+| **Menu Open** (default) | Current week's menu open, showing daily detail cards with horizontal swipe |
+| **Menu Closed** | Grid of all menu books, each representing one week |
+
+**State Management:** Use `isMenuOpen: boolean` in `useAppStore` to toggle between views.
 
 **States:**
 
@@ -73,13 +92,12 @@ Present on: **Home, Shopping, My Page**
 |-------|---------|
 | Empty | "No menu yet" + "Create Menu" button |
 | Has Plan | Menu Open view with daily cards |
-| Menu Closed | Grid of all menu books |
 
 ---
 
 #### Menu Open (Default Home View)
 
-**Purpose:** 展示当周每日餐食详情，左右滑动浏览不同日期。
+**Purpose:** Display current week's daily meal details with horizontal swipe to browse different days.
 
 **Layout:**
 ```
@@ -113,39 +131,51 @@ Present on: **Home, Shopping, My Page**
 ```
 
 **Header:**
-- Title: "THIS WEEK" (绿色大写, letter-spacing: 2px)
-- Subtitle: Date range (灰色小字)
-- Grid button (右上角) → 进入 Menu Closed
+- Title: Relative week label (olive green, uppercase, letter-spacing: 2px)
+- Subtitle: Date range (gray, small text)
+- Grid button (top right) → Toggle to Menu Closed view
+
+**Title Display Logic (Relative Week):**
+| Week Offset | Title |
+|-------------|-------|
+| Current week | "THIS WEEK" |
+| -1 week | "LAST WEEK" |
+| +1 week | "NEXT WEEK" |
+| -2 weeks | "2 WEEKS AGO" |
+| -3 weeks | "3 WEEKS AGO" |
+| +2 weeks | "IN 2 WEEKS" |
+| +3 weeks | "IN 3 WEEKS" |
+| ... | Continue pattern |
 
 **Swipe Indicator:**
-- 7 个小圆点代表一周
-- 当前日期高亮 (accent 色, 拉长)
-- 极简设计，无箭头
+- 7 small dots representing the week
+- Current day highlighted (accent color, elongated)
+- Minimal design, no arrows
 
 **Daily Menu Card:**
 - **Header:**
-  - 周几 (24px 粗体)
-  - 日期 (13px 灰色)
-  - 统计: "X meals · X cal"
-  - **右上角 + 按钮**: 手动添加餐
+  - Weekday (24px bold)
+  - Date (13px gray)
+  - Stats: "X meals · X cal"
+  - **Plus button (top right):** Manually add meal (future feature)
 - **Meal Items:**
-  - 彩色图标 (早餐橙 / 午餐绿 / 晚餐紫)
-  - 餐类型 (大写小字)
-  - 菜名 (15px 粗体)
-  - 时间 · 份数
-  - 卡路里 (右侧绿色)
+  - Color-coded icon wrapper (breakfast orange / lunch green / dinner purple)
+  - Meal type (uppercase small text)
+  - Recipe name (15px bold)
+  - Time · Servings
+  - Calories (right side, olive green)
 
 **Interactions:**
-- 左右滑动 → 切换日期
-- 点击餐食 → 打开 Recipe Detail modal
-- 点击右上角 + 按钮 → 手动添加餐 (future)
-- 点击右上角网格按钮 → 进入 Menu Closed
+- Swipe left/right → Change day
+- Tap meal → Open Recipe Detail modal
+- Tap plus button (top right) → Manually add meal (future)
+- Tap grid button (header right) → Toggle to Menu Closed view
 
 ---
 
-#### Menu Closed (All Menus Grid)
+#### Menu Closed View (Home Page State)
 
-**Purpose:** 展示所有菜单本，每本代表一周计划。
+**Purpose:** Display all menu books in a grid. Each book represents one week's plan.
 
 **Layout:**
 ```
@@ -176,37 +206,64 @@ Present on: **Home, Shopping, My Page**
 ```
 
 **Header:**
-- Back button → Return to Menu Open
+- Back button → Toggle to Menu Open view
 - Title: "MY MENUS"
 
 **Menu Book Card:**
 - **Cover:** 
-  - 食物 emoji 组合 (展示当周出现的食材)
-  - 渐变背景
-- **THIS WEEK 标签:** 当前周顶部绿色横条
+  - Food emoji combination (representing ingredients from that week)
+  - Gradient background
+- **"THIS WEEK" badge:** Green horizontal bar at top for current week
 - **Info Footer:**
-  - 日期范围
+  - Date range
   - "X meals · $X"
 
-**Add New Card:**
-- 虚线边框
-- "+" 图标 + "New Menu" 文字
-- 点击 → Navigate to `/create`
+**New Menu Card:**
+- Dashed border
+- "+" icon + "New Menu" text
+- Tap → Navigate to `/create`
 
 **Interactions:**
-- 点击菜单本 → 打开该周 (Menu Open)
-- 点击 "New Menu" → Navigate to `/create`
-- 点击返回 → Return to Menu Open
+- Tap menu book → Load that week's plan and toggle to Menu Open view
+- **Long-press menu book → Show delete confirmation dialog**
+  - Confirm → Delete MenuBook + associated ShoppingList
+  - Cancel → Dismiss dialog
+- Tap "New Menu" → Navigate to `/create`
+- Tap back button → Toggle to Menu Open view
 
 ---
 
 ### 2. Shopping Page (`/shopping`)
 
-**Purpose:** View and manage shopping list for current meal plan.
+**Purpose:** View and manage shopping list for the currently selected Menu Book (week).
+
+**Key Concept:** Each Menu Book (weekly meal plan) has its own Shopping List. When switching weeks in the Home Page, the Shopping Page shows the corresponding week's list. There is no week switcher on this page — users switch weeks from Home Page.
 
 **Layout:**
-- Header: "Shopping List" + "Add Item" button (top right)
-- Main: Categorized item list (collapsible sections)
+```
+┌─────────────────────────────────────┐
+│ SHOPPING LIST              [+ Add]  │
+│ Jan 27 – Feb 2                      │  ← Week indicator (read-only)
+├─────────────────────────────────────┤
+│ 🥩 Proteins                    [−]  │
+│   [ ] Chicken Breast      2 lbs     │
+│   [ ] Eggs               12 count   │
+├─────────────────────────────────────┤
+│ 🥬 Vegetables              [−]      │
+│   [✓] Tomatoes           6 count    │
+│   ...                               │
+├─────────────────────────────────────┤
+│  [Plan]     [List]     [Me]         │
+└─────────────────────────────────────┘
+```
+
+**Header:**
+- Title: "SHOPPING LIST" (uppercase, olive green, letter-spacing)
+- Subtitle: Date range of current week (e.g., "Jan 27 – Feb 2") — **read-only indicator, no tap action**
+- "Add" button (top right)
+
+**Main Content:**
+- Categorized item list (collapsible sections)
 - Bottom: Navigation bar
 
 **Category Display Order:**
@@ -226,14 +283,19 @@ Present on: **Home, Shopping, My Page**
 [ ] Soy Sauce                  ← seasonings: no quantity
 ```
 
+**Empty State (no shopping list for current week):**
+- Icon: 🛒
+- Text: "No shopping list yet"
+- Subtext: "Generate a shopping list from your meal plan"
+
 **Interactions:**
 - Tap checkbox → Toggle purchased status
 - Tap item → Edit name/quantity (inline or modal)
-- Tap "Add Item" → Show add item input
+- Tap "Add" button → Show add item input
 - Tap category header → Collapse/expand section
 
 **Add Item Flow:**
-1. Tap "Add Item" button
+1. Tap "Add" button
 2. Modal appears: Item name input (required), quantity (optional), category dropdown
 3. Save → Item added to list with `isManuallyAdded: true`
 
@@ -471,7 +533,7 @@ Kid-Friendly, Family-Style, Comfort Food, Budget-Friendly, BBQ, Soul Food
 **Design Reference:** [Google Arts & Culture - Food Mood](https://artsandculture.google.com/experiment/food-mood/HwHnGalZ3up0EA?hl=en)
 
 **Display:**
-- Single sentence with inline editable values (highlighted in accent color)
+- Single sentence with inline editable values (highlighted in orange accent color)
 - Tap on highlighted value to trigger its specific control
 - Clean, minimal design with sentence as the focus
 
@@ -505,7 +567,7 @@ The meal plan is for [n] people with $[X] budget and [difficulty] difficulty to 
 ```
 
 - Static text: Primary text color (`#2C2C2C`)
-- Editable values: Accent color (`#8B9469` or orange like reference)
+- Editable values: Accent orange color (`#D97706`)
 
 **Inline Controls (appear on tap):**
 
@@ -550,7 +612,7 @@ The meal plan is... │  $100   │ ...budget and...
 
 | State | Appearance |
 |-------|------------|
-| Default | Value in accent color, underlined or bold |
+| Default | Value in orange accent color, underlined or bold |
 | Hover/Focus | Slightly darker, cursor indicates tappable |
 | Editing | Control visible, value highlighted with background |
 
@@ -694,12 +756,12 @@ const mealPlan = await api.generateMealPlan({
 
 ---
 
-### Step 8: Plan Generated (复用 Menu Open + 双按钮)
+### Step 8: Plan Generated (Reuse Menu Open + Dual Buttons)
 
 **Display:**
-- 复用 Menu Open 的每日卡片设计
-- 左右滑动浏览不同日期
-- 底部两个并排按钮：Modify | Shopping List
+- Reuse Menu Open daily card design
+- Left/right swipe to browse different days
+- Bottom: Two side-by-side buttons: Modify | Shopping List
 
 **Layout:**
 ```
@@ -727,24 +789,24 @@ const mealPlan = await api.generateMealPlan({
 │  └───────────────────────────────┘  │
 │                                     │
 ├─────────────────────────────────────┤
-│ [💬 Modify]    [🛒 Shopping List]   │  ← 双按钮，同等权重
+│ [💬 Modify]    [🛒 Shopping List]   │  ← Dual buttons, equal width
 └─────────────────────────────────────┘
 ```
 
 **Header:**
 - Back button (←) → Return to Home (discard new plan)
-- Title: "YOUR NEW MENU" (大写, letter-spacing)
+- Title: "YOUR NEW MENU" (uppercase, letter-spacing)
 
 **Daily Card:**
-- 与 Menu Open 完全相同
-- 左右滑动浏览 7 天
+- Same design as Menu Open
+- Left/right swipe to browse 7 days
 
-**Bottom Actions (双按钮):**
+**Bottom Actions (Dual Buttons):**
 
 | Button | Style | Action |
 |--------|-------|--------|
-| 💬 Modify | Secondary (白底灰边) | 打开修改输入框 |
-| 🛒 Shopping List | Primary (绿色) | 生成购物清单 → Step 10 |
+| 💬 Modify | Secondary (white bg, gray border) | Open modification input modal |
+| 🛒 Shopping List | Primary (olive green) | Generate shopping list → Step 10 |
 
 **Button CSS:**
 ```css
@@ -807,9 +869,7 @@ const shoppingList = await api.generateShoppingList(
 - Swipe left/right → Navigate between days
 - Tap any meal → Open Recipe Detail modal (Step 9)
 - Tap "Modify" → Show chat input modal
-- Tap "Shopping List" → Navigate to Step 10
-- Tap "Modify Plan" → Show chat input
-- Tap "Generate Shopping List" → Navigate to Step 10
+- Tap "Shopping List" → **User confirms plan and triggers Shopping List generation** → Navigate to Step 10
 
 ---
 
@@ -941,17 +1001,35 @@ useDraftStore.getState().resetDraft();
 
 ---
 
-## Menu Book State (v3.4)
+## Menu Book Navigation (v3.5)
 
-The Menu Open ↔ Menu Closed state is managed in navigation, not stored in global state.
+The Menu Open ↔ Menu Closed navigation uses internal state, not routes.
 
 **Navigation Pattern:**
-- Home (`/`) → Menu Open (default)
-- Click grid button → Navigate to Menu Closed view (could be `/menus` or modal)
-- Click menu book → Return to Menu Open with selected week
-- Click back → Return to Menu Open
+- Home (`/`) → Menu Open (default, current week)
+- Tap grid button → Toggle to Menu Closed view (same route)
+- Tap menu book → Load that week + Toggle to Menu Open view
+- Tap back button → Toggle to Menu Open view
 
-**Optional: Store for Multiple Menu Books**
+**State Management:**
+
+```typescript
+// In useAppStore
+isMenuOpen: boolean;  // true = Menu Open view, false = Menu Closed view
+setIsMenuOpen: (open: boolean) => void;
+toggleMenuView: () => void;
+```
+
+**Route Structure:**
+
+| Route | Component | Description |
+|-------|-----------|-------------|
+| `/` | `HomePage` | Menu Open/Closed views (toggle via state) |
+| `/shopping` | `ShoppingPage` | Shopping list |
+| `/me` | `MyPage` | User preferences |
+| `/create` | `CreatePlanPage` | 8-step create flow |
+
+**Store for Menu Books (Each Week)**
 
 ```typescript
 interface MenuBookState {
@@ -959,6 +1037,7 @@ interface MenuBookState {
   currentWeekId: string | null;
   addMenuBook: (book: MenuBook) => void;
   setCurrentWeek: (id: string) => void;
+  updateShoppingList: (weekId: string, shoppingList: ShoppingList) => void;
 }
 
 interface MenuBook {
@@ -966,8 +1045,12 @@ interface MenuBook {
   weekStartDate: string;  // ISO date string
   weekEndDate: string;
   mealPlan: MealPlan;
+  shoppingList: ShoppingList | null;  // One-to-one relationship with MealPlan
   createdAt: string;
 }
 ```
 
-**Note:** v3.4 移除了 `viewMode: 'daily' | 'plan'` 状态，因为不再有 Daily View / Plan View 切换。
+**Note:** Each MenuBook has a one-to-one relationship with a ShoppingList. When a meal plan is modified, the shopping list should be regenerated.
+```
+
+**Note:** v3.5 uses `isMenuOpen` state to toggle between Menu Open and Menu Closed views within the Home Page. There is no separate `/menus` route.

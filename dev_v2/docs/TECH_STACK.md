@@ -109,18 +109,22 @@ OMenu uses a **separated frontend-backend architecture**.
 4. Backend calls Gemini API
 5. Backend validates & returns modified MealPlan
 6. Frontend displays updated plan
+7. Shopping list should be regenerated after modification
 ```
 
 ### Generate Shopping List
 
 ```
-1. User taps "Generate Shopping List"
+1. User taps "Generate Shopping List" (from Step 8 or existing MenuBook)
 2. Frontend sends POST /api/shopping-lists/generate
 3. Backend builds shopping list prompt
 4. Backend calls Gemini API
 5. Backend validates, aggregates, & returns ShoppingList
-6. Frontend displays in Shopping Page
+6. Frontend stores ShoppingList in corresponding MenuBook
+7. Frontend displays in Shopping Page
 ```
+
+**Key Concept:** Each MenuBook (weekly plan) has a one-to-one relationship with a ShoppingList. When switching weeks, the Shopping Page displays the corresponding week's list.
 
 ---
 
@@ -132,9 +136,9 @@ OMenu uses a **separated frontend-backend architecture**.
 
 | Store | Purpose |
 |-------|---------|
-| `useAppStore` | Current plan, loading states, errors |
+| `useAppStore` | MenuBooks (mealPlan + shoppingList per week), current week, view state |
 | `useDraftStore` | Create flow draft (persisted to localStorage) |
-| `useShoppingStore` | Shopping list UI state |
+| `useShoppingStore` | Shopping list UI state (purchased items, manual additions) |
 
 ### Backend State
 
@@ -149,8 +153,7 @@ OMenu uses a **separated frontend-backend architecture**.
 |------|---------|----------|
 | Create flow draft | localStorage | Frontend |
 | User preferences | localStorage | Frontend |
-| Meal plans | In-memory (Zustand) | Frontend |
-| Shopping lists | In-memory (Zustand) | Frontend |
+| Menu books (meal plans + shopping lists) | In-memory (Zustand) | Frontend |
 
 ---
 
