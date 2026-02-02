@@ -1,6 +1,5 @@
 import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useAppStore } from "@/stores/useAppStore";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { EmptyState } from "@/components/home/EmptyState";
@@ -13,6 +12,14 @@ import { getDayDisplay, getWeekDateRange, isCurrentCalendarWeek, startCaseDay } 
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import type { DayMeals, MenuBook } from "@/types";
+
+function PlusIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round">
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  );
+}
 
 export function HomePage() {
   const menuBooks = useAppStore((state) => state.menuBooks);
@@ -110,37 +117,6 @@ export function HomePage() {
     setAddMealDayKey(null);
   };
 
-  const closedView = (
-    <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {orderedBooks.map((book) => (
-          <MenuClosedCard
-            key={book.id}
-            book={book}
-            onSelect={handleSelectBook}
-            onLongPress={handleRequestDelete}
-            isActive={book.id === currentBook.id}
-            showCurrentWeekBadge={isCurrentCalendarWeek(book.mealPlan.createdAt)}
-          />
-        ))}
-        <Link
-          to="/create"
-          className="flex w-full flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-border-subtle bg-paper-base p-6 text-center transition hover:border-accent-base hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base aspect-[3/4] sm:aspect-[4/5]"
-        >
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-paper-muted text-accent-base">
-            <Plus className="h-6 w-6" />
-          </div>
-          <div className="space-y-1">
-            <p className="text-sm font-semibold text-text-primary">New Menu</p>
-            <p className="text-xs text-text-secondary">Start a fresh meal plan.</p>
-          </div>
-        </Link>
-      </div>
-
-      <p className="text-center text-[11px] uppercase tracking-[0.24em] text-text-tertiary">Long-press a menu to delete</p>
-    </div>
-  );
-
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     touchStartXRef.current = event.touches[0]?.clientX ?? null;
   };
@@ -160,64 +136,68 @@ export function HomePage() {
     touchStartXRef.current = null;
   };
 
-  const openView = (
-    <>
-      <div className="flex flex-col items-center gap-6">
-        <SwipeIndicator
-          total={WEEK_DAYS.length}
-          activeIndex={currentDayIndex}
-          onSelect={setCurrentDayIndex}
-          onPrev={handlePrevDay}
-          onNext={handleNextDay}
-          labels={WEEK_DAYS.map((day) => startCaseDay(day))}
-        />
-
-        <div className="flex w-full items-center gap-3">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={handlePrevDay}
-            aria-label="Previous day"
-            className="h-10 w-10 rounded-full border border-border-subtle text-text-secondary"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-          <div
-            className="flex-1"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            onTouchCancel={() => {
-              touchStartXRef.current = null;
-            }}
-          >
-            <div className="mx-auto w-full min-w-[260px] max-w-[560px] sm:min-w-[320px]">
-              <DailyMenuCard
-                day={currentDayLabel}
-                dateLabel={dateLabel}
-                meals={currentMeals}
-                onOpenMeal={handleOpenMeal}
-                onAddMeal={handleOpenAddMeal}
-              />
-            </div>
-          </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={handleNextDay}
-            aria-label="Next day"
-            className="h-10 w-10 rounded-full border border-border-subtle text-text-secondary"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </Button>
-        </div>
+  // Menu Closed view - grid of all menu books
+  const closedView = (
+    <div className="space-y-4 px-1">
+      <div className="grid grid-cols-2 gap-3.5">
+        {orderedBooks.map((book) => (
+          <MenuClosedCard
+            key={book.id}
+            book={book}
+            onSelect={handleSelectBook}
+            onLongPress={handleRequestDelete}
+            isActive={book.id === currentBook.id}
+            showCurrentWeekBadge={isCurrentCalendarWeek(book.mealPlan.createdAt)}
+          />
+        ))}
+        <Link
+          to="/create"
+          className="flex min-h-[160px] flex-col items-center justify-center gap-2.5 rounded-xl border-2 border-dashed border-border-subtle bg-transparent transition hover:border-accent-base hover:bg-paper-muted/30"
+        >
+          <span className="text-text-disabled">
+            <PlusIcon />
+          </span>
+          <span className="text-[12px] font-medium text-text-secondary">New Menu</span>
+        </Link>
       </div>
-    </>
+    </div>
+  );
+
+  // Menu Open view - current day card with swipe
+  const openView = (
+    <div className="space-y-4">
+      {/* Swipe indicator */}
+      <SwipeIndicator
+        total={WEEK_DAYS.length}
+        activeIndex={currentDayIndex}
+        onSelect={setCurrentDayIndex}
+        onPrev={handlePrevDay}
+        onNext={handleNextDay}
+        labels={WEEK_DAYS.map((day) => startCaseDay(day))}
+      />
+
+      {/* Daily card with swipe */}
+      <div
+        className="px-1"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={() => {
+          touchStartXRef.current = null;
+        }}
+      >
+        <DailyMenuCard
+          day={currentDayLabel}
+          dateLabel={dateLabel}
+          meals={currentMeals}
+          onOpenMeal={handleOpenMeal}
+          onAddMeal={handleOpenAddMeal}
+        />
+      </div>
+    </div>
   );
 
   return (
-    <PageContainer className="space-y-8">
+    <PageContainer className="pb-20">
       {isMenuOpen ? openView : closedView}
 
       <Modal
@@ -239,7 +219,7 @@ export function HomePage() {
           </Button>
           <Button
             type="button"
-            className="bg-accent-orange hover:bg-accent-orangeLight text-white"
+            className="bg-error text-white hover:bg-error/90"
             onClick={handleConfirmDelete}
           >
             Delete

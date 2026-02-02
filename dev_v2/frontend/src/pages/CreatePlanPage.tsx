@@ -1,8 +1,7 @@
-import { useCallback, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { useMealPlan } from "@/hooks/useMealPlan";
-import { PageContainer } from "@/components/layout/PageContainer";
 import { useAppStore } from "@/stores/useAppStore";
 import { StepWelcome } from "@/components/create/StepWelcome";
 import { StepKeywords } from "@/components/create/StepKeywords";
@@ -13,6 +12,8 @@ import { StepSchedule } from "@/components/create/StepSchedule";
 import { StepLoading } from "@/components/create/StepLoading";
 import { StepPlanOverview } from "@/components/create/StepPlanOverview";
 import { StepShoppingLoading } from "@/components/create/StepShoppingLoading";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/utils/cn";
 import type { MealPlan, ShoppingList } from "@/types";
 
 const steps = {
@@ -27,6 +28,48 @@ const steps = {
   shoppingLoading: 9,
 } as const;
 
+const STEP_LABELS: Record<number, string> = {
+  2: "Keywords",
+  3: "Must-Have Items",
+  4: "Disliked Items",
+  5: "People & Budget",
+  6: "Schedule",
+};
+
+// Total steps for progress indicator (excluding welcome, loading, overview, shoppingLoading)
+const TOTAL_PROGRESS_STEPS = 6;
+
+interface ProgressDotsProps {
+  currentStep: number;
+}
+
+function ProgressDots({ currentStep }: ProgressDotsProps) {
+  // Only show progress dots for steps 2-6
+  if (currentStep < 2 || currentStep > 6) return null;
+  
+  return (
+    <div className="flex gap-2 px-5 pt-14 pb-5">
+      {Array.from({ length: TOTAL_PROGRESS_STEPS }).map((_, index) => {
+        const stepNum = index + 1;
+        const isActive = stepNum === currentStep;
+        const isCompleted = stepNum < currentStep;
+        
+        return (
+          <div
+            key={index}
+            className={cn(
+              "h-2 w-2 rounded-full transition-all",
+              isActive && "bg-accent-base",
+              isCompleted && "bg-accent-light",
+              !isActive && !isCompleted && "bg-border-subtle"
+            )}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 export function CreatePlanPage() {
   const draft = useDraftStore();
   const { createPlan } = useMealPlan();
@@ -39,6 +82,29 @@ export function CreatePlanPage() {
   const navigate = useNavigate();
 
   const [result, setResult] = useState<{ plan: MealPlan; list: ShoppingList } | null>(null);
+  const [showResumePrompt, setShowResumePrompt] = useState(false);
+  const [hasCheckedResume, setHasCheckedResume] = useState(false);
+
+  // Check for resume on mount
+  useEffect(() => {
+    if (!hasCheckedResume) {
+      const savedStep = useDraftStore.getState().currentStep;
+      if (savedStep > 1 && savedStep <= steps.schedule) {
+        setShowResumePrompt(true);
+      }
+      setHasCheckedResume(true);
+    }
+  }, [hasCheckedResume]);
+
+  const handleResumeDraft = () => {
+    setShowResumePrompt(false);
+  };
+
+  const handleStartFresh = () => {
+    setShowResumePrompt(false);
+    resetDraft();
+    clearError();
+  };
 
   const goToStep = useCallback((step: number) => setStep(step), [setStep]);
 
@@ -69,9 +135,8 @@ export function CreatePlanPage() {
         cookSchedule: draft.cookSchedule,
       });
       setResult(outcome);
-      goToStep(steps.overview);
+      goToStep(steps.shoppingLoading);
     } catch {
-      // Error messaging handled via store error state; return user to schedule review.
       goToStep(steps.schedule);
     }
   };
@@ -197,22 +262,72 @@ export function CreatePlanPage() {
       content = <StepWelcome onNext={() => goToStep(steps.keywords)} />;
   }
 
-  return (
-    <PageContainer className="space-y-6 py-6">
-      <div className="space-y-2">
-        <h1 className="text-2xl font-semibold text-slate-900">Create Meal Plan</h1>
-        <p className="text-sm text-slate-500">Answer a few quick questions to generate your personalized weekly plan.</p>
+  // Show resume prompt if user has a saved draft
+  if (showResumePrompt) {
+    const savedStepLabel = STEP_LABELS[draft.currentStep] ?? `Step ${draft.currentStep}`;
+    return (
+      <div className="relative flex h-full flex-1 flex-col bg-paper-base">
+        <div className="px-5 pt-14 pb-6">
+          <h1 className="text-[22px] font-semibold leading-tight text-text-primary">
+            Continue where you left off?
+          </h1>
+          <p className="mt-2 text-[14px] text-text-secondary">
+            You have an unfinished meal plan draft at <strong>{savedStepLabel}</strong>.
+          </p>
+        </div>
+
+        <div className="mx-4 rounded-2xl border border-border-subtle bg-card-base p-5 shadow-soft">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <h3 className="text-[15px] font-semibold text-text-primary">Your saved progress:</h3>
+              <ul className="space-y-1 text-[13px] text-text-secondary">
+                {draft.keywords.length > 0 && (
+                  <li>• {draft.keywords.length} keyword(s) selected</li>
+                )}
+                {draft.mustHaveItems.length > 0 && (
+                  <li>• {draft.mustHaveItems.length} must-have item(s)</li>
+                )}
+                {draft.dislikedItems.length > 0 && (
+                  <li>• {draft.dislikedItems.length} disliked item(s)</li>
+                )}
+                <li>• {draft.numPeople} people, ${draft.budget} budget</li>
+              </ul>
+            </div>
+
+            <div className="flex flex-col gap-3 pt-2">
+              <Button onClick={handleResumeDraft} className="w-full rounded-xl py-3">
+                Continue Draft
+              </Button>
+              <Button onClick={handleStartFresh} variant="outline" className="w-full rounded-xl py-3">
+                Start Fresh
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
+    );
+  }
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+  // Full-screen view for welcome, loading, overview steps
+  const isFullScreenStep = draft.currentStep === steps.welcome || 
+                           draft.currentStep === steps.loading || 
+                           draft.currentStep === steps.overview ||
+                           draft.currentStep === steps.shoppingLoading;
+
+  if (isFullScreenStep) {
+    return (
+      <div className="relative flex h-full flex-1 flex-col bg-paper-base">
         {content}
-      </section>
+        {error && <p className="px-5 pb-4 text-center text-sm text-error">{error}</p>}
+      </div>
+    );
+  }
 
-      {isGenerating && draft.currentStep !== steps.loading && (
-        <p className="text-xs text-slate-400">Generating in background...</p>
-      )}
-
-      {error && <p className="text-sm text-red-500">{error}</p>}
-    </PageContainer>
+  return (
+    <div className="relative flex h-full flex-1 flex-col bg-paper-base">
+      <ProgressDots currentStep={draft.currentStep} />
+      {content}
+      {error && <p className="px-5 pb-4 text-center text-sm text-error">{error}</p>}
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { DEFAULT_BUDGET, DEFAULT_NUM_PEOPLE, MEAL_TYPES, WEEK_DAYS } from "@/utils/constants";
-import type { CookSchedule, Difficulty } from "@/types";
+import type { CookSchedule, Difficulty, UserPreferences } from "@/types";
 
 type DayOfWeek = (typeof WEEK_DAYS)[number];
 type MealType = (typeof MEAL_TYPES)[number];
@@ -38,6 +38,7 @@ interface DraftState {
   toggleMeal: (day: DayOfWeek, meal: MealType) => void;
   selectAllMeals: () => void;
   deselectAllMeals: () => void;
+  setPreferences: (preferences: UserPreferences) => void;
 
   getSelectedMealCount: () => number;
   resetDraft: () => void;
@@ -134,6 +135,18 @@ export const useDraftStore = create(
           }, {} as CookSchedule),
           lastUpdated: new Date().toISOString(),
         })),
+
+      setPreferences: (preferences) =>
+        set({
+          keywords: preferences.keywords,
+          mustHaveItems: preferences.mustHaveItems,
+          dislikedItems: preferences.dislikedItems,
+          numPeople: preferences.numPeople,
+          budget: preferences.budget,
+          difficulty: preferences.difficulty,
+          cookSchedule: preferences.cookSchedule,
+          lastUpdated: new Date().toISOString(),
+        }),
 
       getSelectedMealCount: () => {
         const { cookSchedule } = get();

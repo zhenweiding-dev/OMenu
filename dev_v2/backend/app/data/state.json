@@ -1,0 +1,1090 @@
+{
+  "preferences": {
+    "keywords": [
+      "Healthy",
+      "Quick",
+      "Under 30 Min",
+      "Meal Prep"
+    ],
+    "mustHaveItems": [
+      "Avocado",
+      "Tuna",
+      "Chicken",
+      "Shrimp",
+      "Beef",
+      "Tacos"
+    ],
+    "dislikedItems": [
+      "Mushrooms",
+      "Octopus"
+    ],
+    "numPeople": 2,
+    "budget": 175,
+    "difficulty": "easy",
+    "cookSchedule": {
+      "monday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      },
+      "tuesday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      },
+      "wednesday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      },
+      "thursday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      },
+      "friday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      },
+      "saturday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      },
+      "sunday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      }
+    }
+  },
+  "menuBooks": [
+    {
+      "id": "demo_week_20260202",
+      "mealPlan": {
+        "id": "mealplan_demo_20260202",
+        "createdAt": "2026-02-02T08:00:00Z",
+        "status": "ready",
+        "preferences": {
+          "keywords": [
+            "Healthy",
+            "Quick",
+            "Under 30 Min",
+            "Meal Prep"
+          ],
+          "mustHaveItems": [
+            "Avocado",
+            "Tuna",
+            "Chicken",
+            "Shrimp",
+            "Beef",
+            "Tacos"
+          ],
+          "dislikedItems": [
+            "Mushrooms",
+            "Octopus"
+          ],
+          "numPeople": 2,
+          "budget": 175,
+          "difficulty": "easy",
+          "cookSchedule": {
+            "monday": {
+              "breakfast": true,
+              "lunch": true,
+              "dinner": true
+            },
+            "tuesday": {
+              "breakfast": true,
+              "lunch": true,
+              "dinner": true
+            },
+            "wednesday": {
+              "breakfast": true,
+              "lunch": true,
+              "dinner": true
+            },
+            "thursday": {
+              "breakfast": true,
+              "lunch": true,
+              "dinner": true
+            },
+            "friday": {
+              "breakfast": true,
+              "lunch": true,
+              "dinner": true
+            },
+            "saturday": {
+              "breakfast": true,
+              "lunch": true,
+              "dinner": true
+            },
+            "sunday": {
+              "breakfast": true,
+              "lunch": true,
+              "dinner": true
+            }
+          }
+        },
+        "days": {
+          "monday": {
+            "breakfast": {
+              "id": "manual_breakfast_monday_1770075000229",
+              "name": "sdsd",
+              "ingredients": [],
+              "instructions": "",
+              "estimatedTime": 0,
+              "servings": 0,
+              "difficulty": "easy",
+              "totalCalories": 0,
+              "notes": ""
+            },
+            "lunch": {
+              "id": "recipe_chicken_salad",
+              "name": "Herbed Chicken Salad Bowl",
+              "ingredients": [
+                {
+                  "name": "Chicken breast",
+                  "quantity": 1.0,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Spring greens",
+                  "quantity": 4.0,
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Cherry tomatoes",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Quinoa",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "grains"
+                },
+                {
+                  "name": "Feta cheese",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Lemon vinaigrette",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Cook quinoa. Grill chicken with herbs. Toss greens, tomatoes, quinoa, and feta with vinaigrette. Slice chicken and serve on top.",
+              "estimatedTime": 30,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 540,
+              "notes": null
+            },
+            "dinner": {
+              "id": "recipe_salmon",
+              "name": "Citrus Herb Salmon",
+              "ingredients": [
+                {
+                  "name": "Salmon fillet",
+                  "quantity": 4.0,
+                  "unit": "oz",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Asparagus",
+                  "quantity": 12.0,
+                  "unit": "spears",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Orange",
+                  "quantity": 1.0,
+                  "unit": "",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Olive oil",
+                  "quantity": 2.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Fresh dill",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Preheat oven to 400°F. Arrange salmon and asparagus on tray. Drizzle olive oil, orange zest, and garlic. Roast 12 minutes and finish with dill.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 610,
+              "notes": null
+            }
+          },
+          "tuesday": {
+            "breakfast": {
+              "id": "recipe_avocado_toast",
+              "name": "Avocado Toast with Eggs",
+              "ingredients": [
+                {
+                  "name": "Sourdough bread",
+                  "quantity": 2.0,
+                  "unit": "slices",
+                  "category": "grains"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 1.0,
+                  "unit": "",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Egg",
+                  "quantity": 2.0,
+                  "unit": "",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Lemon juice",
+                  "quantity": 1.0,
+                  "unit": "tsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Chili flakes",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Toast bread. Mash avocado with lemon juice and spread over toast. Top with fried eggs and sprinkle chili flakes.",
+              "estimatedTime": 15,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 320,
+              "notes": null
+            },
+            "lunch": {
+              "id": "recipe_chicken_salad",
+              "name": "Herbed Chicken Salad Bowl",
+              "ingredients": [
+                {
+                  "name": "Chicken breast",
+                  "quantity": 1.0,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Spring greens",
+                  "quantity": 4.0,
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Cherry tomatoes",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Quinoa",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "grains"
+                },
+                {
+                  "name": "Feta cheese",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Lemon vinaigrette",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Cook quinoa. Grill chicken with herbs. Toss greens, tomatoes, quinoa, and feta with vinaigrette. Slice chicken and serve on top.",
+              "estimatedTime": 30,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 540,
+              "notes": null
+            },
+            "dinner": null
+          },
+          "wednesday": {
+            "breakfast": {
+              "id": "recipe_avocado_toast",
+              "name": "Avocado Toast with Eggs",
+              "ingredients": [
+                {
+                  "name": "Sourdough bread",
+                  "quantity": 2.0,
+                  "unit": "slices",
+                  "category": "grains"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 1.0,
+                  "unit": "",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Egg",
+                  "quantity": 2.0,
+                  "unit": "",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Lemon juice",
+                  "quantity": 1.0,
+                  "unit": "tsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Chili flakes",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Toast bread. Mash avocado with lemon juice and spread over toast. Top with fried eggs and sprinkle chili flakes.",
+              "estimatedTime": 15,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 320,
+              "notes": null
+            },
+            "lunch": {
+              "id": "recipe_chicken_salad",
+              "name": "Herbed Chicken Salad Bowl",
+              "ingredients": [
+                {
+                  "name": "Chicken breast",
+                  "quantity": 1.0,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Spring greens",
+                  "quantity": 4.0,
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Cherry tomatoes",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Quinoa",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "grains"
+                },
+                {
+                  "name": "Feta cheese",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Lemon vinaigrette",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Cook quinoa. Grill chicken with herbs. Toss greens, tomatoes, quinoa, and feta with vinaigrette. Slice chicken and serve on top.",
+              "estimatedTime": 30,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 540,
+              "notes": null
+            },
+            "dinner": {
+              "id": "manual_dinner_wednesday_1770075447988",
+              "name": "sds",
+              "ingredients": [],
+              "instructions": "",
+              "estimatedTime": 0,
+              "servings": 0,
+              "difficulty": "hard",
+              "totalCalories": 0,
+              "notes": ""
+            }
+          },
+          "thursday": {
+            "breakfast": {
+              "id": "recipe_avocado_toast",
+              "name": "Avocado Toast with Eggs",
+              "ingredients": [
+                {
+                  "name": "Sourdough bread",
+                  "quantity": 2.0,
+                  "unit": "slices",
+                  "category": "grains"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 1.0,
+                  "unit": "",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Egg",
+                  "quantity": 2.0,
+                  "unit": "",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Lemon juice",
+                  "quantity": 1.0,
+                  "unit": "tsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Chili flakes",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Toast bread. Mash avocado with lemon juice and spread over toast. Top with fried eggs and sprinkle chili flakes.",
+              "estimatedTime": 15,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 320,
+              "notes": null
+            },
+            "lunch": {
+              "id": "recipe_chicken_salad",
+              "name": "Herbed Chicken Salad Bowl",
+              "ingredients": [
+                {
+                  "name": "Chicken breast",
+                  "quantity": 1.0,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Spring greens",
+                  "quantity": 4.0,
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Cherry tomatoes",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Quinoa",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "grains"
+                },
+                {
+                  "name": "Feta cheese",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Lemon vinaigrette",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Cook quinoa. Grill chicken with herbs. Toss greens, tomatoes, quinoa, and feta with vinaigrette. Slice chicken and serve on top.",
+              "estimatedTime": 30,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 540,
+              "notes": null
+            },
+            "dinner": {
+              "id": "recipe_salmon",
+              "name": "Citrus Herb Salmon",
+              "ingredients": [
+                {
+                  "name": "Salmon fillet",
+                  "quantity": 4.0,
+                  "unit": "oz",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Asparagus",
+                  "quantity": 12.0,
+                  "unit": "spears",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Orange",
+                  "quantity": 1.0,
+                  "unit": "",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Olive oil",
+                  "quantity": 2.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Fresh dill",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Preheat oven to 400°F. Arrange salmon and asparagus on tray. Drizzle olive oil, orange zest, and garlic. Roast 12 minutes and finish with dill.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 610,
+              "notes": null
+            }
+          },
+          "friday": {
+            "breakfast": {
+              "id": "recipe_avocado_toast",
+              "name": "Avocado Toast with Eggs",
+              "ingredients": [
+                {
+                  "name": "Sourdough bread",
+                  "quantity": 2.0,
+                  "unit": "slices",
+                  "category": "grains"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 1.0,
+                  "unit": "",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Egg",
+                  "quantity": 2.0,
+                  "unit": "",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Lemon juice",
+                  "quantity": 1.0,
+                  "unit": "tsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Chili flakes",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Toast bread. Mash avocado with lemon juice and spread over toast. Top with fried eggs and sprinkle chili flakes.",
+              "estimatedTime": 15,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 320,
+              "notes": null
+            },
+            "lunch": {
+              "id": "recipe_chicken_salad",
+              "name": "Herbed Chicken Salad Bowl",
+              "ingredients": [
+                {
+                  "name": "Chicken breast",
+                  "quantity": 1.0,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Spring greens",
+                  "quantity": 4.0,
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Cherry tomatoes",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Quinoa",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "grains"
+                },
+                {
+                  "name": "Feta cheese",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Lemon vinaigrette",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Cook quinoa. Grill chicken with herbs. Toss greens, tomatoes, quinoa, and feta with vinaigrette. Slice chicken and serve on top.",
+              "estimatedTime": 30,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 540,
+              "notes": null
+            },
+            "dinner": {
+              "id": "recipe_salmon",
+              "name": "Citrus Herb Salmon",
+              "ingredients": [
+                {
+                  "name": "Salmon fillet",
+                  "quantity": 4.0,
+                  "unit": "oz",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Asparagus",
+                  "quantity": 12.0,
+                  "unit": "spears",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Orange",
+                  "quantity": 1.0,
+                  "unit": "",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Olive oil",
+                  "quantity": 2.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Fresh dill",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Preheat oven to 400°F. Arrange salmon and asparagus on tray. Drizzle olive oil, orange zest, and garlic. Roast 12 minutes and finish with dill.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 610,
+              "notes": null
+            }
+          },
+          "saturday": {
+            "breakfast": {
+              "id": "recipe_avocado_toast",
+              "name": "Avocado Toast with Eggs",
+              "ingredients": [
+                {
+                  "name": "Sourdough bread",
+                  "quantity": 2.0,
+                  "unit": "slices",
+                  "category": "grains"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 1.0,
+                  "unit": "",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Egg",
+                  "quantity": 2.0,
+                  "unit": "",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Lemon juice",
+                  "quantity": 1.0,
+                  "unit": "tsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Chili flakes",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Toast bread. Mash avocado with lemon juice and spread over toast. Top with fried eggs and sprinkle chili flakes.",
+              "estimatedTime": 15,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 320,
+              "notes": null
+            },
+            "lunch": {
+              "id": "recipe_chicken_salad",
+              "name": "Herbed Chicken Salad Bowl",
+              "ingredients": [
+                {
+                  "name": "Chicken breast",
+                  "quantity": 1.0,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Spring greens",
+                  "quantity": 4.0,
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Cherry tomatoes",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Quinoa",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "grains"
+                },
+                {
+                  "name": "Feta cheese",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Lemon vinaigrette",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Cook quinoa. Grill chicken with herbs. Toss greens, tomatoes, quinoa, and feta with vinaigrette. Slice chicken and serve on top.",
+              "estimatedTime": 30,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 540,
+              "notes": null
+            },
+            "dinner": {
+              "id": "recipe_salmon",
+              "name": "Citrus Herb Salmon",
+              "ingredients": [
+                {
+                  "name": "Salmon fillet",
+                  "quantity": 4.0,
+                  "unit": "oz",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Asparagus",
+                  "quantity": 12.0,
+                  "unit": "spears",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Orange",
+                  "quantity": 1.0,
+                  "unit": "",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Olive oil",
+                  "quantity": 2.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Fresh dill",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Preheat oven to 400°F. Arrange salmon and asparagus on tray. Drizzle olive oil, orange zest, and garlic. Roast 12 minutes and finish with dill.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 610,
+              "notes": null
+            }
+          },
+          "sunday": {
+            "breakfast": {
+              "id": "recipe_avocado_toast",
+              "name": "Avocado Toast with Eggs",
+              "ingredients": [
+                {
+                  "name": "Sourdough bread",
+                  "quantity": 2.0,
+                  "unit": "slices",
+                  "category": "grains"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 1.0,
+                  "unit": "",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Egg",
+                  "quantity": 2.0,
+                  "unit": "",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Lemon juice",
+                  "quantity": 1.0,
+                  "unit": "tsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Chili flakes",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Toast bread. Mash avocado with lemon juice and spread over toast. Top with fried eggs and sprinkle chili flakes.",
+              "estimatedTime": 15,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 320,
+              "notes": null
+            },
+            "lunch": {
+              "id": "recipe_chicken_salad",
+              "name": "Herbed Chicken Salad Bowl",
+              "ingredients": [
+                {
+                  "name": "Chicken breast",
+                  "quantity": 1.0,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Spring greens",
+                  "quantity": 4.0,
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Cherry tomatoes",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Quinoa",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "grains"
+                },
+                {
+                  "name": "Feta cheese",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Lemon vinaigrette",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Cook quinoa. Grill chicken with herbs. Toss greens, tomatoes, quinoa, and feta with vinaigrette. Slice chicken and serve on top.",
+              "estimatedTime": 30,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 540,
+              "notes": null
+            },
+            "dinner": {
+              "id": "recipe_salmon",
+              "name": "Citrus Herb Salmon",
+              "ingredients": [
+                {
+                  "name": "Salmon fillet",
+                  "quantity": 4.0,
+                  "unit": "oz",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Asparagus",
+                  "quantity": 12.0,
+                  "unit": "spears",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Orange",
+                  "quantity": 1.0,
+                  "unit": "",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Olive oil",
+                  "quantity": 2.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Fresh dill",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Preheat oven to 400°F. Arrange salmon and asparagus on tray. Drizzle olive oil, orange zest, and garlic. Roast 12 minutes and finish with dill.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 610,
+              "notes": null
+            }
+          }
+        }
+      },
+      "shoppingList": {
+        "id": "shopping_demo_20260202",
+        "mealPlanId": "mealplan_demo_20260202",
+        "createdAt": "2026-02-02T23:28:37.897000Z",
+        "items": [
+          {
+            "id": "item_bread",
+            "name": "Sourdough bread",
+            "category": "grains",
+            "totalQuantity": 1.0,
+            "unit": "loaf",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_avocado",
+            "name": "Avocados",
+            "category": "fruits",
+            "totalQuantity": 4.0,
+            "unit": "",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_eggs",
+            "name": "Eggs",
+            "category": "proteins",
+            "totalQuantity": 12.0,
+            "unit": "count",
+            "purchased": true,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_salmon",
+            "name": "Salmon fillet",
+            "category": "proteins",
+            "totalQuantity": 4.0,
+            "unit": "oz",
+            "purchased": true,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_asparagus",
+            "name": "Asparagus",
+            "category": "vegetables",
+            "totalQuantity": 1.0,
+            "unit": "bunch",
+            "purchased": true,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_quinoa",
+            "name": "Quinoa",
+            "category": "grains",
+            "totalQuantity": 2.0,
+            "unit": "cups",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_vinaigrette",
+            "name": "Lemon vinaigrette",
+            "category": "seasonings",
+            "totalQuantity": 0.0,
+            "unit": "",
+            "purchased": true,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_olive_oil",
+            "name": "Olive oil",
+            "category": "pantry_staples",
+            "totalQuantity": 1.0,
+            "unit": "bottle",
+            "purchased": true,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "d1a9770d-0dc4-4883-8a33-917731d20fbf",
+            "name": "asa",
+            "category": "proteins",
+            "totalQuantity": 23.0,
+            "unit": "23",
+            "purchased": true,
+            "isManuallyAdded": true
+          }
+        ]
+      }
+    }
+  ],
+  "currentWeekId": "demo_week_20260202",
+  "currentDayIndex": 1,
+  "isMenuOpen": true
+}

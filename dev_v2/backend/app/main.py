@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import meal_plans, shopping
+from app.routers import meal_plans, shopping, user_state
 
 app = FastAPI(
     title="OMenu API",
@@ -22,6 +22,7 @@ app.add_middleware(
 
 app.include_router(meal_plans.router, prefix="/api/meal-plans", tags=["Meal Plans"])
 app.include_router(shopping.router, prefix="/api/shopping-lists", tags=["Shopping Lists"])
+app.include_router(user_state.router, prefix="/api/user-state", tags=["User State"])
 
 
 @app.get("/api/health")

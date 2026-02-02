@@ -116,30 +116,37 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurr
     >
       <div
         className={cn(
-          "relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-subtle bg-card-base p-5 text-text-primary shadow-soft transition-transform",
+          "relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-subtle bg-card-base text-text-primary shadow-soft transition-transform",
           "hover:-translate-y-[2px]",
           isActive ? "ring-2 ring-accent-base/60 ring-offset-2 ring-offset-paper-base" : "ring-0",
         )}
       >
+        {/* THIS WEEK badge - green horizontal bar at top per spec */}
         {showCurrentWeekBadge && (
-          <span className="inline-flex items-center rounded-full bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-primary">
-            {relativeLabel}
-          </span>
+          <div className="bg-accent-base px-4 py-2 text-center">
+            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-white">
+              {relativeLabel}
+            </span>
+          </div>
         )}
 
-        <div
-          className={cn(
-            "mt-4 flex flex-1 items-center justify-center rounded-2xl border border-border-subtle/60 text-center text-3xl leading-relaxed",
-            surfaceClass,
-          )}
-          aria-hidden
-        >
-          {emojiCover}
+        {/* Food emoji cover */}
+        <div className="flex flex-1 flex-col p-4">
+          <div
+            className={cn(
+              "flex flex-1 items-center justify-center rounded-2xl border border-border-subtle/60 text-center text-3xl leading-relaxed",
+              surfaceClass,
+            )}
+            aria-hidden
+          >
+            {emojiCover}
+          </div>
         </div>
 
-        <div className="mt-4 space-y-1 rounded-2xl border border-border-subtle/80 bg-white/90 p-4">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-text-secondary">{weekRange}</p>
-          <p className="text-[13px] text-text-primary">
+        {/* Info footer */}
+        <div className="border-t border-border-subtle bg-white/90 px-4 py-3">
+          <p className="text-[13px] font-semibold text-text-primary">{weekRange}</p>
+          <p className="mt-0.5 text-[12px] text-text-secondary">
             {totalMeals} meals • {budget}
           </p>
         </div>

@@ -44,8 +44,8 @@ class ParseError(Exception):
 
 
 class GeminiService:
-    def __init__(self, model_name: str = "gemini-3-flash-preview", timeout_seconds: float = 120.0) -> None:
-        self._model_name = model_name
+    def __init__(self, model_name: Optional[str] = None, timeout_seconds: float = 120.0) -> None:
+        self._model_name = model_name or settings.gemini_model
         self._model: Optional[Any] = None
         self._client: Optional[Any] = None
         self._timeout_seconds = timeout_seconds

@@ -1,6 +1,4 @@
 import type { DayMeals } from "@/types";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
 interface DailyMenuCardProps {
@@ -11,10 +9,10 @@ interface DailyMenuCardProps {
   onAddMeal: () => void;
 }
 
-const MEAL_META: Record<keyof DayMeals, { label: string; icon: string; accent: string }> = {
-  breakfast: { label: "Breakfast", icon: "🌅", accent: "bg-amber-100 text-amber-700" },
-  lunch: { label: "Lunch", icon: "☀️", accent: "bg-emerald-100 text-emerald-700" },
-  dinner: { label: "Dinner", icon: "🌙", accent: "bg-indigo-100 text-indigo-700" },
+const MEAL_META: Record<keyof DayMeals, { label: string; icon: string; bgColor: string }> = {
+  breakfast: { label: "Breakfast", icon: "🌅", bgColor: "bg-meal-breakfast" },
+  lunch: { label: "Lunch", icon: "☀️", bgColor: "bg-meal-lunch" },
+  dinner: { label: "Dinner", icon: "🌙", bgColor: "bg-meal-dinner" },
 };
 
 function MealRow({
@@ -28,19 +26,13 @@ function MealRow({
 }) {
   const meta = MEAL_META[mealType];
 
+  // Empty slot
   if (!meal) {
     return (
-      <div className="flex min-h-[120px] items-center gap-3 rounded-2xl border border-dashed border-border-subtle px-4 py-3">
-        <div className={`flex h-11 w-11 items-center justify-center rounded-2xl text-lg ${meta.accent}`} aria-hidden>
-          {meta.icon}
-        </div>
-        <div className="flex flex-1 flex-col gap-0.5">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
-            {meta.label}
-          </span>
-          <span className="text-[12px] text-text-disabled">Not scheduled</span>
-        </div>
-        <span className="text-[12px] text-text-disabled">—</span>
+      <div className="mx-4 my-2.5 flex items-center justify-center rounded-xl border border-dashed border-border-subtle bg-paper-base px-4 py-4">
+        <span className="text-[13px] text-text-disabled">
+          {meta.icon} No {meta.label.toLowerCase()} planned
+        </span>
       </div>
     );
   }
@@ -49,40 +41,30 @@ function MealRow({
     <button
       type="button"
       onClick={onOpen}
-      className="flex min-h-[120px] items-start gap-3 rounded-2xl border border-border-subtle bg-card-base/80 px-4 py-3 text-left shadow-soft transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base"
+      className="flex w-full items-center gap-3.5 border-b border-border-subtle px-5 py-3.5 text-left transition-colors last:border-b-0 hover:bg-paper-muted/50"
     >
-      <div className={`flex h-11 w-11 items-center justify-center rounded-2xl text-lg ${meta.accent}`} aria-hidden>
+      {/* Icon wrapper */}
+      <div className={`flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-xl text-lg ${meta.bgColor}`}>
         {meta.icon}
       </div>
-      <div className="flex flex-1 flex-col gap-2">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+
+      {/* Content */}
+      <div className="min-w-0 flex-1">
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-text-secondary">
           {meta.label}
-        </span>
-        <div className="space-y-1">
-          <p className="text-[15px] font-semibold leading-tight text-text-primary">{meal.name}</p>
-          <p className="text-[12px] text-text-secondary">
-            {meal.estimatedTime > 0 ? `${meal.estimatedTime} min` : "Time n/a"} · Serves {meal.servings || "n/a"}
-          </p>
-        </div>
-        {meal.ingredients?.length ? (
-          <div className="flex flex-wrap gap-1.5">
-            {meal.ingredients.slice(0, 4).map((ingredient, index) => (
-              <span
-                key={`${ingredient.name}-${index}`}
-                className="max-w-[10rem] truncate rounded-full border border-border-tag bg-paper-muted px-2 py-0.5 text-[11px] font-medium text-text-secondary"
-              >
-                {ingredient.name}
-              </span>
-            ))}
-            {meal.ingredients.length > 4 && (
-              <span className="rounded-full border border-border-tag px-2 py-0.5 text-[11px] font-medium text-text-secondary">
-                +{meal.ingredients.length - 4}
-              </span>
-            )}
-          </div>
-        ) : null}
+        </p>
+        <p className="mt-0.5 truncate text-[15px] font-semibold leading-tight text-text-primary">
+          {meal.name}
+        </p>
+        <p className="mt-1 text-[11px] text-text-secondary">
+          {meal.estimatedTime > 0 ? `${meal.estimatedTime} min` : "—"} · {meal.servings || "—"} servings
+        </p>
       </div>
-      <span className="text-[13px] font-semibold text-accent-base">{meal.totalCalories} cal</span>
+
+      {/* Calories */}
+      <span className="flex-shrink-0 text-[13px] font-semibold text-accent-base">
+        {meal.totalCalories}
+      </span>
     </button>
   );
 }
@@ -94,35 +76,35 @@ export function DailyMenuCard({ day, dateLabel, meals, onOpenMeal, onAddMeal }: 
   }, 0);
 
   return (
-    <Card className="w-full">
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[24px] font-bold tracking-[-0.02em] text-text-primary">{day}</p>
-            <p className="mt-1 text-[13px] text-text-secondary">{dateLabel}</p>
+    <div className="w-full overflow-hidden rounded-2xl border border-border-subtle bg-card-base shadow-card">
+      {/* Card header */}
+      <div className="relative border-b border-border-subtle bg-card-header px-5 py-5">
+        <div className="pr-12">
+          <p className="text-[24px] font-bold tracking-tight text-text-primary">{day}</p>
+          <p className="mt-0.5 text-[13px] text-text-secondary">{dateLabel}</p>
+          <div className="mt-2.5 flex items-center gap-3.5 text-[12px] text-text-secondary">
+            <span>🍽️ {scheduledMeals} {scheduledMeals === 1 ? "meal" : "meals"}</span>
+            <span>🔥 {totalCalories.toLocaleString()} cal</span>
           </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={onAddMeal}
-            aria-label="Add meal"
-            className="h-10 w-10 rounded-full border border-border-subtle text-text-secondary"
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
         </div>
-        <div className="mt-4 flex items-center gap-3 text-[12px] text-text-secondary">
-          <span>🍽️ {scheduledMeals} {scheduledMeals === 1 ? "meal" : "meals"}</span>
-          <span aria-hidden>•</span>
-          <span>🔥 {totalCalories.toLocaleString()} cal</span>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
+
+        {/* Add meal button */}
+        <button
+          type="button"
+          onClick={onAddMeal}
+          aria-label="Add meal"
+          className="absolute right-4 top-4 flex h-[34px] w-[34px] items-center justify-center rounded-[10px] border-[1.5px] border-dashed border-border-tag bg-white transition-colors hover:border-accent-base"
+        >
+          <Plus className="h-[15px] w-[15px] text-text-disabled" strokeWidth={2} />
+        </button>
+      </div>
+
+      {/* Meal items */}
+      <div>
         <MealRow mealType="breakfast" meal={meals.breakfast} onOpen={() => onOpenMeal("breakfast")} />
         <MealRow mealType="lunch" meal={meals.lunch} onOpen={() => onOpenMeal("lunch")} />
         <MealRow mealType="dinner" meal={meals.dinner} onOpen={() => onOpenMeal("dinner")} />
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

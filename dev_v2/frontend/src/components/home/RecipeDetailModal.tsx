@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BarChart3, Check, Clock, Flame, Pencil, Trash2, Users, X } from "lucide-react";
+import { createPortal } from "react-dom";
 import { useAppStore } from "@/stores/useAppStore";
 import { startCaseDay } from "@/utils/helpers";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,14 +22,78 @@ interface ModalContentProps {
   onDelete: () => void;
 }
 
+function CloseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+      <path d="M18 6L6 18M6 6l12 12" />
+    </svg>
+  );
+}
+
+function EditIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+    </svg>
+  );
+}
+
+function DeleteIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 6v6l4 2" />
+    </svg>
+  );
+}
+
+function UsersIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+    </svg>
+  );
+}
+
+function ChartIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <path d="M12 20V10M18 20V4M6 20v-4" />
+    </svg>
+  );
+}
+
+function FlameIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z" />
+    </svg>
+  );
+}
+
 function RecipeDetailModalContent({ active, onClose, onSaveNotes, onDelete }: ModalContentProps) {
   const { book, day, mealType, recipe } = active;
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [notesDraft, setNotesDraft] = useState(() => recipe.notes ?? "");
 
-  const dayLabel = startCaseDay(day);
-  const mealLabel = mealType.charAt(0).toUpperCase() + mealType.slice(1);
-  const ingredientCount = recipe.ingredients.length;
+  const ingredientsList = recipe.ingredients.map((ing) => {
+    if (ing.quantity > 0) {
+      return `${ing.quantity} ${ing.unit} ${ing.name}`.trim();
+    }
+    return ing.name;
+  });
+
   const instructionSteps = recipe.instructions
     .split(/\n+/)
     .map((step) => step.trim())
@@ -38,148 +102,165 @@ function RecipeDetailModalContent({ active, onClose, onSaveNotes, onDelete }: Mo
       const cleaned = step.replace(/^(?:step\s*\d+[:.-]?|\d+[).:\-\s]*|[-•\u2022]\s*)/i, "").trim();
       return cleaned.length > 0 ? cleaned : step;
     });
-  const hasNotes = Boolean(recipe.notes);
 
-  const headerSubtitle = `${dayLabel} · ${mealLabel}`;
+  const hasNotes = Boolean(recipe.notes);
 
   const handleSaveNotes = () => {
     onSaveNotes(notesDraft.trim());
     setIsEditingNotes(false);
   };
 
-  const handleCancelNotes = () => {
-    setNotesDraft(recipe.notes ?? "");
-    setIsEditingNotes(false);
+  const handleDelete = () => {
+    const shouldDelete = window.confirm("Remove this meal from the plan?");
+    if (shouldDelete) {
+      onDelete();
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 px-4 py-6">
-      <div className="relative w-full max-w-3xl rounded-[2rem] border border-border-subtle bg-card-base p-6 shadow-card">
-        <div className="flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="icon"
+    <div className="absolute inset-0 z-50 flex items-end justify-center bg-black/40">
+      <div className="flex max-h-[85%] w-full flex-col overflow-hidden rounded-t-3xl bg-card-base">
+        {/* Modal Header */}
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-subtle bg-card-base px-5 py-4">
+          <button
+            type="button"
             onClick={onClose}
-            className="h-9 w-9 rounded-full text-text-secondary hover:text-text-primary"
-            aria-label="Close recipe"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-text-primary transition-colors hover:bg-paper-dark"
+            aria-label="Close"
           >
-            <X className="h-5 w-5" />
-          </Button>
+            <CloseIcon />
+          </button>
           <div className="flex items-center gap-2">
-            {isEditingNotes ? (
-              <>
-                <Button size="sm" variant="ghost" onClick={handleCancelNotes}>
-                  Cancel
-                </Button>
-                <Button size="sm" onClick={handleSaveNotes}>
-                  <Check className="mr-1.5 h-4 w-4" /> Save
-                </Button>
-              </>
-            ) : (
-              <Button size="sm" variant="ghost" onClick={() => setIsEditingNotes(true)}>
-                <Pencil className="mr-1.5 h-4 w-4" /> Edit notes
-              </Button>
-            )}
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => {
-                const shouldDelete = window.confirm("Remove this meal from the plan?");
-                if (!shouldDelete) return;
-                onDelete();
-              }}
-              className="text-[#C67B7B] hover:text-[#a86161]"
+            <button
+              type="button"
+              onClick={() => setIsEditingNotes(true)}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-text-primary transition-colors hover:bg-paper-dark"
+              aria-label="Edit notes"
             >
-              <Trash2 className="mr-1.5 h-4 w-4" /> Delete meal
-            </Button>
+              <EditIcon />
+            </button>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-error transition-colors hover:bg-paper-dark"
+              aria-label="Delete meal"
+            >
+              <DeleteIcon />
+            </button>
           </div>
         </div>
 
-        <div className="mt-3 space-y-3">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-accent-base">
-            {headerSubtitle}
-          </p>
-          <h2 className="text-[26px] font-bold leading-tight tracking-[-0.02em] text-text-primary">
+        {/* Modal Body - Scrollable */}
+        <div className="flex-1 overflow-y-auto px-5 py-5">
+          {/* Recipe Title */}
+          <h2 className="text-[22px] font-semibold leading-tight text-text-primary">
             {recipe.name}
           </h2>
-          <div className="flex flex-wrap items-center gap-4 text-[12px] text-text-secondary">
-            <span className="flex items-center gap-1">
-              <Clock className="h-4 w-4" /> {recipe.estimatedTime} min
-            </span>
-            <span className="flex items-center gap-1">
-              <Users className="h-4 w-4" /> Serves {recipe.servings}
-            </span>
-            <span className="flex items-center gap-1">
-              <BarChart3 className="h-4 w-4" /> {formatDifficulty(recipe.difficulty)}
-            </span>
-            <span className="flex items-center gap-1">
-              <Flame className="h-4 w-4" /> {recipe.totalCalories} kcal
-            </span>
+
+          {/* Recipe Meta */}
+          <div className="mt-4 flex flex-wrap gap-4">
+            <div className="flex items-center gap-1.5 text-[13px] text-text-secondary">
+              <ClockIcon />
+              <span>{recipe.estimatedTime} min</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-[13px] text-text-secondary">
+              <UsersIcon />
+              <span>{recipe.servings} servings</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-[13px] text-text-secondary">
+              <ChartIcon />
+              <span>{formatDifficulty(recipe.difficulty)}</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-[13px] text-text-secondary">
+              <FlameIcon />
+              <span>{recipe.totalCalories} cal</span>
           </div>
         </div>
 
-        <div className="mt-6 grid gap-6 md:grid-cols-[1.4fr,1fr]">
-          <section className="space-y-4">
-            <div>
-              <h3 className="text-[15px] font-semibold text-text-primary">Ingredients</h3>
-              <ul className="mt-2 space-y-1 text-[13px] text-text-secondary">
-                {recipe.ingredients.map((ingredient) => (
-                  <li key={`${ingredient.name}-${ingredient.quantity}`} className="flex items-baseline gap-3">
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-tertiary">
-                      {ingredient.category.replace(/_/g, " ")}
-                    </span>
-                    <span>
-                      {ingredient.name}
-                      {ingredient.quantity > 0 && ` · ${ingredient.quantity} ${ingredient.unit}`}
-                    </span>
+          {/* Ingredients Section */}
+          <section className="mt-6">
+            <h3 className="text-[14px] font-semibold text-text-primary">Ingredients</h3>
+            <ul className="mt-3">
+              {ingredientsList.map((item, index) => (
+                <li
+                  key={index}
+                  className="border-b border-border-subtle py-2 text-[14px] text-text-primary last:border-b-0"
+                >
+                  • {item}
                   </li>
                 ))}
               </ul>
-            </div>
-            <div>
-              <h3 className="text-[15px] font-semibold text-text-primary">Instructions</h3>
-              <ol className="mt-2 space-y-2 text-[13px] leading-relaxed text-text-secondary">
+          </section>
+
+          {/* Instructions Section */}
+          <section className="mt-6">
+            <h3 className="text-[14px] font-semibold text-text-primary">Instructions</h3>
+            <ol className="mt-3">
                 {instructionSteps.length > 0 ? (
                   instructionSteps.map((step, index) => (
-                    <li key={index} className="flex gap-3">
-                      <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full border border-border-subtle text-[12px] font-semibold text-text-secondary">
+                  <li
+                    key={index}
+                    className="relative border-b border-border-subtle py-3 pl-7 text-[14px] leading-relaxed text-text-primary last:border-b-0"
+                  >
+                    <span className="absolute left-0 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-paper-muted text-[11px] font-semibold text-accent-base">
                         {index + 1}
                       </span>
-                      <span>{step}</span>
+                    {step}
                     </li>
                   ))
                 ) : (
-                  <li>No instructions provided.</li>
+                <li className="py-2 text-[14px] text-text-secondary">No instructions provided.</li>
                 )}
               </ol>
-            </div>
           </section>
 
-          <section className="space-y-4 rounded-[1.5rem] border border-border-subtle bg-paper-muted/60 p-4">
-            <div className="space-y-1">
-              <h3 className="text-[15px] font-semibold text-text-primary">Notes</h3>
-              <p className="text-[12px] text-text-secondary">
-                Personalize this recipe with tips, swaps, or reminders.
-              </p>
+          {/* Notes Section */}
+          <section className="mt-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-[14px] font-semibold text-text-primary">Notes</h3>
+              {!isEditingNotes && (
+                <button
+                  type="button"
+                  onClick={() => setIsEditingNotes(true)}
+                  className="text-[13px] text-accent-base hover:opacity-80"
+                >
+                  Edit
+                </button>
+              )}
             </div>
             {isEditingNotes ? (
+              <div className="mt-3 space-y-3">
               <Textarea
                 value={notesDraft}
                 onChange={(event) => setNotesDraft(event.target.value)}
                 placeholder="Add your notes here"
-                className="min-h-[160px]"
+                  className="min-h-[100px]"
               />
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setNotesDraft(recipe.notes ?? "");
+                      setIsEditingNotes(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button size="sm" onClick={handleSaveNotes}>
+                    Save
+                  </Button>
+                </div>
+              </div>
             ) : hasNotes ? (
-              <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-text-secondary">{recipe.notes}</p>
+              <p className="mt-3 whitespace-pre-wrap text-[14px] leading-relaxed text-text-secondary">
+                {recipe.notes}
+              </p>
             ) : (
-              <p className="text-[13px] italic text-text-tertiary">No notes yet.</p>
+              <p className="mt-3 text-[14px] italic text-text-tertiary">
+                Add a pinch of sugar for better taste.
+              </p>
             )}
-            <div className="text-[12px] text-text-tertiary">
-              {ingredientCount} ingredients • Last generated on {new Date(book.mealPlan.createdAt).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              })}
-            </div>
           </section>
         </div>
       </div>
@@ -211,7 +292,10 @@ export function RecipeDetailModal() {
     return null;
   }
 
-  return (
+  const container = document.getElementById("phone-screen");
+  if (!container) return null;
+
+  return createPortal(
     <RecipeDetailModalContent
       key={`${active.book.id}-${active.recipe.id}`}
       active={active}
@@ -221,6 +305,7 @@ export function RecipeDetailModal() {
         clearDayMeal(active.book.id, active.day, active.mealType);
         clearActiveMeal();
       }}
-    />
+    />,
+    container,
   );
 }

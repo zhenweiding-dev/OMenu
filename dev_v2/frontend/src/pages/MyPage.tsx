@@ -1,19 +1,25 @@
-import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
 import { PageContainer } from "@/components/layout/PageContainer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/stores/useAppStore";
 import { useDraftStore } from "@/stores/useDraftStore";
-import { formatCurrency, formatIsoDate } from "@/utils/helpers";
-import type { MenuBook, UserPreferences } from "@/types";
+import { formatCurrency } from "@/utils/helpers";
+import type { MenuBook, UserPreferences, Difficulty } from "@/types";
 import { useShallow } from "zustand/react/shallow";
+import {
+  EditKeywordsModal,
+  EditMustHaveModal,
+  EditDislikedModal,
+  EditSettingsModal,
+} from "@/components/profile/EditPreferencesModals";
+
+type EditModalType = "keywords" | "mustHave" | "disliked" | "settings" | null;
 
 export function MyPage() {
-  const navigate = useNavigate();
+  const [activeModal, setActiveModal] = useState<EditModalType>(null);
+
   const menuBooks = useAppStore((state) => state.menuBooks);
   const currentBook = useAppStore((state) => state.getCurrentMenuBook());
+  const updateMenuBook = useAppStore((state) => state.updateMenuBook);
 
   const draftPreferences = useDraftStore((state) => {
     const { keywords, mustHaveItems, dislikedItems, numPeople, budget, difficulty, cookSchedule } = state;
@@ -22,14 +28,12 @@ export function MyPage() {
 
   const draftActions = useDraftStore(
     useShallow((state) => ({
-      setStep: state.setStep,
       setKeywords: state.setKeywords,
       setMustHaveItems: state.setMustHaveItems,
       setDislikedItems: state.setDislikedItems,
       setNumPeople: state.setNumPeople,
       setBudget: state.setBudget,
       setDifficulty: state.setDifficulty,
-      setCookSchedule: state.setCookSchedule,
     })),
   );
 
@@ -40,89 +44,171 @@ export function MyPage() {
 
   const sourcePlan = latestBook ?? currentBook;
   const preferences: UserPreferences = sourcePlan?.mealPlan.preferences ?? draftPreferences;
-  const lastGeneratedAt = sourcePlan?.mealPlan.createdAt ?? null;
 
-  const tagStyles = "bg-paper-muted text-text-primary px-3 py-1 text-[12px] font-medium";
+  const applyPreferenceUpdate = (updates: Partial<UserPreferences>) => {
+    const nextPreferences: UserPreferences = { ...preferences, ...updates };
+    draftActions.setKeywords(nextPreferences.keywords);
+    draftActions.setMustHaveItems(nextPreferences.mustHaveItems);
+    draftActions.setDislikedItems(nextPreferences.dislikedItems);
+    draftActions.setNumPeople(nextPreferences.numPeople);
+    draftActions.setBudget(nextPreferences.budget);
+    draftActions.setDifficulty(nextPreferences.difficulty);
+
+    if (sourcePlan) {
+      updateMenuBook(sourcePlan.id, {
+        mealPlan: {
+          ...sourcePlan.mealPlan,
+          preferences: nextPreferences,
+        },
+      });
+    }
+  };
+
+  // Save handlers for each modal
+  const handleSaveKeywords = (keywords: string[]) => {
+    applyPreferenceUpdate({ keywords });
+  };
+
+  const handleSaveMustHave = (items: string[]) => {
+    applyPreferenceUpdate({ mustHaveItems: items });
+  };
+
+  const handleSaveDisliked = (items: string[]) => {
+    applyPreferenceUpdate({ dislikedItems: items });
+  };
+
+  const handleSaveSettings = (settings: { numPeople: number; budget: number; difficulty: Difficulty }) => {
+    applyPreferenceUpdate(settings);
+  };
 
   const renderTags = (items: string[], placeholder: string) => {
     if (items.length === 0) {
-      return <p className="text-sm text-text-secondary">{placeholder}</p>;
+      return <p className="text-[13px] text-text-secondary">{placeholder}</p>;
     }
     return (
       <div className="flex flex-wrap gap-2">
         {items.map((item) => (
-          <Badge key={item} className={tagStyles}>
+          <span
+            key={item}
+            className="rounded-md border border-border-tagSelected bg-tag-selectedBg px-3 py-1.5 text-[12px] font-medium text-accent-base"
+          >
             {item}
-          </Badge>
+          </span>
         ))}
       </div>
     );
   };
 
-  const handleEditPreferences = () => {
-    draftActions.setKeywords(preferences.keywords);
-    draftActions.setMustHaveItems(preferences.mustHaveItems);
-    draftActions.setDislikedItems(preferences.dislikedItems);
-    draftActions.setNumPeople(preferences.numPeople);
-    draftActions.setBudget(preferences.budget);
-    draftActions.setDifficulty(preferences.difficulty);
-    draftActions.setCookSchedule({ ...preferences.cookSchedule });
-    draftActions.setStep(2);
-    navigate("/create");
-  };
-
   return (
-    <PageContainer className="space-y-6">
-      <Card>
-        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div className="space-y-1">
-            <CardTitle className="text-[16px]">Your Meal Preferences</CardTitle>
-            <p className="text-[13px] text-text-secondary">
-              Last updated {lastGeneratedAt ? formatIsoDate(lastGeneratedAt) : "using your current draft"}
-            </p>
+    <PageContainer className="space-y-4">
+      {/* Keywords Section */}
+      <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
+        <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
+          <h3 className="text-[14px] font-semibold text-text-primary">Keywords</h3>
+          <button
+            type="button"
+            onClick={() => setActiveModal("keywords")}
+            className="text-[13px] font-medium text-accent-base hover:opacity-80"
+          >
+            Edit
+          </button>
           </div>
-          <Button onClick={handleEditPreferences} className="w-full sm:w-auto">
-            Edit preferences
-          </Button>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <h3 className="text-[13px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Keywords</h3>
+        <div className="px-4 py-4">
               {renderTags(preferences.keywords, "No keywords saved yet.")}
             </div>
-            <div className="space-y-2">
-              <h3 className="text-[13px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Must-have items</h3>
+      </section>
+
+      {/* Must-Have Items Section */}
+      <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
+        <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
+          <h3 className="text-[14px] font-semibold text-text-primary">Must-Have Items</h3>
+          <button
+            type="button"
+            onClick={() => setActiveModal("mustHave")}
+            className="text-[13px] font-medium text-accent-base hover:opacity-80"
+          >
+            Edit
+          </button>
+        </div>
+        <div className="px-4 py-4">
               {renderTags(preferences.mustHaveItems, "No must-have items saved yet.")}
             </div>
-            <div className="space-y-2">
-              <h3 className="text-[13px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Disliked items</h3>
+      </section>
+
+      {/* Disliked Items Section */}
+      <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
+        <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
+          <h3 className="text-[14px] font-semibold text-text-primary">Disliked Items</h3>
+          <button
+            type="button"
+            onClick={() => setActiveModal("disliked")}
+            className="text-[13px] font-medium text-accent-base hover:opacity-80"
+          >
+            Edit
+          </button>
+        </div>
+        <div className="px-4 py-4">
               {renderTags(preferences.dislikedItems, "No dislikes added yet.")}
             </div>
-            <div className="space-y-2">
-              <h3 className="text-[13px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Cooking schedule</h3>
-              <p className="text-sm text-text-secondary">Customize which meals you cook on each day inside the edit flow.</p>
-            </div>
-          </div>
+      </section>
 
-          <dl className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl bg-paper-muted p-4 text-center">
-              <dt className="text-[12px] uppercase tracking-[0.18em] text-text-secondary">People</dt>
-              <dd className="text-[18px] font-semibold text-text-primary">{preferences.numPeople}</dd>
+      {/* Default Settings Section */}
+      <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
+        <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
+          <h3 className="text-[14px] font-semibold text-text-primary">Default Settings</h3>
+          <button
+            type="button"
+            onClick={() => setActiveModal("settings")}
+            className="text-[13px] font-medium text-accent-base hover:opacity-80"
+          >
+            Edit
+          </button>
             </div>
-            <div className="rounded-2xl bg-paper-muted p-4 text-center">
-              <dt className="text-[12px] uppercase tracking-[0.18em] text-text-secondary">Weekly Budget</dt>
-              <dd className="text-[18px] font-semibold text-text-primary">{formatCurrency(preferences.budget)}</dd>
+        <div className="flex flex-col gap-3 px-4 py-4">
+          <div className="flex items-center justify-between">
+            <span className="text-[14px] text-text-secondary">People</span>
+            <span className="text-[15px] font-medium text-text-primary">{preferences.numPeople}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-[14px] text-text-secondary">Budget</span>
+            <span className="text-[15px] font-medium text-text-primary">{formatCurrency(preferences.budget)}</span>
             </div>
-            <div className="rounded-2xl bg-paper-muted p-4 text-center">
-              <dt className="text-[12px] uppercase tracking-[0.18em] text-text-secondary">Difficulty</dt>
-              <dd className="text-[18px] font-semibold text-text-primary">
-                {preferences.difficulty.charAt(0).toUpperCase() + preferences.difficulty.slice(1)}
-              </dd>
+          <div className="flex items-center justify-between">
+            <span className="text-[14px] text-text-secondary">Difficulty</span>
+            <span className="text-[15px] font-medium text-text-primary">
+              {preferences.difficulty.charAt(0).toUpperCase() + preferences.difficulty.slice(1)}
+            </span>
             </div>
-          </dl>
-        </CardContent>
-      </Card>
+            </div>
+      </section>
+
+      {/* Edit Modals */}
+      <EditKeywordsModal
+        isOpen={activeModal === "keywords"}
+        onClose={() => setActiveModal(null)}
+        keywords={preferences.keywords}
+        onSave={handleSaveKeywords}
+      />
+      <EditMustHaveModal
+        isOpen={activeModal === "mustHave"}
+        onClose={() => setActiveModal(null)}
+        items={preferences.mustHaveItems}
+        onSave={handleSaveMustHave}
+      />
+      <EditDislikedModal
+        isOpen={activeModal === "disliked"}
+        onClose={() => setActiveModal(null)}
+        items={preferences.dislikedItems}
+        onSave={handleSaveDisliked}
+      />
+      <EditSettingsModal
+        isOpen={activeModal === "settings"}
+        onClose={() => setActiveModal(null)}
+        numPeople={preferences.numPeople}
+        budget={preferences.budget}
+        difficulty={preferences.difficulty}
+        onSave={handleSaveSettings}
+      />
     </PageContainer>
   );
 }

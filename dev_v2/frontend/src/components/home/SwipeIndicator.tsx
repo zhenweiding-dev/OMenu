@@ -1,4 +1,5 @@
 import type { KeyboardEvent } from "react";
+import { cn } from "@/utils/cn";
 
 interface SwipeIndicatorProps {
   total: number;
@@ -23,7 +24,7 @@ export function SwipeIndicator({ total, activeIndex, onSelect, onPrev, onNext, l
 
   return (
     <div
-      className="flex items-center justify-center gap-2"
+      className="flex items-center justify-center gap-[5px] py-2"
       role="tablist"
       aria-label="Days of the week"
       onKeyDown={handleKeyDown}
@@ -36,7 +37,12 @@ export function SwipeIndicator({ total, activeIndex, onSelect, onPrev, onNext, l
             key={index}
             type="button"
             onClick={() => onSelect(index)}
-            className={`h-2.5 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base ${isActive ? "w-6 bg-accent-base" : "w-2.5 bg-border-subtle"}`}
+            className={cn(
+              "h-[5px] rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base",
+              isActive 
+                ? "w-4 bg-accent-base" 
+                : "w-[5px] bg-border-subtle"
+            )}
             aria-label={labels?.[index] ?? `Day ${index + 1}`}
             role="tab"
             aria-selected={isActive}

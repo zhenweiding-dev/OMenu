@@ -89,6 +89,14 @@ export interface MenuBook {
   shoppingList: ShoppingList;
 }
 
+export interface UserState {
+  preferences: UserPreferences | null;
+  menuBooks: MenuBook[];
+  currentWeekId: string | null;
+  currentDayIndex: number;
+  isMenuOpen: boolean;
+}
+
 export interface ErrorDetail {
   field?: string;
   message: string;

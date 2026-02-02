@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { formatIsoDate } from "@/utils/helpers";
-import type { MealPlan, ShoppingList } from "@/types";
+import { Modal } from "@/components/ui/modal";
+import { DailyMenuCard } from "@/components/home/DailyMenuCard";
+import { SwipeIndicator } from "@/components/home/SwipeIndicator";
+import { WEEK_DAYS } from "@/utils/constants";
+import { getDayDisplay, startCaseDay } from "@/utils/helpers";
+import type { MealPlan, ShoppingList, DayMeals } from "@/types";
 import { useMealPlan } from "@/hooks/useMealPlan";
 import { useAppStore } from "@/stores/useAppStore";
 
@@ -16,26 +18,68 @@ interface StepPlanOverviewProps {
   onViewShopping: () => void;
 }
 
+function ArrowLeftIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+  );
+}
+
 export function StepPlanOverview({ mealPlan, shoppingList, onPlanUpdated, onCreateAnother, onViewShopping }: StepPlanOverviewProps) {
   const { updatePlan } = useMealPlan();
   const isGenerating = useAppStore((state) => state.isGenerating);
   const globalError = useAppStore((state) => state.error);
   const clearError = useAppStore((state) => state.clearError);
+  const setActiveMeal = useAppStore((state) => state.setActiveMeal);
 
-  const totalMeals = Object.values(mealPlan.days).reduce((total, day) => {
-    return total + [day.breakfast, day.lunch, day.dinner].filter(Boolean).length;
-  }, 0);
-
+  const [currentDayIndex, setCurrentDayIndex] = useState(0);
+  const [showModifyModal, setShowModifyModal] = useState(false);
   const [modification, setModification] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
+  const touchStartXRef = useRef<number | null>(null);
+
   const hasShoppingItems = shoppingList.items.length > 0;
+  const currentDayKey = WEEK_DAYS[currentDayIndex];
+  const currentMeals = mealPlan.days[currentDayKey];
+  const currentDayLabel = startCaseDay(currentDayKey);
+  const { dateLabel } = getDayDisplay(mealPlan.createdAt, currentDayIndex);
+
+  const handlePrevDay = () => {
+    setCurrentDayIndex((prev) => (prev + WEEK_DAYS.length - 1) % WEEK_DAYS.length);
+  };
+
+  const handleNextDay = () => {
+    setCurrentDayIndex((prev) => (prev + 1) % WEEK_DAYS.length);
+  };
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    touchStartXRef.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    const startX = touchStartXRef.current;
+    if (startX == null) return;
+    const endX = event.changedTouches[0]?.clientX ?? startX;
+    const deltaX = endX - startX;
+    if (Math.abs(deltaX) > 60) {
+      deltaX < 0 ? handleNextDay() : handlePrevDay();
+    }
+    touchStartXRef.current = null;
+  };
+
+  const handleOpenMeal = (mealType: keyof DayMeals) => {
+    setActiveMeal({
+      bookId: mealPlan.id,
+      day: currentDayKey,
+      mealType,
+    });
+  };
 
   const handleModifyPlan = async () => {
     const trimmed = modification.trim();
-    if (!trimmed) {
-      return;
-    }
+    if (!trimmed) return;
 
     setSuccessMessage("");
     clearError();
@@ -44,6 +88,7 @@ export function StepPlanOverview({ mealPlan, shoppingList, onPlanUpdated, onCrea
       const result = await updatePlan(mealPlan, trimmed);
       onPlanUpdated(result.plan, result.list);
       setModification("");
+      setShowModifyModal(false);
       setSuccessMessage("Plan updated successfully.");
     } catch {
       // Errors piped through global store
@@ -51,94 +96,109 @@ export function StepPlanOverview({ mealPlan, shoppingList, onPlanUpdated, onCrea
   };
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <h2 className="text-[22px] font-semibold text-text-primary">Your plan is ready</h2>
-        <p className="text-[13px] text-text-secondary">
-          Generated on {formatIsoDate(mealPlan.createdAt)}. Review highlights below or jump straight into the home and shopping views.
-        </p>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Weekly menu</CardTitle>
-            <CardDescription>{totalMeals} scheduled meals</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2 text-[13px] text-text-secondary">
-            <p>Household size: {mealPlan.preferences.numPeople}</p>
-            <p>Weekly budget: ${mealPlan.preferences.budget}</p>
-            <p>Difficulty: {mealPlan.preferences.difficulty}</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Shopping list</CardTitle>
-            <CardDescription>{shoppingList.items.length} consolidated items</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2 text-[13px] text-text-secondary">
-            {hasShoppingItems ? (
-              <>
-                {shoppingList.items.slice(0, 4).map((item) => (
-                  <div key={item.id} className="flex items-center justify-between">
-                    <span>{item.name}</span>
-                    <span className="text-[12px] text-text-disabled">
-                      {item.totalQuantity} {item.unit}
-                    </span>
-                  </div>
-                ))}
-                {shoppingList.items.length > 4 && (
-                  <p className="text-[12px] text-text-disabled">
-                    + {shoppingList.items.length - 4} more items
-                  </p>
-                )}
-              </>
-            ) : (
-              <p className="text-[12px] text-text-disabled">
-                Generate the shopping list to preview consolidated grocery items here.
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="space-y-4 rounded-2xl border border-border-subtle bg-card-base p-4">
-        <div className="space-y-2">
-          <h3 className="text-[15px] font-semibold text-text-primary">Need adjustments?</h3>
-          <p className="text-[12px] text-text-secondary">
-            Describe what you&apos;d like to change and we&apos;ll regenerate the week and shopping list.
+    <div className="flex min-h-[calc(100vh-180px)] flex-col">
+      {/* Header with back button */}
+      <div className="flex items-center gap-3 px-5 pt-14 pb-4">
+        <button
+          type="button"
+          onClick={onCreateAnother}
+          className="flex h-10 w-10 items-center justify-center rounded-xl bg-card-base shadow-btn"
+        >
+          <ArrowLeftIcon />
+        </button>
+        <div>
+          <p className="text-[12px] font-semibold uppercase tracking-widest text-accent-base">
+            Your New Menu
           </p>
+          {successMessage && (
+            <p className="text-[11px] text-success">{successMessage}</p>
+          )}
         </div>
-        <Textarea
-          value={modification}
-          onChange={(event) => setModification(event.target.value.slice(0, 200))}
-          placeholder="Example: Swap Friday dinner for a vegetarian option."
-          maxLength={200}
-          className="min-h-[96px]"
-          disabled={isGenerating}
-        />
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-[11px] text-text-tertiary">{modification.length}/200 characters</p>
-          <Button onClick={handleModifyPlan} disabled={isGenerating || !modification.trim()} size="sm">
-            {isGenerating ? "Updating..." : "Submit modification"}
-          </Button>
-        </div>
-        {globalError && <p className="text-[12px] text-red-500">{globalError}</p>}
-        {successMessage && <p className="text-[12px] text-accent-base">{successMessage}</p>}
       </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <Button asChild className="w-full sm:w-auto" disabled={isGenerating}>
-          <Link to="/">View in Home</Link>
-        </Button>
-        <Button className="w-full sm:w-auto" variant="outline" onClick={onViewShopping} disabled={isGenerating}>
-          {hasShoppingItems ? "View Shopping List" : "Generate Shopping List"}
-        </Button>
-        <Button className="w-full sm:w-auto" variant="ghost" onClick={onCreateAnother} disabled={isGenerating}>
-          Create another plan
-        </Button>
+      {/* Swipe indicator */}
+      <div className="px-5">
+        <SwipeIndicator
+          total={WEEK_DAYS.length}
+          activeIndex={currentDayIndex}
+          onSelect={setCurrentDayIndex}
+          onPrev={handlePrevDay}
+          onNext={handleNextDay}
+          labels={WEEK_DAYS.map((day) => startCaseDay(day))}
+        />
       </div>
+
+      {/* Daily card with swipe navigation */}
+      <div
+        className="flex-1 px-4 py-4"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={() => { touchStartXRef.current = null; }}
+      >
+        <DailyMenuCard
+          day={currentDayLabel}
+          dateLabel={dateLabel}
+          meals={currentMeals}
+          onOpenMeal={handleOpenMeal}
+          onAddMeal={() => {}}
+        />
+      </div>
+
+      {/* Error display */}
+      {globalError && <p className="px-5 pb-4 text-center text-[12px] text-error">{globalError}</p>}
+
+      {/* Dual action buttons */}
+      <div className="sticky bottom-0 border-t border-border-subtle bg-paper-base px-5 pb-6 pt-4">
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => setShowModifyModal(true)}
+            disabled={isGenerating}
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border-subtle bg-card-base px-4 py-3.5 text-[14px] font-semibold text-text-primary transition-colors hover:bg-paper-muted disabled:opacity-50"
+          >
+            💬 Modify
+          </button>
+          <button
+            type="button"
+            onClick={onViewShopping}
+            disabled={isGenerating}
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-accent-base px-4 py-3.5 text-[14px] font-semibold text-white transition-colors hover:bg-accent-base/90 disabled:opacity-50"
+          >
+            🛒 Shopping List
+          </button>
+        </div>
+      </div>
+
+      {/* Modify Plan Modal */}
+      <Modal
+        open={showModifyModal}
+        title="Modify Your Plan"
+        description="Describe what you'd like to change and we'll regenerate the week."
+        onClose={() => setShowModifyModal(false)}
+        className="max-w-md"
+      >
+        <div className="space-y-4">
+          <Textarea
+            value={modification}
+            onChange={(event) => setModification(event.target.value.slice(0, 200))}
+            placeholder="Example: Swap Friday dinner for a vegetarian option."
+            maxLength={200}
+            className="min-h-[120px]"
+            disabled={isGenerating}
+          />
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] text-text-tertiary">{modification.length}/200</p>
+            <div className="flex gap-2">
+              <Button variant="ghost" onClick={() => setShowModifyModal(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleModifyPlan} disabled={isGenerating || !modification.trim()}>
+                {isGenerating ? "Updating..." : "Apply Changes"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

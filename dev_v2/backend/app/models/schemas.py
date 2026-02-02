@@ -114,6 +114,12 @@ class ShoppingList(BaseModel):
     items: List[ShoppingItem]
 
 
+class MenuBook(BaseModel):
+    id: str
+    mealPlan: MealPlan
+    shoppingList: ShoppingList
+
+
 class GenerateMealPlanRequest(BaseModel):
     keywords: List[str] = Field(default_factory=list)
     mustHaveItems: List[str] = Field(default_factory=list)
@@ -143,3 +149,11 @@ class ErrorResponse(BaseModel):
     code: str
     message: str
     details: List[ErrorDetail] = Field(default_factory=list)
+
+
+class UserState(BaseModel):
+    preferences: Optional[UserPreferences] = None
+    menuBooks: List[MenuBook] = Field(default_factory=list)
+    currentWeekId: Optional[str] = None
+    currentDayIndex: int = Field(default=0, ge=0, le=6)
+    isMenuOpen: bool = True

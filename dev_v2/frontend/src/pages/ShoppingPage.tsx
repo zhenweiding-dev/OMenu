@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { ChevronDown, Minus, Plus } from "lucide-react";
 import { useAppStore } from "@/stores/useAppStore";
 import { useShoppingStore } from "@/stores/useShoppingStore";
 import { useMealPlan } from "@/hooks/useMealPlan";
@@ -9,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import type { IngredientCategory, ShoppingItem } from "@/types";
+import { cn } from "@/utils/cn";
 
 const CATEGORY_DETAILS: Record<IngredientCategory, { icon: string; label: string }> = {
   proteins: { icon: "🥩", label: "Proteins" },
@@ -23,6 +23,30 @@ const CATEGORY_DETAILS: Record<IngredientCategory, { icon: string; label: string
 
 function formatCategoryLabel(category: IngredientCategory) {
   return CATEGORY_DETAILS[category]?.label ?? category.replace("_", " ");
+}
+
+function PlusIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  );
+}
+
+function MinusIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+      <path d="M5 12h14" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 6L9 17l-5-5" />
+    </svg>
+  );
 }
 
 interface ShoppingItemModalProps {
@@ -122,7 +146,7 @@ function ShoppingItemForm({
         </label>
         <select
           id="shopping-item-category"
-          className="h-10 w-full rounded-md border border-border-subtle bg-white px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base"
+          className="h-10 w-full rounded-lg border border-border-subtle bg-white px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base"
           value={category}
           onChange={(event) => setCategory(event.target.value as IngredientCategory)}
         >
@@ -139,7 +163,7 @@ function ShoppingItemForm({
           <Button
             type="button"
             variant="ghost"
-            className="text-accent-orange"
+            className="text-error"
             onClick={() => onDelete()}
           >
             Delete item
@@ -204,7 +228,7 @@ export function ShoppingPage() {
     return INGREDIENT_CATEGORIES.map((category) => ({
       category,
       items: list.filter((item) => item.category === category),
-    }));
+    })).filter((group) => group.items.length > 0);
   }, [currentBook]);
 
   const totalItems = currentBook?.shoppingList?.items?.length ?? 0;
@@ -278,137 +302,114 @@ export function ShoppingPage() {
     }
   };
 
+  // Empty state - no current book
+  if (!currentBook) {
+    return (
+      <PageContainer className="flex flex-col items-center justify-center px-5 py-20 text-center">
+        <div className="mb-6 flex h-[100px] w-[100px] items-center justify-center rounded-3xl border border-border-subtle bg-paper-muted">
+          <span className="text-[44px]" aria-hidden>🛒</span>
+        </div>
+        <h2 className="mb-2 text-[20px] font-semibold text-text-primary">No shopping list yet</h2>
+        <p className="text-[14px] text-text-secondary">Generate a shopping list from your meal plan</p>
+      </PageContainer>
+    );
+  }
+
+  // Empty state - has book but no shopping items
+  if (totalItems === 0) {
+    return (
+      <PageContainer className="flex flex-col items-center justify-center px-5 py-20 text-center">
+        <div className="mb-6 flex h-[100px] w-[100px] items-center justify-center rounded-3xl border border-border-subtle bg-paper-muted">
+          <span className="text-[44px]" aria-hidden>🛒</span>
+        </div>
+        <h2 className="mb-2 text-[20px] font-semibold text-text-primary">No shopping list yet</h2>
+        <p className="mb-8 text-[14px] text-text-secondary">Generate a shopping list from your meal plan</p>
+        <Button onClick={handleGenerateList} disabled={isGenerating} className="rounded-xl px-8 py-3">
+          {isGenerating ? "Generating..." : "Generate from meal plan"}
+        </Button>
+        {globalError && !isGenerating && <p className="mt-4 text-sm text-error">{globalError}</p>}
+      </PageContainer>
+    );
+  }
+
   return (
-    <PageContainer className="space-y-8">
-      <div className="flex justify-end">
-        {currentBook && (
-          <Button size="sm" onClick={() => setShowAddItemModal(true)}>
-            <Plus className="mr-1.5 h-4 w-4" /> Add Item
-          </Button>
-        )}
-      </div>
+    <PageContainer className="space-y-5">
+      {/* Category sections */}
+      {groupedItems.map(({ category, items }) => {
+        const details = CATEGORY_DETAILS[category];
+        const isCollapsed = collapsedCategories[category];
+        const itemCount = items.length;
+        
+        return (
+          <section key={category} className="space-y-0">
+            {/* Section header */}
+            <button
+              type="button"
+              onClick={() => toggleCategoryCollapse(category)}
+              className="flex w-full items-center justify-between py-3"
+            >
+              <span className="flex items-center gap-2 text-[14px] font-semibold text-text-primary">
+                <span className="text-lg">{details?.icon}</span>
+                {details?.label}
+              </span>
+              <span className="flex items-center gap-2 text-[12px] text-text-secondary">
+                <span>{itemCount} items</span>
+                {isCollapsed ? <PlusIcon /> : <MinusIcon />}
+              </span>
+            </button>
 
-      {!currentBook && (
-        <div className="flex flex-col items-center gap-4 rounded-3xl border border-border-subtle bg-card-base p-10 text-center text-text-secondary">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-paper-muted text-4xl" aria-hidden>
-            🛒
-          </div>
-          <div className="space-y-1">
-            <p className="text-base font-semibold text-text-primary">No shopping list yet</p>
-            <p className="text-sm text-text-secondary">Generate a shopping list from your meal plan.</p>
-          </div>
-        </div>
-      )}
+            {/* Items */}
+            {!isCollapsed && (
+              <div className="space-y-0">
+                {items.map((item) => {
+                  const purchased = item.purchased;
+                  const showQuantity = item.category !== "seasonings" && item.totalQuantity > 0;
+                  const quantityText = showQuantity ? `${item.totalQuantity} ${item.unit}`.trim() : "";
 
-      {currentBook && totalItems === 0 && (
-        <div className="flex flex-col items-center gap-4 rounded-3xl border border-border-subtle bg-card-base p-10 text-center text-text-secondary">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-paper-muted text-4xl" aria-hidden>
-            🛒
-          </div>
-          <div className="space-y-1">
-            <p className="text-base font-semibold text-text-primary">No shopping list yet</p>
-            <p className="text-sm text-text-secondary">Generate a shopping list from your meal plan.</p>
-          </div>
-          <Button onClick={handleGenerateList} disabled={isGenerating}>
-            {isGenerating ? "Generating..." : "Generate from meal plan"}
-          </Button>
-          {globalError && !isGenerating && <p className="text-sm text-red-500">{globalError}</p>}
-        </div>
-      )}
+                  return (
+                    <div
+                      key={item.id}
+                      className={cn(
+                        "flex items-center gap-3 border-b border-border-subtle py-3",
+                        purchased && "opacity-60"
+                      )}
+                    >
+                      {/* Checkbox */}
+                      <button
+                        type="button"
+                        onClick={() => handleTogglePurchased(item)}
+                        className={cn(
+                          "flex h-[22px] w-[22px] flex-shrink-0 items-center justify-center rounded border-[1.5px] transition-colors",
+                          purchased
+                            ? "border-success bg-success text-white"
+                            : "border-text-disabled bg-white"
+                        )}
+                      >
+                        {purchased && <CheckIcon />}
+                      </button>
 
-      {currentBook && totalItems > 0 && (
-        <section className="space-y-4">
-          {groupedItems.map(({ category, items }) => {
-            const details = CATEGORY_DETAILS[category];
-            const isCollapsed = collapsedCategories[category];
-            return (
-              <div key={category} className="overflow-hidden rounded-3xl border border-border-subtle bg-card-base shadow-soft">
-                <button
-                  type="button"
-                  onClick={() => toggleCategoryCollapse(category)}
-                  className="flex w-full items-center justify-between px-5 py-4 text-left"
-                >
-                  <span className="flex items-center gap-3 text-[15px] font-semibold text-text-primary">
-                    <span className="text-xl" aria-hidden>
-                      {details?.icon}
-                    </span>
-                    {details?.label ?? formatCategoryLabel(category)}
-                    <span className="rounded-full bg-paper-muted px-2 py-0.5 text-xs font-medium text-text-secondary">
-                      {items.length}
-                    </span>
-                  </span>
-                  <span className="flex items-center gap-2 text-text-secondary">
-                    {isCollapsed ? <Plus className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
-                    <ChevronDown className={`h-4 w-4 transition-transform ${isCollapsed ? "-rotate-90" : "rotate-0"}`} />
-                  </span>
-                </button>
-                {!isCollapsed && (
-                  <div className="space-y-3 border-t border-border-subtle bg-paper-base px-5 py-4">
-                    {items.length === 0 && (
-                      <div className="rounded-2xl border border-dashed border-border-subtle px-4 py-3 text-sm text-text-secondary">
-                        No items yet.
-                      </div>
-                    )}
-                    {items.map((item) => {
-                      const purchased = item.purchased;
-                      const showQuantity = item.category !== "seasonings" && item.totalQuantity > 0;
-                      const detailParts = [] as string[];
-                      if (showQuantity) {
-                        detailParts.push(`${item.totalQuantity} ${item.unit}`.trim());
-                      }
-                      detailParts.push(formatCategoryLabel(item.category));
-                      const detailText = detailParts.filter(Boolean).join(" • ");
-                      return (
-                        <div
-                          key={item.id}
-                          role="button"
-                          tabIndex={0}
-                          aria-label={`Edit ${item.name}`}
-                          onClick={() => setEditingItem(item)}
-                          onKeyDown={(event) => {
-                            if (event.key === "Enter" || event.key === " ") {
-                              event.preventDefault();
-                              setEditingItem(item);
-                            }
-                          }}
-                          className="flex items-center justify-between gap-3 rounded-2xl bg-card-base px-4 py-3 shadow-soft transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base"
-                        >
-                          <label
-                            className="flex flex-1 items-center gap-3"
-                            htmlFor={`purchased-${item.id}`}
-                            onClick={(event) => event.stopPropagation()}
-                          >
-                            <input
-                              id={`purchased-${item.id}`}
-                              type="checkbox"
-                              checked={purchased}
-                              onChange={() => handleTogglePurchased(item)}
-                              className="h-5 w-5 rounded border border-text-disabled text-accent-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base"
-                            />
-                            <div className="flex flex-col">
-                              <span
-                                className={`text-sm font-medium ${
-                                  purchased ? "text-text-secondary line-through" : "text-text-primary"
-                                }`}
-                              >
-                                {item.name}
-                              </span>
-                              <span className="text-xs text-text-secondary">{detailText}</span>
-                            </div>
-                          </label>
-                          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-text-secondary">
-                            Edit
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                      {/* Item name */}
+                      <span
+                        className={cn(
+                          "flex-1 text-[15px]",
+                          purchased ? "text-text-secondary line-through" : "text-text-primary"
+                        )}
+                      >
+                        {item.name}
+                      </span>
+
+                      {/* Quantity */}
+                      {quantityText && (
+                        <span className="text-[13px] text-text-secondary">{quantityText}</span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </section>
-      )}
+            )}
+          </section>
+        );
+      })}
 
       <ShoppingItemModal
         open={modalOpen && Boolean(currentBook)}
@@ -432,7 +433,7 @@ export function ShoppingPage() {
           <Button type="button" variant="ghost" onClick={handleCancelDelete}>
             Cancel
           </Button>
-          <Button type="button" className="bg-accent-orange hover:bg-accent-orangeLight text-white" onClick={handleConfirmDelete}>
+          <Button type="button" className="bg-error text-white hover:bg-error/90" onClick={handleConfirmDelete}>
             Delete
           </Button>
         </div>

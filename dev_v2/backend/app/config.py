@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     """Application settings sourced from environment variables."""
 
     gemini_api_key: str = ""
+    gemini_model: str = "gemini-1.5-flash"
     cors_origins: List[str] | str = Field(default_factory=lambda: ["http://localhost:5173"])
     environment: str = "development"
 
