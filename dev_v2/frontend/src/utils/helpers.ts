@@ -1,4 +1,12 @@
-import { addDays, differenceInCalendarWeeks, format, isSameWeek, startOfWeek } from "date-fns";
+import { addDays, addMinutes, differenceInCalendarWeeks, format, isSameWeek, startOfWeek } from "date-fns";
+
+function normalizeIsoToLocalDate(isoDate: string) {
+  const date = new Date(isoDate);
+  if (Number.isNaN(date.getTime())) {
+    return date;
+  }
+  return addMinutes(date, date.getTimezoneOffset());
+}
 
 export function formatCurrency(value: number, currency: string = "USD") {
   return new Intl.NumberFormat("en-US", {
@@ -9,17 +17,17 @@ export function formatCurrency(value: number, currency: string = "USD") {
 }
 
 export function formatIsoDate(isoDate: string) {
-  return format(new Date(isoDate), "MMM d, yyyy");
+  return format(normalizeIsoToLocalDate(isoDate), "MMM d, yyyy");
 }
 
 export function getWeekDateRange(isoDate: string) {
-  const start = startOfWeek(new Date(isoDate), { weekStartsOn: 1 });
+  const start = startOfWeek(normalizeIsoToLocalDate(isoDate), { weekStartsOn: 1 });
   const end = addDays(start, 6);
   return `${format(start, "MMM d")} – ${format(end, "MMM d")}`;
 }
 
 export function getDayDisplay(isoDate: string, dayIndex: number) {
-  const start = startOfWeek(new Date(isoDate), { weekStartsOn: 1 });
+  const start = startOfWeek(normalizeIsoToLocalDate(isoDate), { weekStartsOn: 1 });
   const currentDate = addDays(start, dayIndex);
   return {
     dateLabel: format(currentDate, "MMM d"),
@@ -32,7 +40,7 @@ export function startCaseDay(day: string) {
 }
 
 export function getRelativeWeekLabel(isoDate: string) {
-  const targetStart = startOfWeek(new Date(isoDate), { weekStartsOn: 1 });
+  const targetStart = startOfWeek(normalizeIsoToLocalDate(isoDate), { weekStartsOn: 1 });
   const currentStart = startOfWeek(new Date(), { weekStartsOn: 1 });
   const diff = differenceInCalendarWeeks(targetStart, currentStart, {
     weekStartsOn: 1,
@@ -51,5 +59,5 @@ export function getRelativeWeekLabel(isoDate: string) {
 }
 
 export function isCurrentCalendarWeek(isoDate: string) {
-  return isSameWeek(new Date(isoDate), new Date(), { weekStartsOn: 1 });
+  return isSameWeek(normalizeIsoToLocalDate(isoDate), new Date(), { weekStartsOn: 1 });
 }

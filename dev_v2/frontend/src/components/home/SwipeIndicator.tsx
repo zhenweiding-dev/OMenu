@@ -1,33 +1,48 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { KeyboardEvent } from "react";
 
 interface SwipeIndicatorProps {
-  currentDay: string;
+  total: number;
+  activeIndex: number;
+  onSelect: (index: number) => void;
   onPrev: () => void;
   onNext: () => void;
+  labels?: string[];
 }
 
-export function SwipeIndicator({ currentDay, onPrev, onNext }: SwipeIndicatorProps) {
+export function SwipeIndicator({ total, activeIndex, onSelect, onPrev, onNext, labels }: SwipeIndicatorProps) {
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      onPrev();
+    }
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      onNext();
+    }
+  };
+
   return (
-    <div className="flex items-center justify-between rounded-full border border-border-subtle bg-paper-muted px-4 py-2 text-[12px] uppercase tracking-[0.18em] text-text-secondary shadow-soft">
-      <button
-        type="button"
-        onClick={onPrev}
-        className="flex items-center gap-1 rounded-full px-1.5 py-1 text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base"
-        aria-label="Previous day"
-      >
-        <ChevronLeft className="h-4 w-4" strokeWidth={1.8} />
-        Prev
-      </button>
-      <span className="text-[13px] font-semibold tracking-[0.24em] text-text-primary">{currentDay}</span>
-      <button
-        type="button"
-        onClick={onNext}
-        className="flex items-center gap-1 rounded-full px-1.5 py-1 text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base"
-        aria-label="Next day"
-      >
-        Next
-        <ChevronRight className="h-4 w-4" strokeWidth={1.8} />
-      </button>
+    <div
+      className="flex items-center justify-center gap-2"
+      role="tablist"
+      aria-label="Days of the week"
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+    >
+      {Array.from({ length: total }).map((_, index) => {
+        const isActive = index === activeIndex;
+        return (
+          <button
+            key={index}
+            type="button"
+            onClick={() => onSelect(index)}
+            className={`h-2.5 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base ${isActive ? "w-6 bg-accent-base" : "w-2.5 bg-border-subtle"}`}
+            aria-label={labels?.[index] ?? `Day ${index + 1}`}
+            role="tab"
+            aria-selected={isActive}
+          />
+        );
+      })}
     </div>
   );
 }

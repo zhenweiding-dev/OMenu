@@ -1,10 +1,9 @@
 import { useMemo, useState } from "react";
-import { ChevronDown, Minus, Plus, ShoppingCart } from "lucide-react";
+import { ChevronDown, Minus, Plus } from "lucide-react";
 import { useAppStore } from "@/stores/useAppStore";
 import { useShoppingStore } from "@/stores/useShoppingStore";
 import { useMealPlan } from "@/hooks/useMealPlan";
 import { INGREDIENT_CATEGORIES } from "@/utils/constants";
-import { getWeekDateRange } from "@/utils/helpers";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
@@ -200,21 +199,15 @@ export function ShoppingPage() {
 
   const [pendingDelete, setPendingDelete] = useState<ShoppingItem | null>(null);
 
-  const weekRange = useMemo(() => {
-    if (!currentBook) return "";
-    return getWeekDateRange(currentBook.mealPlan.createdAt);
-  }, [currentBook]);
-
   const groupedItems = useMemo(() => {
-    const list = currentBook?.shoppingList.items ?? [];
+    const list = currentBook?.shoppingList?.items ?? [];
     return INGREDIENT_CATEGORIES.map((category) => ({
       category,
       items: list.filter((item) => item.category === category),
-    })).filter((group) => group.items.length > 0);
+    }));
   }, [currentBook]);
 
-  const totalItems = currentBook?.shoppingList.items.length ?? 0;
-  const hasVisibleItems = groupedItems.some((group) => group.items.length > 0);
+  const totalItems = currentBook?.shoppingList?.items?.length ?? 0;
   const defaultModalCategory = groupedItems[0]?.category ?? "proteins";
   const modalOpen = showAddItemModal || Boolean(editingItem);
   const modalMode: "add" | "edit" = editingItem ? "edit" : "add";
@@ -287,37 +280,34 @@ export function ShoppingPage() {
 
   return (
     <PageContainer className="space-y-8">
-      <header className="flex items-center justify-between">
-        <div>
-          <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-accent-base">Shopping List</p>
-          <h1 className="mt-1 text-[28px] font-bold tracking-tight text-text-primary">Groceries for the Week</h1>
-          {weekRange && <p className="text-sm text-text-secondary">{weekRange}</p>}
-        </div>
-        <Button size="sm" onClick={() => setShowAddItemModal(true)}>
-          <Plus className="mr-1.5 h-4 w-4" /> Add
-        </Button>
-      </header>
+      <div className="flex justify-end">
+        {currentBook && (
+          <Button size="sm" onClick={() => setShowAddItemModal(true)}>
+            <Plus className="mr-1.5 h-4 w-4" /> Add Item
+          </Button>
+        )}
+      </div>
 
       {!currentBook && (
-        <div className="flex flex-col items-center gap-3 rounded-3xl border border-border-subtle bg-card-base p-10 text-center text-text-secondary">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-paper-muted text-3xl">
-            <ShoppingCart className="h-7 w-7 text-accent-base" />
+        <div className="flex flex-col items-center gap-4 rounded-3xl border border-border-subtle bg-card-base p-10 text-center text-text-secondary">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-paper-muted text-4xl" aria-hidden>
+            🛒
           </div>
           <div className="space-y-1">
             <p className="text-base font-semibold text-text-primary">No shopping list yet</p>
-            <p className="text-sm text-text-secondary">Create a meal plan to generate a shopping list.</p>
+            <p className="text-sm text-text-secondary">Generate a shopping list from your meal plan.</p>
           </div>
         </div>
       )}
 
       {currentBook && totalItems === 0 && (
         <div className="flex flex-col items-center gap-4 rounded-3xl border border-border-subtle bg-card-base p-10 text-center text-text-secondary">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-paper-muted text-3xl">
-            <ShoppingCart className="h-7 w-7 text-accent-base" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-paper-muted text-4xl" aria-hidden>
+            🛒
           </div>
           <div className="space-y-1">
-            <p className="text-base font-semibold text-text-primary">Ready to build your list?</p>
-            <p className="text-sm text-text-secondary">Generate groceries from {getWeekDateRange(currentBook.mealPlan.createdAt)}.</p>
+            <p className="text-base font-semibold text-text-primary">No shopping list yet</p>
+            <p className="text-sm text-text-secondary">Generate a shopping list from your meal plan.</p>
           </div>
           <Button onClick={handleGenerateList} disabled={isGenerating}>
             {isGenerating ? "Generating..." : "Generate from meal plan"}
@@ -326,13 +316,7 @@ export function ShoppingPage() {
         </div>
       )}
 
-      {currentBook && totalItems > 0 && !hasVisibleItems && (
-        <div className="rounded-3xl border border-border-subtle bg-card-base p-6 text-center text-sm text-text-secondary">
-          No items match this view.
-        </div>
-      )}
-
-      {currentBook && hasVisibleItems && (
+      {currentBook && totalItems > 0 && (
         <section className="space-y-4">
           {groupedItems.map(({ category, items }) => {
             const details = CATEGORY_DETAILS[category];
@@ -360,6 +344,11 @@ export function ShoppingPage() {
                 </button>
                 {!isCollapsed && (
                   <div className="space-y-3 border-t border-border-subtle bg-paper-base px-5 py-4">
+                    {items.length === 0 && (
+                      <div className="rounded-2xl border border-dashed border-border-subtle px-4 py-3 text-sm text-text-secondary">
+                        No items yet.
+                      </div>
+                    )}
                     {items.map((item) => {
                       const purchased = item.purchased;
                       const showQuantity = item.category !== "seasonings" && item.totalQuantity > 0;
@@ -372,9 +361,23 @@ export function ShoppingPage() {
                       return (
                         <div
                           key={item.id}
-                          className="flex items-center justify-between gap-3 rounded-2xl bg-card-base px-4 py-3 shadow-soft"
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`Edit ${item.name}`}
+                          onClick={() => setEditingItem(item)}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              event.preventDefault();
+                              setEditingItem(item);
+                            }
+                          }}
+                          className="flex items-center justify-between gap-3 rounded-2xl bg-card-base px-4 py-3 shadow-soft transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base"
                         >
-                          <label className="flex flex-1 items-center gap-3" htmlFor={`purchased-${item.id}`}>
+                          <label
+                            className="flex flex-1 items-center gap-3"
+                            htmlFor={`purchased-${item.id}`}
+                            onClick={(event) => event.stopPropagation()}
+                          >
                             <input
                               id={`purchased-${item.id}`}
                               type="checkbox"
@@ -393,16 +396,9 @@ export function ShoppingPage() {
                               <span className="text-xs text-text-secondary">{detailText}</span>
                             </div>
                           </label>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="text-xs"
-                            onClick={() => setEditingItem(item)}
-                            aria-label={`Edit ${item.name}`}
-                          >
+                          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-text-secondary">
                             Edit
-                          </Button>
+                          </span>
                         </div>
                       );
                     })}
@@ -415,7 +411,7 @@ export function ShoppingPage() {
       )}
 
       <ShoppingItemModal
-        open={modalOpen}
+        open={modalOpen && Boolean(currentBook)}
         mode={modalMode}
         initialItem={editingItem ?? undefined}
         defaultCategory={editingItem?.category ?? defaultModalCategory}

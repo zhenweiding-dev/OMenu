@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BarChart3, Check, Clock, Flame, Pencil, Users, X } from "lucide-react";
+import { BarChart3, Check, Clock, Flame, Pencil, Trash2, Users, X } from "lucide-react";
 import { useAppStore } from "@/stores/useAppStore";
 import { startCaseDay } from "@/utils/helpers";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,9 +19,10 @@ interface ModalContentProps {
   };
   onClose: () => void;
   onSaveNotes: (notes: string) => void;
+  onDelete: () => void;
 }
 
-function RecipeDetailModalContent({ active, onClose, onSaveNotes }: ModalContentProps) {
+function RecipeDetailModalContent({ active, onClose, onSaveNotes, onDelete }: ModalContentProps) {
   const { book, day, mealType, recipe } = active;
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [notesDraft, setNotesDraft] = useState(() => recipe.notes ?? "");
@@ -75,6 +76,18 @@ function RecipeDetailModalContent({ active, onClose, onSaveNotes }: ModalContent
                 <Pencil className="mr-1.5 h-4 w-4" /> Edit notes
               </Button>
             )}
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                const shouldDelete = window.confirm("Remove this meal from the plan?");
+                if (!shouldDelete) return;
+                onDelete();
+              }}
+              className="text-[#C67B7B] hover:text-[#a86161]"
+            >
+              <Trash2 className="mr-1.5 h-4 w-4" /> Delete meal
+            </Button>
           </div>
         </div>
 
@@ -174,6 +187,7 @@ export function RecipeDetailModal() {
   const active = useAppStore((state) => state.getActiveMeal());
   const clearActiveMeal = useAppStore((state) => state.clearActiveMeal);
   const updateMealNotes = useAppStore((state) => state.updateMealNotes);
+  const clearDayMeal = useAppStore((state) => state.clearDayMeal);
 
   useEffect(() => {
     if (!active) return undefined;
@@ -199,6 +213,10 @@ export function RecipeDetailModal() {
       active={active}
       onClose={clearActiveMeal}
       onSaveNotes={(notes) => updateMealNotes(active.book.id, active.day, active.mealType, notes)}
+      onDelete={() => {
+        clearDayMeal(active.book.id, active.day, active.mealType);
+        clearActiveMeal();
+      }}
     />
   );
 }

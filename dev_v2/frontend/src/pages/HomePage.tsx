@@ -1,18 +1,18 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, LayoutGrid, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useAppStore } from "@/stores/useAppStore";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { EmptyState } from "@/components/home/EmptyState";
-import { MenuBookCard } from "@/components/home/MenuBookCard";
 import { MenuClosedCard } from "@/components/home/MenuClosedCard";
 import { DailyMenuCard } from "@/components/home/DailyMenuCard";
+import { AddMealModal } from "@/components/home/AddMealModal";
 import { SwipeIndicator } from "@/components/home/SwipeIndicator";
 import { WEEK_DAYS } from "@/utils/constants";
 import { getDayDisplay, getWeekDateRange, isCurrentCalendarWeek, startCaseDay } from "@/utils/helpers";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
-import type { MenuBook } from "@/types";
+import type { DayMeals, MenuBook } from "@/types";
 
 export function HomePage() {
   const menuBooks = useAppStore((state) => state.menuBooks);
@@ -24,9 +24,10 @@ export function HomePage() {
   const deleteMenuBook = useAppStore((state) => state.deleteMenuBook);
   const isMenuOpen = useAppStore((state) => state.isMenuOpen);
   const setIsMenuOpen = useAppStore((state) => state.setIsMenuOpen);
-  const toggleMenuView = useAppStore((state) => state.toggleMenuView);
+  const setDayMeal = useAppStore((state) => state.setDayMeal);
 
   const [pendingDelete, setPendingDelete] = useState<MenuBook | null>(null);
+  const [addMealDayKey, setAddMealDayKey] = useState<(typeof WEEK_DAYS)[number] | null>(null);
 
   const orderedBooks = useMemo(
     () => [...menuBooks].sort((a, b) => (a.mealPlan.createdAt < b.mealPlan.createdAt ? 1 : -1)),
@@ -60,6 +61,8 @@ export function HomePage() {
     setCurrentDayIndex((currentDayIndex + 1) % WEEK_DAYS.length);
   };
 
+  const touchStartXRef = useRef<number | null>(null);
+
   const handleSelectBook = (id: string) => {
     setCurrentWeekId(id);
     setCurrentDayIndex(0);
@@ -78,7 +81,6 @@ export function HomePage() {
   const currentMeals = currentBook.mealPlan.days[currentDayKey];
   const currentDayLabel = startCaseDay(currentDayKey);
   const { dateLabel } = getDayDisplay(currentBook.mealPlan.createdAt, currentDayIndex);
-  const currentWeekRange = getWeekDateRange(currentBook.mealPlan.createdAt);
 
   const handleOpenMeal = (mealType: keyof typeof currentMeals) => {
     setActiveMeal({
@@ -88,26 +90,28 @@ export function HomePage() {
     });
   };
 
+  const handleOpenAddMeal = () => {
+    setAddMealDayKey(currentDayKey);
+  };
+
+  const handleCloseAddMeal = () => {
+    setAddMealDayKey(null);
+  };
+
+  const handleSubmitAddMeal = ({
+    mealType,
+    meal,
+  }: {
+    mealType: keyof DayMeals;
+    meal: NonNullable<DayMeals[keyof DayMeals]>;
+  }) => {
+    if (!addMealDayKey) return;
+    setDayMeal(currentBook.id, addMealDayKey, mealType, meal);
+    setAddMealDayKey(null);
+  };
+
   const closedView = (
     <>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(true)} aria-label="Back to menu open view">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div>
-            <h1 className="text-[24px] font-semibold text-text-primary">My Menus</h1>
-            <p className="text-[13px] text-text-secondary">Browse previous weeks or start a new plan.</p>
-          </div>
-        </div>
-        <Button asChild>
-          <Link to="/create" className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            New Menu
-          </Link>
-        </Button>
-      </div>
-
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {orderedBooks.map((book) => (
           <MenuClosedCard
@@ -121,7 +125,7 @@ export function HomePage() {
         ))}
         <Link
           to="/create"
-          className="flex h-full flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-border-subtle bg-paper-base p-6 text-center text-text-secondary transition hover:border-accent-base hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base"
+          className="flex h-full flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-border-subtle bg-paper-base p-6 text-center transition hover:border-accent-base hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base"
         >
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-paper-muted text-accent-base">
             <Plus className="h-6 w-6" />
@@ -133,48 +137,80 @@ export function HomePage() {
         </Link>
       </div>
 
-      <p className="text-center text-[12px] text-text-tertiary">Long-press any menu to delete it.</p>
+      <p className="text-center text-[11px] uppercase tracking-[0.24em] text-text-tertiary">Long-press a menu to delete</p>
     </>
   );
 
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    touchStartXRef.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    const startX = touchStartXRef.current;
+    if (startX == null) return;
+    const endX = event.changedTouches[0]?.clientX ?? startX;
+    const deltaX = endX - startX;
+    if (Math.abs(deltaX) > 60) {
+      if (deltaX < 0) {
+        handleNextDay();
+      } else {
+        handlePrevDay();
+      }
+    }
+    touchStartXRef.current = null;
+  };
+
   const openView = (
     <>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-[13px] font-semibold uppercase tracking-[0.18em] text-text-secondary">This Week</p>
-          <h1 className="text-[26px] font-semibold text-text-primary">{currentWeekRange}</h1>
-          <p className="text-[13px] text-text-secondary">Swipe through your meals or jump to another menu.</p>
-        </div>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={toggleMenuView}
-          aria-label="View all menus"
-          className="h-10 w-10 rounded-full"
-        >
-          <LayoutGrid className="h-5 w-5" />
-        </Button>
-      </div>
+      <div className="flex flex-col items-center gap-6">
+        <SwipeIndicator
+          total={WEEK_DAYS.length}
+          activeIndex={currentDayIndex}
+          onSelect={setCurrentDayIndex}
+          onPrev={handlePrevDay}
+          onNext={handleNextDay}
+          labels={WEEK_DAYS.map((day) => startCaseDay(day))}
+        />
 
-      <section className="space-y-4">
-        <h2 className="text-[13px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Menu Books</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {orderedBooks.map((book) => (
-            <MenuBookCard
-              key={book.id}
-              book={book}
-              onSelect={handleSelectBook}
-              isActive={book.id === currentBook.id}
-              onLongPress={handleRequestDelete}
+        <div className="flex w-full items-center gap-3">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={handlePrevDay}
+            aria-label="Previous day"
+            className="h-10 w-10 rounded-full border border-border-subtle text-text-secondary"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+          <div
+            className="flex-1"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={() => {
+              touchStartXRef.current = null;
+            }}
+          >
+            <DailyMenuCard
+              day={currentDayLabel}
+              dateLabel={dateLabel}
+              meals={currentMeals}
+              onOpenMeal={handleOpenMeal}
+              onAddMeal={handleOpenAddMeal}
             />
-          ))}
+          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={handleNextDay}
+            aria-label="Next day"
+            className="h-10 w-10 rounded-full border border-border-subtle text-text-secondary"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
         </div>
-      </section>
-
-      <section className="flex flex-col gap-5">
-        <SwipeIndicator currentDay={currentDayLabel} onPrev={handlePrevDay} onNext={handleNextDay} />
-        <DailyMenuCard day={currentDayLabel} dateLabel={dateLabel} meals={currentMeals} onOpenMeal={handleOpenMeal} />
-      </section>
+      </div>
     </>
   );
 
@@ -208,6 +244,14 @@ export function HomePage() {
           </Button>
         </div>
       </Modal>
+
+      <AddMealModal
+        open={addMealDayKey !== null}
+        dayLabel={addMealDayKey ? startCaseDay(addMealDayKey) : ""}
+        existingMeals={addMealDayKey ? currentBook.mealPlan.days[addMealDayKey] : currentMeals}
+        onClose={handleCloseAddMeal}
+        onSubmit={handleSubmitAddMeal}
+      />
     </PageContainer>
   );
 }

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageContainer } from "@/components/layout/PageContainer";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/stores/useAppStore";
@@ -72,21 +72,21 @@ export function MyPage() {
   };
 
   return (
-    <PageContainer className="space-y-6 py-6">
-      <header className="space-y-1">
-        <h1 className="text-[26px] font-semibold text-text-primary">Profile</h1>
-        <p className="text-[13px] text-text-secondary">Adjust your defaults to keep future meal plans aligned with your goals.</p>
-      </header>
-
-      <section className="grid gap-4 lg:grid-cols-2">
-        <Card className="h-full">
-          <CardHeader>
-            <CardTitle className="text-[16px]">Preferences</CardTitle>
+    <PageContainer className="space-y-6">
+      <Card>
+        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-1">
+            <CardTitle className="text-[16px]">Your Meal Preferences</CardTitle>
             <p className="text-[13px] text-text-secondary">
-              Last updated {lastGeneratedAt ? formatIsoDate(lastGeneratedAt) : "from your current draft"}
+              Last updated {lastGeneratedAt ? formatIsoDate(lastGeneratedAt) : "using your current draft"}
             </p>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          </div>
+          <Button onClick={handleEditPreferences} className="w-full sm:w-auto">
+            Edit preferences
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <h3 className="text-[13px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Keywords</h3>
               {renderTags(preferences.keywords, "No keywords saved yet.")}
@@ -99,37 +99,30 @@ export function MyPage() {
               <h3 className="text-[13px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Disliked items</h3>
               {renderTags(preferences.dislikedItems, "No dislikes added yet.")}
             </div>
-          </CardContent>
-          <CardFooter>
-            <Button onClick={handleEditPreferences}>Edit preferences</Button>
-          </CardFooter>
-        </Card>
+            <div className="space-y-2">
+              <h3 className="text-[13px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Cooking schedule</h3>
+              <p className="text-sm text-text-secondary">Customize which meals you cook on each day inside the edit flow.</p>
+            </div>
+          </div>
 
-        <Card className="h-full">
-          <CardHeader>
-            <CardTitle className="text-[16px]">Defaults</CardTitle>
-            <p className="text-[13px] text-text-secondary">These settings apply when generating a new plan.</p>
-          </CardHeader>
-          <CardContent>
-            <dl className="grid gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl bg-paper-muted p-4 text-center">
-                <dt className="text-[12px] uppercase tracking-[0.18em] text-text-secondary">People</dt>
-                <dd className="text-[18px] font-semibold text-text-primary">{preferences.numPeople}</dd>
-              </div>
-              <div className="rounded-2xl bg-paper-muted p-4 text-center">
-                <dt className="text-[12px] uppercase tracking-[0.18em] text-text-secondary">Weekly Budget</dt>
-                <dd className="text-[18px] font-semibold text-text-primary">{formatCurrency(preferences.budget)}</dd>
-              </div>
-              <div className="rounded-2xl bg-paper-muted p-4 text-center">
-                <dt className="text-[12px] uppercase tracking-[0.18em] text-text-secondary">Difficulty</dt>
-                <dd className="text-[18px] font-semibold text-text-primary">
-                  {preferences.difficulty.charAt(0).toUpperCase() + preferences.difficulty.slice(1)}
-                </dd>
-              </div>
-            </dl>
-          </CardContent>
-        </Card>
-      </section>
+          <dl className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-2xl bg-paper-muted p-4 text-center">
+              <dt className="text-[12px] uppercase tracking-[0.18em] text-text-secondary">People</dt>
+              <dd className="text-[18px] font-semibold text-text-primary">{preferences.numPeople}</dd>
+            </div>
+            <div className="rounded-2xl bg-paper-muted p-4 text-center">
+              <dt className="text-[12px] uppercase tracking-[0.18em] text-text-secondary">Weekly Budget</dt>
+              <dd className="text-[18px] font-semibold text-text-primary">{formatCurrency(preferences.budget)}</dd>
+            </div>
+            <div className="rounded-2xl bg-paper-muted p-4 text-center">
+              <dt className="text-[12px] uppercase tracking-[0.18em] text-text-secondary">Difficulty</dt>
+              <dd className="text-[18px] font-semibold text-text-primary">
+                {preferences.difficulty.charAt(0).toUpperCase() + preferences.difficulty.slice(1)}
+              </dd>
+            </div>
+          </dl>
+        </CardContent>
+      </Card>
     </PageContainer>
   );
 }

@@ -1,7 +1,7 @@
 import { useMemo, useRef } from "react";
 import { cn } from "@/utils/cn";
 import { formatCurrency, getRelativeWeekLabel, getWeekDateRange } from "@/utils/helpers";
-import { MENU_CLOSED_EMOJI_FALLBACK, MENU_CLOSED_GRADIENTS } from "@/utils/constants";
+import { MENU_CLOSED_EMOJI_FALLBACK, MENU_CLOSED_SURFACES } from "@/utils/constants";
 import type { IngredientCategory, MenuBook } from "@/types";
 
 interface MenuClosedCardProps {
@@ -23,16 +23,25 @@ const CATEGORY_EMOJI: Record<IngredientCategory, string> = {
   others: "🍽️",
 };
 
-function pickGradient(id: string) {
+function pickSurface(id: string) {
   const hash = Array.from(id).reduce((total, char) => total + char.charCodeAt(0), 0);
-  return MENU_CLOSED_GRADIENTS[hash % MENU_CLOSED_GRADIENTS.length];
+  return MENU_CLOSED_SURFACES[hash % MENU_CLOSED_SURFACES.length];
+}
+
+function collectIngredientCategories(book: MenuBook) {
+  const categories = new Set<IngredientCategory>();
+  Object.values(book.mealPlan.days).forEach((day) => {
+    Object.values(day).forEach((meal) => {
+      meal?.ingredients.forEach((ingredient) => {
+        categories.add(ingredient.category);
+      });
+    });
+  });
+  return categories;
 }
 
 function buildEmojiCover(book: MenuBook) {
-  const categories = new Set<IngredientCategory>();
-  book.shoppingList.items.forEach((item) => {
-    categories.add(item.category);
-  });
+  const categories = collectIngredientCategories(book);
 
   const emojiPool = Array.from(categories)
     .map((category) => CATEGORY_EMOJI[category])
@@ -47,7 +56,7 @@ function buildEmojiCover(book: MenuBook) {
 }
 
 export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurrentWeekBadge }: MenuClosedCardProps) {
-  const gradientClass = useMemo(() => pickGradient(book.id), [book.id]);
+  const surfaceClass = useMemo(() => pickSurface(book.id), [book.id]);
   const emojiCover = buildEmojiCover(book);
   const weekRange = getWeekDateRange(book.mealPlan.createdAt);
   const relativeLabel = getRelativeWeekLabel(book.mealPlan.createdAt);
@@ -107,14 +116,14 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurr
     >
       <div
         className={cn(
-          "relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br p-5 text-white shadow-soft transition-transform",
+          "relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-subtle p-5 text-text-primary shadow-soft transition-transform",
           "hover:-translate-y-[2px]",
-          gradientClass,
-          isActive ? "ring-2 ring-white/80 ring-offset-2 ring-offset-black/10" : "ring-0",
+          surfaceClass,
+          isActive ? "ring-2 ring-accent-base/60 ring-offset-2 ring-offset-paper-base" : "ring-0",
         )}
       >
         {showCurrentWeekBadge && (
-          <span className="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+          <span className="inline-flex items-center rounded-full bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-primary">
             {relativeLabel}
           </span>
         )}
@@ -123,9 +132,9 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurr
           {emojiCover}
         </div>
 
-        <div className="mt-auto space-y-1 rounded-2xl bg-white/15 p-4">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-white/80">{weekRange}</p>
-          <p className="text-[13px] text-white">
+        <div className="mt-auto space-y-1 rounded-2xl border border-border-subtle bg-white/75 p-4">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-text-secondary">{weekRange}</p>
+          <p className="text-[13px] text-text-primary">
             {totalMeals} meals • {budget}
           </p>
         </div>

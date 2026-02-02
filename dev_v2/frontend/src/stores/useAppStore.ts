@@ -16,6 +16,8 @@ interface AppState {
   addMenuBook: (book: MenuBook) => void;
   updateMenuBook: (id: string, updates: Partial<MenuBook>) => void;
   deleteMenuBook: (id: string) => void;
+  setDayMeal: (bookId: string, day: DayKey, mealType: MealKey, meal: NonNullable<DayMeals[MealKey]>) => void;
+  clearDayMeal: (bookId: string, day: DayKey, mealType: MealKey) => void;
 
   currentWeekId: string | null;
   setCurrentWeekId: (id: string | null) => void;
@@ -75,6 +77,47 @@ export const useAppStore = create<AppState>()(
     set((state) => ({
       menuBooks: state.menuBooks.filter((book) => book.id !== id),
       currentWeekId: state.currentWeekId === id ? null : state.currentWeekId,
+    })),
+  setDayMeal: (bookId, day, mealType, meal) =>
+    set((state) => ({
+      menuBooks: state.menuBooks.map((book) => {
+        if (book.id !== bookId) return book;
+        const dayMeals = book.mealPlan.days[day];
+        return {
+          ...book,
+          mealPlan: {
+            ...book.mealPlan,
+            days: {
+              ...book.mealPlan.days,
+              [day]: {
+                ...dayMeals,
+                [mealType]: meal,
+              },
+            },
+          },
+        };
+      }),
+    })),
+  clearDayMeal: (bookId, day, mealType) =>
+    set((state) => ({
+      menuBooks: state.menuBooks.map((book) => {
+        if (book.id !== bookId) return book;
+        const dayMeals = book.mealPlan.days[day];
+        if (!dayMeals[mealType]) return book;
+        return {
+          ...book,
+          mealPlan: {
+            ...book.mealPlan,
+            days: {
+              ...book.mealPlan.days,
+              [day]: {
+                ...dayMeals,
+                [mealType]: null,
+              },
+            },
+          },
+        };
+      }),
     })),
 
   currentWeekId: null,
