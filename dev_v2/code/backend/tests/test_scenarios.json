@@ -1,0 +1,70 @@
+{
+  "scenarios": [
+    {
+      "id": "scenario_1",
+      "name": "健康减脂用户",
+      "description": "注重健康、低卡路里、高蛋白饮食的用户",
+      "request": {
+        "keywords": ["Healthy", "Low-calorie", "High-protein"],
+        "mustHaveItems": ["Chicken breast", "Eggs", "Salmon"],
+        "dislikedItems": ["Fried food", "Cheese", "Butter"],
+        "numPeople": 1,
+        "budget": 80,
+        "difficulty": "easy",
+        "cookSchedule": {
+          "monday": {"breakfast": true, "lunch": true, "dinner": true},
+          "tuesday": {"breakfast": false, "lunch": true, "dinner": true},
+          "wednesday": {"breakfast": false, "lunch": true, "dinner": true},
+          "thursday": {"breakfast": false, "lunch": false, "dinner": false},
+          "friday": {"breakfast": false, "lunch": false, "dinner": false},
+          "saturday": {"breakfast": false, "lunch": false, "dinner": false},
+          "sunday": {"breakfast": false, "lunch": false, "dinner": false}
+        }
+      }
+    },
+    {
+      "id": "scenario_2",
+      "name": "中式家庭餐",
+      "description": "4口之家，偏好中式家常菜，周末做饭",
+      "request": {
+        "keywords": ["Chinese", "Family-style", "Homemade"],
+        "mustHaveItems": ["Rice", "Pork", "Tofu"],
+        "dislikedItems": ["Spicy", "Seafood"],
+        "numPeople": 4,
+        "budget": 150,
+        "difficulty": "medium",
+        "cookSchedule": {
+          "monday": {"breakfast": false, "lunch": false, "dinner": false},
+          "tuesday": {"breakfast": false, "lunch": false, "dinner": false},
+          "wednesday": {"breakfast": false, "lunch": false, "dinner": false},
+          "thursday": {"breakfast": false, "lunch": false, "dinner": false},
+          "friday": {"breakfast": false, "lunch": false, "dinner": false},
+          "saturday": {"breakfast": true, "lunch": true, "dinner": true},
+          "sunday": {"breakfast": true, "lunch": true, "dinner": true}
+        }
+      }
+    },
+    {
+      "id": "scenario_3",
+      "name": "素食主义者",
+      "description": "纯素食用户，不吃任何肉类和海鲜",
+      "request": {
+        "keywords": ["Vegetarian", "Plant-based", "Fresh"],
+        "mustHaveItems": ["Tofu", "Beans", "Vegetables"],
+        "dislikedItems": ["Meat", "Fish", "Chicken", "Pork", "Beef", "Seafood"],
+        "numPeople": 2,
+        "budget": 100,
+        "difficulty": "easy",
+        "cookSchedule": {
+          "monday": {"breakfast": true, "lunch": true, "dinner": true},
+          "tuesday": {"breakfast": false, "lunch": true, "dinner": true},
+          "wednesday": {"breakfast": false, "lunch": true, "dinner": true},
+          "thursday": {"breakfast": false, "lunch": false, "dinner": false},
+          "friday": {"breakfast": false, "lunch": false, "dinner": false},
+          "saturday": {"breakfast": false, "lunch": false, "dinner": false},
+          "sunday": {"breakfast": false, "lunch": false, "dinner": false}
+        }
+      }
+    }
+  ]
+}
