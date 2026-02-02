@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  font-family: theme("fontFamily.sans");
+  background-color: theme("colors.paper.base");
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background-color: theme("colors.paper.base");
+  color: theme("colors.text.primary");
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  @apply mx-auto max-w-md pb-24; /* Mobile-first canvas */
+}
