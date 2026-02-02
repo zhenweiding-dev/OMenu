@@ -14,8 +14,10 @@ body {
   background-color: theme("colors.paper.base");
   color: theme("colors.text.primary");
   -webkit-font-smoothing: antialiased;
+  overflow: hidden;
 }
 
 #root {
-  @apply mx-auto max-w-md pb-24; /* Mobile-first canvas */
+  width: 100%;
+  min-height: 100vh;
 }

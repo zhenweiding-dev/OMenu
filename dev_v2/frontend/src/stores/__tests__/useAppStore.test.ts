@@ -71,3 +71,35 @@ describe("useAppStore shopping actions", () => {
     );
   });
 });
+
+describe("useAppStore meal actions", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    useAppStore.persist.clearStorage?.();
+    useAppStore.setState(initialState, true);
+  });
+
+  it("sets a manual meal on a given day", () => {
+    const book = cloneSample();
+    useAppStore.setState({ menuBooks: [book], currentWeekId: book.id });
+
+    useAppStore.getState().setDayMeal(book.id, "monday", "breakfast", {
+      ...book.mealPlan.days.monday.breakfast!,
+      id: "manual-test",
+      name: "Custom Breakfast",
+    });
+
+    const updatedBook = useAppStore.getState().menuBooks[0];
+    expect(updatedBook.mealPlan.days.monday.breakfast?.name).toBe("Custom Breakfast");
+  });
+
+  it("clears an existing meal from a slot", () => {
+    const book = cloneSample();
+    useAppStore.setState({ menuBooks: [book], currentWeekId: book.id });
+
+    useAppStore.getState().clearDayMeal(book.id, "tuesday", "dinner");
+
+    const updatedBook = useAppStore.getState().menuBooks[0];
+    expect(updatedBook.mealPlan.days.tuesday.dinner).toBeNull();
+  });
+});

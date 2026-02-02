@@ -111,14 +111,13 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurr
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerLeave}
       onPointerCancel={handlePointerLeave}
-      className="group relative h-full w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base"
+      className="group relative block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base aspect-[3/4] sm:aspect-[4/5]"
       aria-pressed={isActive}
     >
       <div
         className={cn(
-          "relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-subtle p-5 text-text-primary shadow-soft transition-transform",
+          "relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-subtle bg-card-base p-5 text-text-primary shadow-soft transition-transform",
           "hover:-translate-y-[2px]",
-          surfaceClass,
           isActive ? "ring-2 ring-accent-base/60 ring-offset-2 ring-offset-paper-base" : "ring-0",
         )}
       >
@@ -128,11 +127,17 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurr
           </span>
         )}
 
-        <div className="mt-4 text-3xl leading-relaxed" aria-hidden>
+        <div
+          className={cn(
+            "mt-4 flex flex-1 items-center justify-center rounded-2xl border border-border-subtle/60 text-center text-3xl leading-relaxed",
+            surfaceClass,
+          )}
+          aria-hidden
+        >
           {emojiCover}
         </div>
 
-        <div className="mt-auto space-y-1 rounded-2xl border border-border-subtle bg-white/75 p-4">
+        <div className="mt-4 space-y-1 rounded-2xl border border-border-subtle/80 bg-white/90 p-4">
           <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-text-secondary">{weekRange}</p>
           <p className="text-[13px] text-text-primary">
             {totalMeals} meals • {budget}

@@ -111,7 +111,7 @@ export function HomePage() {
   };
 
   const closedView = (
-    <>
+    <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {orderedBooks.map((book) => (
           <MenuClosedCard
@@ -125,7 +125,7 @@ export function HomePage() {
         ))}
         <Link
           to="/create"
-          className="flex h-full flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-border-subtle bg-paper-base p-6 text-center transition hover:border-accent-base hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base"
+          className="flex w-full flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-border-subtle bg-paper-base p-6 text-center transition hover:border-accent-base hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base aspect-[3/4] sm:aspect-[4/5]"
         >
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-paper-muted text-accent-base">
             <Plus className="h-6 w-6" />
@@ -138,7 +138,7 @@ export function HomePage() {
       </div>
 
       <p className="text-center text-[11px] uppercase tracking-[0.24em] text-text-tertiary">Long-press a menu to delete</p>
-    </>
+    </div>
   );
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
@@ -191,13 +191,15 @@ export function HomePage() {
               touchStartXRef.current = null;
             }}
           >
-            <DailyMenuCard
-              day={currentDayLabel}
-              dateLabel={dateLabel}
-              meals={currentMeals}
-              onOpenMeal={handleOpenMeal}
-              onAddMeal={handleOpenAddMeal}
-            />
+            <div className="mx-auto w-full min-w-[260px] max-w-[560px] sm:min-w-[320px]">
+              <DailyMenuCard
+                day={currentDayLabel}
+                dateLabel={dateLabel}
+                meals={currentMeals}
+                onOpenMeal={handleOpenMeal}
+                onAddMeal={handleOpenAddMeal}
+              />
+            </div>
           </div>
           <Button
             type="button"
@@ -246,6 +248,7 @@ export function HomePage() {
       </Modal>
 
       <AddMealModal
+        key={addMealDayKey ?? "closed"}
         open={addMealDayKey !== null}
         dayLabel={addMealDayKey ? startCaseDay(addMealDayKey) : ""}
         existingMeals={addMealDayKey ? currentBook.mealPlan.days[addMealDayKey] : currentMeals}

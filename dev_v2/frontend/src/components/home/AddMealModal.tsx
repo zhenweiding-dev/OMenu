@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -59,17 +59,7 @@ export function AddMealModal({ open, dayLabel, existingMeals, onClose, onSubmit 
   const [difficulty, setDifficulty] = useState<Difficulty>(DEFAULT_DIFFICULTY);
   const [instructions, setInstructions] = useState("");
 
-  useEffect(() => {
-    if (!open) return;
-    setMealType(emptyMealType);
-    setName("");
-    setIngredientsInput("");
-    setEstimatedTime("");
-    setServings("");
-    setCalories("");
-    setDifficulty(DEFAULT_DIFFICULTY);
-    setInstructions("");
-  }, [open, emptyMealType]);
+  const replacingMeal = existingMeals[mealType];
 
   const handleSubmit = () => {
     if (!name.trim()) return;
@@ -114,10 +104,16 @@ export function AddMealModal({ open, dayLabel, existingMeals, onClose, onSubmit 
               {MEAL_TYPE_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
-                  {existingMeals[option.value] ? " (replace)" : ""}
                 </option>
               ))}
             </select>
+            {replacingMeal ? (
+              <p className="text-xs text-text-secondary">
+                Replaces <span className="font-medium text-text-primary">{replacingMeal.name}</span> in this slot.
+              </p>
+            ) : (
+              <p className="text-xs text-text-secondary">Adds a new recipe to this slot.</p>
+            )}
           </label>
           <label className="flex flex-col gap-2 text-sm text-text-primary">
             Difficulty

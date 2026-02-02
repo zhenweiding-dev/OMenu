@@ -33,7 +33,11 @@ function RecipeDetailModalContent({ active, onClose, onSaveNotes, onDelete }: Mo
   const instructionSteps = recipe.instructions
     .split(/\n+/)
     .map((step) => step.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .map((step) => {
+      const cleaned = step.replace(/^(?:step\s*\d+[:.-]?|\d+[).:\-\s]*|[-•\u2022]\s*)/i, "").trim();
+      return cleaned.length > 0 ? cleaned : step;
+    });
   const hasNotes = Boolean(recipe.notes);
 
   const headerSubtitle = `${dayLabel} · ${mealLabel}`;

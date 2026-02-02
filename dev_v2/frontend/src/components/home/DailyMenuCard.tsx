@@ -69,7 +69,7 @@ function MealRow({
             {meal.ingredients.slice(0, 4).map((ingredient, index) => (
               <span
                 key={`${ingredient.name}-${index}`}
-                className="rounded-full border border-border-tag bg-paper-muted px-2 py-0.5 text-[11px] font-medium text-text-secondary"
+                className="max-w-[10rem] truncate rounded-full border border-border-tag bg-paper-muted px-2 py-0.5 text-[11px] font-medium text-text-secondary"
               >
                 {ingredient.name}
               </span>

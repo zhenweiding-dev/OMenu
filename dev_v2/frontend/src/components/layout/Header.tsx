@@ -45,7 +45,7 @@ export function Header() {
             <div className="flex items-start justify-between gap-6">
               <div>
                 <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-accent-base">{relativeWeekLabel}</p>
-                <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em] text-text-primary">{currentWeekRange}</h1>
+                <p className="mt-2 text-[13px] text-text-secondary">{currentWeekRange}</p>
               </div>
               <Button
                 variant="outline"
@@ -76,10 +76,7 @@ export function Header() {
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <div>
-                <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-accent-base">Menu Library</p>
-                <h1 className="mt-1 text-[28px] font-semibold tracking-[-0.02em] text-text-primary">My Menus</h1>
-              </div>
+              <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-accent-base">Menu Library</p>
             </div>
             <span className="inline-block h-11 w-11" aria-hidden />
           </div>
