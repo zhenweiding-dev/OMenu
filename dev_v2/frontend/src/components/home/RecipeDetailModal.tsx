@@ -10,7 +10,7 @@ function formatDifficulty(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-interface ModalContentProps {
+export interface ModalContentProps {
   active: {
     book: MenuBook;
     day: keyof MenuBook["mealPlan"]["days"];
@@ -82,7 +82,7 @@ function FlameIcon() {
   );
 }
 
-function RecipeDetailModalContent({ active, onClose, onSaveNotes, onDelete }: ModalContentProps) {
+export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: ModalContentProps) {
   const { book, day, mealType, recipe } = active;
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [notesDraft, setNotesDraft] = useState(() => recipe.notes ?? "");
@@ -296,7 +296,7 @@ export function RecipeDetailModal() {
   if (!container) return null;
 
   return createPortal(
-    <RecipeDetailModalContent
+    <RecipeDetailSheet
       key={`${active.book.id}-${active.recipe.id}`}
       active={active}
       onClose={clearActiveMeal}

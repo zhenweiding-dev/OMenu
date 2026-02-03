@@ -6,7 +6,7 @@ import { DailyMenuCard } from "@/components/home/DailyMenuCard";
 import { SwipeIndicator } from "@/components/home/SwipeIndicator";
 import { WEEK_DAYS } from "@/utils/constants";
 import { getDayDisplay, startCaseDay } from "@/utils/helpers";
-import type { MealPlan, ShoppingList, DayMeals } from "@/types";
+import type { MealPlan, ShoppingList, DayMeals, Recipe } from "@/types";
 import { useMealPlan } from "@/hooks/useMealPlan";
 import { useAppStore } from "@/stores/useAppStore";
 
@@ -69,7 +69,7 @@ export function StepPlanOverview({ mealPlan, shoppingList, onPlanUpdated, onCrea
     touchStartXRef.current = null;
   };
 
-  const handleOpenMeal = (mealType: keyof DayMeals) => {
+  const handleOpenMeal = (mealType: keyof DayMeals, _meal: Recipe) => {
     setActiveMeal({
       bookId: mealPlan.id,
       day: currentDayKey,

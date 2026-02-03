@@ -10,6 +10,7 @@ import { RecipeDetailModal } from "@/components/home/RecipeDetailModal";
 import { useAppStore } from "@/stores/useAppStore";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { fetchUserState, saveUserState } from "@/services/api";
+import { buildMockMenuBooks } from "@/data/mockMenuBooks";
 import { useShallow } from "zustand/react/shallow";
 
 function App() {
@@ -39,9 +40,9 @@ function App() {
   );
 
   const outlineItems = [
-    { to: "/", label: "Plan", description: "Weekly overview" },
+    { to: "/create", label: "Create", description: "Start a new menu" },
+    { to: "/", label: "Menu", description: "Weekly menus" },
     { to: "/shopping", label: "Shopping", description: "List & groceries" },
-    { to: "/create", label: "Create", description: "New weekly menu" },
     { to: "/me", label: "Profile", description: "Account & settings" },
   ];
 
@@ -77,6 +78,13 @@ function App() {
       isMounted = false;
     };
   }, [setCurrentDayIndex, setDraftPreferences, setIsMenuOpen, setMenuBooks]);
+
+  useEffect(() => {
+    if (import.meta.env.VITE_USE_MOCK !== "true") return;
+    if (!remoteStateReady) return;
+    if (menuBooks.length > 0) return;
+    setMenuBooks(buildMockMenuBooks());
+  }, [menuBooks.length, remoteStateReady, setMenuBooks]);
 
   useEffect(() => {
     if (!remoteStateReady) return;

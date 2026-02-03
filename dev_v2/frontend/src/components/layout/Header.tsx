@@ -1,4 +1,3 @@
-import { ArrowLeft } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { getRelativeWeekLabel, getWeekDateRange } from "@/utils/helpers";
 import { useAppStore } from "@/stores/useAppStore";
@@ -21,8 +20,7 @@ export function Header() {
   const location = useLocation();
   const pathname = location.pathname;
   const currentBook = useAppStore((state) => state.getCurrentMenuBook());
-  const isMenuOpen = useAppStore((state) => state.isMenuOpen);
-  const toggleMenuView = useAppStore((state) => state.toggleMenuView);
+  const setIsMenuPickerOpen = useAppStore((state) => state.setIsMenuPickerOpen);
   const setShowAddItemModal = useShoppingStore((state) => state.setShowAddItemModal);
 
   if (pathname === "/create") {
@@ -30,66 +28,30 @@ export function Header() {
   }
 
   if (pathname === "/") {
-    if (!currentBook) {
-      return (
-        <header className="sticky top-0 z-40 bg-paper-base">
-          <div className="px-5 pb-4 pt-14">
-            <div className="space-y-2">
-              <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">Welcome</p>
-            </div>
-          </div>
-        </header>
-      );
-    }
+    const relativeWeekLabel = currentBook ? getRelativeWeekLabel(currentBook.mealPlan.createdAt) : "WELCOME";
+    const currentWeekRange = currentBook ? getWeekDateRange(currentBook.mealPlan.createdAt) : null;
 
-    if (isMenuOpen) {
-      const relativeWeekLabel = getRelativeWeekLabel(currentBook.mealPlan.createdAt);
-      const currentWeekRange = getWeekDateRange(currentBook.mealPlan.createdAt);
-
-      return (
-        <header className="sticky top-0 z-40 bg-paper-base">
-          <div className="px-5 pb-4 pt-14">
-            <div className="flex items-start justify-between gap-6">
-              <div>
-              <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">
-                  {relativeWeekLabel}
-                </p>
-                <p className="mt-1 text-[11px] text-text-secondary">{currentWeekRange}</p>
-              </div>
-              {/* Grid icon button */}
-              <button
-                type="button"
-                onClick={toggleMenuView}
-                aria-label="View all menus"
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-card-base shadow-btn"
-              >
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.8}>
-                  <rect x="3" y="3" width="7" height="7" rx="1.5"/>
-                  <rect x="14" y="3" width="7" height="7" rx="1.5"/>
-                  <rect x="14" y="14" width="7" height="7" rx="1.5"/>
-                  <rect x="3" y="14" width="7" height="7" rx="1.5"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </header>
-      );
-    }
-
-    // Menu closed view header
     return (
       <header className="sticky top-0 z-40 bg-paper-base">
         <div className="px-5 pb-4 pt-14">
-          <div className="flex items-center gap-3">
+          <div className="flex items-start justify-between gap-6">
+            <div>
+              <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">
+                {relativeWeekLabel}
+              </p>
+              {currentWeekRange && <p className="mt-1 text-[11px] text-text-secondary">{currentWeekRange}</p>}
+            </div>
             <button
               type="button"
-              onClick={toggleMenuView}
-              aria-label="Back to current menu"
+              onClick={() => setIsMenuPickerOpen(true)}
+              aria-label="Open menu book picker"
               className="flex h-10 w-10 items-center justify-center rounded-xl bg-card-base shadow-btn"
             >
-              <ArrowLeft className="h-5 w-5 text-text-primary" strokeWidth={2} />
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.8}>
+                <path d="M4 19.5A2.5 2.5 0 016.5 17H20" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </button>
-            <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">MY MENUS</p>
           </div>
         </div>
       </header>

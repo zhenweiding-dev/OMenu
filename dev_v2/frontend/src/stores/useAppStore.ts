@@ -31,6 +31,9 @@ interface AppState {
   currentDayIndex: number;
   setCurrentDayIndex: (index: number) => void;
 
+  isMenuPickerOpen: boolean;
+  setIsMenuPickerOpen: (open: boolean) => void;
+
   isGenerating: boolean;
   setIsGenerating: (status: boolean) => void;
 
@@ -140,6 +143,9 @@ export const useAppStore = create<AppState>()(
   currentDayIndex: 0,
   setCurrentDayIndex: (index) =>
     set({ currentDayIndex: Math.max(0, Math.min(6, index)) }),
+
+  isMenuPickerOpen: false,
+  setIsMenuPickerOpen: (open) => set({ isMenuPickerOpen: open }),
 
   isGenerating: false,
   setIsGenerating: (status) => set({ isGenerating: status }),

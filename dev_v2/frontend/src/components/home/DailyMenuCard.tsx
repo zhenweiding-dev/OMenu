@@ -1,11 +1,15 @@
-import type { DayMeals } from "@/types";
+import type { DayMeals, Recipe } from "@/types";
 import { Plus } from "lucide-react";
+
+type MealInput = Recipe | Recipe[] | null;
+
+type MealEntry = Recipe & { source?: "base" | "extra" };
 
 interface DailyMenuCardProps {
   day: string;
   dateLabel: string;
-  meals: DayMeals;
-  onOpenMeal: (mealType: keyof DayMeals) => void;
+  meals: Record<keyof DayMeals, MealInput>;
+  onOpenMeal: (mealType: keyof DayMeals, meal: MealEntry) => void;
   onAddMeal: () => void;
 }
 
@@ -15,19 +19,24 @@ const MEAL_META: Record<keyof DayMeals, { label: string; icon: string; bgColor: 
   dinner: { label: "Dinner", icon: "🌙", bgColor: "bg-meal-dinner" },
 };
 
+function normalizeMeals(meal: MealInput): MealEntry[] {
+  if (!meal) return [];
+  return Array.isArray(meal) ? meal : [meal];
+}
+
 function MealRow({
   mealType,
-  meal,
+  meals,
   onOpen,
 }: {
   mealType: keyof DayMeals;
-  meal: DayMeals[keyof DayMeals];
-  onOpen?: () => void;
+  meals: MealEntry[];
+  onOpen?: (meal: MealEntry) => void;
 }) {
   const meta = MEAL_META[mealType];
 
   // Empty slot
-  if (!meal) {
+  if (meals.length === 0) {
     return (
       <div className="mx-4 my-2.5 flex items-center justify-center rounded-xl border border-dashed border-border-subtle bg-paper-base px-4 py-4">
         <span className="text-[13px] text-text-disabled">
@@ -38,40 +47,51 @@ function MealRow({
   }
 
   return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className="flex w-full items-center gap-3.5 border-b border-border-subtle px-5 py-3.5 text-left transition-colors last:border-b-0 hover:bg-paper-muted/50"
-    >
-      {/* Icon wrapper */}
-      <div className={`flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-xl text-lg ${meta.bgColor}`}>
-        {meta.icon}
-      </div>
+    <>
+      {meals.map((meal, index) => (
+        <button
+          key={meal.id ?? `${mealType}-${index}`}
+          type="button"
+          onClick={() => onOpen?.(meal)}
+          className="flex w-full items-center gap-3.5 border-b border-border-subtle px-5 py-3.5 text-left transition-colors last:border-b-0 hover:bg-paper-muted/50"
+        >
+          {/* Icon wrapper */}
+          <div className={`flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-xl text-lg ${meta.bgColor}`}>
+            {meta.icon}
+          </div>
 
-      {/* Content */}
-      <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.03em] text-text-secondary">
-          {meta.label}
-        </p>
-        <p className="mt-0.5 truncate text-[15px] font-semibold leading-tight text-text-primary">
-          {meal.name}
-        </p>
-        <p className="mt-1 text-[11px] text-text-secondary">
-          {meal.estimatedTime > 0 ? `${meal.estimatedTime} min` : "—"} · {meal.servings || "—"} servings
-        </p>
-      </div>
+          {/* Content */}
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.03em] text-text-secondary">
+              {meta.label}
+            </p>
+            <p className="mt-0.5 truncate text-[15px] font-semibold leading-tight text-text-primary">
+              {meal.name}
+            </p>
+            <p className="mt-1 text-[11px] text-text-secondary">
+              {meal.estimatedTime > 0 ? `${meal.estimatedTime} min` : "—"} · {meal.servings || "—"} servings
+            </p>
+          </div>
 
-      {/* Calories */}
-      <span className="flex-shrink-0 text-[13px] font-semibold text-accent-base">
-        {meal.totalCalories}
-      </span>
-    </button>
+          {/* Calories */}
+          <span className="flex-shrink-0 text-[13px] font-semibold text-accent-base">
+            {meal.totalCalories}
+          </span>
+        </button>
+      ))}
+    </>
   );
 }
 
 export function DailyMenuCard({ day, dateLabel, meals, onOpenMeal, onAddMeal }: DailyMenuCardProps) {
-  const scheduledMeals = [meals.breakfast, meals.lunch, meals.dinner].filter(Boolean).length;
-  const totalCalories = [meals.breakfast, meals.lunch, meals.dinner].reduce((sum, item) => {
+  const normalizedMeals = {
+    breakfast: normalizeMeals(meals.breakfast),
+    lunch: normalizeMeals(meals.lunch),
+    dinner: normalizeMeals(meals.dinner),
+  };
+
+  const totalDishes = normalizedMeals.breakfast.length + normalizedMeals.lunch.length + normalizedMeals.dinner.length;
+  const totalCalories = [...normalizedMeals.breakfast, ...normalizedMeals.lunch, ...normalizedMeals.dinner].reduce((sum, item) => {
     return sum + (item?.totalCalories ?? 0);
   }, 0);
 
@@ -83,7 +103,7 @@ export function DailyMenuCard({ day, dateLabel, meals, onOpenMeal, onAddMeal }: 
           <p className="text-[24px] font-bold tracking-[-0.02em] text-text-primary">{day}</p>
           <p className="mt-0.5 text-[13px] text-text-secondary">{dateLabel}</p>
           <div className="mt-2.5 flex items-center gap-3.5 text-[12px] text-text-secondary">
-            <span>🍽️ {scheduledMeals} {scheduledMeals === 1 ? "meal" : "meals"}</span>
+            <span>🍽️ {totalDishes} {totalDishes === 1 ? "dish" : "dishes"}</span>
             <span>🔥 {totalCalories.toLocaleString()} cal</span>
           </div>
         </div>
@@ -101,9 +121,9 @@ export function DailyMenuCard({ day, dateLabel, meals, onOpenMeal, onAddMeal }: 
 
       {/* Meal items */}
       <div>
-        <MealRow mealType="breakfast" meal={meals.breakfast} onOpen={() => onOpenMeal("breakfast")} />
-        <MealRow mealType="lunch" meal={meals.lunch} onOpen={() => onOpenMeal("lunch")} />
-        <MealRow mealType="dinner" meal={meals.dinner} onOpen={() => onOpenMeal("dinner")} />
+        <MealRow mealType="breakfast" meals={normalizedMeals.breakfast} onOpen={(meal) => onOpenMeal("breakfast", meal)} />
+        <MealRow mealType="lunch" meals={normalizedMeals.lunch} onOpen={(meal) => onOpenMeal("lunch", meal)} />
+        <MealRow mealType="dinner" meals={normalizedMeals.dinner} onOpen={(meal) => onOpenMeal("dinner", meal)} />
       </div>
     </div>
   );

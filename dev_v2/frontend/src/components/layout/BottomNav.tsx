@@ -58,7 +58,7 @@ function MeIcon({ isActive }: { isActive: boolean }) {
 }
 
 const navItems = [
-  { to: "/", label: "Plan", Icon: PlanIcon },
+  { to: "/", label: "Menu", Icon: PlanIcon },
   { to: "/shopping", label: "List", Icon: ListIcon },
   { to: "/me", label: "Me", Icon: MeIcon },
 ];
