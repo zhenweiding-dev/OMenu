@@ -35,7 +35,7 @@ export function Header() {
         <header className="sticky top-0 z-40 bg-paper-base">
           <div className="px-5 pb-4 pt-14">
             <div className="space-y-2">
-              <p className="text-[12px] font-semibold uppercase tracking-widest text-accent-base">Welcome</p>
+              <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">Welcome</p>
             </div>
           </div>
         </header>
@@ -51,7 +51,7 @@ export function Header() {
           <div className="px-5 pb-4 pt-14">
             <div className="flex items-start justify-between gap-6">
               <div>
-                <p className="text-[12px] font-semibold uppercase tracking-widest text-accent-base">
+              <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">
                   {relativeWeekLabel}
                 </p>
                 <p className="mt-1 text-[11px] text-text-secondary">{currentWeekRange}</p>
@@ -89,7 +89,7 @@ export function Header() {
             >
               <ArrowLeft className="h-5 w-5 text-text-primary" strokeWidth={2} />
             </button>
-            <p className="text-[12px] font-semibold uppercase tracking-widest text-accent-base">MY MENUS</p>
+            <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">MY MENUS</p>
           </div>
         </div>
       </header>
@@ -108,7 +108,7 @@ export function Header() {
         <div className="px-5 pb-4 pt-14">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-[12px] font-semibold uppercase tracking-widest text-accent-base">{title}</p>
+              <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">{title}</p>
               {subtitle && <p className="mt-1 text-[11px] text-text-secondary">{subtitle}</p>}
             </div>
             {/* Add button per spec */}
@@ -131,7 +131,7 @@ export function Header() {
       <div className="px-5 pb-4 pt-14">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-[12px] font-semibold uppercase tracking-widest text-accent-base">{title}</p>
+            <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">{title}</p>
           </div>
         </div>
       </div>

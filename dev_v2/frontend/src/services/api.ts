@@ -1,7 +1,41 @@
 import type { MealPlan, ShoppingList, UserPreferences, UserState } from "@/types";
+import { SAMPLE_MENU_BOOK } from "@/data/sampleMenuBook";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 const GENERATION_TIMEOUT = 120_000;
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function clone<T>(value: T): T {
+  if (typeof structuredClone === "function") {
+    return structuredClone(value);
+  }
+  return JSON.parse(JSON.stringify(value)) as T;
+}
+
+function buildMockMealPlan(preferences: UserPreferences): MealPlan {
+  const plan = clone(SAMPLE_MENU_BOOK.mealPlan);
+  const now = new Date().toISOString();
+  const suffix = now.replace(/[-:.TZ]/g, "");
+  return {
+    ...plan,
+    id: `mock_plan_${suffix}`,
+    createdAt: now,
+    preferences,
+  };
+}
+
+function buildMockShoppingList(mealPlanId: string, createdAt: string): ShoppingList {
+  const list = clone(SAMPLE_MENU_BOOK.shoppingList);
+  const suffix = createdAt.replace(/[-:.TZ]/g, "");
+  return {
+    ...list,
+    id: `mock_list_${suffix}`,
+    mealPlanId,
+    createdAt,
+  };
+}
 
 function toErrorMessage(payload: unknown, fallback: string) {
   if (!payload || typeof payload !== "object") return fallback;
@@ -49,6 +83,9 @@ async function fetchWithTimeout(url: string, options: RequestInit, timeout: numb
     if (error instanceof DOMException && error.name === "AbortError") {
       throw new ApiTimeoutError();
     }
+    if (error instanceof TypeError) {
+      throw new Error(`Unable to reach backend at ${API_BASE_URL}. Check that the server is running and VITE_API_BASE_URL is correct.`);
+    }
     throw error;
   } finally {
     window.clearTimeout(timeoutId);
@@ -61,6 +98,10 @@ export async function healthCheck() {
 }
 
 export async function generateMealPlan(preferences: UserPreferences) {
+  if (USE_MOCK) {
+    await delay(1200);
+    return buildMockMealPlan(preferences);
+  }
   const response = await fetchWithTimeout(
     `${API_BASE_URL}/api/meal-plans/generate`,
     {
@@ -74,6 +115,10 @@ export async function generateMealPlan(preferences: UserPreferences) {
 }
 
 export async function modifyMealPlan(planId: string, modification: string, currentPlan: MealPlan) {
+  if (USE_MOCK) {
+    await delay(800);
+    return { ...currentPlan };
+  }
   const response = await fetchWithTimeout(
     `${API_BASE_URL}/api/meal-plans/${planId}/modify`,
     {
@@ -87,6 +132,10 @@ export async function modifyMealPlan(planId: string, modification: string, curre
 }
 
 export async function generateShoppingList(mealPlanId: string, mealPlan: MealPlan) {
+  if (USE_MOCK) {
+    await delay(800);
+    return buildMockShoppingList(mealPlanId, new Date().toISOString());
+  }
   const response = await fetchWithTimeout(
     `${API_BASE_URL}/api/shopping-lists/generate`,
     {

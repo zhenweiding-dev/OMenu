@@ -49,10 +49,11 @@ function buildEmojiCover(book: MenuBook) {
 
   const source = emojiPool.length > 0 ? emojiPool : MENU_CLOSED_EMOJI_FALLBACK;
   const selection: string[] = [];
-  for (let index = 0; index < 6; index += 1) {
+  for (let index = 0; index < 9; index += 1) {
     selection.push(source[index % source.length]);
   }
-  return selection.join(" ");
+  const rows = [selection.slice(0, 3), selection.slice(3, 6), selection.slice(6, 9)];
+  return rows.map((row) => row.join(" ")).join("\n");
 }
 
 export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurrentWeekBadge }: MenuClosedCardProps) {
@@ -116,25 +117,25 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurr
     >
       <div
         className={cn(
-          "relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-subtle bg-card-base text-text-primary shadow-soft transition-transform",
-          "hover:-translate-y-[2px]",
-          isActive ? "ring-2 ring-accent-base/60 ring-offset-2 ring-offset-paper-base" : "ring-0",
+          "relative flex h-full flex-col overflow-hidden rounded-2xl border border-border-subtle bg-card-base text-text-primary shadow-soft transition-transform",
+          "hover:-translate-y-[2px] hover:shadow-[0_6px_20px_rgba(0,0,0,0.1)]",
+          isActive ? "border-accent-base/50" : "",
         )}
       >
         {/* THIS WEEK badge - green horizontal bar at top per spec */}
         {showCurrentWeekBadge && (
-          <div className="bg-accent-base px-4 py-2 text-center">
-            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-white">
+          <div className="absolute left-0 right-0 top-0 z-10 bg-accent-base py-1.5 text-center">
+            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-white">
               {relativeLabel}
             </span>
           </div>
         )}
 
         {/* Food emoji cover */}
-        <div className="flex flex-1 flex-col p-4">
+        <div className={cn("flex flex-1 flex-col p-4", showCurrentWeekBadge && "pt-8")}>
           <div
             className={cn(
-              "flex flex-1 items-center justify-center rounded-2xl border border-border-subtle/60 text-center text-3xl leading-relaxed",
+              "flex flex-1 items-center justify-center rounded-2xl text-center text-[22px] leading-relaxed whitespace-pre-line",
               surfaceClass,
             )}
             aria-hidden
@@ -144,9 +145,9 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurr
         </div>
 
         {/* Info footer */}
-        <div className="border-t border-border-subtle bg-white/90 px-4 py-3">
-          <p className="text-[13px] font-semibold text-text-primary">{weekRange}</p>
-          <p className="mt-0.5 text-[12px] text-text-secondary">
+        <div className="border-t border-border-subtle bg-white px-4 py-3">
+          <p className="text-[12px] font-semibold text-text-primary">{weekRange}</p>
+          <p className="mt-0.5 text-[11px] text-text-secondary">
             {totalMeals} meals • {budget}
           </p>
         </div>

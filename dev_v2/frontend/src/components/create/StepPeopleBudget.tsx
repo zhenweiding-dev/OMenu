@@ -80,31 +80,34 @@ export function StepPeopleBudget({
         <p className="text-[24px] font-medium leading-relaxed text-text-primary">
           The meal plan is for{" "}
           <span className="relative inline-block">
-            <button
-              type="button"
-              onClick={() => setEditingField(editingField === "people" ? null : "people")}
-              className="border-b-2 border-dashed border-accent-orange pb-0.5 font-semibold text-accent-orange hover:opacity-80"
-            >
-              {numPeople}
-            </button>
-            {editingField === "people" && (
-              <span className="absolute left-1/2 top-full z-20 mt-2 flex -translate-x-1/2 items-center gap-2 rounded-lg border border-border-subtle bg-white p-2 shadow-lg">
+            {editingField === "people" ? (
+              <span className="inline-flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => onUpdatePeople(Math.max(1, numPeople - 1))}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-border-subtle hover:bg-paper-muted"
+                  className="flex h-7 w-7 items-center justify-center rounded-md border border-border-tag bg-tag-selectedBg text-text-primary hover:bg-paper-muted"
                 >
                   <MinusIcon />
                 </button>
-                <span className="w-8 text-center text-lg font-semibold">{numPeople}</span>
+                <span className="min-w-[24px] text-center text-[24px] font-semibold text-accent-orange">
+                  {numPeople}
+                </span>
                 <button
                   type="button"
                   onClick={() => onUpdatePeople(Math.min(10, numPeople + 1))}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-border-subtle hover:bg-paper-muted"
+                  className="flex h-7 w-7 items-center justify-center rounded-md border border-border-tag bg-tag-selectedBg text-text-primary hover:bg-paper-muted"
                 >
                   <PlusIcon />
                 </button>
               </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setEditingField(editingField === "people" ? null : "people")}
+                className="border-b-2 border-dashed border-accent-orange pb-0.5 font-semibold text-accent-orange hover:opacity-80"
+              >
+                {numPeople}
+              </button>
             )}
           </span>{" "}
           people with{" "}

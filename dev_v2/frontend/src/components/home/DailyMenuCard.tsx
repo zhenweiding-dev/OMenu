@@ -50,7 +50,7 @@ function MealRow({
 
       {/* Content */}
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-text-secondary">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.03em] text-text-secondary">
           {meta.label}
         </p>
         <p className="mt-0.5 truncate text-[15px] font-semibold leading-tight text-text-primary">
@@ -80,7 +80,7 @@ export function DailyMenuCard({ day, dateLabel, meals, onOpenMeal, onAddMeal }: 
       {/* Card header */}
       <div className="relative border-b border-border-subtle bg-card-header px-5 py-5">
         <div className="pr-12">
-          <p className="text-[24px] font-bold tracking-tight text-text-primary">{day}</p>
+          <p className="text-[24px] font-bold tracking-[-0.02em] text-text-primary">{day}</p>
           <p className="mt-0.5 text-[13px] text-text-secondary">{dateLabel}</p>
           <div className="mt-2.5 flex items-center gap-3.5 text-[12px] text-text-secondary">
             <span>🍽️ {scheduledMeals} {scheduledMeals === 1 ? "meal" : "meals"}</span>

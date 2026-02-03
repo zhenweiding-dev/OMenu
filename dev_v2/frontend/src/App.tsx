@@ -9,16 +9,11 @@ import { MyPage } from "@/pages/MyPage";
 import { RecipeDetailModal } from "@/components/home/RecipeDetailModal";
 import { useAppStore } from "@/stores/useAppStore";
 import { useDraftStore } from "@/stores/useDraftStore";
-import { SAMPLE_MENU_BOOK } from "@/data/sampleMenuBook";
-import { startOfWeek } from "date-fns";
 import { fetchUserState, saveUserState } from "@/services/api";
 import { useShallow } from "zustand/react/shallow";
 
 function App() {
-  const menuCount = useAppStore((state) => state.menuBooks.length);
   const menuBooks = useAppStore((state) => state.menuBooks);
-  const addMenuBook = useAppStore((state) => state.addMenuBook);
-  const updateMenuBook = useAppStore((state) => state.updateMenuBook);
   const setMenuBooks = useAppStore((state) => state.setMenuBooks);
   const currentWeekId = useAppStore((state) => state.currentWeekId);
   const currentDayIndex = useAppStore((state) => state.currentDayIndex);
@@ -29,7 +24,6 @@ function App() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const syncTimeoutRef = useRef<number | null>(null);
   const [remoteStateReady, setRemoteStateReady] = useState(false);
-  const [hasRemoteState, setHasRemoteState] = useState(false);
 
   const setDraftPreferences = useDraftStore((state) => state.setPreferences);
   const draftPreferences = useDraftStore(
@@ -58,9 +52,6 @@ function App() {
         const remoteState = await fetchUserState();
         if (!isMounted) return;
         const hasMenuBooks = (remoteState.menuBooks ?? []).length > 0;
-        const hasPreferences = Boolean(remoteState.preferences);
-        setHasRemoteState(hasMenuBooks || hasPreferences);
-
         if (hasMenuBooks) {
           setMenuBooks(remoteState.menuBooks, remoteState.currentWeekId ?? null);
         }
@@ -74,7 +65,6 @@ function App() {
           setDraftPreferences(remoteState.preferences);
         }
       } catch {
-        setHasRemoteState(false);
       } finally {
         if (isMounted) {
           setRemoteStateReady(true);
@@ -110,71 +100,6 @@ function App() {
     };
   }, [currentDayIndex, currentWeekId, draftPreferences, isMenuOpen, menuBooks, remoteStateReady]);
 
-  useEffect(() => {
-    if (!import.meta.env.DEV) return;
-    if (!remoteStateReady || hasRemoteState) return;
-    const storage = typeof window !== "undefined" ? window.localStorage : null;
-    const SEED_FLAG_KEY = "omenu_dev_seeded";
-    const markSeeded = () => storage?.setItem(SEED_FLAG_KEY, "true");
-
-    const buildSeedMenu = () => {
-      const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
-      const isoWeekStart = weekStart.toISOString();
-      const idSuffix = isoWeekStart.slice(0, 10).replace(/-/g, "");
-      const mealPlanId = `mealplan_demo_${idSuffix}`;
-      const shoppingListId = `shopping_demo_${idSuffix}`;
-
-      return {
-        ...SAMPLE_MENU_BOOK,
-        id: `demo_week_${idSuffix}`,
-        mealPlan: {
-          ...SAMPLE_MENU_BOOK.mealPlan,
-          id: mealPlanId,
-          createdAt: isoWeekStart,
-        },
-        shoppingList: {
-          ...SAMPLE_MENU_BOOK.shoppingList,
-          id: shoppingListId,
-          mealPlanId,
-          createdAt: new Date().toISOString(),
-        },
-      };
-    };
-
-    if (menuCount > 0) {
-      const existingDemo = useAppStore.getState().menuBooks.find((book) => book.id.startsWith("demo_week_"));
-      if (existingDemo) {
-        const refreshed = buildSeedMenu();
-        updateMenuBook(existingDemo.id, {
-          mealPlan: refreshed.mealPlan,
-          shoppingList: refreshed.shoppingList,
-        });
-      }
-      markSeeded();
-      return;
-    }
-
-    if (storage?.getItem(SEED_FLAG_KEY)) {
-      return;
-    }
-
-    if (useAppStore.persist.hasHydrated()) {
-      addMenuBook(buildSeedMenu());
-      markSeeded();
-      return;
-    }
-
-    const unsub = useAppStore.persist.onFinishHydration?.((state) => {
-      if (state.menuBooks.length === 0 && !storage?.getItem(SEED_FLAG_KEY)) {
-        addMenuBook(buildSeedMenu());
-        markSeeded();
-      }
-    });
-
-    return () => {
-      unsub?.();
-    };
-  }, [addMenuBook, hasRemoteState, menuCount, remoteStateReady, updateMenuBook]);
 
   useEffect(() => {
     if (scrollContainerRef.current) {
@@ -223,9 +148,9 @@ function App() {
           </ul>
         </aside>
 
-        <div className="relative w-full max-w-[420px]">
-          <div className="mx-auto flex aspect-[375/812] w-full max-h-[calc(100vh-80px)] flex-col overflow-hidden rounded-[2.5rem] border-[9px] border-[#1A1A1A] bg-[#1A1A1A] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)]">
-            <div id="phone-screen" className="relative flex h-full flex-col overflow-hidden rounded-[1.9rem] bg-paper-base">
+        <div className="relative w-full max-w-[380px]">
+          <div className="mx-auto flex aspect-[375/812] w-full max-h-[calc(100vh-80px)] flex-col overflow-hidden rounded-[2.5rem] border-[8px] border-[#1A1A1A] bg-[#1A1A1A] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]">
+            <div id="phone-screen" className="relative flex h-full flex-col overflow-hidden rounded-[2rem] bg-paper-base">
               <div ref={scrollContainerRef} className="flex-1 overflow-y-auto">
                 <Header />
                 <Routes>

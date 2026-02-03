@@ -1,9 +1,9 @@
 export const MENU_CLOSED_SURFACES = [
-  "bg-[#F9F5EE]",
-  "bg-[#F1E9DD]",
-  "bg-[#E9E1D3]",
-  "bg-[#F3EADC]",
-  "bg-[#E4D9C8]",
+  "bg-gradient-to-br from-[#FAF8F5] to-[#F0EDE8]",
+  "bg-gradient-to-br from-[#F7F1E8] to-[#EDE3D4]",
+  "bg-gradient-to-br from-[#F6EEE4] to-[#E9DDCF]",
+  "bg-gradient-to-br from-[#F9F4EC] to-[#EFE6DA]",
+  "bg-gradient-to-br from-[#F4ECE2] to-[#E7DACB]",
 ] as const;
 
 export const MENU_CLOSED_EMOJI_FALLBACK = ["🍽️", "🥗", "🍲", "🥘", "🍱", "🥪"] as const;

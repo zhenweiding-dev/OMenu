@@ -99,7 +99,7 @@ export function AddMealModal({ open, dayLabel, existingMeals, onClose, onSubmit 
             <select
               value={mealType}
               onChange={(event) => setMealType(event.target.value as keyof DayMeals)}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-white px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base"
+              className="h-11 w-full rounded-lg border border-border-tag bg-white px-4 text-[15px] text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base focus:ring-offset-2 focus:ring-offset-paper-base"
             >
               {MEAL_TYPE_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -120,7 +120,7 @@ export function AddMealModal({ open, dayLabel, existingMeals, onClose, onSubmit 
             <select
               value={difficulty}
               onChange={(event) => setDifficulty(event.target.value as Difficulty)}
-              className="h-10 w-full rounded-lg border border-border-subtle bg-white px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base"
+              className="h-11 w-full rounded-lg border border-border-tag bg-white px-4 text-[15px] text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base focus:ring-offset-2 focus:ring-offset-paper-base"
             >
               <option value="easy">Easy</option>
               <option value="medium">Medium</option>

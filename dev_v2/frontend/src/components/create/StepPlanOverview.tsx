@@ -107,7 +107,7 @@ export function StepPlanOverview({ mealPlan, shoppingList, onPlanUpdated, onCrea
           <ArrowLeftIcon />
         </button>
         <div>
-          <p className="text-[12px] font-semibold uppercase tracking-widest text-accent-base">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">
             Your New Menu
           </p>
           {successMessage && (

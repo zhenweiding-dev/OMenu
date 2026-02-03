@@ -152,7 +152,7 @@ export function HomePage() {
         ))}
         <Link
           to="/create"
-          className="flex min-h-[160px] flex-col items-center justify-center gap-2.5 rounded-xl border-2 border-dashed border-border-subtle bg-transparent transition hover:border-accent-base hover:bg-paper-muted/30"
+          className="flex min-h-[160px] flex-col items-center justify-center gap-2.5 rounded-2xl border-2 border-dashed border-border-subtle bg-transparent transition hover:border-accent-base hover:bg-[rgba(139,148,105,0.03)]"
         >
           <span className="text-text-disabled">
             <PlusIcon />

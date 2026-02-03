@@ -44,8 +44,8 @@ class ParseError(Exception):
 
 
 class GeminiService:
-    def __init__(self, model_name: Optional[str] = None, timeout_seconds: float = 120.0) -> None:
-        self._model_name = model_name or settings.gemini_model
+    def __init__(self, model_name: str = "gemini-3-flash-preview", timeout_seconds: float = 120.0) -> None:
+        self._model_name = model_name
         self._model: Optional[Any] = None
         self._client: Optional[Any] = None
         self._timeout_seconds = timeout_seconds
@@ -162,7 +162,7 @@ class GeminiService:
             if "SAFETY" in reason:
                 raise GeminiSafetyError("Gemini safety filters blocked the content.")
             if "MAX_TOKENS" in reason:
-                logger.warning("Gemini response reached max token limit for model %s", self._model_name)
+                raise GeminiError(f"Gemini response reached max token limit for model {self._model_name}")
 
     def parse_json_response(self, text: str) -> dict[str, Any]:
         if not text:

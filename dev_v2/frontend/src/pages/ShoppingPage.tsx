@@ -146,7 +146,7 @@ function ShoppingItemForm({
         </label>
         <select
           id="shopping-item-category"
-          className="h-10 w-full rounded-lg border border-border-subtle bg-white px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base"
+          className="h-11 w-full rounded-lg border border-border-tag bg-white px-4 text-[15px] text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base focus:ring-offset-2 focus:ring-offset-paper-base"
           value={category}
           onChange={(event) => setCategory(event.target.value as IngredientCategory)}
         >
@@ -369,15 +369,27 @@ export function ShoppingPage() {
                   return (
                     <div
                       key={item.id}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => setEditingItem(item)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          setEditingItem(item);
+                        }
+                      }}
                       className={cn(
-                        "flex items-center gap-3 border-b border-border-subtle py-3",
+                        "flex items-center gap-3 border-b border-border-subtle py-3 transition-colors hover:bg-paper-muted/50",
                         purchased && "opacity-60"
                       )}
                     >
                       {/* Checkbox */}
                       <button
                         type="button"
-                        onClick={() => handleTogglePurchased(item)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleTogglePurchased(item);
+                        }}
                         className={cn(
                           "flex h-[22px] w-[22px] flex-shrink-0 items-center justify-center rounded border-[1.5px] transition-colors",
                           purchased

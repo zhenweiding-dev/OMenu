@@ -24,7 +24,7 @@ export function SwipeIndicator({ total, activeIndex, onSelect, onPrev, onNext, l
 
   return (
     <div
-      className="flex items-center justify-center gap-[5px] py-2"
+      className="flex items-center justify-center gap-[5px] pt-2 pb-3.5"
       role="tablist"
       aria-label="Days of the week"
       onKeyDown={handleKeyDown}

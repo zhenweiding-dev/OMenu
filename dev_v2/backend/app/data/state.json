@@ -129,8 +129,8 @@
         "days": {
           "monday": {
             "breakfast": {
-              "id": "manual_breakfast_monday_1770075000229",
-              "name": "sdsd",
+              "id": "manual_breakfast_monday_1770082084134",
+              "name": "123",
               "ingredients": [],
               "instructions": "",
               "estimatedTime": 0,
@@ -1085,6 +1085,6 @@
     }
   ],
   "currentWeekId": "demo_week_20260202",
-  "currentDayIndex": 1,
-  "isMenuOpen": true
+  "currentDayIndex": 0,
+  "isMenuOpen": false
 }

@@ -42,15 +42,15 @@ export function StepShoppingLoading({ mealPlan, onGenerated, onError }: StepShop
   return (
     <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 text-center">
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-paper-muted">
-        <ShoppingCart className="h-8 w-8 animate-spin text-brand-primary" />
+        <ShoppingCart className="h-8 w-8 animate-spin text-accent-base" />
       </div>
       <div className="space-y-1">
-        <h2 className="text-lg font-semibold text-slate-900">Generating your shopping list</h2>
-        <p className="text-sm text-slate-500">
+        <h2 className="text-[20px] font-semibold text-text-primary">Generating your shopping list</h2>
+        <p className="text-[14px] text-text-secondary">
           We&apos;re consolidating ingredients across your week. This usually takes less than a minute.
         </p>
       </div>
-      {error && !isGenerating && <p className="text-sm text-red-500">{error}</p>}
+      {error && !isGenerating && <p className="text-[13px] text-error">{error}</p>}
     </div>
   );
 }
