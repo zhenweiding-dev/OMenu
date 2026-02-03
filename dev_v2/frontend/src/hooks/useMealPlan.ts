@@ -4,7 +4,6 @@ import { useAppStore } from "@/stores/useAppStore";
 import type { MealPlan, ShoppingList, UserPreferences } from "@/types";
 
 export function useMealPlan() {
-  const addMenuBook = useAppStore((state) => state.addMenuBook);
   const updateMenuBook = useAppStore((state) => state.updateMenuBook);
   const setIsGenerating = useAppStore((state) => state.setIsGenerating);
   const setError = useAppStore((state) => state.setError);
@@ -22,7 +21,6 @@ export function useMealPlan() {
           createdAt: plan.createdAt,
           items: [],
         };
-        addMenuBook({ id: plan.id, mealPlan: plan, shoppingList: placeholderList });
         return { plan, list: placeholderList };
       } catch (error) {
         setError(error instanceof Error ? error.message : "Failed to generate meal plan");
@@ -31,7 +29,7 @@ export function useMealPlan() {
         setIsGenerating(false);
       }
     },
-    [addMenuBook, clearError, setError, setIsGenerating],
+    [clearError, setError, setIsGenerating],
   );
 
   const updatePlan = useCallback(
@@ -41,7 +39,10 @@ export function useMealPlan() {
       try {
         const updatedPlan = await modifyMealPlan(plan.id, modification, plan);
         const updatedList = await generateShoppingList(updatedPlan.id, updatedPlan);
-        updateMenuBook(plan.id, { mealPlan: updatedPlan, shoppingList: updatedList });
+        const hasBook = useAppStore.getState().menuBooks.some((book) => book.id === plan.id);
+        if (hasBook) {
+          updateMenuBook(plan.id, { mealPlan: updatedPlan, shoppingList: updatedList });
+        }
         return { plan: updatedPlan, list: updatedList };
       } catch (error) {
         setError(error instanceof Error ? error.message : "Failed to modify meal plan");
@@ -59,7 +60,10 @@ export function useMealPlan() {
       clearError();
       try {
         const list = await generateShoppingList(plan.id, plan);
-        updateMenuBook(plan.id, { shoppingList: list });
+        const hasBook = useAppStore.getState().menuBooks.some((book) => book.id === plan.id);
+        if (hasBook) {
+          updateMenuBook(plan.id, { shoppingList: list });
+        }
         return list;
       } catch (error) {
         setError(error instanceof Error ? error.message : "Failed to generate shopping list");

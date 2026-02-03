@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { DEFAULT_BUDGET, DEFAULT_NUM_PEOPLE, MEAL_TYPES, WEEK_DAYS } from "@/utils/constants";
-import type { CookSchedule, Difficulty, UserPreferences } from "@/types";
+import type { CookSchedule, Difficulty, MealPlan, ShoppingList, UserPreferences } from "@/types";
 
 type DayOfWeek = (typeof WEEK_DAYS)[number];
 type MealType = (typeof MEAL_TYPES)[number];
@@ -16,6 +16,7 @@ interface DraftState {
   difficulty: Difficulty;
   cookSchedule: CookSchedule;
   lastUpdated: string;
+  pendingResult: { plan: MealPlan; list: ShoppingList } | null;
 
   setStep: (step: number) => void;
   setKeywords: (keywords: string[]) => void;
@@ -39,6 +40,8 @@ interface DraftState {
   selectAllMeals: () => void;
   deselectAllMeals: () => void;
   setPreferences: (preferences: UserPreferences) => void;
+  setPendingResult: (result: { plan: MealPlan; list: ShoppingList } | null) => void;
+  clearPendingResult: () => void;
 
   getSelectedMealCount: () => number;
   resetDraft: () => void;
@@ -60,6 +63,7 @@ const initialState = {
   difficulty: "medium" as Difficulty,
   cookSchedule: initialSchedule,
   lastUpdated: new Date().toISOString(),
+  pendingResult: null,
 };
 
 export const useDraftStore = create(
@@ -147,6 +151,9 @@ export const useDraftStore = create(
           cookSchedule: preferences.cookSchedule,
           lastUpdated: new Date().toISOString(),
         }),
+
+      setPendingResult: (result) => set({ pendingResult: result }),
+      clearPendingResult: () => set({ pendingResult: null }),
 
       getSelectedMealCount: () => {
         const { cookSchedule } = get();

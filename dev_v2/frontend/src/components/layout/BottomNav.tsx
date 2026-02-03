@@ -12,12 +12,12 @@ function PlanIcon({ isActive }: { isActive: boolean }) {
       className="h-[22px] w-[22px]"
       fill="none"
       stroke="currentColor"
-      strokeWidth={isActive ? 2 : 1.8}
+      strokeWidth={isActive ? 2.2 : 2}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
-      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+      <path d="M12 7v14" />
+      <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
     </svg>
   );
 }
@@ -33,9 +33,11 @@ function ListIcon({ isActive }: { isActive: boolean }) {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-      <rect x="9" y="3" width="6" height="4" rx="1" />
-      <path d="M9 12l2 2 4-4" />
+      <path d="m3 17 2 2 4-4" />
+      <path d="m3 7 2 2 4-4" />
+      <path d="M13 6h8" />
+      <path d="M13 12h8" />
+      <path d="M13 18h8" />
     </svg>
   );
 }
@@ -51,8 +53,8 @@ function MeIcon({ isActive }: { isActive: boolean }) {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <circle cx="12" cy="8" r="4" />
-      <path d="M20 21a8 8 0 10-16 0" />
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
     </svg>
   );
 }

@@ -39,18 +39,23 @@ export function StepLoading({ onGoHome, minWaitSeconds = MIN_WAIT_DEFAULT }: Ste
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center px-5 py-20 text-center">
       {/* Animated chef icon */}
-      <div className="mb-8 flex h-[120px] w-[120px] items-center justify-center rounded-full bg-paper-muted animate-pulse-subtle">
-        <span className="text-[56px]" aria-hidden>👨‍🍳</span>
+      <div className="relative mb-8 flex h-[155px] w-[155px] items-center justify-center rounded-full bg-paper-muted animate-chef">
+        <span className="text-[66px]" aria-hidden>👨‍🍳</span>
+        <span className="absolute -left-4 top-6 text-[26px] animate-ingredient-a" aria-hidden>🌮</span>
+        <span className="absolute left-1 bottom-6 text-[24px] animate-ingredient-b" aria-hidden>🍲</span>
+        <span className="absolute -right-3 top-10 text-[25px] animate-ingredient-c" aria-hidden>🥘</span>
+        <span className="absolute right-3 bottom-7 text-[22px] animate-ingredient-d" aria-hidden>🍣</span>
+        <span className="absolute right-14 top-0 text-[23px] animate-ingredient-c" aria-hidden>🥧</span>
       </div>
 
       {/* Title */}
       <h2 className="mb-2 text-[20px] font-semibold text-text-primary">
-        Generating your meal plan...
+        Designing your menu...
       </h2>
 
       {/* Subtitle */}
       <p className="mb-6 text-[14px] text-text-secondary">
-        Our chef is preparing something delicious
+        Our chef is sketching a fresh menu for you
       </p>
 
       {/* Timer */}

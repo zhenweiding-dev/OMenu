@@ -180,7 +180,10 @@ export function AddMealModal({
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-subtle bg-card-base px-5 py-4">
           <button
             type="button"
-            onClick={onClose}
+            onPointerDown={(event) => {
+              event.preventDefault();
+              onClose();
+            }}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-text-primary transition-colors hover:bg-paper-dark"
             aria-label="Close"
           >

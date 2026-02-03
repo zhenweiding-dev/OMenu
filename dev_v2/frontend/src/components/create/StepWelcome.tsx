@@ -2,13 +2,37 @@ import { Button } from "@/components/ui/button";
 
 interface StepWelcomeProps {
   onNext: () => void;
+  dateRange?: string;
+  label?: string;
+  compact?: boolean;
+  inline?: boolean;
 }
 
 const FOOD_EMOJIS = ["🍳", "🥗", "🍜"];
 
-export function StepWelcome({ onNext }: StepWelcomeProps) {
+export function StepWelcome({
+  onNext,
+  dateRange,
+  label = "THIS WEEK",
+  compact = false,
+  inline = false,
+}: StepWelcomeProps) {
   return (
-    <div className="flex min-h-[70vh] flex-col items-center justify-center px-5 py-10 text-center">
+    <div
+      className={
+        inline
+          ? "flex flex-1 flex-col items-center justify-center px-5 pt-20 pb-8 text-center"
+          : compact
+            ? "flex flex-1 flex-col items-center justify-center px-5 pt-20 pb-8 text-center"
+            : "flex flex-1 flex-col items-center justify-center px-5 pt-20 pb-10 text-center"
+      }
+    >
+      {dateRange && (
+        <div className="mb-6">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-accent-base">{label}</p>
+          <p className="mt-1 text-[12px] text-text-secondary">{dateRange}</p>
+        </div>
+      )}
       {/* Animated food circle */}
       <div className="mb-10 flex h-[200px] w-[200px] items-center justify-center rounded-full bg-gradient-to-br from-paper-muted to-border-subtle animate-float">
         <span className="text-5xl tracking-wider">

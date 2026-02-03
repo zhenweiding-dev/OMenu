@@ -90,7 +90,7 @@ export function MyPage() {
         {items.map((item) => (
           <span
             key={item}
-            className="rounded-md border border-border-tagSelected bg-tag-selectedBg px-3 py-1.5 text-[12px] font-medium text-accent-base"
+            className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
           >
             {item}
           </span>

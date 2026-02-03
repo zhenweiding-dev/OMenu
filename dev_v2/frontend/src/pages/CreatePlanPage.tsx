@@ -78,13 +78,40 @@ export function CreatePlanPage() {
   const error = useAppStore((state) => state.error);
   const setError = useAppStore((state) => state.setError);
   const clearError = useAppStore((state) => state.clearError);
+  const addMenuBook = useAppStore((state) => state.addMenuBook);
+  const menuBooks = useAppStore((state) => state.menuBooks);
   const resetDraft = useDraftStore((state) => state.resetDraft);
+  const pendingResult = useDraftStore((state) => state.pendingResult);
+  const setPendingResult = useDraftStore((state) => state.setPendingResult);
+  const clearPendingResult = useDraftStore((state) => state.clearPendingResult);
   const setStep = useDraftStore((state) => state.setStep);
   const navigate = useNavigate();
 
-  const [result, setResult] = useState<{ plan: MealPlan; list: ShoppingList } | null>(null);
+  const [result, setResult] = useState<{ plan: MealPlan; list: ShoppingList } | null>(
+    pendingResult ?? null,
+  );
   const [showResumePrompt, setShowResumePrompt] = useState(false);
   const [hasCheckedResume, setHasCheckedResume] = useState(false);
+
+  useEffect(() => {
+    if (result || !pendingResult) return;
+    setResult(pendingResult);
+  }, [pendingResult, result]);
+
+  useEffect(() => {
+    if (pendingResult && draft.currentStep < steps.overview) {
+      setStep(steps.overview);
+    }
+  }, [draft.currentStep, pendingResult, setStep]);
+
+  useEffect(() => {
+    if (draft.currentStep < steps.loading) return;
+    if (result || isGenerating) return;
+    if (pendingResult) return;
+    // If we refreshed while in loading/overview/shoppingLoading and no pending result exists,
+    // return to the last editable step to avoid a stuck loading screen.
+    setStep(steps.schedule);
+  }, [draft.currentStep, isGenerating, pendingResult, result, setStep]);
 
   useEffect(() => {
     const state = location.state as { startStep?: number; skipResume?: boolean } | null;
@@ -100,6 +127,11 @@ export function CreatePlanPage() {
   useEffect(() => {
     const state = location.state as { startStep?: number; skipResume?: boolean } | null;
     if (state?.skipResume) return;
+    if (pendingResult) {
+      setShowResumePrompt(false);
+      setHasCheckedResume(true);
+      return;
+    }
     if (!hasCheckedResume) {
       const savedStep = useDraftStore.getState().currentStep;
       if (savedStep > 1 && savedStep <= steps.schedule) {
@@ -107,7 +139,7 @@ export function CreatePlanPage() {
       }
       setHasCheckedResume(true);
     }
-  }, [hasCheckedResume, location.state]);
+  }, [hasCheckedResume, location.state, pendingResult]);
 
   const handleResumeDraft = () => {
     setShowResumePrompt(false);
@@ -116,16 +148,11 @@ export function CreatePlanPage() {
   const handleStartFresh = () => {
     setShowResumePrompt(false);
     resetDraft();
+    clearPendingResult();
     clearError();
   };
 
   const goToStep = useCallback((step: number) => setStep(step), [setStep]);
-
-  const handleBackToWelcome = () => {
-    resetDraft();
-    setResult(null);
-    clearError();
-  };
 
   const handleGenerate = async () => {
     setResult(null);
@@ -147,8 +174,9 @@ export function CreatePlanPage() {
         difficulty: draft.difficulty,
         cookSchedule: draft.cookSchedule,
       });
+      setPendingResult(outcome);
       setResult(outcome);
-      goToStep(steps.shoppingLoading);
+      goToStep(steps.overview);
     } catch {
       goToStep(steps.schedule);
     }
@@ -156,19 +184,34 @@ export function CreatePlanPage() {
 
   const handleViewShopping = useCallback(() => {
     if (!result) return;
+    const hasBook = menuBooks.some((book) => book.id === result.plan.id);
+    if (!hasBook) {
+      addMenuBook({ id: result.plan.id, mealPlan: result.plan, shoppingList: result.list });
+    }
     if (result.list.items.length > 0) {
+      clearPendingResult();
+      resetDraft();
       navigate("/shopping");
       return;
     }
     goToStep(steps.shoppingLoading);
-  }, [goToStep, navigate, result]);
+  }, [
+    addMenuBook,
+    clearPendingResult,
+    goToStep,
+    menuBooks,
+    navigate,
+    resetDraft,
+    result,
+  ]);
 
   const handleShoppingGenerated = useCallback(
     (plan: MealPlan, list: ShoppingList) => {
       setResult({ plan, list });
+      clearPendingResult();
       resetDraft();
     },
-    [resetDraft],
+    [clearPendingResult, resetDraft],
   );
 
   const handleShoppingError = useCallback(() => {
@@ -249,8 +292,10 @@ export function CreatePlanPage() {
           <StepPlanOverview
             mealPlan={result.plan}
             shoppingList={result.list}
-            onPlanUpdated={(plan, list) => setResult({ plan, list })}
-            onCreateAnother={handleBackToWelcome}
+            onPlanUpdated={(plan, list) => {
+              setResult({ plan, list });
+              setPendingResult({ plan, list });
+            }}
             onViewShopping={handleViewShopping}
           />
         );

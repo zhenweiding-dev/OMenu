@@ -36,9 +36,10 @@ interface ModalWrapperProps {
   title: string;
   children: React.ReactNode;
   onSave: () => void;
+  showSaveButton?: boolean;
 }
 
-function ModalWrapper({ isOpen, onClose, title, children, onSave }: ModalWrapperProps) {
+function ModalWrapper({ isOpen, onClose, title, children, onSave, showSaveButton = true }: ModalWrapperProps) {
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -70,13 +71,15 @@ function ModalWrapper({ isOpen, onClose, title, children, onSave }: ModalWrapper
             <CloseIcon />
           </button>
           <h2 className="text-[16px] font-semibold text-text-primary">{title}</h2>
-          <button
-            type="button"
-            onClick={onSave}
-            className="text-[14px] font-semibold text-accent-base hover:opacity-80"
-          >
-            Save
-          </button>
+          {showSaveButton && (
+            <button
+              type="button"
+              onClick={onSave}
+              className="text-[14px] font-semibold text-accent-base hover:opacity-80"
+            >
+              Save
+            </button>
+          )}
         </div>
         {/* Body */}
         <div className="flex-1 overflow-y-auto px-5 py-5 pb-10">
@@ -91,10 +94,10 @@ function ModalWrapper({ isOpen, onClose, title, children, onSave }: ModalWrapper
 
 // ===== Keywords Modal =====
 const KEYWORD_CATEGORIES = {
-  "Cooking Style": ["Quick", "Easy", "One-Pot", "Sheet Pan", "Slow Cooker", "Under 30 Min", "Meal Prep", "Weeknight"],
-  "Diet & Health": ["Healthy", "Vegetarian", "Vegan", "Low-Carb", "High-Protein", "Keto", "Gluten-Free", "Dairy-Free"],
-  "Cuisine": ["American", "Italian", "Mexican", "Chinese", "Japanese", "Thai", "Indian", "Korean", "Mediterranean"],
-  "Other": ["Kid-Friendly", "Family-Style", "Comfort Food", "Budget-Friendly", "BBQ"],
+  "Cooking Style": ["Quick", "Easy", "One-Pot", "Healthy", "Under 30 Min", "Meal Prep"],
+  "Diet & Health": ["Healthy", "Vegetarian", "Vegan", "Low-Carb", "High-Protein", "Gluten-Free"],
+  "Cuisine": ["Italian", "Mexican", "Japanese", "Thai", "Chinese", "Mediterranean"],
+  "Other": ["Kid-Friendly", "Comfort Food", "Budget-Friendly", "BBQ"],
 };
 
 interface EditKeywordsModalProps {
@@ -135,68 +138,102 @@ export function EditKeywordsModal({ isOpen, onClose, keywords, onSave }: EditKey
   };
 
   return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Keywords" onSave={handleSave}>
-      <p className="mb-4 text-[14px] text-text-secondary">Select all that apply</p>
-      <div className="space-y-5">
-        {Object.entries(KEYWORD_CATEGORIES).map(([category, tags]) => (
-          <div key={category}>
-            <p className="mb-3 text-[11px] font-medium uppercase tracking-wider text-text-secondary">
-              {category}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {tags.map((tag) => {
-                const isSelected = selected.includes(tag);
-                return (
+    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Keywords" onSave={handleSave} showSaveButton={false}>
+      <div className="flex min-h-[60vh] flex-col">
+        <div className="flex-1 space-y-4 pb-2">
+          {selected.length > 0 && (
+            <div>
+              <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-base">
+                Your Keywords
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {selected.map((tag) => (
                   <button
-                    key={tag}
+                    key={`selected-${tag}`}
                     type="button"
                     onClick={() => toggleKeyword(tag)}
-                    className={cn(
-                      "rounded-md border px-3.5 py-2 text-[13px] transition-all",
-                      isSelected
-                        ? "border-border-tagSelected bg-tag-selectedBg font-medium text-accent-base"
-                        : "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary"
-                    )}
+                    className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
                   >
                     {tag}
                   </button>
-                );
-              })}
-              {category === "Other" && (
-                <>
-                  {showCustomInput ? (
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        value={customInput}
-                        onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
-                        onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
-                        placeholder="Custom keyword"
-                        autoFocus
-                        className="w-32 rounded-md border border-accent-base bg-white px-3 py-2 text-[13px] outline-none"
-                      />
-                      <Button size="sm" onClick={handleAddCustom} className="h-9">
-                        Add
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={() => setShowCustomInput(false)} className="h-9">
-                        Cancel
-                      </Button>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setShowCustomInput(true)}
-                      className="flex items-center gap-1.5 rounded-md border border-dashed border-border-tag px-3.5 py-2 text-[13px] text-text-secondary hover:border-accent-base hover:text-accent-base"
-                    >
-                      <PlusIcon />
-                      Add
-                    </button>
-                  )}
-                </>
-              )}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          )}
+          {Object.entries(KEYWORD_CATEGORIES).map(([category, tags]) => {
+            const visibleTags = tags.filter((tag) => !selected.includes(tag));
+            if (visibleTags.length === 0) return null;
+            return (
+              <div key={category}>
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+                  {category}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {visibleTags.map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => toggleKeyword(tag)}
+                      className={cn(
+                        "rounded-md border px-2.5 py-1.5 text-[12px] transition-all",
+                        "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary",
+                      )}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-1 pt-3">
+          {showCustomInput ? (
+            <div className="mb-4 flex items-center gap-2">
+              <input
+                type="text"
+                value={customInput}
+                onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
+                onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
+                placeholder="Custom keyword"
+                autoFocus
+                className="flex-1 rounded-md border border-accent-base bg-white px-3 py-2 text-[13px] outline-none"
+              />
+              <Button size="sm" onClick={handleAddCustom} className="h-9">
+                Add
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => setShowCustomInput(false)} className="h-9">
+                Cancel
+              </Button>
+            </div>
+          ) : (
+            <div className="mb-4 flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowCustomInput(true)}
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-dashed border-border-tag py-2.5 text-[13px] font-semibold text-text-secondary hover:border-accent-base hover:text-accent-base"
+              >
+                <PlusIcon />
+                Add keyword
+              </button>
+              <Button
+                onClick={handleSave}
+                className="flex-1 rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+              >
+                Save
+              </Button>
+            </div>
+          )}
+          {showCustomInput && (
+            <Button
+              onClick={handleSave}
+              className="w-full rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+            >
+              Save
+            </Button>
+          )}
+        </div>
       </div>
     </ModalWrapper>
   );
@@ -206,50 +243,34 @@ export function EditKeywordsModal({ isOpen, onClose, keywords, onSave }: EditKey
 const ITEM_CATEGORIES = {
   Proteins: [
     { label: "Eggs", emoji: "🥚" },
-    { label: "Bacon", emoji: "🥓" },
     { label: "Chicken", emoji: "🍗" },
-    { label: "Turkey", emoji: "🦃" },
     { label: "Beef", emoji: "🥩" },
-    { label: "Pork", emoji: "🐷" },
-    { label: "Steak", emoji: "🍖" },
-    { label: "Salmon", emoji: "🐟" },
-    { label: "Tuna", emoji: "🐟" },
     { label: "Shrimp", emoji: "🦐" },
-    { label: "Tofu", emoji: "🍳" },
   ],
   "Grains & Carbs": [
     { label: "Bread", emoji: "🍞" },
     { label: "Rice", emoji: "🍚" },
     { label: "Pasta", emoji: "🍝" },
     { label: "Potatoes", emoji: "🥔" },
-    { label: "Oatmeal", emoji: "🥣" },
-    { label: "Pancakes", emoji: "🥞" },
   ],
   Dairy: [
     { label: "Milk", emoji: "🥛" },
     { label: "Cheese", emoji: "🧀" },
     { label: "Yogurt", emoji: "🥛" },
-    { label: "Butter", emoji: "🧈" },
   ],
   Vegetables: [
     { label: "Broccoli", emoji: "🥦" },
     { label: "Carrots", emoji: "🥕" },
     { label: "Salad", emoji: "🥗" },
-    { label: "Corn", emoji: "🌽" },
-    { label: "Avocado", emoji: "🥑" },
   ],
   "Meal Types": [
     { label: "Pizza", emoji: "🍕" },
     { label: "Tacos", emoji: "🌮" },
     { label: "Burgers", emoji: "🍔" },
-    { label: "Sandwiches", emoji: "🥪" },
-    { label: "Wraps", emoji: "🌯" },
     { label: "Soup", emoji: "🍜" },
-    { label: "Bowls", emoji: "🍱" },
   ],
   Pantry: [
     { label: "Beans", emoji: "🫘" },
-    { label: "Peanut Butter", emoji: "🥜" },
     { label: "Nuts", emoji: "🥜" },
   ],
 };
@@ -292,71 +313,101 @@ export function EditMustHaveModal({ isOpen, onClose, items, onSave }: EditMustHa
   };
 
   return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Must-Have Items" onSave={handleSave}>
-      <p className="mb-4 text-[14px] text-text-secondary">Select all that apply</p>
-      <div className="space-y-5">
-        {Object.entries(ITEM_CATEGORIES).map(([category, categoryItems]) => (
-          <div key={category}>
-            <p className="mb-3 text-[11px] font-medium uppercase tracking-wider text-text-secondary">
-              {category}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {categoryItems.map(({ label, emoji }) => {
-                const isSelected = selected.includes(label);
-                return (
+    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Must-Have Items" onSave={handleSave} showSaveButton={false}>
+      <div className="flex min-h-[60vh] flex-col">
+        <div className="flex-1 space-y-4 pb-2">
+          {selected.length > 0 && (
+            <div>
+              <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-base">
+                Your Must-Haves
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {selected.map((tag) => (
                   <button
-                    key={label}
+                    key={`selected-${tag}`}
                     type="button"
-                    onClick={() => toggleItem(label)}
-                    className={cn(
-                      "rounded-md border px-3.5 py-2 text-[13px] transition-all",
-                      isSelected
-                        ? "border-border-tagSelected bg-tag-selectedBg font-medium text-accent-base"
-                        : "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary"
-                    )}
+                    onClick={() => toggleItem(tag)}
+                    className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
                   >
-                    {emoji} {label}
+                    {tag}
                   </button>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-        {/* Custom input section */}
-        <div>
-          <p className="mb-3 text-[11px] font-medium uppercase tracking-wider text-text-secondary">
-            Other
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {showCustomInput ? (
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={customInput}
-                  onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
-                  onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
-                  placeholder="Custom item"
-                  autoFocus
-                  className="w-32 rounded-md border border-accent-base bg-white px-3 py-2 text-[13px] outline-none"
-                />
-                <Button size="sm" onClick={handleAddCustom} className="h-9">
-                  Add
-                </Button>
-                <Button size="sm" variant="ghost" onClick={() => setShowCustomInput(false)} className="h-9">
-                  Cancel
-                </Button>
+                ))}
               </div>
-            ) : (
+            </div>
+          )}
+          {Object.entries(ITEM_CATEGORIES).map(([category, categoryItems]) => {
+            const visibleItems = categoryItems.filter((item) => !selected.includes(item.label));
+            if (visibleItems.length === 0) return null;
+            return (
+              <div key={category}>
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+                  {category}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {visibleItems.map(({ label, emoji }) => (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => toggleItem(label)}
+                      className={cn(
+                        "rounded-md border px-2.5 py-1.5 text-[12px] transition-all",
+                        "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary",
+                      )}
+                    >
+                      {emoji} {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-1 pt-3">
+          {showCustomInput ? (
+            <div className="mb-4 flex items-center gap-2">
+              <input
+                type="text"
+                value={customInput}
+                onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
+                onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
+                placeholder="Custom item"
+                autoFocus
+                className="flex-1 rounded-md border border-accent-base bg-white px-3 py-2 text-[13px] outline-none"
+              />
+              <Button size="sm" onClick={handleAddCustom} className="h-9">
+                Add
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => setShowCustomInput(false)} className="h-9">
+                Cancel
+              </Button>
+            </div>
+          ) : (
+            <div className="mb-4 flex gap-3">
               <button
                 type="button"
                 onClick={() => setShowCustomInput(true)}
-                className="flex items-center gap-1.5 rounded-md border border-dashed border-border-tag px-3.5 py-2 text-[13px] text-text-secondary hover:border-accent-base hover:text-accent-base"
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-dashed border-border-tag py-2.5 text-[13px] font-semibold text-text-secondary hover:border-accent-base hover:text-accent-base"
               >
                 <PlusIcon />
-                Add
+                Add item
               </button>
-            )}
-          </div>
+              <Button
+                onClick={handleSave}
+                className="flex-1 rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+              >
+                Save
+              </Button>
+            </div>
+          )}
+          {showCustomInput && (
+            <Button
+              onClick={handleSave}
+              className="w-full rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+            >
+              Save
+            </Button>
+          )}
         </div>
       </div>
     </ModalWrapper>
@@ -373,47 +424,27 @@ const DISLIKE_CATEGORIES = {
     { label: "Eggs", emoji: "🥚" },
     { label: "Shellfish", emoji: "🦐" },
     { label: "Fish", emoji: "🐟" },
-    { label: "Soy", emoji: "🌱" },
-  ],
-  Seafood: [
-    { label: "Squid", emoji: "🦑" },
-    { label: "Octopus", emoji: "🐙" },
-    { label: "Lobster", emoji: "🦞" },
-    { label: "Crab", emoji: "🦀" },
   ],
   Vegetables: [
     { label: "Onion", emoji: "🧅" },
     { label: "Garlic", emoji: "🧄" },
     { label: "Cilantro", emoji: "🌿" },
-    { label: "Cucumber", emoji: "🥒" },
     { label: "Mushrooms", emoji: "🍄" },
     { label: "Bell Peppers", emoji: "🫑" },
     { label: "Eggplant", emoji: "🍆" },
-    { label: "Brussels Sprouts", emoji: "🥬" },
-    { label: "Broccoli", emoji: "🥦" },
-    { label: "Olives", emoji: "🫒" },
-    { label: "Celery", emoji: "🌿" },
-    { label: "Kale", emoji: "🥬" },
-    { label: "Jalapeño", emoji: "🌶️" },
-    { label: "Pickles", emoji: "🥒" },
   ],
   Meats: [
     { label: "Pork", emoji: "🐷" },
     { label: "Red Meat", emoji: "🥩" },
-    { label: "Organ Meat", emoji: "🍖" },
-    { label: "Bone-in Meat", emoji: "🦴" },
   ],
   "Flavors & Textures": [
     { label: "Spicy Food", emoji: "🌶️" },
     { label: "Ginger", emoji: "🫚" },
     { label: "Coconut", emoji: "🥥" },
-    { label: "Raw Vegetables", emoji: "🥗" },
   ],
   "Cooking Styles": [
     { label: "Fried Food", emoji: "🛢️" },
     { label: "Butter", emoji: "🧈" },
-    { label: "Heavy Cream", emoji: "🥛" },
-    { label: "Alcohol in Cooking", emoji: "🍺" },
   ],
   Other: [
     { label: "Artificial Sweeteners", emoji: "🧃" },
@@ -459,68 +490,102 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
   };
 
   return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Disliked Items" onSave={handleSave}>
-      <p className="mb-4 text-[14px] text-text-secondary">Select all that apply</p>
-      <div className="space-y-5">
-        {Object.entries(DISLIKE_CATEGORIES).map(([category, categoryItems]) => (
-          <div key={category}>
-            <p className="mb-3 text-[11px] font-medium uppercase tracking-wider text-text-secondary">
-              {category}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {categoryItems.map(({ label, emoji }) => {
-                const isSelected = selected.includes(label);
-                return (
+    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Disliked Items" onSave={handleSave} showSaveButton={false}>
+      <div className="flex min-h-[60vh] flex-col">
+        <div className="flex-1 space-y-4 pb-2">
+          {selected.length > 0 && (
+            <div>
+              <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-base">
+                Your Dislikes
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {selected.map((tag) => (
                   <button
-                    key={label}
+                    key={`selected-${tag}`}
                     type="button"
-                    onClick={() => toggleItem(label)}
-                    className={cn(
-                      "rounded-md border px-3.5 py-2 text-[13px] transition-all",
-                      isSelected
-                        ? "border-border-tagSelected bg-tag-selectedBg font-medium text-accent-base"
-                        : "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary"
-                    )}
+                    onClick={() => toggleItem(tag)}
+                    className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
                   >
-                    {emoji} {label}
+                    {tag}
                   </button>
-                );
-              })}
-              {category === "Other" && (
-                <>
-                  {showCustomInput ? (
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        value={customInput}
-                        onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
-                        onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
-                        placeholder="Custom item"
-                        autoFocus
-                        className="w-32 rounded-md border border-accent-base bg-white px-3 py-2 text-[13px] outline-none"
-                      />
-                      <Button size="sm" onClick={handleAddCustom} className="h-9">
-                        Add
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={() => setShowCustomInput(false)} className="h-9">
-                        Cancel
-                      </Button>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setShowCustomInput(true)}
-                      className="flex items-center gap-1.5 rounded-md border border-dashed border-border-tag px-3.5 py-2 text-[13px] text-text-secondary hover:border-accent-base hover:text-accent-base"
-                    >
-                      <PlusIcon />
-                      Add
-                    </button>
-                  )}
-                </>
-              )}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          )}
+          {Object.entries(DISLIKE_CATEGORIES).map(([category, categoryItems]) => {
+            const visibleItems = categoryItems.filter((item) => !selected.includes(item.label));
+            if (visibleItems.length === 0) return null;
+            return (
+              <div key={category}>
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+                  {category}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {visibleItems.map(({ label, emoji }) => (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => toggleItem(label)}
+                      className={cn(
+                        "rounded-md border px-2.5 py-1.5 text-[12px] transition-all",
+                        "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary",
+                      )}
+                    >
+                      {emoji} {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-1 pt-3">
+          {showCustomInput ? (
+            <div className="mb-4 flex items-center gap-2">
+              <input
+                type="text"
+                value={customInput}
+                onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
+                onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
+                placeholder="Custom item"
+                autoFocus
+                className="flex-1 rounded-md border border-accent-base bg-white px-3 py-2 text-[13px] outline-none"
+              />
+              <Button size="sm" onClick={handleAddCustom} className="h-9">
+                Add
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => setShowCustomInput(false)} className="h-9">
+                Cancel
+              </Button>
+            </div>
+          ) : (
+            <div className="mb-4 flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowCustomInput(true)}
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-dashed border-border-tag py-2.5 text-[13px] font-semibold text-text-secondary hover:border-accent-base hover:text-accent-base"
+              >
+                <PlusIcon />
+                Add item
+              </button>
+              <Button
+                onClick={handleSave}
+                className="flex-1 rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+              >
+                Save
+              </Button>
+            </div>
+          )}
+          {showCustomInput && (
+            <Button
+              onClick={handleSave}
+              className="w-full rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+            >
+              Save
+            </Button>
+          )}
+        </div>
       </div>
     </ModalWrapper>
   );

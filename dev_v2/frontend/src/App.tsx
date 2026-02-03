@@ -49,6 +49,12 @@ function App() {
   useEffect(() => {
     let isMounted = true;
     const loadRemoteState = async () => {
+      if (import.meta.env.VITE_USE_MOCK === "true") {
+        if (isMounted) {
+          setRemoteStateReady(true);
+        }
+        return;
+      }
       try {
         const remoteState = await fetchUserState();
         if (!isMounted) return;
@@ -88,6 +94,7 @@ function App() {
 
   useEffect(() => {
     if (!remoteStateReady) return;
+    if (import.meta.env.VITE_USE_MOCK === "true") return;
     if (syncTimeoutRef.current) {
       window.clearTimeout(syncTimeoutRef.current);
     }

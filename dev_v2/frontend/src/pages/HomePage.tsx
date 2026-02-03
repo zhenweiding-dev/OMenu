@@ -307,9 +307,17 @@ export function HomePage() {
   );
 
   return (
-    <PageContainer className={shouldShowWelcome ? "px-0 pt-0 pb-20" : "pb-20"}>
+    <PageContainer
+      className={
+        shouldShowWelcome
+          ? "px-0 pt-0 pb-0 flex flex-col"
+          : "pb-20"
+      }
+    >
       {shouldShowWelcome ? (
         <StepWelcome
+          label="WELCOME"
+          inline
           onNext={() => {
             resetDraft();
             navigate("/create", { state: { startStep: 2, skipResume: true } });

@@ -33,6 +33,37 @@ body {
   50% { transform: scale(1.05); }
 }
 
+.animate-chef {
+  animation: chef-breathe 2.6s ease-in-out infinite;
+}
+
+.animate-ingredient-a {
+  animation: ingredient-float 2.6s ease-in-out infinite;
+}
+
+.animate-ingredient-b {
+  animation: ingredient-float 2.6s ease-in-out infinite 0.2s;
+}
+
+.animate-ingredient-c {
+  animation: ingredient-float 2.6s ease-in-out infinite 0.4s;
+}
+
+.animate-ingredient-d {
+  animation: ingredient-float 2.6s ease-in-out infinite 0.6s;
+}
+
+@keyframes chef-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  45% { transform: translateY(-3px) scale(1.03); }
+  70% { transform: translateY(2px) scale(0.99); }
+}
+
+@keyframes ingredient-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }

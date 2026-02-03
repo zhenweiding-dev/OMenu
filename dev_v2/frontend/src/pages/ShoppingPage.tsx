@@ -34,6 +34,14 @@ function PlusIcon() {
   );
 }
 
+function CloseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+      <path d="M18 6L6 18M6 6l12 12" />
+    </svg>
+  );
+}
+
 function MinusIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
@@ -81,9 +89,9 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
     setQuantity(initialItem && initialItem.totalQuantity > 0 ? String(initialItem.totalQuantity) : "");
     setUnit(initialItem?.unit ?? "");
     setCategory(initialItem?.category ?? defaultCategory);
-    setIsEditingName(mode === "add");
-    setIsEditingQuantity(false);
-    setIsEditingCategory(false);
+    setIsEditingName(true);
+    setIsEditingQuantity(true);
+    setIsEditingCategory(true);
   }, [defaultCategory, initialItem, mode, open]);
 
   useEffect(() => {
@@ -107,11 +115,14 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-subtle bg-card-base px-5 py-4">
           <button
             type="button"
-            onClick={onClose}
+            onPointerDown={(event) => {
+              event.preventDefault();
+              onClose();
+            }}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-text-primary transition-colors hover:bg-paper-dark"
             aria-label="Close"
           >
-            <MinusIcon />
+            <CloseIcon />
           </button>
           <div className="flex items-center gap-2">
             {mode === "edit" && onDelete && (
@@ -162,6 +173,7 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
                 {name ? name : <span className="text-text-tertiary">Tap to add item name</span>}
               </button>
             )}
+            {saveDisabled && <p className="mt-2 text-xs text-[#C67B7B]">Name is required.</p>}
           </div>
 
           <section className="mt-5">
@@ -397,11 +409,11 @@ export function ShoppingPage() {
                       key={item.id}
                       role="button"
                       tabIndex={0}
-                      onClick={() => setEditingItem(item)}
+                      onClick={() => handleTogglePurchased(item)}
                       onKeyDown={(event) => {
                         if (event.key === "Enter" || event.key === " ") {
                           event.preventDefault();
-                          setEditingItem(item);
+                          handleTogglePurchased(item);
                         }
                       }}
                       className={cn(
@@ -410,12 +422,7 @@ export function ShoppingPage() {
                       )}
                     >
                       {/* Checkbox */}
-                      <button
-                        type="button"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          handleTogglePurchased(item);
-                        }}
+                      <div
                         className={cn(
                           "flex h-[22px] w-[22px] flex-shrink-0 items-center justify-center rounded border-[1.5px] transition-colors",
                           purchased
@@ -424,22 +431,36 @@ export function ShoppingPage() {
                         )}
                       >
                         {purchased && <CheckIcon />}
-                      </button>
+                      </div>
 
-                      {/* Item name */}
-                      <span
-                        className={cn(
-                          "flex-1 text-[15px]",
-                          purchased ? "text-text-secondary line-through" : "text-text-primary"
+                      {/* Item name + quantity */}
+                      <div className="flex-1">
+                        <span
+                          className={cn(
+                            "block text-[15px]",
+                            purchased ? "text-text-secondary line-through" : "text-text-primary"
+                          )}
+                        >
+                          {item.name}
+                        </span>
+                        {quantityText && (
+                          <span className="mt-0.5 block text-[12px] text-text-tertiary">
+                            {quantityText}
+                          </span>
                         )}
-                      >
-                        {item.name}
-                      </span>
+                      </div>
 
-                      {/* Quantity */}
-                      {quantityText && (
-                        <span className="text-[13px] text-text-secondary">{quantityText}</span>
-                      )}
+                      {/* Edit */}
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setEditingItem(item);
+                        }}
+                        className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary hover:text-text-primary"
+                      >
+                        EDIT
+                      </button>
                     </div>
                   );
                 })}

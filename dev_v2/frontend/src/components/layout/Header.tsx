@@ -29,7 +29,9 @@ export function Header() {
 
   if (pathname === "/") {
     const relativeWeekLabel = currentBook ? getRelativeWeekLabel(currentBook.mealPlan.createdAt) : "WELCOME";
-    const currentWeekRange = currentBook ? getWeekDateRange(currentBook.mealPlan.createdAt) : null;
+    const currentWeekRange = currentBook
+      ? getWeekDateRange(currentBook.mealPlan.createdAt)
+      : getWeekDateRange(new Date().toISOString());
 
     return (
       <header className="sticky top-0 z-40 bg-paper-base">
