@@ -45,12 +45,13 @@ export function Header() {
               type="button"
               onClick={() => setIsMenuPickerOpen(true)}
               aria-label="Open menu book picker"
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-card-base shadow-btn"
+              className="flex h-10 items-center gap-2 rounded-full border border-border-subtle bg-paper-base px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-primary shadow-btn"
             >
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.8}>
+              <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="none" stroke="currentColor" strokeWidth={1.8}>
                 <path d="M4 19.5A2.5 2.5 0 016.5 17H20" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
+              MENUBOOK
             </button>
           </div>
         </div>

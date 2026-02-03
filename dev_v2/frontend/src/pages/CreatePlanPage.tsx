@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { useMealPlan } from "@/hooks/useMealPlan";
 import { useAppStore } from "@/stores/useAppStore";
@@ -72,6 +72,7 @@ function ProgressDots({ currentStep }: ProgressDotsProps) {
 
 export function CreatePlanPage() {
   const draft = useDraftStore();
+  const location = useLocation();
   const { createPlan } = useMealPlan();
   const isGenerating = useAppStore((state) => state.isGenerating);
   const error = useAppStore((state) => state.error);
@@ -85,8 +86,20 @@ export function CreatePlanPage() {
   const [showResumePrompt, setShowResumePrompt] = useState(false);
   const [hasCheckedResume, setHasCheckedResume] = useState(false);
 
+  useEffect(() => {
+    const state = location.state as { startStep?: number; skipResume?: boolean } | null;
+    if (!state?.startStep) return;
+    if (state.skipResume) {
+      setShowResumePrompt(false);
+      setHasCheckedResume(true);
+    }
+    setStep(state.startStep);
+  }, [location.state, setStep]);
+
   // Check for resume on mount
   useEffect(() => {
+    const state = location.state as { startStep?: number; skipResume?: boolean } | null;
+    if (state?.skipResume) return;
     if (!hasCheckedResume) {
       const savedStep = useDraftStore.getState().currentStep;
       if (savedStep > 1 && savedStep <= steps.schedule) {
@@ -94,7 +107,7 @@ export function CreatePlanPage() {
       }
       setHasCheckedResume(true);
     }
-  }, [hasCheckedResume]);
+  }, [hasCheckedResume, location.state]);
 
   const handleResumeDraft = () => {
     setShowResumePrompt(false);

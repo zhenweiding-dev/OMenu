@@ -1,15 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { addWeeks, differenceInCalendarWeeks, startOfWeek } from "date-fns";
 import { createPortal } from "react-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppStore } from "@/stores/useAppStore";
 import { useMenuExtrasStore } from "@/stores/useMenuExtrasStore";
+import { useDraftStore } from "@/stores/useDraftStore";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { EmptyState } from "@/components/home/EmptyState";
 import { MenuClosedCard } from "@/components/home/MenuClosedCard";
 import { DailyMenuCard } from "@/components/home/DailyMenuCard";
 import { AddMealModal } from "@/components/home/AddMealModal";
 import { RecipeDetailSheet } from "@/components/home/RecipeDetailModal";
-import { SwipeIndicator } from "@/components/home/SwipeIndicator";
+import { WeekDateBar } from "@/components/home/WeekDateBar";
+import { StepWelcome } from "@/components/create/StepWelcome";
 import { WEEK_DAYS } from "@/utils/constants";
 import { getDayDisplay, getWeekDateRange, isCurrentCalendarWeek, startCaseDay } from "@/utils/helpers";
 import { Modal } from "@/components/ui/modal";
@@ -41,6 +44,8 @@ export function HomePage() {
   const addExtraMeal = useMenuExtrasStore((state) => state.addExtraMeal);
   const updateExtraMealNotes = useMenuExtrasStore((state) => state.updateExtraMealNotes);
   const removeExtraMeal = useMenuExtrasStore((state) => state.removeExtraMeal);
+  const resetDraft = useDraftStore((state) => state.resetDraft);
+  const navigate = useNavigate();
 
   const [pendingDelete, setPendingDelete] = useState<MenuBook | null>(null);
   const [addMealDayKey, setAddMealDayKey] = useState<(typeof WEEK_DAYS)[number] | null>(null);
@@ -52,10 +57,67 @@ export function HomePage() {
     source: "base" | "extra";
   } | null>(null);
 
+  const hasUserSelectedWeekRef = useRef(false);
+
   const orderedBooks = useMemo(
-    () => [...menuBooks].sort((a, b) => (a.mealPlan.createdAt < b.mealPlan.createdAt ? 1 : -1)),
+    () => [...menuBooks].sort((a, b) => (a.mealPlan.createdAt < b.mealPlan.createdAt ? -1 : 1)),
     [menuBooks],
   );
+
+  const currentWeekBook = useMemo(
+    () => menuBooks.find((book) => isCurrentCalendarWeek(book.mealPlan.createdAt)) ?? null,
+    [menuBooks],
+  );
+
+  const menuPickerItems = useMemo(() => {
+    const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    if (orderedBooks.length === 0) {
+      return [{ type: "placeholder" as const, weekStart: currentWeekStart }];
+    }
+
+    const getWeekStart = (isoDate: string) => startOfWeek(new Date(isoDate), { weekStartsOn: 1 });
+    const items: Array<
+      | { type: "book"; book: MenuBook }
+      | { type: "placeholder"; weekStart: Date }
+    > = [];
+
+    orderedBooks.forEach((book, index) => {
+      const bookWeekStart = getWeekStart(book.mealPlan.createdAt);
+      items.push({ type: "book", book });
+
+      const nextBook = orderedBooks[index + 1];
+      if (nextBook) {
+        const nextWeekStart = getWeekStart(nextBook.mealPlan.createdAt);
+        const gap = differenceInCalendarWeeks(nextWeekStart, bookWeekStart, { weekStartsOn: 1 });
+        if (gap > 1) {
+          for (let step = 1; step < gap; step += 1) {
+            const missingWeek = addWeeks(bookWeekStart, step);
+            if (differenceInCalendarWeeks(missingWeek, currentWeekStart, { weekStartsOn: 1 }) >= 0) {
+              items.push({ type: "placeholder", weekStart: missingWeek });
+            }
+          }
+        }
+      } else {
+        const nextWeek = addWeeks(bookWeekStart, 1);
+        items.push({ type: "placeholder", weekStart: nextWeek });
+      }
+    });
+
+    return items;
+  }, [orderedBooks]);
+
+  useEffect(() => {
+    if (!currentWeekBook) return;
+    if (hasUserSelectedWeekRef.current) return;
+    if (currentBook?.id === currentWeekBook.id) return;
+    setCurrentWeekId(currentWeekBook.id);
+  }, [currentBook?.id, currentWeekBook, setCurrentWeekId]);
+
+  useEffect(() => {
+    if (!currentWeekBook && !hasUserSelectedWeekRef.current) {
+      setCurrentWeekId(null);
+    }
+  }, [currentWeekBook, setCurrentWeekId]);
 
   useEffect(() => {
     if (import.meta.env.VITE_USE_MOCK !== "true") return;
@@ -117,24 +179,27 @@ export function HomePage() {
   const touchStartXRef = useRef<number | null>(null);
 
   const handleSelectBook = (id: string) => {
+    hasUserSelectedWeekRef.current = true;
     setCurrentWeekId(id);
     setCurrentDayIndex(0);
     setIsMenuPickerOpen(false);
   };
 
-  const hasCurrentBook = Boolean(currentBook);
+  const shouldShowWelcome = !currentWeekBook && !hasUserSelectedWeekRef.current;
+  const activeBook = shouldShowWelcome ? null : currentBook ?? currentWeekBook;
+  const hasCurrentBook = Boolean(activeBook);
   const currentDayKey = hasCurrentBook ? WEEK_DAYS[currentDayIndex] : WEEK_DAYS[0];
-  const currentMeals = hasCurrentBook ? currentBook.mealPlan.days[currentDayKey] : null;
+  const currentMeals = hasCurrentBook ? activeBook.mealPlan.days[currentDayKey] : null;
   const currentDayLabel = startCaseDay(currentDayKey);
   const { dateLabel } = hasCurrentBook
-    ? getDayDisplay(currentBook.mealPlan.createdAt, currentDayIndex)
+    ? getDayDisplay(activeBook.mealPlan.createdAt, currentDayIndex)
     : { dateLabel: "" };
 
   const handleOpenMeal = (mealType: keyof DayMeals, meal: Recipe) => {
-    if (!currentBook) return;
+    if (!activeBook) return;
     const source = (meal as Recipe & { source?: "base" | "extra" }).source === "extra" ? "extra" : "base";
     setActiveDish({
-      book: currentBook,
+      book: activeBook,
       day: currentDayKey,
       mealType,
       recipe: meal,
@@ -158,12 +223,12 @@ export function HomePage() {
     meal: NonNullable<DayMeals[keyof DayMeals]>;
   }) => {
     if (!addMealDayKey) return;
-    if (!currentBook) return;
-    const existingMeal = currentBook.mealPlan.days[addMealDayKey][mealType];
+    if (!activeBook) return;
+    const existingMeal = activeBook.mealPlan.days[addMealDayKey][mealType];
     if (existingMeal) {
-      addExtraMeal(currentBook.id, addMealDayKey, mealType, meal);
+      addExtraMeal(activeBook.id, addMealDayKey, mealType, meal);
     } else {
-      setDayMeal(currentBook.id, addMealDayKey, mealType, meal);
+      setDayMeal(activeBook.id, addMealDayKey, mealType, meal);
     }
     setAddMealDayKey(null);
   };
@@ -188,14 +253,14 @@ export function HomePage() {
   };
 
   const currentMealEntries = useMemo(() => {
-    if (!currentBook || !currentMeals) {
+    if (!activeBook || !currentMeals) {
       return {
         breakfast: [] as Recipe[],
         lunch: [] as Recipe[],
         dinner: [] as Recipe[],
       };
     }
-    const extraMealsForDay = extras[currentBook.id]?.[currentDayKey] ?? {};
+    const extraMealsForDay = extras[activeBook.id]?.[currentDayKey] ?? {};
     const buildEntries = (mealType: keyof DayMeals) => {
       const baseMeal = currentMeals[mealType];
       const extraMeals = extraMealsForDay[mealType] ?? [];
@@ -208,20 +273,18 @@ export function HomePage() {
       lunch: buildEntries("lunch"),
       dinner: buildEntries("dinner"),
     };
-  }, [currentBook, currentMeals, currentDayKey, extras]);
+  }, [activeBook, currentMeals, currentDayKey, extras]);
 
   // Menu Open view - current day card with swipe
   const openView = (
     <div className="space-y-4">
-      {/* Swipe indicator */}
-      <SwipeIndicator
-        total={WEEK_DAYS.length}
-        activeIndex={currentDayIndex}
-        onSelect={setCurrentDayIndex}
-        onPrev={handlePrevDay}
-        onNext={handleNextDay}
-        labels={WEEK_DAYS.map((day) => startCaseDay(day))}
-      />
+      {activeBook && (
+        <WeekDateBar
+          createdAt={activeBook.mealPlan.createdAt}
+          activeIndex={currentDayIndex}
+          onSelect={setCurrentDayIndex}
+        />
+      )}
 
       {/* Daily card with swipe */}
       <div
@@ -244,8 +307,19 @@ export function HomePage() {
   );
 
   return (
-    <PageContainer className="pb-20">
-      {currentBook ? openView : <EmptyState />}
+    <PageContainer className={shouldShowWelcome ? "px-0 pt-0 pb-20" : "pb-20"}>
+      {shouldShowWelcome ? (
+        <StepWelcome
+          onNext={() => {
+            resetDraft();
+            navigate("/create", { state: { startStep: 2, skipResume: true } });
+          }}
+        />
+      ) : hasCurrentBook ? (
+        openView
+      ) : (
+        <EmptyState />
+      )}
 
       <Modal
         open={isMenuPickerOpen}
@@ -255,8 +329,8 @@ export function HomePage() {
       >
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-[16px] font-semibold text-text-primary">All Menus</h2>
-            <p className="mt-1 text-[12px] text-text-secondary">Select a week to view</p>
+            <h2 className="text-[16px] font-semibold text-text-primary">Menu Book</h2>
+            <p className="mt-1 text-[12px] text-text-secondary">Long press a menu book to delete.</p>
           </div>
           <button
             type="button"
@@ -269,27 +343,42 @@ export function HomePage() {
             </svg>
           </button>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-3.5">
-          {orderedBooks.map((book) => (
-            <MenuClosedCard
-              key={book.id}
-              book={book}
-              onSelect={handleSelectBook}
-              onLongPress={handleRequestDelete}
-              isActive={book.id === currentBook?.id}
-              showCurrentWeekBadge={isCurrentCalendarWeek(book.mealPlan.createdAt)}
-            />
-          ))}
-          <Link
-            to="/create"
-            onClick={() => setIsMenuPickerOpen(false)}
-            className="flex min-h-[160px] flex-col items-center justify-center gap-2.5 rounded-2xl border-2 border-dashed border-border-subtle bg-transparent transition hover:border-accent-base hover:bg-[rgba(139,148,105,0.03)]"
-          >
-            <span className="text-text-disabled">
-              <PlusIcon />
-            </span>
-            <span className="text-[12px] font-medium text-text-secondary">New Menu</span>
-          </Link>
+        <div className="mt-4 flex flex-col gap-3">
+          {menuPickerItems.map((item) => {
+            if (item.type === "book") {
+              const { book } = item;
+              return (
+                <MenuClosedCard
+                  key={book.id}
+                  book={book}
+                  onSelect={handleSelectBook}
+                  onLongPress={handleRequestDelete}
+                  isActive={book.id === activeBook?.id}
+                  showCurrentWeekBadge={isCurrentCalendarWeek(book.mealPlan.createdAt)}
+                />
+              );
+            }
+
+            const weekRange = getWeekDateRange(item.weekStart.toISOString());
+            return (
+              <Link
+                key={item.weekStart.toISOString()}
+                to="/create"
+                onClick={() => setIsMenuPickerOpen(false)}
+                className="flex items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-border-subtle bg-transparent px-4 py-3 transition hover:border-accent-base hover:bg-[rgba(139,148,105,0.03)]"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-text-disabled">
+                    <PlusIcon />
+                  </span>
+                  <div>
+                    <p className="text-[13px] font-semibold text-text-primary">Add Menu</p>
+                    <p className="mt-1 text-[11px] text-text-secondary">{weekRange}</p>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </Modal>
 
@@ -320,12 +409,14 @@ export function HomePage() {
         </div>
       </Modal>
 
-      {currentBook && (
+      {activeBook && (
         <AddMealModal
           key={addMealDayKey ?? "closed"}
           open={addMealDayKey !== null}
           dayLabel={addMealDayKey ? startCaseDay(addMealDayKey) : ""}
-          existingMeals={addMealDayKey ? currentBook.mealPlan.days[addMealDayKey] : currentBook.mealPlan.days[currentDayKey]}
+          existingMeals={addMealDayKey ? activeBook.mealPlan.days[addMealDayKey] : activeBook.mealPlan.days[currentDayKey]}
+          defaultServings={activeBook.mealPlan.preferences.numPeople}
+          defaultDifficulty={activeBook.mealPlan.preferences.difficulty}
           onClose={handleCloseAddMeal}
           onSubmit={handleSubmitAddMeal}
         />

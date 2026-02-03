@@ -58,9 +58,9 @@ function MeIcon({ isActive }: { isActive: boolean }) {
 }
 
 const navItems = [
-  { to: "/", label: "Menu", Icon: PlanIcon },
-  { to: "/shopping", label: "List", Icon: ListIcon },
-  { to: "/me", label: "Me", Icon: MeIcon },
+  { to: "/", label: "MENU", Icon: PlanIcon },
+  { to: "/shopping", label: "LIST", Icon: ListIcon },
+  { to: "/me", label: "PROFILE", Icon: MeIcon },
 ];
 
 export function BottomNav({ withinFrame = false }: BottomNavProps) {

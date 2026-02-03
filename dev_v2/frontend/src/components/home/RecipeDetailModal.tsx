@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useAppStore } from "@/stores/useAppStore";
 import { startCaseDay } from "@/utils/helpers";
+import { INGREDIENT_CATEGORIES } from "@/utils/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import type { DayMeals, MenuBook } from "@/types";
@@ -9,6 +10,11 @@ import type { DayMeals, MenuBook } from "@/types";
 function formatDifficulty(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
+
+function formatMealType(mealType: string) {
+  return mealType.toUpperCase();
+}
+
 
 export interface ModalContentProps {
   active: {
@@ -86,13 +92,15 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
   const { book, day, mealType, recipe } = active;
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [notesDraft, setNotesDraft] = useState(() => recipe.notes ?? "");
+  const notesRef = useRef<HTMLTextAreaElement>(null);
+  const notesSectionRef = useRef<HTMLDivElement>(null);
 
-  const ingredientsList = recipe.ingredients.map((ing) => {
-    if (ing.quantity > 0) {
-      return `${ing.quantity} ${ing.unit} ${ing.name}`.trim();
-    }
-    return ing.name;
-  });
+  const groupedIngredients = useMemo(() => {
+    return INGREDIENT_CATEGORIES.map((category) => ({
+      category,
+      items: recipe.ingredients.filter((ingredient) => ingredient.category === category),
+    })).filter((group) => group.items.length > 0);
+  }, [recipe.ingredients]);
 
   const instructionSteps = recipe.instructions
     .split(/\n+/)
@@ -105,13 +113,23 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
 
   const hasNotes = Boolean(recipe.notes);
 
+  useEffect(() => {
+    if (!isEditingNotes) return;
+    const focusNotes = () => {
+      notesRef.current?.focus();
+      notesSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+    const id = window.setTimeout(focusNotes, 0);
+    return () => window.clearTimeout(id);
+  }, [isEditingNotes]);
+
   const handleSaveNotes = () => {
     onSaveNotes(notesDraft.trim());
     setIsEditingNotes(false);
   };
 
   const handleDelete = () => {
-    const shouldDelete = window.confirm("Remove this meal from the plan?");
+    const shouldDelete = window.confirm("Remove this dish from the menu?");
     if (shouldDelete) {
       onDelete();
     }
@@ -134,26 +152,31 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
             <button
               type="button"
               onClick={() => setIsEditingNotes(true)}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-text-primary transition-colors hover:bg-paper-dark"
+              className="flex items-center gap-1 rounded-full bg-paper-muted px-3 py-2 text-[12px] font-medium text-text-primary transition-colors hover:bg-paper-dark"
               aria-label="Edit notes"
             >
               <EditIcon />
+              <span>Edit Notes</span>
             </button>
             <button
               type="button"
               onClick={handleDelete}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-error transition-colors hover:bg-paper-dark"
-              aria-label="Delete meal"
+              className="flex items-center gap-1 rounded-full bg-paper-muted px-3 py-2 text-[12px] font-medium text-error transition-colors hover:bg-paper-dark"
+              aria-label="Delete dish"
             >
               <DeleteIcon />
+              <span>Delete Dish</span>
             </button>
           </div>
         </div>
 
         {/* Modal Body - Scrollable */}
         <div className="flex-1 overflow-y-auto px-5 py-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base">
+            {startCaseDay(day).toUpperCase()} · {formatMealType(mealType)}
+          </p>
           {/* Recipe Title */}
-          <h2 className="text-[22px] font-semibold leading-tight text-text-primary">
+          <h2 className="mt-2 text-[22px] font-semibold leading-tight text-text-primary">
             {recipe.name}
           </h2>
 
@@ -180,16 +203,27 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
           {/* Ingredients Section */}
           <section className="mt-6">
             <h3 className="text-[14px] font-semibold text-text-primary">Ingredients</h3>
-            <ul className="mt-3">
-              {ingredientsList.map((item, index) => (
-                <li
-                  key={index}
-                  className="border-b border-border-subtle py-2 text-[14px] text-text-primary last:border-b-0"
-                >
-                  • {item}
-                  </li>
-                ))}
-              </ul>
+            <div className="mt-3 space-y-3">
+              {groupedIngredients.map((group) => {
+                const itemsText = group.items
+                  .map((ingredient) => {
+                    if (ingredient.quantity <= 0) return ingredient.name;
+                    if (ingredient.category === "seasonings") {
+                      return `${ingredient.name} ${ingredient.quantity}`.trim();
+                    }
+                    return `${ingredient.name} ${ingredient.quantity}${ingredient.unit ? ` ${ingredient.unit}` : ""}`.trim();
+                  })
+                  .join(" · ");
+                return (
+                  <div key={group.category} className="flex flex-wrap items-baseline gap-2">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary">
+                      {group.category.replace(/_/g, " ")}
+                    </span>
+                    <span className="text-[14px] text-text-primary">{itemsText}</span>
+                  </div>
+                );
+              })}
+            </div>
           </section>
 
           {/* Instructions Section */}
@@ -215,7 +249,7 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
           </section>
 
           {/* Notes Section */}
-          <section className="mt-6">
+          <section className="mt-6" ref={notesSectionRef}>
             <div className="flex items-center justify-between">
               <h3 className="text-[14px] font-semibold text-text-primary">Notes</h3>
               {!isEditingNotes && (
@@ -224,13 +258,14 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
                   onClick={() => setIsEditingNotes(true)}
                   className="text-[13px] text-accent-base hover:opacity-80"
                 >
-                  Edit
+                  Edit Notes
                 </button>
               )}
             </div>
             {isEditingNotes ? (
               <div className="mt-3 space-y-3">
               <Textarea
+                ref={notesRef}
                 value={notesDraft}
                 onChange={(event) => setNotesDraft(event.target.value)}
                 placeholder="Add your notes here"

@@ -49,11 +49,10 @@ function buildEmojiCover(book: MenuBook) {
 
   const source = emojiPool.length > 0 ? emojiPool : MENU_CLOSED_EMOJI_FALLBACK;
   const selection: string[] = [];
-  for (let index = 0; index < 9; index += 1) {
+  for (let index = 0; index < 4; index += 1) {
     selection.push(source[index % source.length]);
   }
-  const rows = [selection.slice(0, 3), selection.slice(3, 6), selection.slice(6, 9)];
-  return rows.map((row) => row.join(" ")).join("\n");
+  return selection;
 }
 
 export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurrentWeekBadge }: MenuClosedCardProps) {
@@ -112,45 +111,45 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurr
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerLeave}
       onPointerCancel={handlePointerLeave}
-      className="group relative block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base aspect-[3/4] sm:aspect-[4/5]"
+      className="group relative block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base"
       aria-pressed={isActive}
     >
       <div
         className={cn(
-          "relative flex h-full flex-col overflow-hidden rounded-2xl border border-border-subtle bg-card-base text-text-primary shadow-soft transition-transform",
-          "hover:-translate-y-[2px] hover:shadow-[0_6px_20px_rgba(0,0,0,0.1)]",
-          isActive ? "border-accent-base/50" : "",
+          "relative flex items-center gap-4 rounded-2xl border bg-paper-base px-4 py-3 text-text-primary shadow-soft transition-transform",
+          "hover:-translate-y-[1px] hover:shadow-[0_6px_16px_rgba(0,0,0,0.08)]",
+          isActive ? "border-accent-base" : "border-accent-base/35",
         )}
       >
-        {/* THIS WEEK badge - green horizontal bar at top per spec */}
-        {showCurrentWeekBadge && (
-          <div className="absolute left-0 right-0 top-0 z-10 bg-accent-base py-1.5 text-center">
-            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-white">
-              {relativeLabel}
+        {/* Emoji block */}
+        <div
+          className={cn(
+            "grid h-12 w-12 flex-shrink-0 grid-cols-2 place-items-center rounded-xl border border-border-subtle text-[16px]",
+            surfaceClass,
+          )}
+          aria-hidden
+        >
+          {emojiCover.map((emoji, index) => (
+            <span key={`${emoji}-${index}`} className="leading-none">
+              {emoji}
             </span>
-          </div>
-        )}
-
-        {/* Food emoji cover */}
-        <div className={cn("flex flex-1 flex-col p-4", showCurrentWeekBadge && "pt-8")}>
-          <div
-            className={cn(
-              "flex flex-1 items-center justify-center rounded-2xl text-center text-[22px] leading-relaxed whitespace-pre-line",
-              surfaceClass,
-            )}
-            aria-hidden
-          >
-            {emojiCover}
-          </div>
+          ))}
         </div>
 
-        {/* Info footer */}
-        <div className="border-t border-border-subtle bg-white px-4 py-3">
-          <p className="text-[12px] font-semibold text-text-primary">{weekRange}</p>
-          <p className="mt-0.5 text-[11px] text-text-secondary">
-            {totalMeals} meals • {budget}
+        {/* Text */}
+        <div className="min-w-0 flex-1">
+          <p className="text-[13px] font-semibold text-text-primary">{weekRange}</p>
+          <p className="mt-1 text-[11px] text-text-secondary">
+            {totalMeals} dishes · {budget}
           </p>
         </div>
+
+        {/* Tag */}
+        {showCurrentWeekBadge && (
+          <span className="rounded-full border border-accent-base/30 bg-accent-soft px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-base">
+            {relativeLabel}
+          </span>
+        )}
       </div>
     </button>
   );

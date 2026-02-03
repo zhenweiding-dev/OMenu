@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useAppStore } from "@/stores/useAppStore";
 import { useShoppingStore } from "@/stores/useShoppingStore";
 import { useMealPlan } from "@/hooks/useMealPlan";
@@ -64,142 +65,167 @@ interface ShoppingItemModalProps {
   onDelete?: () => void;
 }
 
-function ShoppingItemForm({
-  mode,
-  initialItem,
-  defaultCategory,
-  onClose,
-  onSubmit,
-  onDelete,
-}: Omit<ShoppingItemModalProps, "open">) {
-  const [name, setName] = useState(() => initialItem?.name ?? "");
-  const [quantity, setQuantity] = useState(() =>
-    initialItem && initialItem.totalQuantity > 0 ? String(initialItem.totalQuantity) : "",
-  );
-  const [unit, setUnit] = useState(() => initialItem?.unit ?? "");
-  const [category, setCategory] = useState<IngredientCategory>(initialItem?.category ?? defaultCategory);
+function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, onSubmit, onDelete }: ShoppingItemModalProps) {
+  const [name, setName] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [unit, setUnit] = useState("");
+  const [category, setCategory] = useState<IngredientCategory>(defaultCategory);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [isEditingQuantity, setIsEditingQuantity] = useState(false);
+  const [isEditingCategory, setIsEditingCategory] = useState(false);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    setName(initialItem?.name ?? "");
+    setQuantity(initialItem && initialItem.totalQuantity > 0 ? String(initialItem.totalQuantity) : "");
+    setUnit(initialItem?.unit ?? "");
+    setCategory(initialItem?.category ?? defaultCategory);
+    setIsEditingName(mode === "add");
+    setIsEditingQuantity(false);
+    setIsEditingCategory(false);
+  }, [defaultCategory, initialItem, mode, open]);
+
+  useEffect(() => {
+    if (!open || mode !== "add") return;
+    const id = window.setTimeout(() => {
+      nameInputRef.current?.focus();
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, [mode, open]);
+
+  if (!open) return null;
+  const container = document.getElementById("phone-screen");
+  if (!container) return null;
 
   const isSeasoning = category === "seasonings";
   const saveDisabled = name.trim().length === 0;
 
-  return (
-    <form
-      className="space-y-4"
-      onSubmit={(event) => {
-        event.preventDefault();
-        if (saveDisabled) return;
-        onSubmit({
-          name: name.trim(),
-          quantity: quantity.trim(),
-          unit: unit.trim(),
-          category,
-        });
-        onClose();
-      }}
-    >
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-text-primary" htmlFor="shopping-item-name">
-          Item name
-        </label>
-        <Input
-          id="shopping-item-name"
-          placeholder="Blueberries"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          autoFocus
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-text-primary" htmlFor="shopping-item-quantity">
-            Quantity
-          </label>
-          <Input
-            id="shopping-item-quantity"
-            placeholder={isSeasoning ? "Optional" : "2"}
-            value={quantity}
-            onChange={(event) => setQuantity(event.target.value)}
-            disabled={isSeasoning}
-          />
-        </div>
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-text-primary" htmlFor="shopping-item-unit">
-            Unit
-          </label>
-          <Input
-            id="shopping-item-unit"
-            placeholder={isSeasoning ? "" : "cups"}
-            value={unit}
-            onChange={(event) => setUnit(event.target.value)}
-            disabled={isSeasoning}
-          />
-        </div>
-      </div>
-      {isSeasoning && (
-        <p className="text-xs text-text-secondary">Seasonings do not require a quantity.</p>
-      )}
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-text-primary" htmlFor="shopping-item-category">
-          Category
-        </label>
-        <select
-          id="shopping-item-category"
-          className="h-11 w-full rounded-lg border border-border-tag bg-white px-4 text-[15px] text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base focus:ring-offset-2 focus:ring-offset-paper-base"
-          value={category}
-          onChange={(event) => setCategory(event.target.value as IngredientCategory)}
-        >
-          {INGREDIENT_CATEGORIES.map((option) => (
-            <option key={option} value={option}>
-              {formatCategoryLabel(option)}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="flex items-center justify-between gap-2 pt-2">
-        {mode === "edit" && onDelete ? (
-          <Button
+  return createPortal(
+    <div className="absolute inset-0 z-50 flex items-end justify-center bg-black/40">
+      <div className="flex max-h-[85%] w-full flex-col overflow-hidden rounded-t-3xl bg-card-base">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-subtle bg-card-base px-5 py-4">
+          <button
             type="button"
-            variant="ghost"
-            className="text-error"
-            onClick={() => onDelete()}
+            onClick={onClose}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-text-primary transition-colors hover:bg-paper-dark"
+            aria-label="Close"
           >
-            Delete item
-          </Button>
-        ) : (
-          <span />
-        )}
-        <div className="flex items-center gap-2">
-          <Button type="button" variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" disabled={saveDisabled}>
-            {mode === "add" ? "Add item" : "Save changes"}
-          </Button>
+            <MinusIcon />
+          </button>
+          <div className="flex items-center gap-2">
+            {mode === "edit" && onDelete && (
+              <Button type="button" variant="ghost" className="text-error" onClick={onDelete}>
+                Delete Item
+              </Button>
+            )}
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => {
+                if (saveDisabled) return;
+                onSubmit({
+                  name: name.trim(),
+                  quantity: quantity.trim(),
+                  unit: unit.trim(),
+                  category,
+                });
+                onClose();
+              }}
+              disabled={saveDisabled}
+            >
+              {mode === "add" ? "Add Item" : "Save Item"}
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-5 py-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base">SHOPPING ITEM</p>
+
+          <div className="mt-2">
+            {isEditingName ? (
+              <Input
+                id="shopping-item-name"
+                ref={nameInputRef}
+                placeholder=" Blueberries"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                onBlur={() => setIsEditingName(false)}
+                className="h-auto rounded-xl border border-border-subtle bg-transparent px-3 py-2 text-[22px] font-semibold leading-tight text-text-primary focus-visible:ring-0"
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIsEditingName(true)}
+                className="text-left text-[22px] font-semibold leading-tight text-text-primary"
+              >
+                {name ? name : <span className="text-text-tertiary">Tap to add item name</span>}
+              </button>
+            )}
+          </div>
+
+          <section className="mt-5">
+            <h3 className="text-[14px] font-semibold text-text-primary">Quantity</h3>
+            {isEditingQuantity ? (
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                <Input
+                  id="shopping-item-quantity"
+                  placeholder={isSeasoning ? "Optional" : "2"}
+                  value={quantity}
+                  onChange={(event) => setQuantity(event.target.value)}
+                  disabled={isSeasoning}
+                />
+                <Input
+                  id="shopping-item-unit"
+                  placeholder={isSeasoning ? "" : "cups"}
+                  value={unit}
+                  onChange={(event) => setUnit(event.target.value)}
+                  disabled={isSeasoning}
+                />
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIsEditingQuantity(true)}
+                className="mt-3 text-[14px] text-text-tertiary"
+              >
+                {isSeasoning
+                  ? "No quantity required for seasonings"
+                  : quantity
+                    ? `${quantity} ${unit}`.trim()
+                    : "Tap to add quantity"}
+              </button>
+            )}
+          </section>
+
+          <section className="mt-6">
+            <h3 className="text-[14px] font-semibold text-text-primary">Category</h3>
+            {isEditingCategory ? (
+              <select
+                className="mt-3 h-11 w-full rounded-lg border border-border-tag bg-white px-4 text-[15px] text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base focus:ring-offset-2 focus:ring-offset-paper-base"
+                value={category}
+                onChange={(event) => setCategory(event.target.value as IngredientCategory)}
+              >
+                {INGREDIENT_CATEGORIES.map((option) => (
+                  <option key={option} value={option}>
+                    {formatCategoryLabel(option)}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIsEditingCategory(true)}
+                className="mt-3 text-[14px] text-text-secondary"
+              >
+                {formatCategoryLabel(category)}
+              </button>
+            )}
+          </section>
         </div>
       </div>
-    </form>
-  );
-}
-
-function ShoppingItemModal({ open, mode, initialItem, defaultCategory, onClose, onSubmit, onDelete }: ShoppingItemModalProps) {
-  if (!open) return null;
-  const modalKey = initialItem ? `edit-${initialItem.id}` : `add-${defaultCategory}`;
-
-  return (
-    <Modal open={open} className="max-w-md" title={mode === "add" ? "Add Item" : "Edit Item"}>
-      <ShoppingItemForm
-        key={modalKey}
-        mode={mode}
-        initialItem={initialItem}
-        defaultCategory={defaultCategory}
-        onClose={onClose}
-        onSubmit={onSubmit}
-        onDelete={onDelete}
-      />
-    </Modal>
+    </div>,
+    container,
   );
 }
 
@@ -423,7 +449,7 @@ export function ShoppingPage() {
         );
       })}
 
-      <ShoppingItemModal
+      <ShoppingItemSheet
         open={modalOpen && Boolean(currentBook)}
         mode={modalMode}
         initialItem={editingItem ?? undefined}

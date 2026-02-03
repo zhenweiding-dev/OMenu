@@ -47,39 +47,40 @@ function MealRow({
   }
 
   return (
-    <>
-      {meals.map((meal, index) => (
-        <button
-          key={meal.id ?? `${mealType}-${index}`}
-          type="button"
-          onClick={() => onOpen?.(meal)}
-          className="flex w-full items-center gap-3.5 border-b border-border-subtle px-5 py-3.5 text-left transition-colors last:border-b-0 hover:bg-paper-muted/50"
-        >
-          {/* Icon wrapper */}
-          <div className={`flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-xl text-lg ${meta.bgColor}`}>
-            {meta.icon}
-          </div>
+    <div className="flex w-full items-start gap-3.5 border-b border-border-subtle px-5 py-3.5 text-left last:border-b-0">
+      {/* Icon wrapper */}
+      <div className={`flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-xl text-lg ${meta.bgColor}`}>
+        {meta.icon}
+      </div>
 
-          {/* Content */}
-          <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.03em] text-text-secondary">
-              {meta.label}
-            </p>
-            <p className="mt-0.5 truncate text-[15px] font-semibold leading-tight text-text-primary">
-              {meal.name}
-            </p>
-            <p className="mt-1 text-[11px] text-text-secondary">
-              {meal.estimatedTime > 0 ? `${meal.estimatedTime} min` : "—"} · {meal.servings || "—"} servings
-            </p>
-          </div>
-
-          {/* Calories */}
-          <span className="flex-shrink-0 text-[13px] font-semibold text-accent-base">
-            {meal.totalCalories}
-          </span>
-        </button>
-      ))}
-    </>
+      {/* Content */}
+      <div className="min-w-0 flex-1">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.03em] text-text-secondary">
+          {meta.label}
+        </p>
+        <div className="mt-1 flex flex-wrap items-stretch gap-2">
+          {meals.map((meal, index) => (
+            <div key={meal.id ?? `${mealType}-${index}`} className="flex items-stretch gap-2">
+              <button
+                type="button"
+                onClick={() => onOpen?.(meal)}
+                className="flex flex-col items-start text-left transition-colors hover:text-text-primary"
+              >
+                <span className="max-w-[180px] truncate text-[15px] font-semibold leading-tight text-text-primary">
+                  {meal.name}
+                </span>
+                <span className="text-[11px] text-text-secondary">
+                  {meal.estimatedTime > 0 ? `${meal.estimatedTime} min` : "—"} · {meal.servings || "—"} servings · {meal.totalCalories} cal
+                </span>
+              </button>
+              {index < meals.length - 1 && (
+                <span className="mx-1 w-px self-stretch border-l border-dashed border-border-subtle" aria-hidden />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -100,8 +101,10 @@ export function DailyMenuCard({ day, dateLabel, meals, onOpenMeal, onAddMeal }: 
       {/* Card header */}
       <div className="relative border-b border-border-subtle bg-card-header px-5 py-5">
         <div className="pr-12">
-          <p className="text-[24px] font-bold tracking-[-0.02em] text-text-primary">{day}</p>
-          <p className="mt-0.5 text-[13px] text-text-secondary">{dateLabel}</p>
+          <div className="flex items-end gap-2">
+            <p className="text-[24px] font-bold tracking-[-0.02em] text-text-primary">{day}</p>
+            <p className="text-[13px] text-text-secondary">{dateLabel}</p>
+          </div>
           <div className="mt-2.5 flex items-center gap-3.5 text-[12px] text-text-secondary">
             <span>🍽️ {totalDishes} {totalDishes === 1 ? "dish" : "dishes"}</span>
             <span>🔥 {totalCalories.toLocaleString()} cal</span>
