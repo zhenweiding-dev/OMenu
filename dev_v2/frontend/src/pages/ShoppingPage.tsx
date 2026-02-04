@@ -110,16 +110,25 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
   const saveDisabled = name.trim().length === 0;
 
   return createPortal(
-    <div className="absolute inset-0 z-50 flex items-end justify-center bg-black/40">
-      <div className="flex max-h-[85%] w-full flex-col overflow-hidden rounded-t-3xl bg-card-base">
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-subtle bg-card-base px-5 py-4">
+    <div
+      className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6"
+      onPointerDown={(event) => {
+        if (event.target !== event.currentTarget) return;
+        onClose();
+      }}
+    >
+      <div
+        className="w-full max-w-md overflow-hidden rounded-3xl border border-border-subtle bg-card-base shadow-[0_4px_20px_rgba(0,0,0,0.12)]"
+        onPointerDown={(event) => event.stopPropagation()}
+      >
+        <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
           <button
             type="button"
             onPointerDown={(event) => {
               event.preventDefault();
               onClose();
             }}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-text-primary transition-colors hover:bg-paper-dark"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-paper-muted text-text-primary transition-colors hover:bg-paper-dark"
             aria-label="Close"
           >
             <CloseIcon />
@@ -150,7 +159,7 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-5 py-5">
+        <div className="max-h-[70vh] overflow-y-auto px-4 py-4">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base">SHOPPING ITEM</p>
 
           <div className="mt-2">
@@ -371,7 +380,7 @@ export function ShoppingPage() {
   }
 
   return (
-    <PageContainer className="space-y-5">
+    <PageContainer className="space-y-3">
       {/* Category sections */}
       {groupedItems.map(({ category, items }) => {
         const details = CATEGORY_DETAILS[category];
@@ -379,18 +388,18 @@ export function ShoppingPage() {
         const itemCount = items.length;
         
         return (
-          <section key={category} className="space-y-0">
+          <section key={category} className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
             {/* Section header */}
             <button
               type="button"
               onClick={() => toggleCategoryCollapse(category)}
-              className="flex w-full items-center justify-between py-3"
+              className="flex w-full items-center justify-between px-4 py-2.5"
             >
-              <span className="flex items-center gap-2 text-[14px] font-semibold text-text-primary">
-                <span className="text-lg">{details?.icon}</span>
+              <span className="flex items-center gap-2 text-[13px] font-semibold text-text-primary">
+                <span className="text-base">{details?.icon}</span>
                 {details?.label}
               </span>
-              <span className="flex items-center gap-2 text-[12px] text-text-secondary">
+              <span className="flex items-center gap-2 text-[11px] text-text-secondary">
                 <span>{itemCount} items</span>
                 {isCollapsed ? <PlusIcon /> : <MinusIcon />}
               </span>
@@ -398,7 +407,7 @@ export function ShoppingPage() {
 
             {/* Items */}
             {!isCollapsed && (
-              <div className="space-y-0">
+              <div className="border-t border-border-subtle">
                 {items.map((item) => {
                   const purchased = item.purchased;
                   const showQuantity = item.category !== "seasonings" && item.totalQuantity > 0;
@@ -417,14 +426,14 @@ export function ShoppingPage() {
                         }
                       }}
                       className={cn(
-                        "flex items-center gap-3 border-b border-border-subtle py-3 transition-colors hover:bg-paper-muted/50",
+                        "flex items-center gap-2 border-b border-border-subtle px-4 py-2.5 transition-colors hover:bg-paper-muted/50 last:border-b-0",
                         purchased && "opacity-60"
                       )}
                     >
                       {/* Checkbox */}
                       <div
                         className={cn(
-                          "flex h-[22px] w-[22px] flex-shrink-0 items-center justify-center rounded border-[1.5px] transition-colors",
+                          "flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border-[1.5px] transition-colors",
                           purchased
                             ? "border-success bg-success text-white"
                             : "border-text-disabled bg-white"
@@ -437,14 +446,14 @@ export function ShoppingPage() {
                       <div className="flex-1">
                         <span
                           className={cn(
-                            "block text-[15px]",
+                            "block text-[14px] font-medium",
                             purchased ? "text-text-secondary line-through" : "text-text-primary"
                           )}
                         >
                           {item.name}
                         </span>
                         {quantityText && (
-                          <span className="mt-0.5 block text-[12px] text-text-tertiary">
+                          <span className="mt-0.5 block text-[11px] text-text-tertiary">
                             {quantityText}
                           </span>
                         )}
@@ -457,7 +466,7 @@ export function ShoppingPage() {
                           event.stopPropagation();
                           setEditingItem(item);
                         }}
-                        className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary hover:text-text-primary"
+                        className="text-[10px] font-semibold uppercase tracking-[0.2em] text-text-secondary hover:text-text-primary"
                       >
                         EDIT
                       </button>

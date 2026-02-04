@@ -224,8 +224,17 @@ export function StepPlanOverview({
           const container = document.getElementById("phone-screen");
           if (!container) return null;
           return createPortal(
-            <div className="absolute inset-0 z-50 flex items-end justify-center bg-black/40">
-              <div className="flex max-h-[85%] w-full flex-col overflow-hidden rounded-t-3xl bg-card-base">
+            <div
+              className="absolute inset-0 z-50 flex items-end justify-center bg-black/40"
+              onPointerDown={(event) => {
+                if (event.target !== event.currentTarget) return;
+                setShowModifyModal(false);
+              }}
+            >
+              <div
+                className="flex max-h-[85%] w-full flex-col overflow-hidden rounded-t-3xl bg-card-base"
+                onPointerDown={(event) => event.stopPropagation()}
+              >
                 <div className="border-b border-border-subtle px-5 py-4">
                   <h2 className="text-[16px] font-semibold text-text-primary">Modify Your Plan</h2>
                   <p className="mt-1 text-[12px] text-text-secondary">

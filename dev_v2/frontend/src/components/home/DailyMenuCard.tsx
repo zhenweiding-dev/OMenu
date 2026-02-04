@@ -1,5 +1,5 @@
 import type { DayMeals, Recipe } from "@/types";
-import { Plus } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
 
 type MealInput = Recipe | Recipe[] | null;
 
@@ -55,26 +55,35 @@ function MealRow({
 
       {/* Content */}
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.03em] text-text-secondary">
-          {meta.label}
-        </p>
-        <div className="mt-1 flex flex-wrap items-stretch gap-2">
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.03em] text-text-secondary">
+            {meta.label}
+          </p>
+          <span className="text-[11px] text-text-tertiary">
+            {meals.length} {meals.length === 1 ? "dish" : "dishes"} ·{" "}
+            {meals.reduce((sum, item) => sum + (item?.totalCalories ?? 0), 0).toLocaleString()} cal
+          </span>
+        </div>
+        <div className="mt-2 space-y-2">
           {meals.map((meal, index) => (
-            <div key={meal.id ?? `${mealType}-${index}`} className="flex items-stretch gap-2">
+            <div key={meal.id ?? `${mealType}-${index}`} className="flex flex-col">
               <button
                 type="button"
                 onClick={() => onOpen?.(meal)}
-                className="flex flex-col items-start text-left transition-colors hover:text-text-primary"
+                className="group flex w-full items-center justify-between gap-3 text-left transition-colors hover:text-text-primary"
               >
-                <span className="max-w-[180px] truncate text-[15px] font-semibold leading-tight text-text-primary">
-                  {meal.name}
-                </span>
-                <span className="text-[11px] text-text-secondary">
-                  {meal.estimatedTime > 0 ? `${meal.estimatedTime} min` : "—"} · {meal.servings || "—"} servings · {meal.totalCalories} cal
-                </span>
+                <div className="min-w-0 flex-1">
+                  <span className="block max-w-[220px] truncate text-[15px] font-semibold leading-tight text-text-primary">
+                    {meal.name}
+                  </span>
+                  <span className="text-[11px] text-text-secondary">
+                    {meal.estimatedTime > 0 ? `${meal.estimatedTime} min` : "—"} · {meal.servings || "—"} servings · {meal.totalCalories} cal
+                  </span>
+                </div>
+                <ChevronRight className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-text-tertiary opacity-60 transition-opacity group-hover:opacity-100" />
               </button>
               {index < meals.length - 1 && (
-                <span className="mx-1 w-px self-stretch border-l border-dashed border-border-subtle" aria-hidden />
+                <span className="mt-2 h-px w-full border-t border-dashed border-border-subtle" aria-hidden />
               )}
             </div>
           ))}

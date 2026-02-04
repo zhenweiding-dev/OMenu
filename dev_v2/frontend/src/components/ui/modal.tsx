@@ -30,13 +30,21 @@ export function Modal({ open, title, description, onClose, children, className, 
   if (!container) return null;
 
   const modalContent = (
-    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6">
+    <div
+      className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6"
+      onPointerDown={(event) => {
+        if (!onClose) return;
+        if (event.target !== event.currentTarget) return;
+        onClose();
+      }}
+    >
       <div
         className={cn(
           "w-full max-w-lg rounded-3xl border border-border-subtle bg-card-base p-6 shadow-[0_4px_20px_rgba(0,0,0,0.12)]",
           "max-h-[85%] overflow-y-auto",
           className,
         )}
+        onPointerDown={(event) => event.stopPropagation()}
       >
         {title && <h2 className="text-lg font-semibold text-text-primary">{title}</h2>}
         {description && <p className="mt-1 text-sm text-text-secondary">{description}</p>}

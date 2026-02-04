@@ -136,8 +136,17 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
   };
 
   return (
-    <div className="absolute inset-0 z-50 flex items-end justify-center bg-black/40">
-      <div className="flex max-h-[85%] w-full flex-col overflow-hidden rounded-t-3xl bg-card-base">
+    <div
+      className="absolute inset-0 z-50 flex items-end justify-center bg-black/40"
+      onPointerDown={(event) => {
+        if (event.target !== event.currentTarget) return;
+        onClose();
+      }}
+    >
+      <div
+        className="flex max-h-[85%] w-full flex-col overflow-hidden rounded-t-3xl bg-card-base"
+        onPointerDown={(event) => event.stopPropagation()}
+      >
         {/* Modal Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-subtle bg-card-base px-5 py-4">
           <button
