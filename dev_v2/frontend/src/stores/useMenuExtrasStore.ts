@@ -8,6 +8,7 @@ type ExtrasMap = Record<string, Partial<Record<DayKey, Partial<Record<MealKey, R
 
 interface MenuExtrasState {
   extras: ExtrasMap;
+  setExtras: (extras: ExtrasMap) => void;
   addExtraMeal: (bookId: string, day: DayKey, mealType: MealKey, recipe: Recipe) => void;
   updateExtraMealNotes: (bookId: string, day: DayKey, mealType: MealKey, recipeId: string, notes: string) => void;
   removeExtraMeal: (bookId: string, day: DayKey, mealType: MealKey, recipeId: string) => void;
@@ -15,6 +16,7 @@ interface MenuExtrasState {
 
 export const useMenuExtrasStore = create<MenuExtrasState>((set) => ({
   extras: {},
+  setExtras: (extras) => set({ extras }),
   addExtraMeal: (bookId, day, mealType, recipe) =>
     set((state) => {
       const bookExtras = state.extras[bookId] ?? {};

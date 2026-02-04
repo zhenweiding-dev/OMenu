@@ -120,6 +120,24 @@ class MenuBook(BaseModel):
     shoppingList: ShoppingList
 
 
+class PendingResult(BaseModel):
+    plan: MealPlan
+    list: ShoppingList
+
+
+class DraftState(BaseModel):
+    currentStep: int = Field(default=1, ge=1)
+    keywords: List[str] = Field(default_factory=list)
+    mustHaveItems: List[str] = Field(default_factory=list)
+    dislikedItems: List[str] = Field(default_factory=list)
+    numPeople: int = Field(ge=1, le=10, default=2)
+    budget: int = Field(ge=50, le=500, default=100)
+    difficulty: Difficulty = Difficulty.medium
+    cookSchedule: CookSchedule
+    lastUpdated: datetime
+    pendingResult: Optional[PendingResult] = None
+
+
 class GenerateMealPlanRequest(BaseModel):
     keywords: List[str] = Field(default_factory=list)
     mustHaveItems: List[str] = Field(default_factory=list)
@@ -149,11 +167,3 @@ class ErrorResponse(BaseModel):
     code: str
     message: str
     details: List[ErrorDetail] = Field(default_factory=list)
-
-
-class UserState(BaseModel):
-    preferences: Optional[UserPreferences] = None
-    menuBooks: List[MenuBook] = Field(default_factory=list)
-    currentWeekId: Optional[str] = None
-    currentDayIndex: int = Field(default=0, ge=0, le=6)
-    isMenuOpen: bool = True

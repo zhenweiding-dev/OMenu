@@ -1,7 +1,6 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 import { DEFAULT_BUDGET, DEFAULT_NUM_PEOPLE, MEAL_TYPES, WEEK_DAYS } from "@/utils/constants";
-import type { CookSchedule, Difficulty, MealPlan, ShoppingList, UserPreferences } from "@/types";
+import type { CookSchedule, Difficulty, DraftState as DraftPayload, MealPlan, ShoppingList, UserPreferences } from "@/types";
 
 type DayOfWeek = (typeof WEEK_DAYS)[number];
 type MealType = (typeof MEAL_TYPES)[number];
@@ -42,6 +41,7 @@ interface DraftState {
   setPreferences: (preferences: UserPreferences) => void;
   setPendingResult: (result: { plan: MealPlan; list: ShoppingList } | null) => void;
   clearPendingResult: () => void;
+  setDraftState: (draft: DraftPayload) => void;
 
   getSelectedMealCount: () => number;
   resetDraft: () => void;
@@ -66,109 +66,113 @@ const initialState = {
   pendingResult: null,
 };
 
-export const useDraftStore = create(
-  persist<DraftState>(
-    (set, get) => ({
-      ...initialState,
+export const useDraftStore = create<DraftState>()((set, get) => ({
+  ...initialState,
 
-      setStep: (step) => set({ currentStep: Math.max(1, step) }),
+  setStep: (step) => set({ currentStep: Math.max(1, step) }),
 
-      setKeywords: (keywords) => set({ keywords, lastUpdated: new Date().toISOString() }),
-      addKeyword: (keyword) =>
-        set((state) => ({
-          keywords: [...new Set([...state.keywords, keyword.trim()])].filter(Boolean),
-          lastUpdated: new Date().toISOString(),
-        })),
-      removeKeyword: (keyword) =>
-        set((state) => ({
-          keywords: state.keywords.filter((item) => item !== keyword),
-          lastUpdated: new Date().toISOString(),
-        })),
+  setKeywords: (keywords) => set({ keywords, lastUpdated: new Date().toISOString() }),
+  addKeyword: (keyword) =>
+    set((state) => ({
+      keywords: [...new Set([...state.keywords, keyword.trim()])].filter(Boolean),
+      lastUpdated: new Date().toISOString(),
+    })),
+  removeKeyword: (keyword) =>
+    set((state) => ({
+      keywords: state.keywords.filter((item) => item !== keyword),
+      lastUpdated: new Date().toISOString(),
+    })),
 
-      setMustHaveItems: (items) => set({ mustHaveItems: items, lastUpdated: new Date().toISOString() }),
-      addMustHaveItem: (item) =>
-        set((state) => ({
-          mustHaveItems: [...new Set([...state.mustHaveItems, item.trim()])].filter(Boolean),
-          lastUpdated: new Date().toISOString(),
-        })),
-      removeMustHaveItem: (item) =>
-        set((state) => ({
-          mustHaveItems: state.mustHaveItems.filter((value) => value !== item),
-          lastUpdated: new Date().toISOString(),
-        })),
+  setMustHaveItems: (items) => set({ mustHaveItems: items, lastUpdated: new Date().toISOString() }),
+  addMustHaveItem: (item) =>
+    set((state) => ({
+      mustHaveItems: [...new Set([...state.mustHaveItems, item.trim()])].filter(Boolean),
+      lastUpdated: new Date().toISOString(),
+    })),
+  removeMustHaveItem: (item) =>
+    set((state) => ({
+      mustHaveItems: state.mustHaveItems.filter((value) => value !== item),
+      lastUpdated: new Date().toISOString(),
+    })),
 
-      setDislikedItems: (items) => set({ dislikedItems: items, lastUpdated: new Date().toISOString() }),
-      addDislikedItem: (item) =>
-        set((state) => ({
-          dislikedItems: [...new Set([...state.dislikedItems, item.trim()])].filter(Boolean),
-          lastUpdated: new Date().toISOString(),
-        })),
-      removeDislikedItem: (item) =>
-        set((state) => ({
-          dislikedItems: state.dislikedItems.filter((value) => value !== item),
-          lastUpdated: new Date().toISOString(),
-        })),
+  setDislikedItems: (items) => set({ dislikedItems: items, lastUpdated: new Date().toISOString() }),
+  addDislikedItem: (item) =>
+    set((state) => ({
+      dislikedItems: [...new Set([...state.dislikedItems, item.trim()])].filter(Boolean),
+      lastUpdated: new Date().toISOString(),
+    })),
+  removeDislikedItem: (item) =>
+    set((state) => ({
+      dislikedItems: state.dislikedItems.filter((value) => value !== item),
+      lastUpdated: new Date().toISOString(),
+    })),
 
-      setNumPeople: (count) => set({ numPeople: Math.min(Math.max(1, count), 10) }),
-      setBudget: (budget) => set({ budget: Math.max(50, budget) }),
-      setDifficulty: (difficulty) => set({ difficulty }),
+  setNumPeople: (count) => set({ numPeople: Math.min(Math.max(1, count), 10) }),
+  setBudget: (budget) => set({ budget: Math.max(50, budget) }),
+  setDifficulty: (difficulty) => set({ difficulty }),
 
-      setCookSchedule: (schedule) =>
-        set({ cookSchedule: schedule, lastUpdated: new Date().toISOString() }),
-      toggleMeal: (day, meal) =>
-        set((state) => ({
-          cookSchedule: {
-            ...state.cookSchedule,
-            [day]: { ...state.cookSchedule[day], [meal]: !state.cookSchedule[day][meal] },
-          },
-          lastUpdated: new Date().toISOString(),
-        })),
-      selectAllMeals: () =>
-        set(() => ({
-          cookSchedule: WEEK_DAYS.reduce<CookSchedule>((acc, day) => {
-            acc[day] = { breakfast: true, lunch: true, dinner: true };
-            return acc;
-          }, {} as CookSchedule),
-          lastUpdated: new Date().toISOString(),
-        })),
-      deselectAllMeals: () =>
-        set(() => ({
-          cookSchedule: WEEK_DAYS.reduce<CookSchedule>((acc, day) => {
-            acc[day] = { ...defaultMealSelection };
-            return acc;
-          }, {} as CookSchedule),
-          lastUpdated: new Date().toISOString(),
-        })),
-
-      setPreferences: (preferences) =>
-        set({
-          keywords: preferences.keywords,
-          mustHaveItems: preferences.mustHaveItems,
-          dislikedItems: preferences.dislikedItems,
-          numPeople: preferences.numPeople,
-          budget: preferences.budget,
-          difficulty: preferences.difficulty,
-          cookSchedule: preferences.cookSchedule,
-          lastUpdated: new Date().toISOString(),
-        }),
-
-      setPendingResult: (result) => set({ pendingResult: result }),
-      clearPendingResult: () => set({ pendingResult: null }),
-
-      getSelectedMealCount: () => {
-        const { cookSchedule } = get();
-        return WEEK_DAYS.reduce((total, day) => {
-          const selection = cookSchedule[day];
-          return total + MEAL_TYPES.filter((meal) => selection[meal]).length;
-        }, 0);
+  setCookSchedule: (schedule) =>
+    set({ cookSchedule: schedule, lastUpdated: new Date().toISOString() }),
+  toggleMeal: (day, meal) =>
+    set((state) => ({
+      cookSchedule: {
+        ...state.cookSchedule,
+        [day]: { ...state.cookSchedule[day], [meal]: !state.cookSchedule[day][meal] },
       },
+      lastUpdated: new Date().toISOString(),
+    })),
+  selectAllMeals: () =>
+    set(() => ({
+      cookSchedule: WEEK_DAYS.reduce<CookSchedule>((acc, day) => {
+        acc[day] = { breakfast: true, lunch: true, dinner: true };
+        return acc;
+      }, {} as CookSchedule),
+      lastUpdated: new Date().toISOString(),
+    })),
+  deselectAllMeals: () =>
+    set(() => ({
+      cookSchedule: WEEK_DAYS.reduce<CookSchedule>((acc, day) => {
+        acc[day] = { ...defaultMealSelection };
+        return acc;
+      }, {} as CookSchedule),
+      lastUpdated: new Date().toISOString(),
+    })),
 
-      resetDraft: () => set({ ...initialState, lastUpdated: new Date().toISOString() }),
+  setPreferences: (preferences) =>
+    set({
+      keywords: preferences.keywords,
+      mustHaveItems: preferences.mustHaveItems,
+      dislikedItems: preferences.dislikedItems,
+      numPeople: preferences.numPeople,
+      budget: preferences.budget,
+      difficulty: preferences.difficulty,
+      cookSchedule: preferences.cookSchedule,
+      lastUpdated: new Date().toISOString(),
     }),
-    {
-      name: "omenu-draft",
-      storage: createJSONStorage(() => localStorage),
-      version: 1,
-    },
-  ),
-);
+
+  setPendingResult: (result) => set({ pendingResult: result }),
+  clearPendingResult: () => set({ pendingResult: null }),
+  setDraftState: (draft) =>
+    set({
+      currentStep: draft.currentStep,
+      keywords: draft.keywords,
+      mustHaveItems: draft.mustHaveItems,
+      dislikedItems: draft.dislikedItems,
+      numPeople: draft.numPeople,
+      budget: draft.budget,
+      difficulty: draft.difficulty,
+      cookSchedule: draft.cookSchedule,
+      lastUpdated: draft.lastUpdated,
+      pendingResult: draft.pendingResult,
+    }),
+
+  getSelectedMealCount: () => {
+    const { cookSchedule } = get();
+    return WEEK_DAYS.reduce((total, day) => {
+      const selection = cookSchedule[day];
+      return total + MEAL_TYPES.filter((meal) => selection[meal]).length;
+    }, 0);
+  },
+
+  resetDraft: () => set({ ...initialState, lastUpdated: new Date().toISOString() }),
+}));

@@ -4,7 +4,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import meal_plans, shopping, user_state
+from app.routers import (
+    draft,
+    meal_plans,
+    menu_books,
+    menu_extras,
+    profile,
+    shopping,
+    ui_state,
+)
 
 app = FastAPI(
     title="OMenu API",
@@ -20,9 +28,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# AI Generation endpoints
 app.include_router(meal_plans.router, prefix="/api/meal-plans", tags=["Meal Plans"])
 app.include_router(shopping.router, prefix="/api/shopping-lists", tags=["Shopping Lists"])
-app.include_router(user_state.router, prefix="/api/user-state", tags=["User State"])
+
+# Separated data storage endpoints
+app.include_router(profile.router, prefix="/api/profile", tags=["Profile"])
+app.include_router(menu_books.router, prefix="/api/menu-books", tags=["Menu Books"])
+app.include_router(ui_state.router, prefix="/api/ui-state", tags=["UI State"])
+app.include_router(draft.router, prefix="/api/draft", tags=["Draft"])
+app.include_router(menu_extras.router, prefix="/api/menu-extras", tags=["Menu Extras"])
 
 
 @app.get("/api/health")

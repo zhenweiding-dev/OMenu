@@ -40,6 +40,9 @@ export type WeekDays = Record<
   DayMeals
 >;
 
+export type DayKey = keyof WeekDays;
+export type MealKey = keyof DayMeals;
+
 export interface MealSelection {
   breakfast: boolean;
   lunch: boolean;
@@ -89,21 +92,23 @@ export interface MenuBook {
   shoppingList: ShoppingList;
 }
 
-export interface UserState {
-  preferences: UserPreferences | null;
-  menuBooks: MenuBook[];
+export type MenuExtras = Record<string, Partial<Record<DayKey, Partial<Record<MealKey, Recipe[]>>>>>;
+
+export interface DraftState {
+  currentStep: number;
+  keywords: string[];
+  mustHaveItems: string[];
+  dislikedItems: string[];
+  numPeople: number;
+  budget: number;
+  difficulty: Difficulty;
+  cookSchedule: CookSchedule;
+  lastUpdated: string;
+  pendingResult: { plan: MealPlan; list: ShoppingList } | null;
+}
+
+export interface UIState {
   currentWeekId: string | null;
   currentDayIndex: number;
   isMenuOpen: boolean;
-}
-
-export interface ErrorDetail {
-  field?: string;
-  message: string;
-}
-
-export interface ApiErrorResponse {
-  code: string;
-  message: string;
-  details?: ErrorDetail[];
 }

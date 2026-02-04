@@ -1,41 +1,15 @@
-import type { MealPlan, ShoppingList, UserPreferences, UserState } from "@/types";
-import { SAMPLE_MENU_BOOK } from "@/data/sampleMenuBook";
+import type { 
+  DraftState,
+  MealPlan, 
+  MenuBook,
+  MenuExtras,
+  ShoppingList, 
+  UIState,
+  UserPreferences,
+} from "@/types";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 const GENERATION_TIMEOUT = 120_000;
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-function clone<T>(value: T): T {
-  if (typeof structuredClone === "function") {
-    return structuredClone(value);
-  }
-  return JSON.parse(JSON.stringify(value)) as T;
-}
-
-function buildMockMealPlan(preferences: UserPreferences): MealPlan {
-  const plan = clone(SAMPLE_MENU_BOOK.mealPlan);
-  const now = new Date().toISOString();
-  const suffix = now.replace(/[-:.TZ]/g, "");
-  return {
-    ...plan,
-    id: `mock_plan_${suffix}`,
-    createdAt: now,
-    preferences,
-  };
-}
-
-function buildMockShoppingList(mealPlanId: string, createdAt: string): ShoppingList {
-  const list = clone(SAMPLE_MENU_BOOK.shoppingList);
-  const suffix = createdAt.replace(/[-:.TZ]/g, "");
-  return {
-    ...list,
-    id: `mock_list_${suffix}`,
-    mealPlanId,
-    createdAt,
-  };
-}
 
 function toErrorMessage(payload: unknown, fallback: string) {
   if (!payload || typeof payload !== "object") return fallback;
@@ -92,16 +66,16 @@ async function fetchWithTimeout(url: string, options: RequestInit, timeout: numb
   }
 }
 
+// ========== Health Check ==========
+
 export async function healthCheck() {
   const response = await fetch(`${API_BASE_URL}/api/health`);
   return handleResponse<{ status: string; version: string }>(response);
 }
 
+// ========== AI Generation Endpoints ==========
+
 export async function generateMealPlan(preferences: UserPreferences) {
-  if (USE_MOCK) {
-    await delay(1200);
-    return buildMockMealPlan(preferences);
-  }
   const response = await fetchWithTimeout(
     `${API_BASE_URL}/api/meal-plans/generate`,
     {
@@ -115,10 +89,6 @@ export async function generateMealPlan(preferences: UserPreferences) {
 }
 
 export async function modifyMealPlan(planId: string, modification: string, currentPlan: MealPlan) {
-  if (USE_MOCK) {
-    await delay(800);
-    return { ...currentPlan };
-  }
   const response = await fetchWithTimeout(
     `${API_BASE_URL}/api/meal-plans/${planId}/modify`,
     {
@@ -132,10 +102,6 @@ export async function modifyMealPlan(planId: string, modification: string, curre
 }
 
 export async function generateShoppingList(mealPlanId: string, mealPlan: MealPlan) {
-  if (USE_MOCK) {
-    await delay(800);
-    return buildMockShoppingList(mealPlanId, new Date().toISOString());
-  }
   const response = await fetchWithTimeout(
     `${API_BASE_URL}/api/shopping-lists/generate`,
     {
@@ -148,16 +114,119 @@ export async function generateShoppingList(mealPlanId: string, mealPlan: MealPla
   return handleResponse<ShoppingList>(response);
 }
 
-export async function fetchUserState() {
-  const response = await fetch(`${API_BASE_URL}/api/user-state`);
-  return handleResponse<UserState>(response);
+// ========== Profile (User Preferences) ==========
+
+export async function fetchProfile(): Promise<UserPreferences | null> {
+  const response = await fetch(`${API_BASE_URL}/api/profile`);
+  return handleResponse<UserPreferences | null>(response);
 }
 
-export async function saveUserState(state: UserState) {
-  const response = await fetch(`${API_BASE_URL}/api/user-state`, {
+export async function saveProfile(profile: UserPreferences): Promise<UserPreferences> {
+  const response = await fetch(`${API_BASE_URL}/api/profile`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(profile),
+  });
+  return handleResponse<UserPreferences>(response);
+}
+
+// ========== Menu Books ==========
+
+export async function fetchMenuBooks(): Promise<MenuBook[]> {
+  const response = await fetch(`${API_BASE_URL}/api/menu-books`);
+  return handleResponse<MenuBook[]>(response);
+}
+
+export async function fetchMenuBook(bookId: string): Promise<MenuBook> {
+  const response = await fetch(`${API_BASE_URL}/api/menu-books/${bookId}`);
+  return handleResponse<MenuBook>(response);
+}
+
+export async function createMenuBook(book: MenuBook): Promise<MenuBook> {
+  const response = await fetch(`${API_BASE_URL}/api/menu-books`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(book),
+  });
+  return handleResponse<MenuBook>(response);
+}
+
+export async function updateMenuBook(bookId: string, book: MenuBook): Promise<MenuBook> {
+  const response = await fetch(`${API_BASE_URL}/api/menu-books/${bookId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(book),
+  });
+  return handleResponse<MenuBook>(response);
+}
+
+export async function deleteMenuBook(bookId: string): Promise<void> {
+  await fetch(`${API_BASE_URL}/api/menu-books/${bookId}`, {
+    method: "DELETE",
+  });
+}
+
+export async function updateMenuBookShoppingList(bookId: string, shoppingList: ShoppingList): Promise<MenuBook> {
+  const response = await fetch(`${API_BASE_URL}/api/menu-books/${bookId}/shopping-list`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(shoppingList),
+  });
+  return handleResponse<MenuBook>(response);
+}
+
+// ========== UI State ==========
+
+export async function fetchUIState(): Promise<UIState> {
+  const response = await fetch(`${API_BASE_URL}/api/ui-state`);
+  return handleResponse<UIState>(response);
+}
+
+export async function saveUIState(state: UIState): Promise<UIState> {
+  const response = await fetch(`${API_BASE_URL}/api/ui-state`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(state),
   });
-  return handleResponse<UserState>(response);
+  return handleResponse<UIState>(response);
+}
+
+// ========== Draft State ==========
+
+export async function fetchDraft(): Promise<DraftState | null> {
+  const response = await fetch(`${API_BASE_URL}/api/draft`);
+  return handleResponse<DraftState | null>(response);
+}
+
+export async function saveDraft(draft: DraftState): Promise<DraftState> {
+  const response = await fetch(`${API_BASE_URL}/api/draft`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(draft),
+  });
+  return handleResponse<DraftState>(response);
+}
+
+export async function clearDraft(): Promise<void> {
+  await fetch(`${API_BASE_URL}/api/draft`, {
+    method: "DELETE",
+  });
+}
+
+// ========== Menu Extras ==========
+
+export async function fetchMenuExtras(): Promise<MenuExtras> {
+  const response = await fetch(`${API_BASE_URL}/api/menu-extras`);
+  const data = await handleResponse<{ extras: MenuExtras }>(response);
+  return data.extras;
+}
+
+export async function saveMenuExtras(extras: MenuExtras): Promise<MenuExtras> {
+  const response = await fetch(`${API_BASE_URL}/api/menu-extras`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ extras }),
+  });
+  const data = await handleResponse<{ extras: MenuExtras }>(response);
+  return data.extras;
 }

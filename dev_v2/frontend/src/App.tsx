@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Routes, Route, NavLink, useLocation } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { BottomNav } from "@/components/layout/BottomNav";
@@ -7,37 +7,21 @@ import { CreatePlanPage } from "@/pages/CreatePlanPage";
 import { ShoppingPage } from "@/pages/ShoppingPage";
 import { MyPage } from "@/pages/MyPage";
 import { RecipeDetailModal } from "@/components/home/RecipeDetailModal";
-import { useAppStore } from "@/stores/useAppStore";
-import { useDraftStore } from "@/stores/useDraftStore";
-import { fetchUserState, saveUserState } from "@/services/api";
-import { buildMockMenuBooks } from "@/data/mockMenuBooks";
-import { useShallow } from "zustand/react/shallow";
+import { useBackendSync } from "@/hooks/useBackendSync";
 
 function App() {
-  const menuBooks = useAppStore((state) => state.menuBooks);
-  const setMenuBooks = useAppStore((state) => state.setMenuBooks);
-  const currentWeekId = useAppStore((state) => state.currentWeekId);
-  const currentDayIndex = useAppStore((state) => state.currentDayIndex);
-  const setCurrentDayIndex = useAppStore((state) => state.setCurrentDayIndex);
-  const isMenuOpen = useAppStore((state) => state.isMenuOpen);
-  const setIsMenuOpen = useAppStore((state) => state.setIsMenuOpen);
   const location = useLocation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const syncTimeoutRef = useRef<number | null>(null);
-  const [remoteStateReady, setRemoteStateReady] = useState(false);
 
-  const setDraftPreferences = useDraftStore((state) => state.setPreferences);
-  const draftPreferences = useDraftStore(
-    useShallow((state) => ({
-      keywords: state.keywords,
-      mustHaveItems: state.mustHaveItems,
-      dislikedItems: state.dislikedItems,
-      numPeople: state.numPeople,
-      budget: state.budget,
-      difficulty: state.difficulty,
-      cookSchedule: state.cookSchedule,
-    })),
-  );
+  // Use the centralized backend sync hook - all data comes from backend
+  useBackendSync();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [location.pathname]);
 
   const outlineItems = [
     { to: "/create", label: "Create", description: "Start a new menu" },
@@ -45,82 +29,6 @@ function App() {
     { to: "/shopping", label: "Shopping", description: "List & groceries" },
     { to: "/me", label: "Profile", description: "Account & settings" },
   ];
-
-  useEffect(() => {
-    let isMounted = true;
-    const loadRemoteState = async () => {
-      if (import.meta.env.VITE_USE_MOCK === "true") {
-        if (isMounted) {
-          setRemoteStateReady(true);
-        }
-        return;
-      }
-      try {
-        const remoteState = await fetchUserState();
-        if (!isMounted) return;
-        const hasMenuBooks = (remoteState.menuBooks ?? []).length > 0;
-        if (hasMenuBooks) {
-          setMenuBooks(remoteState.menuBooks, remoteState.currentWeekId ?? null);
-        }
-        if (typeof remoteState.currentDayIndex === "number") {
-          setCurrentDayIndex(remoteState.currentDayIndex);
-        }
-        if (typeof remoteState.isMenuOpen === "boolean") {
-          setIsMenuOpen(remoteState.isMenuOpen);
-        }
-        if (remoteState.preferences) {
-          setDraftPreferences(remoteState.preferences);
-        }
-      } catch {
-      } finally {
-        if (isMounted) {
-          setRemoteStateReady(true);
-        }
-      }
-    };
-
-    loadRemoteState();
-    return () => {
-      isMounted = false;
-    };
-  }, [setCurrentDayIndex, setDraftPreferences, setIsMenuOpen, setMenuBooks]);
-
-  useEffect(() => {
-    if (import.meta.env.VITE_USE_MOCK !== "true") return;
-    if (!remoteStateReady) return;
-    if (menuBooks.length > 0) return;
-    setMenuBooks(buildMockMenuBooks());
-  }, [menuBooks.length, remoteStateReady, setMenuBooks]);
-
-  useEffect(() => {
-    if (!remoteStateReady) return;
-    if (import.meta.env.VITE_USE_MOCK === "true") return;
-    if (syncTimeoutRef.current) {
-      window.clearTimeout(syncTimeoutRef.current);
-    }
-    syncTimeoutRef.current = window.setTimeout(() => {
-      saveUserState({
-        preferences: draftPreferences,
-        menuBooks,
-        currentWeekId,
-        currentDayIndex,
-        isMenuOpen,
-      }).catch(() => {});
-    }, 600);
-
-    return () => {
-      if (syncTimeoutRef.current) {
-        window.clearTimeout(syncTimeoutRef.current);
-      }
-    };
-  }, [currentDayIndex, currentWeekId, draftPreferences, isMenuOpen, menuBooks, remoteStateReady]);
-
-
-  useEffect(() => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop = 0;
-    }
-  }, [location.pathname]);
 
   return (
     <div className="flex min-h-screen w-full justify-center bg-[#E8E4DF] px-4 py-10">

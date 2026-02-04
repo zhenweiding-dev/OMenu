@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { createJSONStorage, persist, type StateStorage } from "zustand/middleware";
 import type { DayMeals, MenuBook, ShoppingItem } from "@/types";
 
 type DayKey = keyof MenuBook["mealPlan"]["days"];
@@ -56,15 +55,7 @@ interface AppState {
   removeShoppingItem: (bookId: string, itemId: string) => void;
 }
 
-const noopStorage: StateStorage = {
-  getItem: () => null,
-  setItem: () => void 0,
-  removeItem: () => void 0,
-};
-
-export const useAppStore = create<AppState>()(
-  persist(
-    (set, get) => ({
+export const useAppStore = create<AppState>()((set, get) => ({
   menuBooks: [],
   addMenuBook: (book) =>
     set((state) => ({
@@ -249,16 +240,4 @@ export const useAppStore = create<AppState>()(
         };
       }),
     })),
-    }),
-    {
-      name: "omenu_app_state",
-      storage: createJSONStorage(() => (typeof window === "undefined" ? noopStorage : window.localStorage)),
-      partialize: (state) => ({
-        menuBooks: state.menuBooks,
-        currentWeekId: state.currentWeekId,
-        isMenuOpen: state.isMenuOpen,
-        currentDayIndex: state.currentDayIndex,
-      }),
-    },
-  ),
-);
+}));
