@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { DEFAULT_BUDGET, DEFAULT_NUM_PEOPLE, MEAL_TYPES, WEEK_DAYS } from "@/utils/constants";
-import type { CookSchedule, Difficulty, MealPlan, ShoppingList, UserPreferences } from "@/types";
+import type { CookSchedule, Difficulty, ExtraWeekMeals, MealPlan, ShoppingList, UserPreferences } from "@/types";
 
 type DayOfWeek = (typeof WEEK_DAYS)[number];
 type MealType = (typeof MEAL_TYPES)[number];
@@ -16,7 +16,7 @@ interface DraftState {
   difficulty: Difficulty;
   cookSchedule: CookSchedule;
   lastUpdated: string;
-  pendingResult: { plan: MealPlan; list: ShoppingList } | null;
+  pendingResult: { plan: MealPlan; list: ShoppingList; extraMeals?: ExtraWeekMeals } | null;
 
   setStep: (step: number) => void;
   setKeywords: (keywords: string[]) => void;
@@ -40,7 +40,7 @@ interface DraftState {
   selectAllMeals: () => void;
   deselectAllMeals: () => void;
   setPreferences: (preferences: UserPreferences) => void;
-  setPendingResult: (result: { plan: MealPlan; list: ShoppingList } | null) => void;
+  setPendingResult: (result: { plan: MealPlan; list: ShoppingList; extraMeals?: ExtraWeekMeals } | null) => void;
   clearPendingResult: () => void;
 
   getSelectedMealCount: () => number;

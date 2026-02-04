@@ -33,17 +33,16 @@ export function useMealPlan() {
   );
 
   const updatePlan = useCallback(
-    async (plan: MealPlan, modification: string) => {
+    async (plan: MealPlan, modification: string, list: ShoppingList) => {
       setIsGenerating(true);
       clearError();
       try {
         const updatedPlan = await modifyMealPlan(plan.id, modification, plan);
-        const updatedList = await generateShoppingList(updatedPlan.id, updatedPlan);
         const hasBook = useAppStore.getState().menuBooks.some((book) => book.id === plan.id);
         if (hasBook) {
-          updateMenuBook(plan.id, { mealPlan: updatedPlan, shoppingList: updatedList });
+          updateMenuBook(plan.id, { mealPlan: updatedPlan });
         }
-        return { plan: updatedPlan, list: updatedList };
+        return { plan: updatedPlan, list };
       } catch (error) {
         setError(error instanceof Error ? error.message : "Failed to modify meal plan");
         throw error;

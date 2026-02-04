@@ -1,9 +1,8 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { PageContainer } from "@/components/layout/PageContainer";
-import { useAppStore } from "@/stores/useAppStore";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { formatCurrency } from "@/utils/helpers";
-import type { MenuBook, UserPreferences, Difficulty } from "@/types";
+import type { UserPreferences, Difficulty } from "@/types";
 import { useShallow } from "zustand/react/shallow";
 import {
   EditKeywordsModal,
@@ -16,10 +15,6 @@ type EditModalType = "keywords" | "mustHave" | "disliked" | "settings" | null;
 
 export function MyPage() {
   const [activeModal, setActiveModal] = useState<EditModalType>(null);
-
-  const menuBooks = useAppStore((state) => state.menuBooks);
-  const currentBook = useAppStore((state) => state.getCurrentMenuBook());
-  const updateMenuBook = useAppStore((state) => state.updateMenuBook);
 
   const draftPreferences = useDraftStore((state) => {
     const { keywords, mustHaveItems, dislikedItems, numPeople, budget, difficulty, cookSchedule } = state;
@@ -37,13 +32,7 @@ export function MyPage() {
     })),
   );
 
-  const latestBook = useMemo<MenuBook | null>(() => {
-    if (menuBooks.length === 0) return null;
-    return [...menuBooks].sort((a, b) => (a.mealPlan.createdAt < b.mealPlan.createdAt ? 1 : -1))[0];
-  }, [menuBooks]);
-
-  const sourcePlan = latestBook ?? currentBook;
-  const preferences: UserPreferences = sourcePlan?.mealPlan.preferences ?? draftPreferences;
+  const preferences: UserPreferences = draftPreferences;
 
   const applyPreferenceUpdate = (updates: Partial<UserPreferences>) => {
     const nextPreferences: UserPreferences = { ...preferences, ...updates };
@@ -53,15 +42,6 @@ export function MyPage() {
     draftActions.setNumPeople(nextPreferences.numPeople);
     draftActions.setBudget(nextPreferences.budget);
     draftActions.setDifficulty(nextPreferences.difficulty);
-
-    if (sourcePlan) {
-      updateMenuBook(sourcePlan.id, {
-        mealPlan: {
-          ...sourcePlan.mealPlan,
-          preferences: nextPreferences,
-        },
-      });
-    }
   };
 
   // Save handlers for each modal

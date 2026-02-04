@@ -79,6 +79,12 @@ class DayMeals(BaseModel):
     dinner: Optional[Recipe] = None
 
 
+class ExtraDayMeals(BaseModel):
+    breakfast: List[Recipe] = Field(default_factory=list)
+    lunch: List[Recipe] = Field(default_factory=list)
+    dinner: List[Recipe] = Field(default_factory=list)
+
+
 class WeekDays(BaseModel):
     monday: DayMeals
     tuesday: DayMeals
@@ -87,6 +93,16 @@ class WeekDays(BaseModel):
     friday: DayMeals
     saturday: DayMeals
     sunday: DayMeals
+
+
+class ExtraWeekMeals(BaseModel):
+    monday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
+    tuesday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
+    wednesday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
+    thursday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
+    friday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
+    saturday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
+    sunday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
 
 
 class MealPlan(BaseModel):
@@ -118,6 +134,7 @@ class MenuBook(BaseModel):
     id: str
     mealPlan: MealPlan
     shoppingList: ShoppingList
+    extraMeals: Optional[ExtraWeekMeals] = None
 
 
 class GenerateMealPlanRequest(BaseModel):

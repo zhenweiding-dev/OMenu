@@ -40,6 +40,17 @@ export type WeekDays = Record<
   DayMeals
 >;
 
+export interface ExtraDayMeals {
+  breakfast: Recipe[];
+  lunch: Recipe[];
+  dinner: Recipe[];
+}
+
+export type ExtraWeekMeals = Record<
+  "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday",
+  ExtraDayMeals
+>;
+
 export interface MealSelection {
   breakfast: boolean;
   lunch: boolean;
@@ -87,6 +98,7 @@ export interface MenuBook {
   id: string;
   mealPlan: MealPlan;
   shoppingList: ShoppingList;
+  extraMeals?: ExtraWeekMeals;
 }
 
 export interface UserState {

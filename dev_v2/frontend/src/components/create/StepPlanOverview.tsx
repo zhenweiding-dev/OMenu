@@ -8,32 +8,31 @@ import { AddMealModal } from "@/components/home/AddMealModal";
 import { RecipeDetailSheet } from "@/components/home/RecipeDetailModal";
 import { WEEK_DAYS } from "@/utils/constants";
 import { getDayDisplay, getWeekDateRange, startCaseDay } from "@/utils/helpers";
-import type { MealPlan, ShoppingList, DayMeals, Recipe } from "@/types";
+import type { MealPlan, ShoppingList, DayMeals, ExtraDayMeals, ExtraWeekMeals, Recipe } from "@/types";
 import { useMealPlan } from "@/hooks/useMealPlan";
 import { useAppStore } from "@/stores/useAppStore";
-import { useMenuExtrasStore } from "@/stores/useMenuExtrasStore";
 
 interface StepPlanOverviewProps {
   mealPlan: MealPlan;
   shoppingList: ShoppingList;
+  extraMeals: ExtraWeekMeals;
   onPlanUpdated: (plan: MealPlan, list: ShoppingList) => void;
+  onExtraMealsUpdated: (extraMeals: ExtraWeekMeals) => void;
   onViewShopping: () => void;
 }
 
 export function StepPlanOverview({
   mealPlan,
   shoppingList,
+  extraMeals,
   onPlanUpdated,
+  onExtraMealsUpdated,
   onViewShopping,
 }: StepPlanOverviewProps) {
   const { updatePlan } = useMealPlan();
   const isGenerating = useAppStore((state) => state.isGenerating);
   const globalError = useAppStore((state) => state.error);
   const clearError = useAppStore((state) => state.clearError);
-  const extras = useMenuExtrasStore((state) => state.extras);
-  const addExtraMeal = useMenuExtrasStore((state) => state.addExtraMeal);
-  const updateExtraMealNotes = useMenuExtrasStore((state) => state.updateExtraMealNotes);
-  const removeExtraMeal = useMenuExtrasStore((state) => state.removeExtraMeal);
 
   const [currentDayIndex, setCurrentDayIndex] = useState(0);
   const [showModifyModal, setShowModifyModal] = useState(false);
@@ -50,7 +49,7 @@ export function StepPlanOverview({
   const touchStartXRef = useRef<number | null>(null);
 
   const currentDayKey = WEEK_DAYS[currentDayIndex];
-  const extrasForDay = extras[mealPlan.id]?.[currentDayKey] ?? {};
+  const extrasForDay = extraMeals[currentDayKey] ?? { breakfast: [], lunch: [], dinner: [] };
   const currentMeals = {
     breakfast: mealPlan.days[currentDayKey].breakfast
       ? [
@@ -114,6 +113,10 @@ export function StepPlanOverview({
     setAddMealDayKey(null);
   };
 
+  const ensureDayExtras = (day: keyof ExtraWeekMeals): ExtraDayMeals => {
+    return extraMeals[day] ?? { breakfast: [], lunch: [], dinner: [] };
+  };
+
   const handleSubmitAddMeal = ({
     mealType,
     meal,
@@ -123,7 +126,15 @@ export function StepPlanOverview({
   }) => {
     const base = mealPlan.days[currentDayKey][mealType];
     if (base) {
-      addExtraMeal(mealPlan.id, currentDayKey, mealType, meal);
+      const dayExtras = ensureDayExtras(currentDayKey);
+      const nextExtras: ExtraWeekMeals = {
+        ...extraMeals,
+        [currentDayKey]: {
+          ...dayExtras,
+          [mealType]: [...(dayExtras[mealType] ?? []), meal],
+        },
+      };
+      onExtraMealsUpdated(nextExtras);
       return;
     }
     const updatedPlan: MealPlan = {
@@ -147,7 +158,7 @@ export function StepPlanOverview({
     clearError();
 
     try {
-      const result = await updatePlan(mealPlan, trimmed);
+      const result = await updatePlan(mealPlan, trimmed, shoppingList);
       onPlanUpdated(result.plan, result.list);
       setModification("");
       setShowModifyModal(false);
@@ -301,7 +312,17 @@ export function StepPlanOverview({
               onClose={() => setActiveDish(null)}
               onSaveNotes={(notes) => {
                 if (activeDish.source === "extra") {
-                  updateExtraMealNotes(mealPlan.id, activeDish.day, activeDish.mealType, activeDish.recipe.id, notes);
+                  const dayExtras = ensureDayExtras(activeDish.day);
+                  const nextExtras: ExtraWeekMeals = {
+                    ...extraMeals,
+                    [activeDish.day]: {
+                      ...dayExtras,
+                      [activeDish.mealType]: (dayExtras[activeDish.mealType] ?? []).map((recipe) =>
+                        recipe.id === activeDish.recipe.id ? { ...recipe, notes } : recipe,
+                      ),
+                    },
+                  };
+                  onExtraMealsUpdated(nextExtras);
                   setActiveDish(null);
                   return;
                 }
@@ -323,7 +344,17 @@ export function StepPlanOverview({
               }}
               onDelete={() => {
                 if (activeDish.source === "extra") {
-                  removeExtraMeal(mealPlan.id, activeDish.day, activeDish.mealType, activeDish.recipe.id);
+                  const dayExtras = ensureDayExtras(activeDish.day);
+                  const nextExtras: ExtraWeekMeals = {
+                    ...extraMeals,
+                    [activeDish.day]: {
+                      ...dayExtras,
+                      [activeDish.mealType]: (dayExtras[activeDish.mealType] ?? []).filter(
+                        (recipe) => recipe.id !== activeDish.recipe.id,
+                      ),
+                    },
+                  };
+                  onExtraMealsUpdated(nextExtras);
                   setActiveDish(null);
                   return;
                 }

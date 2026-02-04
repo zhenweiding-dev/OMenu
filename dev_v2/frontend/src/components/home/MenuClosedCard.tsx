@@ -61,9 +61,15 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurr
   const weekRange = getWeekDateRange(book.mealPlan.createdAt);
   const relativeLabel = getRelativeWeekLabel(book.mealPlan.createdAt);
   const budget = formatCurrency(book.mealPlan.preferences.budget);
-  const totalMeals = Object.values(book.mealPlan.days).reduce((count, day) => {
+  const baseMeals = Object.values(book.mealPlan.days).reduce((count, day) => {
     return count + [day.breakfast, day.lunch, day.dinner].filter(Boolean).length;
   }, 0);
+  const extraMeals = book.extraMeals
+    ? Object.values(book.extraMeals).reduce((count, day) => {
+        return count + day.breakfast.length + day.lunch.length + day.dinner.length;
+      }, 0)
+    : 0;
+  const totalMeals = baseMeals + extraMeals;
 
   const holdTimeoutRef = useRef<number | null>(null);
   const ignoreNextClickRef = useRef(false);

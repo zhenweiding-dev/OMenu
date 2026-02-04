@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist, type StateStorage } from "zustand/middleware";
-import type { DayMeals, MenuBook, ShoppingItem } from "@/types";
+import type { DayMeals, ExtraDayMeals, ExtraWeekMeals, MenuBook, Recipe, ShoppingItem } from "@/types";
 
 type DayKey = keyof MenuBook["mealPlan"]["days"];
 type MealKey = keyof DayMeals;
@@ -54,7 +54,26 @@ interface AppState {
   updateShoppingItem: (bookId: string, itemId: string, updates: Partial<ShoppingItem>) => void;
   addShoppingItem: (bookId: string, item: ShoppingItem) => void;
   removeShoppingItem: (bookId: string, itemId: string) => void;
+  addExtraMeal: (bookId: string, day: DayKey, mealType: MealKey, recipe: Recipe) => void;
+  updateExtraMealNotes: (bookId: string, day: DayKey, mealType: MealKey, recipeId: string, notes: string) => void;
+  removeExtraMeal: (bookId: string, day: DayKey, mealType: MealKey, recipeId: string) => void;
 }
+
+const emptyExtraDay = (): ExtraDayMeals => ({
+  breakfast: [],
+  lunch: [],
+  dinner: [],
+});
+
+const emptyExtraWeek = (): ExtraWeekMeals => ({
+  monday: emptyExtraDay(),
+  tuesday: emptyExtraDay(),
+  wednesday: emptyExtraDay(),
+  thursday: emptyExtraDay(),
+  friday: emptyExtraDay(),
+  saturday: emptyExtraDay(),
+  sunday: emptyExtraDay(),
+});
 
 const noopStorage: StateStorage = {
   getItem: () => null,
@@ -245,6 +264,65 @@ export const useAppStore = create<AppState>()(
           shoppingList: {
             ...list,
             items: list.items.filter((item) => item.id !== itemId),
+          },
+        };
+      }),
+    })),
+  addExtraMeal: (bookId, day, mealType, recipe) =>
+    set((state) => ({
+      menuBooks: state.menuBooks.map((book) => {
+        if (book.id !== bookId) return book;
+        const extraMeals = book.extraMeals ?? emptyExtraWeek();
+        const dayExtras = extraMeals[day] ?? emptyExtraDay();
+        const mealExtras = dayExtras[mealType] ?? [];
+        return {
+          ...book,
+          extraMeals: {
+            ...extraMeals,
+            [day]: {
+              ...dayExtras,
+              [mealType]: [...mealExtras, recipe],
+            },
+          },
+        };
+      }),
+    })),
+  updateExtraMealNotes: (bookId, day, mealType, recipeId, notes) =>
+    set((state) => ({
+      menuBooks: state.menuBooks.map((book) => {
+        if (book.id !== bookId) return book;
+        const extraMeals = book.extraMeals ?? emptyExtraWeek();
+        const dayExtras = extraMeals[day] ?? emptyExtraDay();
+        const mealExtras = dayExtras[mealType] ?? [];
+        return {
+          ...book,
+          extraMeals: {
+            ...extraMeals,
+            [day]: {
+              ...dayExtras,
+              [mealType]: mealExtras.map((recipe) =>
+                recipe.id === recipeId ? { ...recipe, notes } : recipe,
+              ),
+            },
+          },
+        };
+      }),
+    })),
+  removeExtraMeal: (bookId, day, mealType, recipeId) =>
+    set((state) => ({
+      menuBooks: state.menuBooks.map((book) => {
+        if (book.id !== bookId) return book;
+        const extraMeals = book.extraMeals ?? emptyExtraWeek();
+        const dayExtras = extraMeals[day] ?? emptyExtraDay();
+        const mealExtras = dayExtras[mealType] ?? [];
+        return {
+          ...book,
+          extraMeals: {
+            ...extraMeals,
+            [day]: {
+              ...dayExtras,
+              [mealType]: mealExtras.filter((recipe) => recipe.id !== recipeId),
+            },
           },
         };
       }),

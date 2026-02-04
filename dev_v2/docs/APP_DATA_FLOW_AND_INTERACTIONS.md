@@ -1,59 +1,50 @@
 # OMenu 数据流与交互总览（v2）
 
-> 基于 `dev_v2/frontend` 当前实现整理（包含 mock/后端两种模式）。
+> 基于 `dev_v2/frontend` 当前实现整理，按“前端交互 ↔ 数据流动”对照梳理。
 
-## 1. 关键数据实体
+## 1. 核心数据实体（前端类型）
 
-- **UserPreferences**：关键词、必备项、讨厌项、人数、预算、难度、每周做饭排期。
-- **MealPlan**：一周菜单（按周生成），包含 `preferences` 与 `days`（七天三餐）。
+- **UserPreferences**：关键词、必备项、讨厌项、人数、预算、难度、排期。
+- **MealPlan**：一周菜单（7 天 × 3 餐），包含 `preferences` 与 `days`。
 - **ShoppingList**：购物清单，关联 `mealPlanId`。
-- **MenuBook**：每周一本菜单簿（`mealPlan + shoppingList`）。
+- **MenuBook**：每周一本菜单簿（`mealPlan + shoppingList + extraMeals`）。
+- **extraMeals**：额外加菜（每周、每天、每餐的数组）。
 
-类型定义参考：`dev_v2/frontend/src/types/index.ts`
+类型定义：`dev_v2/frontend/src/types/index.ts`
 
-## 2. 状态与存储层
+## 2. 状态层与持久化
 
-### 2.1 App 全局状态（`useAppStore`）
-- 保存：`menuBooks`、`currentWeekId`、`currentDayIndex`、`isMenuOpen`、`error`、`isGenerating`、`activeMeal`。
-- 持久化：`omenu_app_state`（localStorage）。
-- 主要职责：
-  - MenuBook 的增删改（`addMenuBook / updateMenuBook / deleteMenuBook`）。
-  - 当前周、当前日管理。
-  - 菜谱详情（notes 更新、删除主菜）。
-  - 购物清单增删改。
+### 2.1 useAppStore（全局业务状态）
+- **持久化**：localStorage `omenu_app_state`。
+- **关键字段**：`menuBooks`、`currentWeekId`、`currentDayIndex`、`isMenuOpen`、`error`、`isGenerating`。
+- **职责**：
+  - MenuBook 的增删改。
+  - 当前周/当前日。
+  - 购物清单条目增删改。
+  - 额外加菜（extraMeals）的增删改与 notes 编辑。
 
 文件：`dev_v2/frontend/src/stores/useAppStore.ts`
 
-### 2.2 Create 流程草稿（`useDraftStore`）
-- 保存：创建过程选项、`currentStep`、`pendingResult`。
-- 持久化：`omenu-draft`（localStorage）。
-- 主要职责：
-  - 创建流程（keywords/must-have/disliked/people/budget/difficulty/schedule）。
-  - 断点续走（`currentStep`）。
-  - 生成后结果临时存储（`pendingResult`），避免刷新卡死。
+### 2.2 useDraftStore（创建流程草稿）
+- **持久化**：localStorage `omenu-draft`。
+- **关键字段**：`currentStep`、create 相关表单、`pendingResult`（plan/list/extraMeals）。
+- **职责**：
+  - create 流程断点续走。
+  - 生成结果临时保存（刷新不丢）。
 
 文件：`dev_v2/frontend/src/stores/useDraftStore.ts`
 
-### 2.3 额外加菜（`useMenuExtrasStore`）
-- 仅前端内存，不持久化。
-- 逻辑：
-  - 如果某餐已经有主菜，新增会作为 **extra**（不覆盖）。
-  - 支持 notes 编辑与删除 extra。
-- 注意：**extra 不会写入 MenuBook/后端**，刷新会消失。
-
-文件：`dev_v2/frontend/src/stores/useMenuExtrasStore.ts`
-
-### 2.4 购物页 UI 状态（`useShoppingStore`）
-- 过滤、折叠、搜索、编辑态等。
+### 2.3 useShoppingStore（购物页 UI 状态）
+- **不持久化**：过滤、折叠、搜索、编辑态。
 
 文件：`dev_v2/frontend/src/stores/useShoppingStore.ts`
 
 ## 3. 后端与 Mock
 
-- **Mock 模式**：`VITE_USE_MOCK=true`。生成菜单/清单用本地样本。
-- **后端模式**：调用 `VITE_API_BASE_URL`。
+- **Mock 模式**：`VITE_USE_MOCK=true`，本地样本生成计划/清单。
+- **后端模式**：`VITE_API_BASE_URL`。
 
-接口：
+API：
 - `POST /api/meal-plans/generate`
 - `POST /api/meal-plans/:id/modify`
 - `POST /api/shopping-lists/generate`
@@ -62,111 +53,124 @@
 
 文件：`dev_v2/frontend/src/services/api.ts`
 
-## 4. 启动与远端同步流程（App.tsx）
+## 4. 全局同步（App 级）
 
-1. **启动读取**：
-   - 如果 `VITE_USE_MOCK=true`：不读后端，只标记 `remoteStateReady`。
-   - 否则 `fetchUserState()`：
-     - 同步 menuBooks / currentWeekId / currentDayIndex / isMenuOpen / preferences。
+**启动加载 → 状态同步**
+1. App 初始化：读取后端 user-state（或 mock）。
+2. 写入 `useAppStore`：menuBooks / currentWeekId / currentDayIndex / isMenuOpen。
+3. 写入 `useDraftStore`：preferences。
 
-2. **Mock 补充**：
-   - 如果 mock 模式且 menuBooks 为空，则加载 `mockMenuBooks`。
-
-3. **保存回写**：
-   - 后端模式下，600ms debounce 保存 `userState`：
-     - `preferences`（来自 draft）
-     - `menuBooks`
-     - `currentWeekId / currentDayIndex / isMenuOpen`
+**定时保存 → 后端**
+- 后端模式下，600ms debounce 保存：
+  - `preferences`（来自 draft）
+  - `menuBooks`（含 extraMeals）
+  - `currentWeekId / currentDayIndex / isMenuOpen`
 
 文件：`dev_v2/frontend/src/App.tsx`
 
-## 5. 页面流程与交互
+## 5. 页面交互 ↔ 数据流映射
 
-### 5.1 Menu 页（Home）
-**路径**：`/`
+### 5.1 Menu 页（/）
 
-- **无当前周菜单**：显示 `StepWelcome`（WELCOME + 日期 + 引导）。
-- **有菜单**：显示 `WeekDateBar + DailyMenuCard`，支持左右滑动切天。
-- **菜单簿（Menu Book）**：点击右上角打开，列表含已有菜单 + 缺口周的占位“Add Menu”。
-- **长按删除**：Menu Book 长按触发删除确认。
+**交互：选择周菜单（MenuBook Picker）**
+- 行为：点击 MenuBook → `setCurrentWeekId` + `setCurrentDayIndex(0)`。
+- 数据：仅更新 `useAppStore`，不触发 API。
 
-**菜谱操作**：
-- 点菜进入详情（`RecipeDetailSheet`，可编辑 notes / 删除）。
-- “+” 添加菜（`AddMealModal`）：
-  - 若该餐已有主菜，则作为 extra；否则替换主菜。
+**交互：切换天（WeekDateBar / 滑动）**
+- 行为：更新 `currentDayIndex`。
+- 数据：仅本地状态。
+
+**交互：点击菜谱查看详情**
+- 行为：打开 `RecipeDetailSheet`。
+- 数据：只读，不触发 API。
+
+**交互：在菜单中添加菜**
+- 入口：`AddMealModal`。
+- 分支：
+  - 该餐已有主菜 → 写入 `menuBooks[bookId].extraMeals`。
+  - 该餐无主菜 → 写入 `menuBooks[bookId].mealPlan.days`。
+- **不触发** shopping list 更新、不触发 AI。
+
+**交互：编辑 notes / 删除菜**
+- 若是主菜：更新 `mealPlan.days`。
+- 若是 extra：更新 `extraMeals`。
+- **不触发** shopping list 更新、不触发 AI。
 
 文件：`dev_v2/frontend/src/pages/HomePage.tsx`
 
-### 5.2 Create 流程（生成菜单）
-**路径**：`/create`
+### 5.2 Create 流程（/create）
 
-**Step 流程**：
-1. Welcome
-2. Keywords
-3. Must-Have
-4. Disliked
-5. People & Budget
-6. Schedule
-7. Loading
-8. Review（Plan Overview）
-9. Shopping Loading
+**步骤 1–6（关键词/偏好/排期）**
+- 行为：写入 `useDraftStore`。
+- 数据：仅本地草稿，未写 MenuBook。
 
-**生成逻辑**：
-- `handleGenerate` → `useMealPlan.createPlan(preferences)`
-- 得到 `plan + placeholderList`：
-  - 保存到 `result` + `pendingResult`
-  - 进入 Review
+**交互：Generate Plan**
+- 调用：`useMealPlan.createPlan(preferences)` → `POST /meal-plans/generate`。
+- 结果：
+  - 写入 `pendingResult`（plan + 空 list + empty extraMeals）。
+  - 进入 Review。
 
-**Review 逻辑**：
-- UI 与 Menu 页一致（WeekDateBar + DailyMenuCard + AddMeal + RecipeDetail）。
-- “Modify” → 调 `modifyMealPlan`，并立即生成 list（但 **不写入 MenuBook**）。
-- “Generate Shopping List” → **此时才写 MenuBook**。
+**交互：Review 页面查看/修改**
+- UI 与 Menu 页一致（WeekDateBar + DailyMenuCard）。
+- 额外加菜：写入 `pendingResult.extraMeals`（不触发 AI、不触发 list）。
+- 修改主菜：写入 `pendingResult.plan`。
 
-**保存时机**（关键约束）：
-- 生成结果默认不写入 menuBooks。
-- 只有用户点击 “Generate Shopping List” 才真正保存到 menuBooks。
+**交互：Modify（SEND TO AI）**
+- 调用：`modifyMealPlan(planId, modification, currentPlan)`。
+- 返回：新 `plan`（**不生成 shopping list**）。
+- 写入：仅更新 `pendingResult.plan`，`pendingResult.list` 保持不变（通常为空占位）。
+- **注意**：仍不写 MenuBook（未确认）。
 
-**刷新恢复**：
-- 如果处于 loading/review 并有 `pendingResult`，会直接恢复 review。
-- 若无 `pendingResult`，回到 schedule，避免卡死。
+**交互：Generate Shopping List（确认保存）**
+- 行为：
+  1. 将 `pendingResult` 写入 `menuBooks`（含 extraMeals）。
+  2. 调用 `generateShoppingList` 生成清单（shopping list **在此时才生成**）。
+  3. 成功后跳转 `/shopping`。
+
+**交互：Shopping Loading**
+- 调用：`generateShoppingList`。
+- 成功：更新 list，清空 draft，跳转购物页。
+- 失败：停留本页，可 retry 或返回。
 
 文件：`dev_v2/frontend/src/pages/CreatePlanPage.tsx`
 
-### 5.3 Shopping List 页
-**路径**：`/shopping`
+### 5.3 Shopping 页（/shopping）
 
-- 依赖 `currentMenuBook.shoppingList`。
-- 行点击：直接标记完成。
-- 右侧 `EDIT`：打开编辑弹窗。
-- 添加/编辑弹窗：与添加菜一致（底部 sheet）。
+**交互：购物清单为空时生成**
+- 行为：`generateList(mealPlan)` → 更新 `menuBooks[bookId].shoppingList`。
+- **不受 extraMeals 影响**。
+
+**交互：点击条目完成/取消**
+- 行为：`updateShoppingItem` 切换 `purchased`。
+
+**交互：添加条目**
+- 行为：`addShoppingItem`，标记 `isManuallyAdded=true`。
+
+**交互：编辑条目**
+- 行为：`updateShoppingItem`。
+
+**交互：删除条目**
+- 行为：`removeShoppingItem`。
 
 文件：`dev_v2/frontend/src/pages/ShoppingPage.tsx`
 
-### 5.4 Profile 页
-**路径**：`/me`
+### 5.4 Profile 页（/me）
 
-- 展示当前偏好（来自最近 menuBook 或 draft）。
-- 编辑弹窗与创建步骤一致：
-  - 选中项置顶
-  - 底部 Add + Save
+**交互：编辑关键词/偏好**
+- 行为：仅更新 `useDraftStore`（Profile 偏好是独立版本）。  
+- **不回写** `menuBooks`，历史 MealPlan 保持原样。  
+- 新生成计划时读取该 Profile 偏好作为默认值。  
 
 文件：`dev_v2/frontend/src/pages/MyPage.tsx`
 
-## 6. 错误与加载状态
+## 6. 错误与加载
 
 - 全局生成状态：`useAppStore.isGenerating`。
-- 错误消息：`useAppStore.error`（页面底部显示）。
+- 错误提示：`useAppStore.error`。
 - API 超时：`ApiTimeoutError`（120s）。
 
-## 7. 已知关键限制
+## 7. 当前约束与约定
 
-1. **Extra dishes 不持久化**（useMenuExtrasStore 仅内存）。
-2. **MenuBook 只在 Generate Shopping List 时保存**。
-3. **pendingResult 恢复仅用于 create 流程**，不是通用“未保存菜单”。
-
----
-
-如需调整：
-- 是否让 review 阶段也写 MenuBook（标记未确认）？
-- 是否把 extra dishes 写入 MenuBook 并同步后端？
-- 是否把 pendingResult 改为后端临时保存？
+1. **MenuBook 只在用户确认（Generate Shopping List）时保存**。
+2. **extraMeals 不会触发购物清单更新，也不触发 AI**。
+3. **pendingResult 仅用于 create 流程恢复，不是通用草稿系统**。

@@ -14,7 +14,8 @@ import { StepPlanOverview } from "@/components/create/StepPlanOverview";
 import { StepShoppingLoading } from "@/components/create/StepShoppingLoading";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
-import type { MealPlan, ShoppingList } from "@/types";
+import type { ExtraWeekMeals, MealPlan, ShoppingList } from "@/types";
+import { WEEK_DAYS } from "@/utils/constants";
 
 const steps = {
   welcome: 1,
@@ -87,16 +88,31 @@ export function CreatePlanPage() {
   const setStep = useDraftStore((state) => state.setStep);
   const navigate = useNavigate();
 
-  const [result, setResult] = useState<{ plan: MealPlan; list: ShoppingList } | null>(
-    pendingResult ?? null,
+  const buildEmptyExtraMeals = useCallback<() => ExtraWeekMeals>(() => {
+    return WEEK_DAYS.reduce<ExtraWeekMeals>((acc, day) => {
+      acc[day] = { breakfast: [], lunch: [], dinner: [] };
+      return acc;
+    }, {} as ExtraWeekMeals);
+  }, []);
+
+  const normalizeResult = useCallback(
+    (value: { plan: MealPlan; list: ShoppingList; extraMeals?: ExtraWeekMeals }) => ({
+      ...value,
+      extraMeals: value.extraMeals ?? buildEmptyExtraMeals(),
+    }),
+    [buildEmptyExtraMeals],
+  );
+
+  const [result, setResult] = useState<{ plan: MealPlan; list: ShoppingList; extraMeals: ExtraWeekMeals } | null>(
+    pendingResult ? normalizeResult(pendingResult) : null,
   );
   const [showResumePrompt, setShowResumePrompt] = useState(false);
   const [hasCheckedResume, setHasCheckedResume] = useState(false);
 
   useEffect(() => {
     if (result || !pendingResult) return;
-    setResult(pendingResult);
-  }, [pendingResult, result]);
+    setResult(normalizeResult(pendingResult));
+  }, [normalizeResult, pendingResult, result]);
 
   useEffect(() => {
     if (pendingResult && draft.currentStep < steps.overview) {
@@ -174,8 +190,9 @@ export function CreatePlanPage() {
         difficulty: draft.difficulty,
         cookSchedule: draft.cookSchedule,
       });
-      setPendingResult(outcome);
-      setResult(outcome);
+      const normalizedOutcome = normalizeResult(outcome);
+      setPendingResult(normalizedOutcome);
+      setResult(normalizedOutcome);
       goToStep(steps.overview);
     } catch {
       goToStep(steps.schedule);
@@ -186,7 +203,12 @@ export function CreatePlanPage() {
     if (!result) return;
     const hasBook = menuBooks.some((book) => book.id === result.plan.id);
     if (!hasBook) {
-      addMenuBook({ id: result.plan.id, mealPlan: result.plan, shoppingList: result.list });
+      addMenuBook({
+        id: result.plan.id,
+        mealPlan: result.plan,
+        shoppingList: result.list,
+        extraMeals: result.extraMeals,
+      });
     }
     if (result.list.items.length > 0) {
       clearPendingResult();
@@ -207,7 +229,10 @@ export function CreatePlanPage() {
 
   const handleShoppingGenerated = useCallback(
     (plan: MealPlan, list: ShoppingList) => {
-      setResult({ plan, list });
+      setResult((prev) => {
+        if (!prev) return prev;
+        return { ...prev, plan, list };
+      });
       clearPendingResult();
       resetDraft();
     },
@@ -292,9 +317,16 @@ export function CreatePlanPage() {
           <StepPlanOverview
             mealPlan={result.plan}
             shoppingList={result.list}
+            extraMeals={result.extraMeals}
             onPlanUpdated={(plan, list) => {
-              setResult({ plan, list });
-              setPendingResult({ plan, list });
+              const nextResult = { plan, list, extraMeals: result.extraMeals };
+              setResult(nextResult);
+              setPendingResult(nextResult);
+            }}
+            onExtraMealsUpdated={(extraMeals) => {
+              const nextResult = { plan: result.plan, list: result.list, extraMeals };
+              setResult(nextResult);
+              setPendingResult(nextResult);
             }}
             onViewShopping={handleViewShopping}
           />

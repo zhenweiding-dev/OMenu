@@ -3,7 +3,6 @@ import { addWeeks, differenceInCalendarWeeks, startOfWeek } from "date-fns";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppStore } from "@/stores/useAppStore";
-import { useMenuExtrasStore } from "@/stores/useMenuExtrasStore";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { EmptyState } from "@/components/home/EmptyState";
@@ -40,10 +39,9 @@ export function HomePage() {
   const isMenuPickerOpen = useAppStore((state) => state.isMenuPickerOpen);
   const setIsMenuPickerOpen = useAppStore((state) => state.setIsMenuPickerOpen);
 
-  const extras = useMenuExtrasStore((state) => state.extras);
-  const addExtraMeal = useMenuExtrasStore((state) => state.addExtraMeal);
-  const updateExtraMealNotes = useMenuExtrasStore((state) => state.updateExtraMealNotes);
-  const removeExtraMeal = useMenuExtrasStore((state) => state.removeExtraMeal);
+  const addExtraMeal = useAppStore((state) => state.addExtraMeal);
+  const updateExtraMealNotes = useAppStore((state) => state.updateExtraMealNotes);
+  const removeExtraMeal = useAppStore((state) => state.removeExtraMeal);
   const resetDraft = useDraftStore((state) => state.resetDraft);
   const navigate = useNavigate();
 
@@ -122,10 +120,9 @@ export function HomePage() {
   useEffect(() => {
     if (import.meta.env.VITE_USE_MOCK !== "true") return;
     if (!currentBook) return;
-    const bookExtras = extras[currentBook.id];
-    const hasExtras =
-      bookExtras &&
-      Object.values(bookExtras).some((day) => day && Object.values(day).some((items) => items && items.length > 0));
+    const hasExtras = currentBook.extraMeals
+      ? Object.values(currentBook.extraMeals).some((day) => Object.values(day).some((items) => items.length > 0))
+      : false;
     if (hasExtras) return;
 
     const baseLunch = currentBook.mealPlan.days.monday.lunch ?? currentBook.mealPlan.days.monday.breakfast;
@@ -147,7 +144,7 @@ export function HomePage() {
       estimatedTime: 20,
       servings: baseLunch.servings || 2,
     });
-  }, [addExtraMeal, currentBook, extras]);
+  }, [addExtraMeal, currentBook]);
 
   const handleRequestDelete = (book: MenuBook) => {
     setPendingDelete(book);
@@ -260,7 +257,11 @@ export function HomePage() {
         dinner: [] as Recipe[],
       };
     }
-    const extraMealsForDay = extras[activeBook.id]?.[currentDayKey] ?? {};
+    const extraMealsForDay = activeBook.extraMeals?.[currentDayKey] ?? {
+      breakfast: [],
+      lunch: [],
+      dinner: [],
+    };
     const buildEntries = (mealType: keyof DayMeals) => {
       const baseMeal = currentMeals[mealType];
       const extraMeals = extraMealsForDay[mealType] ?? [];
@@ -273,7 +274,7 @@ export function HomePage() {
       lunch: buildEntries("lunch"),
       dinner: buildEntries("dinner"),
     };
-  }, [activeBook, currentMeals, currentDayKey, extras]);
+  }, [activeBook, currentMeals, currentDayKey]);
 
   // Menu Open view - current day card with swipe
   const openView = (
