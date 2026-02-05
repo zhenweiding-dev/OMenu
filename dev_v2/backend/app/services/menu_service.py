@@ -38,14 +38,10 @@ class MenuService:
         Returns:
             Complete MenuBook with menus and placeholder shopping list.
         """
-        # Step 1: Generate natural language menu
-        natural_prompt = self._prompts.menu_book(preferences)
-        natural_menu = await self._client.generate(natural_prompt)
-
-        # Step 2: Convert to structured JSON
-        structure_prompt = self._prompts.structured_menu(natural_menu, preferences)
-        structured_response = await self._client.generate(structure_prompt)
-        menu_data = self._parser.parse_json(structured_response)
+        # Single-pass: Generate structured JSON directly
+        prompt = self._prompts.menu_book(preferences)
+        response = await self._client.generate(prompt)
+        menu_data = self._parser.parse_json(response)
 
         # Normalize and validate
         normalized = self._normalize_menus(menu_data)

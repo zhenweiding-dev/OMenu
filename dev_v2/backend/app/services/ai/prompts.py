@@ -30,77 +30,21 @@ class PromptBuilder:
 
     @classmethod
     def menu_book(cls, preferences: UserPreferences) -> str:
-        """Generate prompt for natural language menu creation."""
+        """Generate prompt for structured weekly menu creation (single-pass)."""
         prompt_payload = cls._build_preferences_payload(preferences)
         preferences_json = json.dumps(
             prompt_payload, ensure_ascii=False, separators=(",", ":")
         )
-        budget_text = f"Budget:${preferences.budget}"
 
         return (
-            "Task: Based on the user's preferences, generate a personalized weekly menu in JSON format; "
-            "every meal must include dishName, ingredients, and a brief description. Keep the JSON compact by limiting "
-            "each meal to at most 5 ingredients and a description under 25 words. "
-            "Important: preferredItems should appear at least once during the week, not necessarily in every meal. "
-            f"{budget_text}.\nUser Preferences: {preferences_json}"
-        )
-
-    @classmethod
-    def structured_menu(cls, natural_menu: str, preferences: UserPreferences) -> str:
-        """Generate prompt to convert natural menu to structured JSON."""
-        schema_example = {
-            "monday": {
-                "breakfast": [
-                    {
-                        "id": "mon-breakfast-001",
-                        "name": "Scrambled Eggs with Tomato",
-                        "ingredients": [
-                            {
-                                "name": "eggs",
-                                "quantity": 2,
-                                "unit": "count",
-                                "category": "proteins",
-                            },
-                            {
-                                "name": "tomato",
-                                "quantity": 100,
-                                "unit": "g",
-                                "category": "vegetables",
-                            },
-                            {"name": "oil", "quantity": 0, "unit": "", "category": "seasonings"},
-                        ],
-                        "instructions": "1. Beat eggs... 2. Stir fry tomato... 3. Mix together...",
-                        "estimatedTime": 15,
-                        "servings": preferences.numPeople,
-                        "difficulty": "easy",
-                        "totalCalories": 180,
-                        "source": "ai",
-                    }
-                ],
-                "lunch": [],
-                "dinner": [],
-            },
-            "tuesday": "{ ... }",
-            "...": "...",
-        }
-        schema_block = json.dumps(schema_example, ensure_ascii=False, separators=(",", ":"))
-
-        requirements = (
-            "Requirements: 1) All 7 days present (monday through sunday). "
-            "2) Each day has breakfast, lunch, dinner (use empty array if not scheduled). "
-            "3) Dish ID format {day}-{meal}-{number} (e.g., \"mon-breakfast-001\"). "
-            "4) Ingredient categories: proteins, vegetables, fruits, grains, dairy, "
-            "seasonings, pantry_staples, others. "
-            "5) Seasonings use quantity 0 and empty unit. "
-            "6) <=5 ingredients per meal and instructions <=200 characters. "
-            "7) Each dish must include source=\"ai\"."
-        )
-
-        return (
-            "Task: Convert the following menu into a structured JSON format according to the schema. "
-            f"Menu: {natural_menu} "
-            f"Output Schema: {schema_block} "
-            f"{requirements} RETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks)."
+            f"Generate a weekly menu JSON for {preferences.numPeople} people, budget ${preferences.budget}, "
+            f"difficulty: {preferences.difficulty}.\n"
+            f"Preferences: {preferences_json}\n"
+            "Output JSON with keys: monday-sunday. Each day has breakfast/lunch/dinner arrays.\n"
+            "Dish format: {id,name,ingredients:[{name,quantity,unit,category}],instructions,estimatedTime,servings,difficulty,totalCalories,source:\"ai\"}\n"
+            "ID format: mon-breakfast-001. Categories: proteins,vegetables,fruits,grains,dairy,seasonings,pantry_staples,others.\n"
+            "Seasonings: quantity=0,unit=\"\". Max 5 ingredients, instructions<200 chars. Empty array if meal not scheduled.\n"
+            "RETURN ONLY RAW JSON, no markdown."
         )
 
     @classmethod

@@ -83,6 +83,7 @@ class GeminiClient:
             raise GeminiError("GEMINI_API_KEY is not configured.")
 
         timeout = timeout_seconds or self._timeout_seconds
+        logger.info(f"Generating with model={self._model_name}, prompt_len={len(prompt)}")
 
         try:
             with fail_after(timeout):
@@ -133,6 +134,7 @@ class GeminiClient:
         except google_exceptions.GoogleAPICallError as exc:
             raise GeminiError(exc.message or str(exc)) from exc
         except Exception as exc:  # pragma: no cover
+            logger.error(f"Gemini API error: {type(exc).__name__}: {exc}")
             raise GeminiError(f"Gemini API error: {exc}") from exc
 
     def _extract_text(self, response: Any) -> str:

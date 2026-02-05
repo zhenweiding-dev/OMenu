@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npm test:*)",
       "Bash(curl:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "WebSearch"
     ]
   }
 }
