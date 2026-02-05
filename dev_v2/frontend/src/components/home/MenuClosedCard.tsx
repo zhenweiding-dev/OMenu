@@ -30,10 +30,12 @@ function pickSurface(id: string) {
 
 function collectIngredientCategories(book: MenuBook) {
   const categories = new Set<IngredientCategory>();
-  Object.values(book.mealPlan.days).forEach((day) => {
+  Object.values(book.menus).forEach((day) => {
     Object.values(day).forEach((meal) => {
-      meal?.ingredients.forEach((ingredient) => {
-        categories.add(ingredient.category);
+      meal.forEach((dish) => {
+        dish.ingredients.forEach((ingredient) => {
+          categories.add(ingredient.category);
+        });
       });
     });
   });
@@ -58,18 +60,12 @@ function buildEmojiCover(book: MenuBook) {
 export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurrentWeekBadge }: MenuClosedCardProps) {
   const surfaceClass = useMemo(() => pickSurface(book.id), [book.id]);
   const emojiCover = buildEmojiCover(book);
-  const weekRange = getWeekDateRange(book.mealPlan.createdAt);
-  const relativeLabel = getRelativeWeekLabel(book.mealPlan.createdAt);
-  const budget = formatCurrency(book.mealPlan.preferences.budget);
-  const baseMeals = Object.values(book.mealPlan.days).reduce((count, day) => {
-    return count + [day.breakfast, day.lunch, day.dinner].filter(Boolean).length;
+  const weekRange = getWeekDateRange(book.createdAt);
+  const relativeLabel = getRelativeWeekLabel(book.createdAt);
+  const budget = formatCurrency(book.preferences.budget);
+  const totalDishes = Object.values(book.menus).reduce((count, day) => {
+    return count + day.breakfast.length + day.lunch.length + day.dinner.length;
   }, 0);
-  const extraMeals = book.extraMeals
-    ? Object.values(book.extraMeals).reduce((count, day) => {
-        return count + day.breakfast.length + day.lunch.length + day.dinner.length;
-      }, 0)
-    : 0;
-  const totalMeals = baseMeals + extraMeals;
 
   const holdTimeoutRef = useRef<number | null>(null);
   const ignoreNextClickRef = useRef(false);
@@ -146,7 +142,7 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurr
         <div className="min-w-0 flex-1">
           <p className="text-[13px] font-semibold text-text-primary">{weekRange}</p>
           <p className="mt-1 text-[11px] text-text-secondary">
-            {totalMeals} dishes · {budget}
+            {totalDishes} dishes · {budget}
           </p>
         </div>
 

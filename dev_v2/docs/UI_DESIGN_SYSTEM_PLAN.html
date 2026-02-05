@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OMenu UI Design System Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              paper: { base: "#FAF9F7", muted: "#F5F4F1", dark: "#F0EDE8" },
+              card: { base: "#FFFFFF", header: "#F8F6F2" },
+              text: { primary: "#2C2C2C", secondary: "#7A7A7A", tertiary: "#999999", disabled: "#B5B5B5" },
+              accent: { base: "#8B9469", light: "#A8AD8B", orange: "#D97706", orangeLight: "#FEF3E2" },
+              success: "#6B9B76",
+              error: "#C67B7B",
+              border: { subtle: "#EEEBE6", tag: "#D4D0C8", tagSelected: "#A68A64" },
+              tag: { bg: "transparent", selectedBg: "#F0EBE3", selectedBorder: "#A68A64" },
+              meal: { breakfast: "#FEF3E2", lunch: "#E8F5E9", dinner: "#EDE7F6" },
+            },
+            boxShadow: {
+              card: "0 4px 20px rgba(0,0,0,0.06)",
+              soft: "0 2px 12px rgba(0,0,0,0.06)",
+              btn: "0 2px 8px rgba(0,0,0,0.06)",
+            },
+            borderRadius: { "2xl": "1.25rem", "3xl": "1.5rem" },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-[#E8E4DF] text-text-primary">
+    <main class="mx-auto max-w-3xl space-y-8 px-6 py-10">
+      <section class="space-y-2">
+        <h1 class="text-2xl font-semibold">OMenu UI Design System Plan</h1>
+        <p class="text-sm text-text-secondary">HTML preview of component samples.</p>
+      </section>
+
+      <section class="rounded-2xl border border-border-subtle bg-paper-base p-6 shadow-card">
+        <h2 class="text-[14px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Buttons</h2>
+        <div class="mt-4 flex flex-wrap items-center gap-2">
+          <button class="rounded-xl bg-accent-base px-4 py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90">Primary</button>
+          <button class="rounded-xl border border-border-subtle bg-card-base px-4 py-2.5 text-[13px] font-semibold text-text-primary hover:bg-paper-muted">Secondary</button>
+          <button class="rounded-xl px-4 py-2.5 text-[13px] font-semibold text-text-secondary hover:text-text-primary">Ghost</button>
+          <button class="rounded-xl bg-error px-4 py-2.5 text-[13px] font-semibold text-white hover:bg-error/90">Danger</button>
+        </div>
+      </section>
+
+      <section class="rounded-2xl border border-border-subtle bg-paper-base p-6 shadow-card">
+        <h2 class="text-[14px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Tag / Chip</h2>
+        <div class="mt-4 flex flex-wrap items-center gap-2">
+          <span class="rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] font-medium text-text-secondary">Tag</span>
+          <span class="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base">Selected</span>
+          <button class="rounded-full border border-border-tag px-3 py-1.5 text-[12px] text-text-secondary hover:border-accent-light hover:text-text-primary">Chip</button>
+        </div>
+      </section>
+
+      <section class="rounded-2xl border border-border-subtle bg-paper-base p-6 shadow-card">
+        <h2 class="text-[14px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Card</h2>
+        <div class="mt-4 rounded-2xl border border-border-subtle bg-card-base p-4 shadow-card">
+          <div class="text-[12px] font-semibold uppercase tracking-[0.18em] text-text-secondary">CARD TITLE</div>
+          <div class="mt-2 text-[15px] font-semibold text-text-primary">Card Content</div>
+          <div class="mt-1 text-[12px] text-text-tertiary">Secondary text</div>
+        </div>
+      </section>
+
+      <section class="rounded-2xl border border-border-subtle bg-paper-base p-6 shadow-card">
+        <h2 class="text-[14px] font-semibold uppercase tracking-[0.18em] text-text-secondary">List Row</h2>
+        <div class="mt-4 overflow-hidden rounded-xl border border-border-subtle bg-card-base">
+          <div class="flex items-center gap-2 border-b border-border-subtle px-4 py-2.5 hover:bg-paper-muted/50">
+            <div class="h-5 w-5 rounded border border-text-disabled bg-white"></div>
+            <div class="flex-1">
+              <div class="text-[14px] font-medium text-text-primary">Tomatoes</div>
+              <div class="text-[11px] text-text-tertiary">2 pcs</div>
+            </div>
+            <button class="text-[10px] font-semibold uppercase tracking-[0.2em] text-text-secondary">EDIT</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="rounded-2xl border border-border-subtle bg-paper-base p-6 shadow-card">
+        <h2 class="text-[14px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Bottom Sheet</h2>
+        <div class="relative mt-4 h-60 overflow-hidden rounded-2xl border border-border-subtle bg-card-base">
+          <div class="absolute inset-0 flex items-end justify-center bg-black/20">
+            <div class="w-full max-h-[85%] rounded-t-3xl bg-card-base overflow-hidden">
+              <div class="flex items-center justify-between border-b border-border-subtle px-5 py-4">
+                <button class="h-9 w-9 rounded-full bg-paper-muted">✕</button>
+                <button class="text-[13px] font-semibold text-accent-base">Save</button>
+              </div>
+              <div class="px-5 py-5">
+                <div class="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base">TITLE</div>
+                <div class="mt-2 text-[22px] font-semibold text-text-primary">Editable Field</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="rounded-2xl border border-border-subtle bg-paper-base p-6 shadow-card">
+        <h2 class="text-[14px] font-semibold uppercase tracking-[0.18em] text-text-secondary">Center Modal</h2>
+        <div class="relative mt-4 h-56 overflow-hidden rounded-2xl border border-border-subtle bg-card-base">
+          <div class="absolute inset-0 flex items-center justify-center bg-black/20 px-4 py-6">
+            <div class="w-full max-w-sm rounded-3xl border border-border-subtle bg-card-base p-6 shadow-soft">
+              <div class="text-[16px] font-semibold text-text-primary">Delete item?</div>
+              <div class="mt-1 text-[13px] text-text-secondary">This action cannot be undone.</div>
+              <div class="mt-4 flex justify-end gap-2">
+                <button class="rounded-xl px-4 py-2 text-[13px] font-semibold text-text-secondary">Cancel</button>
+                <button class="rounded-xl bg-error px-4 py-2 text-[13px] font-semibold text-white">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

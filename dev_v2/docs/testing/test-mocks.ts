@@ -10,7 +10,7 @@ import type {
   Ingredient,
   IngredientCategory,
   Difficulty,
-  MealPlan,
+  MenuBook,
   DayMeals,
   ShoppingList,
   ShoppingItem,
@@ -197,7 +197,7 @@ export const mockDefaultCookSchedule: CookSchedule = {
 
 export const mockUserPreferences: UserPreferences = {
   keywords: ['Quick', 'Healthy', 'Chinese'],
-  mustHaveItems: ['Eggs', 'Chicken', 'Rice'],
+  preferredItems: ['Eggs', 'Chicken', 'Rice'],
   dislikedItems: ['Mushrooms', 'Cilantro'],
   numPeople: 2,
   budget: 100,
@@ -206,11 +206,11 @@ export const mockUserPreferences: UserPreferences = {
 };
 
 // ============================================
-// Meal Plan (Complete Weekly Plan) Mock
+// Menu Book (Complete Weekly Plan) Mock
 // ============================================
 
-export const mockMealPlan: MealPlan = {
-  id: 'mp_abc123',
+export const mockMenuBook: MenuBook = {
+  id: 'mb_abc123',
   createdAt: '2025-01-27T10:00:00Z',
   status: 'ready',
   preferences: mockUserPreferences,
@@ -254,7 +254,7 @@ export const mockCurrentMenuBook: MenuBook = {
   id: 'book-001',
   weekStartDate: '2025-01-27',
   weekEndDate: '2025-02-02',
-  mealPlan: mockMealPlan,
+  menuBook: mockMenuBook,
   shoppingList: null,  // Will be set after mockShoppingList is defined
   foodEmojis: '🥚🥗🥩\n🍚🥦🍳',
   createdAt: '2025-01-27T10:00:00Z',
@@ -264,7 +264,7 @@ export const mockPastMenuBook1: MenuBook = {
   id: 'book-002',
   weekStartDate: '2025-01-20',
   weekEndDate: '2025-01-26',
-  mealPlan: { ...mockMealPlan, id: 'mp_def456' },
+  menuBook: { ...mockMenuBook, id: 'mb_def456' },
   shoppingList: null,
   foodEmojis: '🍝🍗🥕\n🥐🧀🍲',
   createdAt: '2025-01-20T10:00:00Z',
@@ -274,7 +274,7 @@ export const mockPastMenuBook2: MenuBook = {
   id: 'book-003',
   weekStartDate: '2025-01-13',
   weekEndDate: '2025-01-19',
-  mealPlan: { ...mockMealPlan, id: 'mp_ghi789' },
+  menuBook: { ...mockMenuBook, id: 'mb_ghi789' },
   shoppingList: null,
   foodEmojis: '🍜🥟🥬\n🍛🥒🍤',
   createdAt: '2025-01-13T10:00:00Z',
@@ -292,7 +292,7 @@ export const mockMenuBooks = [
 
 export const mockShoppingList: ShoppingList = {
   id: 'sl_xyz789',
-  mealPlanId: 'mp_abc123',
+  menuBookId: 'mb_abc123',
   createdAt: '2025-01-27T10:30:00Z',
   items: [
     // Proteins
@@ -324,7 +324,7 @@ export const mockShoppingList: ShoppingList = {
 };
 
 // Update mockCurrentMenuBook with shoppingList after it's defined
-// This creates a complete MenuBook with both mealPlan and shoppingList
+// This creates a complete MenuBook with both menuBook and shoppingList
 export const mockCompleteMenuBook: MenuBook = {
   ...mockCurrentMenuBook,
   shoppingList: mockShoppingList,
@@ -337,7 +337,7 @@ export const mockCompleteMenuBook: MenuBook = {
 export const mockEmptyDraft = {
   currentStep: 1,
   keywords: [] as string[],
-  mustHaveItems: [] as string[],
+  preferredItems: [] as string[],
   dislikedItems: [] as string[],
   numPeople: 2,
   budget: 100,
@@ -349,7 +349,7 @@ export const mockEmptyDraft = {
 export const mockPartialDraft = {
   currentStep: 4,
   keywords: ['Quick', 'Healthy', 'Chinese'],
-  mustHaveItems: ['Eggs', 'Chicken'],
+  preferredItems: ['Eggs', 'Chicken'],
   dislikedItems: ['Mushrooms'],
   numPeople: 2,
   budget: 100,
@@ -361,7 +361,7 @@ export const mockPartialDraft = {
 export const mockCompleteDraft = {
   currentStep: 6,
   keywords: ['Quick', 'Healthy', 'High-Protein', 'Chinese'],
-  mustHaveItems: ['Eggs', 'Chicken', 'Rice'],
+  preferredItems: ['Eggs', 'Chicken', 'Rice'],
   dislikedItems: ['Mushrooms', 'Cilantro'],
   numPeople: 2,
   budget: 100,
@@ -383,27 +383,27 @@ export const mockCompleteDraft = {
 // ============================================
 
 export const mockApiResponses = {
-  generateMealPlan: {
-    success: mockMealPlan,
+  generateMenuBook: {
+    success: mockMenuBook,
     error: {
       error: {
         code: 'GEMINI_ERROR',
-        message: 'Failed to generate meal plan',
+        message: 'Failed to generate menu book',
         details: [],
       },
     },
     timeout: null, // Used for timeout simulation
   },
   
-  modifyMealPlan: {
+  modifyMenuBook: {
     success: {
-      ...mockMealPlan,
-      id: 'mp_abc123_modified',
+      ...mockMenuBook,
+      id: 'mb_abc123_modified',
     },
     error: {
       error: {
         code: 'VALIDATION_ERROR',
-        message: 'Failed to modify meal plan',
+        message: 'Failed to modify menu book',
         details: [{ field: 'modification', message: 'Modification text is required' }],
       },
     },
@@ -481,7 +481,7 @@ export function generateMockMenuBooks(count: number) {
       id: `book-${i + 1}`,
       weekStartDate: weekStart.toISOString().split('T')[0],
       weekEndDate: weekEnd.toISOString().split('T')[0],
-      mealPlan: { ...mockMealPlan, id: `mp_${String(i + 1).padStart(3, '0')}` },
+      menuBook: { ...mockMenuBook, id: `mb_${String(i + 1).padStart(3, '0')}` },
       foodEmojis: getRandomFoodEmojis(),
       createdAt: weekStart.toISOString(),
     });
@@ -505,9 +505,9 @@ function getRandomFoodEmojis(): string {
 }
 
 /**
- * Count total meals in a meal plan
+ * Count total meals in a menu book
  */
-export function countMealsInPlan(plan: MealPlan): number {
+export function countMealsInPlan(plan: MenuBook): number {
   let count = 0;
   Object.values(plan.days).forEach(day => {
     if (day.breakfast) count++;
@@ -518,9 +518,9 @@ export function countMealsInPlan(plan: MealPlan): number {
 }
 
 /**
- * Calculate total calories for a meal plan
+ * Calculate total calories for a menu book
  */
-export function calculateTotalCalories(plan: MealPlan): number {
+export function calculateTotalCalories(plan: MenuBook): number {
   let total = 0;
   Object.values(plan.days).forEach(day => {
     if (day.breakfast) total += day.breakfast.totalCalories;
@@ -553,13 +553,13 @@ export function countMealsInDay(day: DayMeals): number {
 }
 
 /**
- * Create a mock meal plan with custom overrides
+ * Create a mock menu book with custom overrides
  */
-export function createMockMealPlan(overrides: Partial<MealPlan> = {}): MealPlan {
+export function createMockMenuBook(overrides: Partial<MenuBook> = {}): MenuBook {
   return {
-    ...mockMealPlan,
+    ...mockMenuBook,
     ...overrides,
-    id: overrides.id || `mp_${Date.now()}`,
+    id: overrides.id || `mb_${Date.now()}`,
     createdAt: overrides.createdAt || new Date().toISOString(),
   };
 }

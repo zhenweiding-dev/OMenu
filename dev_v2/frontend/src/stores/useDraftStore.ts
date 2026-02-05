@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { DEFAULT_BUDGET, DEFAULT_NUM_PEOPLE, MEAL_TYPES, WEEK_DAYS } from "@/utils/constants";
-import type { CookSchedule, Difficulty, ExtraWeekMeals, MealPlan, ShoppingList, UserPreferences } from "@/types";
+import type { CookSchedule, Difficulty, MenuBook, UserPreferences } from "@/types";
 
 type DayOfWeek = (typeof WEEK_DAYS)[number];
 type MealType = (typeof MEAL_TYPES)[number];
@@ -9,23 +9,23 @@ type MealType = (typeof MEAL_TYPES)[number];
 interface DraftState {
   currentStep: number;
   keywords: string[];
-  mustHaveItems: string[];
+  preferredItems: string[];
   dislikedItems: string[];
   numPeople: number;
   budget: number;
   difficulty: Difficulty;
   cookSchedule: CookSchedule;
   lastUpdated: string;
-  pendingResult: { plan: MealPlan; list: ShoppingList; extraMeals?: ExtraWeekMeals } | null;
+  pendingResult: MenuBook | null;
 
   setStep: (step: number) => void;
   setKeywords: (keywords: string[]) => void;
   addKeyword: (keyword: string) => void;
   removeKeyword: (keyword: string) => void;
 
-  setMustHaveItems: (items: string[]) => void;
-  addMustHaveItem: (item: string) => void;
-  removeMustHaveItem: (item: string) => void;
+  setPreferredItems: (items: string[]) => void;
+  addPreferredItem: (item: string) => void;
+  removePreferredItem: (item: string) => void;
 
   setDislikedItems: (items: string[]) => void;
   addDislikedItem: (item: string) => void;
@@ -40,11 +40,12 @@ interface DraftState {
   selectAllMeals: () => void;
   deselectAllMeals: () => void;
   setPreferences: (preferences: UserPreferences) => void;
-  setPendingResult: (result: { plan: MealPlan; list: ShoppingList; extraMeals?: ExtraWeekMeals } | null) => void;
+  setPendingResult: (result: MenuBook | null) => void;
   clearPendingResult: () => void;
 
   getSelectedMealCount: () => number;
   resetDraft: () => void;
+  resetDraftProgress: () => void;
 }
 
 const defaultMealSelection = { breakfast: false, lunch: false, dinner: false };
@@ -56,7 +57,7 @@ const initialSchedule = WEEK_DAYS.reduce<CookSchedule>((acc, day) => {
 const initialState = {
   currentStep: 1,
   keywords: [],
-  mustHaveItems: [],
+  preferredItems: [],
   dislikedItems: [],
   numPeople: DEFAULT_NUM_PEOPLE,
   budget: DEFAULT_BUDGET,
@@ -85,15 +86,15 @@ export const useDraftStore = create(
           lastUpdated: new Date().toISOString(),
         })),
 
-      setMustHaveItems: (items) => set({ mustHaveItems: items, lastUpdated: new Date().toISOString() }),
-      addMustHaveItem: (item) =>
+      setPreferredItems: (items) => set({ preferredItems: items, lastUpdated: new Date().toISOString() }),
+      addPreferredItem: (item) =>
         set((state) => ({
-          mustHaveItems: [...new Set([...state.mustHaveItems, item.trim()])].filter(Boolean),
+          preferredItems: [...new Set([...state.preferredItems, item.trim()])].filter(Boolean),
           lastUpdated: new Date().toISOString(),
         })),
-      removeMustHaveItem: (item) =>
+      removePreferredItem: (item) =>
         set((state) => ({
-          mustHaveItems: state.mustHaveItems.filter((value) => value !== item),
+          preferredItems: state.preferredItems.filter((value) => value !== item),
           lastUpdated: new Date().toISOString(),
         })),
 
@@ -143,7 +144,7 @@ export const useDraftStore = create(
       setPreferences: (preferences) =>
         set({
           keywords: preferences.keywords,
-          mustHaveItems: preferences.mustHaveItems,
+          preferredItems: preferences.preferredItems,
           dislikedItems: preferences.dislikedItems,
           numPeople: preferences.numPeople,
           budget: preferences.budget,
@@ -164,11 +165,25 @@ export const useDraftStore = create(
       },
 
       resetDraft: () => set({ ...initialState, lastUpdated: new Date().toISOString() }),
+      resetDraftProgress: () =>
+        set((state) => ({
+          currentStep: 1,
+          pendingResult: null,
+          lastUpdated: new Date().toISOString(),
+          keywords: state.keywords,
+          preferredItems: state.preferredItems,
+          dislikedItems: state.dislikedItems,
+          numPeople: state.numPeople,
+          budget: state.budget,
+          difficulty: state.difficulty,
+          cookSchedule: state.cookSchedule,
+        })),
     }),
     {
       name: "omenu-draft",
       storage: createJSONStorage(() => localStorage),
       version: 1,
+      migrate: () => ({ ...initialState }),
     },
   ),
 );

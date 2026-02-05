@@ -5,7 +5,7 @@ import { startCaseDay } from "@/utils/helpers";
 import { INGREDIENT_CATEGORIES } from "@/utils/constants";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import type { DayMeals, MenuBook } from "@/types";
+import type { Dish, Menu, MenuBook } from "@/types";
 
 function formatDifficulty(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
@@ -15,13 +15,12 @@ function formatMealType(mealType: string) {
   return mealType.toUpperCase();
 }
 
-
 export interface ModalContentProps {
   active: {
     book: MenuBook;
-    day: keyof MenuBook["mealPlan"]["days"];
-    mealType: keyof DayMeals;
-    recipe: NonNullable<DayMeals[keyof DayMeals]>;
+    day: keyof MenuBook["menus"];
+    mealType: keyof Menu;
+    dish: Dish;
   };
   onClose: () => void;
   onSaveNotes: (notes: string) => void;
@@ -89,20 +88,20 @@ function FlameIcon() {
 }
 
 export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: ModalContentProps) {
-  const { book, day, mealType, recipe } = active;
+  const { book, day, mealType, dish } = active;
   const [isEditingNotes, setIsEditingNotes] = useState(false);
-  const [notesDraft, setNotesDraft] = useState(() => recipe.notes ?? "");
+  const [notesDraft, setNotesDraft] = useState(() => dish.notes ?? "");
   const notesRef = useRef<HTMLTextAreaElement>(null);
   const notesSectionRef = useRef<HTMLDivElement>(null);
 
   const groupedIngredients = useMemo(() => {
     return INGREDIENT_CATEGORIES.map((category) => ({
       category,
-      items: recipe.ingredients.filter((ingredient) => ingredient.category === category),
+      items: dish.ingredients.filter((ingredient) => ingredient.category === category),
     })).filter((group) => group.items.length > 0);
-  }, [recipe.ingredients]);
+  }, [dish.ingredients]);
 
-  const instructionSteps = recipe.instructions
+  const instructionSteps = dish.instructions
     .split(/\n+/)
     .map((step) => step.trim())
     .filter(Boolean)
@@ -111,7 +110,7 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
       return cleaned.length > 0 ? cleaned : step;
     });
 
-  const hasNotes = Boolean(recipe.notes);
+  const hasNotes = Boolean(dish.notes);
 
   useEffect(() => {
     if (!isEditingNotes) return;
@@ -147,69 +146,70 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
         className="flex max-h-[85%] w-full flex-col overflow-hidden rounded-t-3xl bg-card-base"
         onPointerDown={(event) => event.stopPropagation()}
       >
-        {/* Modal Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-subtle bg-card-base px-5 py-4">
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-text-primary transition-colors hover:bg-paper-dark"
+            className="h-9 w-9 rounded-full bg-paper-muted text-text-primary hover:bg-paper-dark"
             aria-label="Close"
           >
             <CloseIcon />
-          </button>
+          </Button>
           <div className="flex items-center gap-2">
-            <button
+            <Button
               type="button"
               onClick={() => setIsEditingNotes(true)}
-              className="flex items-center gap-1 rounded-full bg-paper-muted px-3 py-2 text-[12px] font-medium text-text-primary transition-colors hover:bg-paper-dark"
+              variant="ghost"
+              size="sm"
+              className="gap-1 rounded-full bg-paper-muted px-3 text-text-primary hover:bg-paper-dark"
               aria-label="Edit notes"
             >
               <EditIcon />
               <span>Edit Notes</span>
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               onClick={handleDelete}
-              className="flex items-center gap-1 rounded-full bg-paper-muted px-3 py-2 text-[12px] font-medium text-error transition-colors hover:bg-paper-dark"
+              variant="ghost"
+              size="sm"
+              className="gap-1 rounded-full bg-paper-muted px-3 text-error hover:bg-paper-dark"
               aria-label="Delete dish"
             >
               <DeleteIcon />
               <span>Delete Dish</span>
-            </button>
+            </Button>
           </div>
         </div>
 
-        {/* Modal Body - Scrollable */}
         <div className="flex-1 overflow-y-auto px-5 py-5">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base">
             {startCaseDay(day).toUpperCase()} · {formatMealType(mealType)}
           </p>
-          {/* Recipe Title */}
           <h2 className="mt-2 text-[22px] font-semibold leading-tight text-text-primary">
-            {recipe.name}
+            {dish.name}
           </h2>
 
-          {/* Recipe Meta */}
           <div className="mt-4 flex flex-wrap gap-4">
             <div className="flex items-center gap-1.5 text-[13px] text-text-secondary">
               <ClockIcon />
-              <span>{recipe.estimatedTime} min</span>
+              <span>{dish.estimatedTime} min</span>
             </div>
             <div className="flex items-center gap-1.5 text-[13px] text-text-secondary">
               <UsersIcon />
-              <span>{recipe.servings} servings</span>
+              <span>{dish.servings} servings</span>
             </div>
             <div className="flex items-center gap-1.5 text-[13px] text-text-secondary">
               <ChartIcon />
-              <span>{formatDifficulty(recipe.difficulty)}</span>
+              <span>{formatDifficulty(dish.difficulty)}</span>
             </div>
             <div className="flex items-center gap-1.5 text-[13px] text-text-secondary">
               <FlameIcon />
-              <span>{recipe.totalCalories} cal</span>
+              <span>{dish.totalCalories} cal</span>
+            </div>
           </div>
-        </div>
 
-          {/* Ingredients Section */}
           <section className="mt-6">
             <h3 className="text-[14px] font-semibold text-text-primary">Ingredients</h3>
             <div className="mt-3 space-y-3">
@@ -225,80 +225,57 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
                   .join(" · ");
                 return (
                   <div key={group.category} className="flex flex-wrap items-baseline gap-2">
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-text-tertiary">
                       {group.category.replace(/_/g, " ")}
                     </span>
-                    <span className="text-[14px] text-text-primary">{itemsText}</span>
+                    <span className="text-[13px] text-text-secondary">{itemsText}</span>
                   </div>
                 );
               })}
             </div>
           </section>
 
-          {/* Instructions Section */}
           <section className="mt-6">
             <h3 className="text-[14px] font-semibold text-text-primary">Instructions</h3>
             <ol className="mt-3">
-                {instructionSteps.length > 0 ? (
-                  instructionSteps.map((step, index) => (
+              {instructionSteps.length > 0 ? (
+                instructionSteps.map((step, index) => (
                   <li
                     key={index}
                     className="relative border-b border-border-subtle py-3 pl-7 text-[14px] leading-relaxed text-text-primary last:border-b-0"
                   >
                     <span className="absolute left-0 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-paper-muted text-[11px] font-semibold text-accent-base">
-                        {index + 1}
-                      </span>
+                      {index + 1}
+                    </span>
                     {step}
-                    </li>
-                  ))
-                ) : (
-                <li className="py-2 text-[14px] text-text-secondary">No instructions provided.</li>
-                )}
-              </ol>
+                  </li>
+                ))
+              ) : (
+                <p className="text-[13px] italic text-text-tertiary">No instructions available.</p>
+              )}
+            </ol>
           </section>
 
-          {/* Notes Section */}
           <section className="mt-6" ref={notesSectionRef}>
             <div className="flex items-center justify-between">
               <h3 className="text-[14px] font-semibold text-text-primary">Notes</h3>
-              {!isEditingNotes && (
-                <button
-                  type="button"
-                  onClick={() => setIsEditingNotes(true)}
-                  className="text-[13px] text-accent-base hover:opacity-80"
-                >
-                  Edit Notes
-                </button>
+              {isEditingNotes && (
+                <Button size="sm" onClick={handleSaveNotes}>
+                  Save
+                </Button>
               )}
             </div>
+
             {isEditingNotes ? (
-              <div className="mt-3 space-y-3">
               <Textarea
                 ref={notesRef}
                 value={notesDraft}
                 onChange={(event) => setNotesDraft(event.target.value)}
-                placeholder="Add your notes here"
-                  className="min-h-[100px]"
+                className="mt-3 min-h-[80px]"
               />
-                <div className="flex justify-end gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setNotesDraft(recipe.notes ?? "");
-                      setIsEditingNotes(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button size="sm" onClick={handleSaveNotes}>
-                    Save
-                  </Button>
-                </div>
-              </div>
             ) : hasNotes ? (
               <p className="mt-3 whitespace-pre-wrap text-[14px] leading-relaxed text-text-secondary">
-                {recipe.notes}
+                {dish.notes}
               </p>
             ) : (
               <p className="mt-3 text-[14px] italic text-text-tertiary">
@@ -313,24 +290,24 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
 }
 
 export function RecipeDetailModal() {
-  const active = useAppStore((state) => state.getActiveMeal());
-  const clearActiveMeal = useAppStore((state) => state.clearActiveMeal);
-  const updateMealNotes = useAppStore((state) => state.updateMealNotes);
-  const clearDayMeal = useAppStore((state) => state.clearDayMeal);
+  const active = useAppStore((state) => state.getActiveDish());
+  const clearActiveDish = useAppStore((state) => state.clearActiveDish);
+  const updateDishNotes = useAppStore((state) => state.updateDishNotes);
+  const removeDish = useAppStore((state) => state.removeDish);
 
   useEffect(() => {
     if (!active) return undefined;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        clearActiveMeal();
+        clearActiveDish();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [active, clearActiveMeal]);
+  }, [active, clearActiveDish]);
 
   if (!active) {
     return null;
@@ -341,13 +318,13 @@ export function RecipeDetailModal() {
 
   return createPortal(
     <RecipeDetailSheet
-      key={`${active.book.id}-${active.recipe.id}`}
+      key={`${active.book.id}-${active.dish.id}`}
       active={active}
-      onClose={clearActiveMeal}
-      onSaveNotes={(notes) => updateMealNotes(active.book.id, active.day, active.mealType, notes)}
+      onClose={clearActiveDish}
+      onSaveNotes={(notes) => updateDishNotes(active.book.id, active.day, active.mealType, active.dish.id, notes)}
       onDelete={() => {
-        clearDayMeal(active.book.id, active.day, active.mealType);
-        clearActiveMeal();
+        removeDish(active.book.id, active.day, active.mealType, active.dish.id);
+        clearActiveDish();
       }}
     />,
     container,

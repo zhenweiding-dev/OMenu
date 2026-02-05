@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/utils/cn";
 
 interface StepDislikedProps {
@@ -79,13 +80,15 @@ export function StepDisliked({ dislikedItems, onAddItem, onRemoveItem, onNext, o
     <div className="flex flex-1 flex-col">
       {/* Header */}
       <div className="px-5 pb-3">
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={onBack}
-          className="mb-4 flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary"
+          className="mb-4 h-auto px-0 py-0 text-[12px] uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary"
         >
           ← Back
-        </button>
+        </Button>
         <h2 className="text-[22px] font-semibold leading-tight text-text-primary">
           Select things you don&apos;t like
         </h2>
@@ -121,24 +124,19 @@ export function StepDisliked({ dislikedItems, onAddItem, onRemoveItem, onNext, o
               {category}
             </p>
             <div className="flex flex-wrap gap-2">
-              {visibleItems.map(({ label, emoji }) => {
-                const isSelected = dislikedItems.includes(label);
-                return (
-                  <button
-                    key={label}
-                    type="button"
-                    onClick={() => toggleItem(label)}
-                    className={cn(
-                      "rounded-md border px-2.5 py-1.5 text-[12px] transition-all",
-                      isSelected
-                        ? "border-border-tagSelected bg-tag-selectedBg font-medium text-accent-base"
-                        : "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary"
-                    )}
-                  >
-                    {emoji} {label}
-                  </button>
-                );
-              })}
+              {visibleItems.map(({ label, emoji }) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => toggleItem(label)}
+                  className={cn(
+                    "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
+                    "hover:border-accent-light hover:text-text-primary"
+                  )}
+                >
+                  {emoji} {label}
+                </button>
+              ))}
             </div>
           </div>
         );
@@ -146,17 +144,17 @@ export function StepDisliked({ dislikedItems, onAddItem, onRemoveItem, onNext, o
       </div>
 
       {/* Footer */}
-      <div className="sticky bottom-0 border-t border-border-subtle bg-paper-base px-5 pb-1 pt-3">
+      <div className="sticky bottom-0 border-t border-border-subtle bg-paper-base px-5 pb-4 pt-3">
         {showCustomInput ? (
           <div className="mb-4 flex items-center gap-2">
-            <input
+            <Input
               type="text"
               value={customInput}
               onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
               onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
               placeholder="Custom item"
               autoFocus
-              className="flex-1 rounded-md border border-accent-base bg-white px-3 py-2 text-[13px] outline-none"
+              className="flex-1 h-9"
             />
             <Button size="sm" onClick={handleAddCustom} className="h-9">
               Add
@@ -167,17 +165,18 @@ export function StepDisliked({ dislikedItems, onAddItem, onRemoveItem, onNext, o
           </div>
         ) : (
           <div className="mb-4 flex gap-3">
-            <button
+            <Button
               type="button"
               onClick={() => setShowCustomInput(true)}
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-dashed border-border-tag py-2.5 text-[13px] font-semibold text-text-secondary hover:border-accent-base hover:text-accent-base"
+              variant="outline"
+              className="flex-1 gap-2 border-dashed border-border-tag bg-transparent text-text-secondary hover:border-accent-base hover:text-accent-base"
             >
               <PlusIcon />
               Add item
-            </button>
+            </Button>
             <Button
               onClick={onNext}
-              className="flex-1 rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+              className="flex-1"
             >
               Next
             </Button>
@@ -186,7 +185,7 @@ export function StepDisliked({ dislikedItems, onAddItem, onRemoveItem, onNext, o
         {showCustomInput && (
           <Button
             onClick={onNext}
-            className="w-full rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+            className="w-full"
           >
             Next
           </Button>

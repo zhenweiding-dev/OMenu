@@ -72,34 +72,40 @@ describe("useAppStore shopping actions", () => {
   });
 });
 
-describe("useAppStore meal actions", () => {
+describe("useAppStore menu actions", () => {
   beforeEach(() => {
     localStorage.clear();
     useAppStore.persist.clearStorage?.();
     useAppStore.setState(initialState, true);
   });
 
-  it("sets a manual meal on a given day", () => {
+  it("adds a dish to a meal", () => {
     const book = cloneSample();
     useAppStore.setState({ menuBooks: [book], currentWeekId: book.id });
 
-    useAppStore.getState().setDayMeal(book.id, "monday", "breakfast", {
-      ...book.mealPlan.days.monday.breakfast!,
+    const dish = {
+      ...book.menus.monday.breakfast[0],
       id: "manual-test",
       name: "Custom Breakfast",
-    });
+      source: "manual" as const,
+    };
+    useAppStore.getState().addDish(book.id, "monday", "breakfast", dish);
 
     const updatedBook = useAppStore.getState().menuBooks[0];
-    expect(updatedBook.mealPlan.days.monday.breakfast?.name).toBe("Custom Breakfast");
+    expect(updatedBook.menus.monday.breakfast.some((item) => item.id === "manual-test")).toBe(true);
   });
 
-  it("clears an existing meal from a slot", () => {
+  it("removes an existing dish from a meal", () => {
     const book = cloneSample();
     useAppStore.setState({ menuBooks: [book], currentWeekId: book.id });
 
-    useAppStore.getState().clearDayMeal(book.id, "tuesday", "dinner");
+    const targetId = book.menus.tuesday.dinner[0]?.id;
+    if (!targetId) {
+      throw new Error("Expected sample menu to have a dinner dish on Tuesday");
+    }
+    useAppStore.getState().removeDish(book.id, "tuesday", "dinner", targetId);
 
     const updatedBook = useAppStore.getState().menuBooks[0];
-    expect(updatedBook.mealPlan.days.tuesday.dinner).toBeNull();
+    expect(updatedBook.menus.tuesday.dinner.some((item) => item.id === targetId)).toBe(false);
   });
 });

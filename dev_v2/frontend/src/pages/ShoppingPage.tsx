@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import { useAppStore } from "@/stores/useAppStore";
 import { useShoppingStore } from "@/stores/useShoppingStore";
-import { useMealPlan } from "@/hooks/useMealPlan";
 import { INGREDIENT_CATEGORIES } from "@/utils/constants";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { Button } from "@/components/ui/button";
@@ -103,8 +103,7 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
   }, [mode, open]);
 
   if (!open) return null;
-  const container = document.getElementById("phone-screen");
-  if (!container) return null;
+  const container = document.getElementById("phone-screen") ?? document.body;
 
   const isSeasoning = category === "seasonings";
   const saveDisabled = name.trim().length === 0;
@@ -121,18 +120,20 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
         className="w-full max-w-md overflow-hidden rounded-3xl border border-border-subtle bg-card-base shadow-[0_4px_20px_rgba(0,0,0,0.12)]"
         onPointerDown={(event) => event.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
-          <button
+        <div className="flex items-center justify-between border-b border-border-subtle px-5 py-4">
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onPointerDown={(event) => {
               event.preventDefault();
               onClose();
             }}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-paper-muted text-text-primary transition-colors hover:bg-paper-dark"
+            className="h-9 w-9 rounded-full bg-paper-muted text-text-primary hover:bg-paper-dark"
             aria-label="Close"
           >
             <CloseIcon />
-          </button>
+          </Button>
           <div className="flex items-center gap-2">
             {mode === "edit" && onDelete && (
               <Button type="button" variant="ghost" className="text-error" onClick={onDelete}>
@@ -171,13 +172,13 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 onBlur={() => setIsEditingName(false)}
-                className="h-auto rounded-xl border border-border-subtle bg-transparent px-3 py-2 text-[22px] font-semibold leading-tight text-text-primary focus-visible:ring-0"
+                className="h-auto rounded-xl border border-border-subtle bg-transparent px-3 py-2 text-[18px] font-semibold leading-tight text-text-primary focus-visible:ring-0"
               />
             ) : (
               <button
                 type="button"
                 onClick={() => setIsEditingName(true)}
-                className="text-left text-[22px] font-semibold leading-tight text-text-primary"
+                className="text-left text-[18px] font-semibold leading-tight text-text-primary"
               >
                 {name ? name : <span className="text-text-tertiary">Tap to add item name</span>}
               </button>
@@ -223,7 +224,7 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
             <h3 className="text-[14px] font-semibold text-text-primary">Category</h3>
             {isEditingCategory ? (
               <select
-                className="mt-3 h-11 w-full rounded-lg border border-border-tag bg-white px-4 text-[15px] text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base focus:ring-offset-2 focus:ring-offset-paper-base"
+                className="mt-3 h-10 w-full rounded-xl border border-border-subtle bg-white px-3.5 text-[13px] text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base focus:ring-offset-2 focus:ring-offset-paper-base"
                 value={category}
                 onChange={(event) => setCategory(event.target.value as IngredientCategory)}
               >
@@ -255,9 +256,7 @@ export function ShoppingPage() {
   const addShoppingItem = useAppStore((state) => state.addShoppingItem);
   const updateShoppingItem = useAppStore((state) => state.updateShoppingItem);
   const removeShoppingItem = useAppStore((state) => state.removeShoppingItem);
-  const isGenerating = useAppStore((state) => state.isGenerating);
-  const globalError = useAppStore((state) => state.error);
-  const { generateList } = useMealPlan();
+  const navigate = useNavigate();
 
   const {
     collapsedCategories,
@@ -340,13 +339,8 @@ export function ShoppingPage() {
     setPendingDelete(null);
   };
 
-  const handleGenerateList = async () => {
-    if (!currentBook) return;
-    try {
-      await generateList(currentBook.mealPlan);
-    } catch {
-      // Error message routed through global store
-    }
+  const handleBackToMenu = () => {
+    navigate("/");
   };
 
   // Empty state - no current book
@@ -357,7 +351,7 @@ export function ShoppingPage() {
           <span className="text-[44px]" aria-hidden>🛒</span>
         </div>
         <h2 className="mb-2 text-[20px] font-semibold text-text-primary">No shopping list yet</h2>
-        <p className="text-[14px] text-text-secondary">Generate a shopping list from your meal plan</p>
+        <p className="text-[14px] text-text-secondary">Generate a shopping list from your menu</p>
       </PageContainer>
     );
   }
@@ -370,11 +364,12 @@ export function ShoppingPage() {
           <span className="text-[44px]" aria-hidden>🛒</span>
         </div>
         <h2 className="mb-2 text-[20px] font-semibold text-text-primary">No shopping list yet</h2>
-        <p className="mb-8 text-[14px] text-text-secondary">Generate a shopping list from your meal plan</p>
-        <Button onClick={handleGenerateList} disabled={isGenerating} className="rounded-xl px-8 py-3">
-          {isGenerating ? "Generating..." : "Generate from meal plan"}
+        <p className="mb-8 text-[14px] text-text-secondary">
+          Shopping lists are generated when you create or modify your menu.
+        </p>
+        <Button onClick={handleBackToMenu} size="lg" className="px-8">
+          Back to Menu
         </Button>
-        {globalError && !isGenerating && <p className="mt-4 text-sm text-error">{globalError}</p>}
       </PageContainer>
     );
   }
@@ -388,7 +383,7 @@ export function ShoppingPage() {
         const itemCount = items.length;
         
         return (
-          <section key={category} className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
+          <section key={category} className="overflow-hidden rounded-2xl border border-border-subtle bg-card-base">
             {/* Section header */}
             <button
               type="button"
@@ -466,6 +461,7 @@ export function ShoppingPage() {
                           event.stopPropagation();
                           setEditingItem(item);
                         }}
+                        aria-label={`Edit ${item.name}`}
                         className="text-[10px] font-semibold uppercase tracking-[0.2em] text-text-secondary hover:text-text-primary"
                       >
                         EDIT

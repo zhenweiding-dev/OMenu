@@ -16,13 +16,14 @@ export function EmptyState() {
       <p className="mb-8 text-[14px] leading-relaxed text-text-secondary">
         Create your first weekly menu
         <br />
-        and let AI plan your meals
+        and let AI design your menu
       </p>
 
       {/* CTA Button */}
       <Button
         asChild
-        className="rounded-xl bg-accent-base px-12 py-4 text-[15px] font-semibold text-white hover:bg-accent-base/90"
+        size="lg"
+        className="px-12"
       >
         <Link to="/create">Create Menu</Link>
       </Button>

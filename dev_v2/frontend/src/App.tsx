@@ -30,7 +30,7 @@ function App() {
   const draftPreferences = useDraftStore(
     useShallow((state) => ({
       keywords: state.keywords,
-      mustHaveItems: state.mustHaveItems,
+      preferredItems: state.preferredItems,
       dislikedItems: state.dislikedItems,
       numPeople: state.numPeople,
       budget: state.budget,

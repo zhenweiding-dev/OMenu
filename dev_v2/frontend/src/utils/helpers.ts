@@ -1,9 +1,16 @@
 import { addDays, addMinutes, differenceInCalendarWeeks, format, isSameWeek, startOfWeek } from "date-fns";
 
+const MICROSECONDS_REGEX = /\.(\d{3})\d+(?=Z|[+-]\d{2}:\d{2}$)/;
+
+function sanitizeIsoString(isoDate: string) {
+  if (!isoDate) return isoDate;
+  return isoDate.replace(MICROSECONDS_REGEX, ".$1");
+}
+
 function normalizeIsoToLocalDate(isoDate: string) {
-  const date = new Date(isoDate);
+  const date = new Date(sanitizeIsoString(isoDate));
   if (Number.isNaN(date.getTime())) {
-    return date;
+    return new Date();
   }
   return addMinutes(date, date.getTimezoneOffset());
 }

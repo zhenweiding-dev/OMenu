@@ -1,5 +1,7 @@
 # OMenu UI 设计现状与规范化方案（v2）
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 > 基于 `dev_v2/frontend` 当前实现整理，包含现状设计系统与下一步规范化方案。
 
 ## 1. 视觉基调（现状）

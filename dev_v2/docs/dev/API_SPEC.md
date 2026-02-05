@@ -1,6 +1,10 @@
 # REST API Specification
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 This document defines the backend REST API endpoints for OMenu.
+
+> 备注：本文已将 “Meal Plan” 统一更名为 “Menu Book”（一周菜单簿），接口与字段同步更新。
 
 **Base URL**: `http://localhost:8000` (development) or `https://your-backend.railway.app` (production)
 
@@ -11,10 +15,10 @@ This document defines the backend REST API endpoints for OMenu.
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/api/health` | GET | Health check |
-| `/api/meal-plans/generate` | POST | Generate new meal plan |
-| `/api/meal-plans/{id}` | GET | Get meal plan by ID |
-| `/api/meal-plans/{id}/modify` | POST | Modify existing meal plan |
-| `/api/shopping-lists/generate` | POST | Generate shopping list from meal plan |
+| `/api/menu-books/generate` | POST | Generate new menu book |
+| `/api/menu-books/{id}` | GET | Get menu book by ID |
+| `/api/menu-books/{id}/modify` | POST | Modify existing menu book |
+| `/api/shopping-lists/generate` | POST | Generate shopping list from menu book |
 
 ---
 
@@ -37,16 +41,16 @@ GET /api/health
 
 ---
 
-### Generate Meal Plan
+### Generate Menu Book
 
 ```
-POST /api/meal-plans/generate
+POST /api/menu-books/generate
 ```
 
-Generate a new weekly meal plan based on user preferences.
+Generate a new weekly menu book based on user preferences.
 
 **Note:** This endpoint uses a two-step Gemini API process:
-1. Generate natural language meal plan
+1. Generate natural language menu book
 2. Convert to structured JSON
 
 This produces more creative and reliable results.
@@ -56,7 +60,7 @@ This produces more creative and reliable results.
 ```json
 {
   "keywords": ["Quick", "Healthy", "Chinese"],
-  "mustHaveItems": ["Eggs", "Chicken", "Rice"],
+  "preferredItems": ["Eggs", "Chicken", "Rice"],
   "dislikedItems": ["Peanuts", "Cilantro"],
   "numPeople": 2,
   "budget": 100,
@@ -78,7 +82,7 @@ This produces more creative and reliable results.
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `keywords` | string[] | No | Cooking style, diet, cuisine preferences |
-| `mustHaveItems` | string[] | No | Required ingredients or recipes |
+| `preferredItems` | string[] | No | Required ingredients or recipes |
 | `dislikedItems` | string[] | No | Ingredients to exclude |
 | `numPeople` | integer | Yes | Number of people (1-10) |
 | `budget` | integer | Yes | Weekly budget in USD |
@@ -89,33 +93,36 @@ This produces more creative and reliable results.
 
 ```json
 {
-  "id": "mp_abc123",
+  "id": "mb_abc123",
   "createdAt": "2025-01-31T12:00:00Z",
   "status": "ready",
   "preferences": { ... },
-  "days": {
+  "menus": {
     "monday": {
-      "breakfast": {
-        "id": "mon-breakfast-001",
-        "name": "Scrambled Eggs with Tomato",
-        "ingredients": [
-          { "name": "eggs", "quantity": 4, "unit": "count", "category": "proteins" },
-          { "name": "tomato", "quantity": 2, "unit": "count", "category": "vegetables" },
-          { "name": "vegetable oil", "quantity": 0, "unit": "", "category": "seasonings" }
-        ],
-        "instructions": "1. Beat eggs with salt.\n2. Dice tomatoes.\n3. Heat oil, scramble eggs.\n4. Add tomatoes, mix.",
-        "estimatedTime": 15,
-        "servings": 2,
-        "difficulty": "easy",
-        "totalCalories": 320
-      },
-      "lunch": { ... },
-      "dinner": { ... }
+      "breakfast": [
+        {
+          "id": "mon-breakfast-001",
+          "name": "Scrambled Eggs with Tomato",
+          "ingredients": [
+            { "name": "eggs", "quantity": 4, "unit": "count", "category": "proteins" },
+            { "name": "tomato", "quantity": 2, "unit": "count", "category": "vegetables" },
+            { "name": "vegetable oil", "quantity": 0, "unit": "", "category": "seasonings" }
+          ],
+          "instructions": "1. Beat eggs with salt. 2. Dice tomatoes. 3. Heat oil, scramble eggs. 4. Add tomatoes, mix.",
+          "estimatedTime": 15,
+          "servings": 2,
+          "difficulty": "easy",
+          "totalCalories": 320,
+          "source": "ai"
+        }
+      ],
+      "lunch": [],
+      "dinner": []
     },
     "tuesday": {
-      "breakfast": null,
-      "lunch": { ... },
-      "dinner": { ... }
+      "breakfast": [],
+      "lunch": [],
+      "dinner": []
     },
     ...
   }
@@ -126,11 +133,11 @@ This produces more creative and reliable results.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `id` | string | Unique meal plan ID (prefix: `mp_`) |
+| `id` | string | Unique menu book ID (prefix: `mb_`) |
 | `createdAt` | string | ISO 8601 timestamp |
 | `status` | string | "ready", "generating", or "error" |
 | `preferences` | object | Snapshot of input preferences |
-| `days` | object | 7 days, each with breakfast/lunch/dinner |
+| `menus` | object | 7 days, each with breakfast/lunch/dinner |
 
 **Error Responses**
 
@@ -141,50 +148,50 @@ This produces more creative and reliable results.
 
 ---
 
-### Get Meal Plan
+### Get Menu Book
 
 ```
-GET /api/meal-plans/{id}
+GET /api/menu-books/{id}
 ```
 
-Retrieve an existing meal plan by ID.
+Retrieve an existing menu book by ID.
 
 **Path Parameters**
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `id` | string | Meal plan ID |
+| `id` | string | Menu book ID |
 
 **Response** `200 OK`
 
-Same format as Generate Meal Plan response.
+Same format as Generate Menu Book response.
 
 **Error Responses**
 
-- `404 Not Found`: Meal plan not found
+- `404 Not Found`: Menu book not found
 
 ---
 
-### Modify Meal Plan
+### Modify Menu Book
 
 ```
-POST /api/meal-plans/{id}/modify
+POST /api/menu-books/{id}/modify
 ```
 
-Modify an existing meal plan based on user instructions.
+Modify an existing menu book based on user instructions.
 
 **Path Parameters**
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `id` | string | Meal plan ID |
+| `id` | string | Menu book ID |
 
 **Request Body**
 
 ```json
 {
   "modification": "Replace Monday dinner with a vegetarian option",
-  "currentPlan": { ... }
+  "currentMenuBook": { ... }
 }
 ```
 
@@ -193,16 +200,16 @@ Modify an existing meal plan based on user instructions.
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `modification` | string | Yes | User's modification request (max 200 chars) |
-| `currentPlan` | object | Yes | Current meal plan to modify |
+| `currentMenuBook` | object | Yes | Current menu book to modify |
 
 **Response** `200 OK`
 
-Same format as Generate Meal Plan response (with modifications applied).
+Same format as Generate Menu Book response (with modifications applied).
 
 **Error Responses**
 
 - `400 Bad Request`: Invalid modification request
-- `404 Not Found`: Meal plan not found
+- `404 Not Found`: Menu book not found
 - `500 Internal Server Error`: Gemini API error
 
 ---
@@ -213,14 +220,18 @@ Same format as Generate Meal Plan response (with modifications applied).
 POST /api/shopping-lists/generate
 ```
 
-Generate a consolidated shopping list from a meal plan.
+Generate a consolidated shopping list from a menu book.
 
 **Request Body**
 
 ```json
 {
-  "mealPlanId": "mp_abc123",
-  "mealPlan": { ... }
+  "menuBookId": "mb_abc123",
+  "menus": {
+    "monday": { "breakfast": [], "lunch": [], "dinner": [] },
+    "tuesday": { "breakfast": [], "lunch": [], "dinner": [] },
+    "...": "..."
+  }
 }
 ```
 
@@ -228,15 +239,15 @@ Generate a consolidated shopping list from a meal plan.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `mealPlanId` | string | Yes | Associated meal plan ID |
-| `mealPlan` | object | Yes | Complete meal plan object |
+| `menuBookId` | string | Yes | Associated menu book ID |
+| `menus` | object | Yes | Weekly menus (7 days) |
 
 **Response** `200 OK`
 
 ```json
 {
   "id": "sl_xyz789",
-  "mealPlanId": "mp_abc123",
+  "menuBookId": "mb_abc123",
   "createdAt": "2025-01-31T12:05:00Z",
   "items": [
     {
@@ -272,7 +283,7 @@ Generate a consolidated shopping list from a meal plan.
 | Field | Type | Description |
 |-------|------|-------------|
 | `id` | string | Unique shopping list ID (prefix: `sl_`) |
-| `mealPlanId` | string | Associated meal plan ID |
+| `menuBookId` | string | Associated menu book ID |
 | `createdAt` | string | ISO 8601 timestamp |
 | `items` | array | Consolidated shopping items |
 

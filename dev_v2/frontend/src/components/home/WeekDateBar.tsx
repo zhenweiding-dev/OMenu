@@ -34,12 +34,19 @@ export function WeekDateBar({ createdAt, activeIndex, onSelect }: WeekDateBarPro
             className={cn(
               "group flex flex-1 flex-col items-center gap-1 rounded-full px-1 pt-2 pb-3 transition-colors",
               isActive
-                ? "bg-accent-base/20 text-text-primary"
+                ? "bg-accent-soft text-accent-base"
                 : "bg-paper-muted/70 text-text-secondary hover:bg-paper-muted",
             )}
           >
             <span className="text-[11px] font-semibold">{DAY_LABELS[day]}</span>
-            <span className="whitespace-nowrap text-[10px] text-text-tertiary">{dateLabel}</span>
+            <span
+              className={cn(
+                "whitespace-nowrap text-[10px]",
+                isActive ? "text-accent-base/80" : "text-text-tertiary",
+              )}
+            >
+              {dateLabel}
+            </span>
             <span
               className={cn(
                 "mt-1 h-[3px] w-6 rounded-full transition-colors",

@@ -2,6 +2,8 @@
 
 This document defines all data structures used in OMenu, including both TypeScript interfaces (frontend) and Pydantic models (backend).
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan）。字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 ---
 
 ## Overview
@@ -91,11 +93,11 @@ class Ingredient(BaseModel):
 
 ---
 
-### Recipe
+### Dish
 
 **TypeScript**
 ```typescript
-interface Recipe {
+interface Dish {
   id: string;
   name: string;
   ingredients: Ingredient[];
@@ -104,13 +106,14 @@ interface Recipe {
   servings: number;
   difficulty: Difficulty;
   totalCalories: number;
+  source: "ai" | "manual";
   notes?: string;                     // User notes (editable)
 }
 ```
 
 **Pydantic**
 ```python
-class Recipe(BaseModel):
+class Dish(BaseModel):
     id: str
     name: str
     ingredients: List[Ingredient]
@@ -119,6 +122,7 @@ class Recipe(BaseModel):
     servings: int
     difficulty: Difficulty
     totalCalories: int
+    source: DishSource
     notes: Optional[str] = None
 ```
 
@@ -170,7 +174,7 @@ class CookSchedule(BaseModel):
 ```typescript
 interface UserPreferences {
   keywords: string[];                  // Quick, Healthy, Chinese, etc.
-  mustHaveItems: string[];             // Required ingredients/recipes
+  preferredItems: string[];             // Required ingredients/recipes
   dislikedItems: string[];             // Excluded ingredients
   numPeople: number;
   budget: number;                      // USD
@@ -183,7 +187,7 @@ interface UserPreferences {
 ```python
 class UserPreferences(BaseModel):
     keywords: List[str] = []
-    mustHaveItems: List[str] = []
+    preferredItems: List[str] = []
     dislikedItems: List[str] = []
     numPeople: int = Field(ge=1, le=10, default=2)
     budget: int = Field(ge=50, le=500, default=100)
@@ -193,64 +197,66 @@ class UserPreferences(BaseModel):
 
 ---
 
-### Weekly Meal Plan
+### Weekly Menu Book
 
 **TypeScript**
 ```typescript
-interface DayMeals {
-  breakfast: Recipe | null;
-  lunch: Recipe | null;
-  dinner: Recipe | null;
+interface Menu {
+  breakfast: Dish[];
+  lunch: Dish[];
+  dinner: Dish[];
 }
 
-interface WeekDays {
-  monday: DayMeals;
-  tuesday: DayMeals;
-  wednesday: DayMeals;
-  thursday: DayMeals;
-  friday: DayMeals;
-  saturday: DayMeals;
-  sunday: DayMeals;
+interface WeekMenus {
+  monday: Menu;
+  tuesday: Menu;
+  wednesday: Menu;
+  thursday: Menu;
+  friday: Menu;
+  saturday: Menu;
+  sunday: Menu;
 }
 
-type MealPlanStatus = 'generating' | 'ready' | 'error';
+type MenuBookStatus = 'generating' | 'ready' | 'error';
 
-interface MealPlan {
+interface MenuBook {
   id: string;
   createdAt: string;                  // ISO 8601
-  status: MealPlanStatus;
+  status: MenuBookStatus;
   preferences: UserPreferences;
-  days: WeekDays;
+  menus: WeekMenus;
+  shoppingList: ShoppingList;
 }
 ```
 
 **Pydantic**
 ```python
-class DayMeals(BaseModel):
-    breakfast: Optional[Recipe] = None
-    lunch: Optional[Recipe] = None
-    dinner: Optional[Recipe] = None
+class Menu(BaseModel):
+    breakfast: List[Dish] = Field(default_factory=list)
+    lunch: List[Dish] = Field(default_factory=list)
+    dinner: List[Dish] = Field(default_factory=list)
 
-class WeekDays(BaseModel):
-    monday: DayMeals
-    tuesday: DayMeals
-    wednesday: DayMeals
-    thursday: DayMeals
-    friday: DayMeals
-    saturday: DayMeals
-    sunday: DayMeals
+class WeekMenus(BaseModel):
+    monday: Menu
+    tuesday: Menu
+    wednesday: Menu
+    thursday: Menu
+    friday: Menu
+    saturday: Menu
+    sunday: Menu
 
-class MealPlanStatus(str, Enum):
+class MenuBookStatus(str, Enum):
     generating = "generating"
     ready = "ready"
     error = "error"
 
-class MealPlan(BaseModel):
+class MenuBook(BaseModel):
     id: str
     createdAt: datetime
-    status: MealPlanStatus
+    status: MenuBookStatus
     preferences: UserPreferences
-    days: WeekDays
+    menus: WeekMenus
+    shoppingList: ShoppingList
 ```
 
 ---
@@ -271,7 +277,7 @@ interface ShoppingItem {
 
 interface ShoppingList {
   id: string;
-  mealPlanId: string;
+  menuBookId: string;
   createdAt: string;
   items: ShoppingItem[];
 }
@@ -290,46 +296,46 @@ class ShoppingItem(BaseModel):
 
 class ShoppingList(BaseModel):
     id: str
-    mealPlanId: str
+    menuBookId: str
     createdAt: datetime
     items: List[ShoppingItem]
 ```
 
 ---
 
-### Menu Book (Frontend Only)
+### Menu Book (Frontend State)
 
-A MenuBook represents a complete weekly package containing both the meal plan and its corresponding shopping list. Each MenuBook has a one-to-one relationship with a ShoppingList.
+MenuBook is the weekly aggregate used across the app. It mirrors the backend schema and always carries the menus plus the (possibly empty) shopping list.
 
 **TypeScript**
 ```typescript
 interface MenuBook {
   id: string;                          // Unique identifier for the week
-  weekStartDate: string;               // ISO 8601 date (Monday)
-  weekEndDate: string;                 // ISO 8601 date (Sunday)
-  mealPlan: MealPlan;                  // Weekly meal plan
-  shoppingList: ShoppingList | null;   // Corresponding shopping list (null if not yet generated)
   createdAt: string;                   // ISO 8601 timestamp
+  status: "generating" | "ready" | "error";
+  preferences: UserPreferences;
+  menus: WeekMenus;
+  shoppingList: ShoppingList;
 }
 ```
 
 **Relationship:**
-- One MenuBook = One Week = One MealPlan + One ShoppingList
-- When viewing Shopping Page, it displays the shopping list for the currently selected MenuBook
-- When meal plan is modified, the shopping list should be regenerated
+- One MenuBook = One Week = One Menus + One ShoppingList
+- Shopping Page displays the list for the currently selected MenuBook
+- Modifying a menu via AI regenerates the shopping list (manual edits do not)
 
 ---
 
-### Meal Plan Draft (Frontend Only)
+### Menu Book Draft (Frontend Only)
 
 Stores intermediate state during plan creation for resume capability.
 
 **TypeScript**
 ```typescript
-interface MealPlanDraft {
-  currentStep: number;                 // Steps 1-8
+interface MenuBookDraft {
+  currentStep: number;                 // Steps 1-9
   keywords: string[];
-  mustHaveItems: string[];
+  preferredItems: string[];
   dislikedItems: string[];
   numPeople: number;
   budget: number;
@@ -349,7 +355,7 @@ For UI state and drafts only:
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `omenu_meal_plan_draft` | `MealPlanDraft` | Creation draft (resume support) |
+| `omenu-draft` | `MenuBookDraft` | Creation draft (resume support) |
 | `omenu_preferences` | `Partial<UserPreferences>` | Last used preferences |
 
 ### Backend
@@ -358,20 +364,20 @@ All generated data is returned from the backend API. The MVP does not persist da
 
 | Endpoint | Returns | Description |
 |----------|---------|-------------|
-| `POST /api/meal-plans/generate` | `MealPlan` | Generated meal plan |
-| `POST /api/meal-plans/{id}/modify` | `MealPlan` | Modified meal plan |
+| `POST /api/menu-books/generate` | `MenuBook` | Generated menu book |
+| `POST /api/menu-books/{id}/modify` | `MenuBook` | Modified menu book |
 | `POST /api/shopping-lists/generate` | `ShoppingList` | Generated shopping list |
 
 ---
 
 ## API Request/Response Formats
 
-### Generate Meal Plan Request
+### Generate Menu Book Request
 
 ```json
 {
   "keywords": ["chinese food", "healthy"],
-  "mustHaveItems": ["eggs", "tofu"],
+  "preferredItems": ["eggs", "tofu"],
   "dislikedItems": ["peanuts"],
   "budget": 100,
   "numPeople": 2,
@@ -383,37 +389,40 @@ All generated data is returned from the backend API. The MVP does not persist da
 }
 ```
 
-### Meal Plan Response
+### Menu Book Response
 
 ```json
 {
-  "id": "mp_abc123",
+  "id": "mb_abc123",
   "createdAt": "2025-01-31T12:00:00Z",
   "status": "ready",
   "preferences": { ... },
-  "days": {
+  "menus": {
     "monday": {
-      "breakfast": {
-        "id": "mon-breakfast-001",
-        "name": "Scrambled Eggs with Tomato",
-        "ingredients": [
-          { "name": "eggs", "quantity": 4, "unit": "count", "category": "proteins" },
-          { "name": "tomato", "quantity": 2, "unit": "count", "category": "vegetables" },
-          { "name": "vegetable oil", "quantity": 0, "unit": "", "category": "seasonings" }
-        ],
-        "instructions": "1. Beat eggs... 2. Stir fry...",
-        "estimatedTime": 15,
-        "servings": 2,
-        "difficulty": "easy",
-        "totalCalories": 320
-      },
-      "lunch": { ... },
-      "dinner": { ... }
+      "breakfast": [
+        {
+          "id": "mon-breakfast-001",
+          "name": "Scrambled Eggs with Tomato",
+          "ingredients": [
+            { "name": "eggs", "quantity": 4, "unit": "count", "category": "proteins" },
+            { "name": "tomato", "quantity": 2, "unit": "count", "category": "vegetables" },
+            { "name": "vegetable oil", "quantity": 0, "unit": "", "category": "seasonings" }
+          ],
+          "instructions": "1. Beat eggs... 2. Stir fry...",
+          "estimatedTime": 15,
+          "servings": 2,
+          "difficulty": "easy",
+          "totalCalories": 320,
+          "source": "ai"
+        }
+      ],
+      "lunch": [],
+      "dinner": []
     },
     "tuesday": {
-      "breakfast": null,
-      "lunch": { ... },
-      "dinner": { ... }
+      "breakfast": [],
+      "lunch": [],
+      "dinner": []
     }
   }
 }
@@ -424,7 +433,7 @@ All generated data is returned from the backend API. The MVP does not persist da
 ```json
 {
   "id": "sl_xyz789",
-  "mealPlanId": "mp_abc123",
+  "menuBookId": "mb_abc123",
   "createdAt": "2025-01-31T12:05:00Z",
   "items": [
     { "id": "item_001", "name": "Eggs", "category": "proteins", "totalQuantity": 12, "unit": "count", "purchased": false },
@@ -455,7 +464,7 @@ All generated data is returned from the backend API. The MVP does not persist da
 | `category` | Must be valid IngredientCategory |
 | `quantity` | 0 for seasonings, > 0 for others |
 
-### Recipe
+### Dish
 
 | Field | Validation |
 |-------|------------|
@@ -470,7 +479,7 @@ All generated data is returned from the backend API. The MVP does not persist da
 
 | Entity | Prefix | Example |
 |--------|--------|---------|
-| Meal Plan | `mp_` | `mp_abc123` |
+| Menu Book | `mb_` | `mb_abc123` |
 | Shopping List | `sl_` | `sl_xyz789` |
 | Shopping Item | `item_` | `item_001` |
-| Recipe | `{day}-{meal}-{number}` | `mon-breakfast-001` |
+| Dish | `{day}-{meal}-{number}` | `mon-breakfast-001` |

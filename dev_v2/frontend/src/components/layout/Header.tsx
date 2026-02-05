@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { getRelativeWeekLabel, getWeekDateRange } from "@/utils/helpers";
 import { useAppStore } from "@/stores/useAppStore";
 import { useShoppingStore } from "@/stores/useShoppingStore";
+import { Button } from "@/components/ui/button";
 
 const ROUTE_TITLES: Record<string, string> = {
   "/shopping": "Shopping List",
@@ -28,9 +29,9 @@ export function Header() {
   }
 
   if (pathname === "/") {
-    const relativeWeekLabel = currentBook ? getRelativeWeekLabel(currentBook.mealPlan.createdAt) : "WELCOME";
+    const relativeWeekLabel = currentBook ? getRelativeWeekLabel(currentBook.createdAt) : "WELCOME";
     const currentWeekRange = currentBook
-      ? getWeekDateRange(currentBook.mealPlan.createdAt)
+      ? getWeekDateRange(currentBook.createdAt)
       : getWeekDateRange(new Date().toISOString());
 
     return (
@@ -43,18 +44,20 @@ export function Header() {
               </p>
               {currentWeekRange && <p className="mt-1 text-[11px] text-text-secondary">{currentWeekRange}</p>}
             </div>
-            <button
+            <Button
               type="button"
               onClick={() => setIsMenuPickerOpen(true)}
               aria-label="Open menu book picker"
-              className="flex h-10 items-center gap-2 rounded-full border border-border-subtle bg-paper-base px-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-primary shadow-btn"
+              variant="outline"
+              size="sm"
+              className="h-10 gap-2 rounded-full px-4 text-[11px] uppercase tracking-[0.12em] shadow-btn"
             >
               <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="none" stroke="currentColor" strokeWidth={1.8}>
                 <path d="M4 19.5A2.5 2.5 0 016.5 17H20" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               MENUBOOK
-            </button>
+            </Button>
           </div>
         </div>
       </header>
@@ -64,7 +67,7 @@ export function Header() {
   const title = ROUTE_TITLES[pathname] ?? "OMenu Planner";
   // Per spec: Shopping page shows date range, Profile page does not
   const showDateRange = pathname === "/shopping";
-  const subtitle = showDateRange && currentBook ? getWeekDateRange(currentBook.mealPlan.createdAt) : undefined;
+  const subtitle = showDateRange && currentBook ? getWeekDateRange(currentBook.createdAt) : undefined;
 
   // Shopping page: Add button in header per spec
   if (pathname === "/shopping") {
@@ -77,14 +80,16 @@ export function Header() {
               {subtitle && <p className="mt-1 text-[11px] text-text-secondary">{subtitle}</p>}
             </div>
             {/* Add button per spec */}
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="icon"
               onClick={() => setShowAddItemModal(true)}
               aria-label="Add item"
-              className="flex h-9 w-9 items-center justify-center rounded-xl bg-card-base shadow-btn"
+              className="h-9 w-9 rounded-xl border-dashed border-border-tag bg-white text-text-tertiary shadow-btn hover:border-accent-base"
             >
               <PlusIcon />
-            </button>
+            </Button>
           </div>
         </div>
       </header>

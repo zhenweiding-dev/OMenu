@@ -5,7 +5,7 @@
 
 import { http, HttpResponse, delay } from 'msw';
 import { 
-  mockMealPlan, 
+  mockMenuBook, 
   mockShoppingList, 
   mockApiResponses 
 } from './test-mocks';
@@ -19,7 +19,7 @@ const API_BASE = '/api';
 
 export const successHandlers = [
   // 生成餐饮计划
-  http.post(`${API_BASE}/meal-plans/generate`, async ({ request }) => {
+  http.post(`${API_BASE}/menu-books/generate`, async ({ request }) => {
     // 模拟正常延迟
     await delay(1000);
     
@@ -27,13 +27,13 @@ export const successHandlers = [
     
     // 基于请求参数生成响应
     const plan = {
-      ...mockMealPlan,
+      ...mockMenuBook,
       id: `plan-${Date.now()}`,
       numPeople: body.numPeople || 2,
       budget: body.budget || 100,
       difficulty: body.difficulty || 'medium',
       keywords: body.keywords || [],
-      mustHaveItems: body.mustHaveItems || [],
+      preferredItems: body.preferredItems || [],
       dislikedItems: body.dislikedItems || [],
       createdAt: new Date().toISOString(),
     };
@@ -42,7 +42,7 @@ export const successHandlers = [
   }),
 
   // 修改餐饮计划
-  http.post(`${API_BASE}/meal-plans/:id/modify`, async ({ params, request }) => {
+  http.post(`${API_BASE}/menu-books/:id/modify`, async ({ params, request }) => {
     await delay(800);
     
     const body = await request.json();
@@ -57,7 +57,7 @@ export const successHandlers = [
     }
     
     const modifiedPlan = {
-      ...mockMealPlan,
+      ...mockMenuBook,
       id: params.id,
       updatedAt: new Date().toISOString(),
       // 模拟一些修改（实际会根据 AI 响应变化）
@@ -75,7 +75,7 @@ export const successHandlers = [
     const shoppingList = {
       ...mockShoppingList,
       id: `list-${Date.now()}`,
-      mealPlanId: body.mealPlanId,
+      menuBookId: body.menuBookId,
       createdAt: new Date().toISOString(),
     };
     
@@ -83,9 +83,9 @@ export const successHandlers = [
   }),
 
   // 获取餐饮计划
-  http.get(`${API_BASE}/meal-plans/:id`, ({ params }) => {
+  http.get(`${API_BASE}/menu-books/:id`, ({ params }) => {
     return HttpResponse.json({
-      ...mockMealPlan,
+      ...mockMenuBook,
       id: params.id,
     });
   }),
@@ -125,7 +125,7 @@ export const successHandlers = [
   }),
 
   // 删除餐食
-  http.delete(`${API_BASE}/meal-plans/:planId/meals/:mealId`, ({ params }) => {
+  http.delete(`${API_BASE}/menu-books/:planId/meals/:mealId`, ({ params }) => {
     return HttpResponse.json({
       success: true,
       deletedMealId: params.mealId,
@@ -139,17 +139,17 @@ export const successHandlers = [
 
 export const errorHandlers = {
   // 生成计划失败
-  generatePlanError: http.post(`${API_BASE}/meal-plans/generate`, () => {
+  generatePlanError: http.post(`${API_BASE}/menu-books/generate`, () => {
     return HttpResponse.json(
-      { error: 'Failed to generate meal plan', code: 'GENERATION_FAILED' },
+      { error: 'Failed to generate menu book', code: 'GENERATION_FAILED' },
       { status: 500 }
     );
   }),
 
   // 修改计划失败
-  modifyPlanError: http.post(`${API_BASE}/meal-plans/:id/modify`, () => {
+  modifyPlanError: http.post(`${API_BASE}/menu-books/:id/modify`, () => {
     return HttpResponse.json(
-      { error: 'Failed to modify meal plan', code: 'MODIFICATION_FAILED' },
+      { error: 'Failed to modify menu book', code: 'MODIFICATION_FAILED' },
       { status: 500 }
     );
   }),
@@ -163,7 +163,7 @@ export const errorHandlers = {
   }),
 
   // 404 Not Found
-  notFound: http.get(`${API_BASE}/meal-plans/:id`, () => {
+  notFound: http.get(`${API_BASE}/menu-books/:id`, () => {
     return HttpResponse.json(
       { error: 'Meal plan not found', code: 'NOT_FOUND' },
       { status: 404 }
@@ -179,7 +179,7 @@ export const errorHandlers = {
   }),
 
   // 网络错误
-  networkError: http.post(`${API_BASE}/meal-plans/generate`, () => {
+  networkError: http.post(`${API_BASE}/menu-books/generate`, () => {
     return HttpResponse.error();
   }),
 };
@@ -190,16 +190,16 @@ export const errorHandlers = {
 
 export const timeoutHandlers = {
   // 生成计划超时（超过 2 分钟）
-  generatePlanTimeout: http.post(`${API_BASE}/meal-plans/generate`, async () => {
+  generatePlanTimeout: http.post(`${API_BASE}/menu-books/generate`, async () => {
     // 延迟 130 秒（超过 2 分钟超时限制）
     await delay(130000);
-    return HttpResponse.json(mockMealPlan);
+    return HttpResponse.json(mockMenuBook);
   }),
 
   // 修改计划超时
-  modifyPlanTimeout: http.post(`${API_BASE}/meal-plans/:id/modify`, async () => {
+  modifyPlanTimeout: http.post(`${API_BASE}/menu-books/:id/modify`, async () => {
     await delay(130000);
-    return HttpResponse.json(mockMealPlan);
+    return HttpResponse.json(mockMenuBook);
   }),
 
   // 生成购物清单超时
@@ -215,15 +215,15 @@ export const timeoutHandlers = {
 
 export const slowHandlers = {
   // 慢速生成计划（正好在超时边缘）
-  generatePlanSlow: http.post(`${API_BASE}/meal-plans/generate`, async () => {
+  generatePlanSlow: http.post(`${API_BASE}/menu-books/generate`, async () => {
     await delay(90000); // 90 秒
-    return HttpResponse.json(mockMealPlan);
+    return HttpResponse.json(mockMenuBook);
   }),
 
   // 正常慢速响应
-  normalSlow: http.post(`${API_BASE}/meal-plans/generate`, async () => {
+  normalSlow: http.post(`${API_BASE}/menu-books/generate`, async () => {
     await delay(3000); // 3 秒
-    return HttpResponse.json(mockMealPlan);
+    return HttpResponse.json(mockMenuBook);
   }),
 };
 
@@ -233,7 +233,7 @@ export const slowHandlers = {
 
 export const validationHandlers = {
   // 验证生成计划请求
-  validateGeneratePlan: http.post(`${API_BASE}/meal-plans/generate`, async ({ request }) => {
+  validateGeneratePlan: http.post(`${API_BASE}/menu-books/generate`, async ({ request }) => {
     const body = await request.json();
     const errors = [];
 
@@ -279,7 +279,7 @@ export const validationHandlers = {
 
     await delay(1000);
     return HttpResponse.json({
-      ...mockMealPlan,
+      ...mockMenuBook,
       id: `plan-${Date.now()}`,
     });
   }),

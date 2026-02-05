@@ -13,13 +13,14 @@ interface MenuBookCardProps {
 const LONG_PRESS_DURATION = 550;
 
 export function MenuBookCard({ book, onSelect, isActive, onLongPress }: MenuBookCardProps) {
-  const scheduledMeals = Object.values(book.mealPlan.days).reduce((total, day) => {
+  const scheduledMeals = Object.values(book.menus).reduce((total, day) => {
     return (
-      total + [day.breakfast, day.lunch, day.dinner].filter(Boolean).length
+      total +
+      [day.breakfast, day.lunch, day.dinner].filter((items) => items.length > 0).length
     );
   }, 0);
 
-  const weekRange = getWeekDateRange(book.mealPlan.createdAt);
+  const weekRange = getWeekDateRange(book.createdAt);
   const shoppingCount = book.shoppingList.items.length;
 
   const holdTimeoutRef = useRef<number | null>(null);

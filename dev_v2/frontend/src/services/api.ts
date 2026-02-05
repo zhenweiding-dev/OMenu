@@ -1,4 +1,4 @@
-import type { MealPlan, ShoppingList, UserPreferences, UserState } from "@/types";
+import type { MenuBook, ShoppingList, UserPreferences, UserState, WeekMenus } from "@/types";
 import { SAMPLE_MENU_BOOK } from "@/data/sampleMenuBook";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
@@ -14,25 +14,31 @@ function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
-function buildMockMealPlan(preferences: UserPreferences): MealPlan {
-  const plan = clone(SAMPLE_MENU_BOOK.mealPlan);
+function buildMockMenuBook(preferences: UserPreferences): MenuBook {
+  const menuBook = clone(SAMPLE_MENU_BOOK);
   const now = new Date().toISOString();
   const suffix = now.replace(/[-:.TZ]/g, "");
   return {
-    ...plan,
-    id: `mock_plan_${suffix}`,
+    ...menuBook,
+    id: `mock_book_${suffix}`,
     createdAt: now,
     preferences,
+    shoppingList: {
+      ...menuBook.shoppingList,
+      id: `mock_list_${suffix}`,
+      menuBookId: `mock_book_${suffix}`,
+      createdAt: now,
+    },
   };
 }
 
-function buildMockShoppingList(mealPlanId: string, createdAt: string): ShoppingList {
+function buildMockShoppingList(menuBookId: string, createdAt: string): ShoppingList {
   const list = clone(SAMPLE_MENU_BOOK.shoppingList);
   const suffix = createdAt.replace(/[-:.TZ]/g, "");
   return {
     ...list,
     id: `mock_list_${suffix}`,
-    mealPlanId,
+    menuBookId,
     createdAt,
   };
 }
@@ -97,13 +103,13 @@ export async function healthCheck() {
   return handleResponse<{ status: string; version: string }>(response);
 }
 
-export async function generateMealPlan(preferences: UserPreferences) {
+export async function generateMenuBook(preferences: UserPreferences) {
   if (USE_MOCK) {
     await delay(1200);
-    return buildMockMealPlan(preferences);
+    return buildMockMenuBook(preferences);
   }
   const response = await fetchWithTimeout(
-    `${API_BASE_URL}/api/meal-plans/generate`,
+    `${API_BASE_URL}/api/menu-books/generate`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -111,37 +117,37 @@ export async function generateMealPlan(preferences: UserPreferences) {
     },
     GENERATION_TIMEOUT,
   );
-  return handleResponse<MealPlan>(response);
+  return handleResponse<MenuBook>(response);
 }
 
-export async function modifyMealPlan(planId: string, modification: string, currentPlan: MealPlan) {
+export async function modifyMenuBook(bookId: string, modification: string, currentMenuBook: MenuBook) {
   if (USE_MOCK) {
     await delay(800);
-    return { ...currentPlan };
+    return { ...currentMenuBook };
   }
   const response = await fetchWithTimeout(
-    `${API_BASE_URL}/api/meal-plans/${planId}/modify`,
+    `${API_BASE_URL}/api/menu-books/${bookId}/modify`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ modification, currentPlan }),
+      body: JSON.stringify({ modification, currentMenuBook }),
     },
     GENERATION_TIMEOUT,
   );
-  return handleResponse<MealPlan>(response);
+  return handleResponse<MenuBook>(response);
 }
 
-export async function generateShoppingList(mealPlanId: string, mealPlan: MealPlan) {
+export async function generateShoppingList(menuBookId: string, menus: WeekMenus) {
   if (USE_MOCK) {
     await delay(800);
-    return buildMockShoppingList(mealPlanId, new Date().toISOString());
+    return buildMockShoppingList(menuBookId, new Date().toISOString());
   }
   const response = await fetchWithTimeout(
     `${API_BASE_URL}/api/shopping-lists/generate`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mealPlanId, mealPlan }),
+      body: JSON.stringify({ menuBookId, menus }),
     },
     GENERATION_TIMEOUT,
   );

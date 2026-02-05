@@ -35,6 +35,7 @@ const config: Config = {
         accent: {
           base: "#8B9469",
           light: "#A8AD8B",
+          soft: "#F0EBE3",
           orange: "#D97706",
           orangeLight: "#FEF3E2",
         },

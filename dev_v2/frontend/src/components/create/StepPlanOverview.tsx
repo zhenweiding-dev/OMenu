@@ -8,28 +8,18 @@ import { AddMealModal } from "@/components/home/AddMealModal";
 import { RecipeDetailSheet } from "@/components/home/RecipeDetailModal";
 import { WEEK_DAYS } from "@/utils/constants";
 import { getDayDisplay, getWeekDateRange, startCaseDay } from "@/utils/helpers";
-import type { MealPlan, ShoppingList, DayMeals, ExtraDayMeals, ExtraWeekMeals, Recipe } from "@/types";
-import { useMealPlan } from "@/hooks/useMealPlan";
+import type { Dish, Menu, MenuBook } from "@/types";
+import { useMenuBook } from "@/hooks/useMenuBook";
 import { useAppStore } from "@/stores/useAppStore";
 
 interface StepPlanOverviewProps {
-  mealPlan: MealPlan;
-  shoppingList: ShoppingList;
-  extraMeals: ExtraWeekMeals;
-  onPlanUpdated: (plan: MealPlan, list: ShoppingList) => void;
-  onExtraMealsUpdated: (extraMeals: ExtraWeekMeals) => void;
+  menuBook: MenuBook;
+  onMenuBookUpdated: (menuBook: MenuBook) => void;
   onViewShopping: () => void;
 }
 
-export function StepPlanOverview({
-  mealPlan,
-  shoppingList,
-  extraMeals,
-  onPlanUpdated,
-  onExtraMealsUpdated,
-  onViewShopping,
-}: StepPlanOverviewProps) {
-  const { updatePlan } = useMealPlan();
+export function StepPlanOverview({ menuBook, onMenuBookUpdated, onViewShopping }: StepPlanOverviewProps) {
+  const { updateMenu, generateList } = useMenuBook();
   const isGenerating = useAppStore((state) => state.isGenerating);
   const globalError = useAppStore((state) => state.error);
   const clearError = useAppStore((state) => state.clearError);
@@ -40,38 +30,17 @@ export function StepPlanOverview({
   const [successMessage, setSuccessMessage] = useState("");
   const [addMealDayKey, setAddMealDayKey] = useState<(typeof WEEK_DAYS)[number] | null>(null);
   const [activeDish, setActiveDish] = useState<{
-    day: keyof MealPlan["days"];
-    mealType: keyof DayMeals;
-    recipe: Recipe;
-    source: "base" | "extra";
+    day: keyof MenuBook["menus"];
+    mealType: keyof Menu;
+    dish: Dish;
   } | null>(null);
 
   const touchStartXRef = useRef<number | null>(null);
 
   const currentDayKey = WEEK_DAYS[currentDayIndex];
-  const extrasForDay = extraMeals[currentDayKey] ?? { breakfast: [], lunch: [], dinner: [] };
-  const currentMeals = {
-    breakfast: mealPlan.days[currentDayKey].breakfast
-      ? [
-          { ...mealPlan.days[currentDayKey].breakfast, source: "base" as const },
-          ...(extrasForDay.breakfast ?? []).map((recipe) => ({ ...recipe, source: "extra" as const })),
-        ]
-      : (extrasForDay.breakfast ?? null),
-    lunch: mealPlan.days[currentDayKey].lunch
-      ? [
-          { ...mealPlan.days[currentDayKey].lunch, source: "base" as const },
-          ...(extrasForDay.lunch ?? []).map((recipe) => ({ ...recipe, source: "extra" as const })),
-        ]
-      : (extrasForDay.lunch ?? null),
-    dinner: mealPlan.days[currentDayKey].dinner
-      ? [
-          { ...mealPlan.days[currentDayKey].dinner, source: "base" as const },
-          ...(extrasForDay.dinner ?? []).map((recipe) => ({ ...recipe, source: "extra" as const })),
-        ]
-      : (extrasForDay.dinner ?? null),
-  } as DayMeals;
+  const currentMenu = menuBook.menus[currentDayKey];
   const currentDayLabel = startCaseDay(currentDayKey);
-  const { dateLabel } = getDayDisplay(mealPlan.createdAt, currentDayIndex);
+  const { dateLabel } = getDayDisplay(menuBook.createdAt, currentDayIndex);
 
   const handlePrevDay = () => {
     setCurrentDayIndex((prev) => (prev + WEEK_DAYS.length - 1) % WEEK_DAYS.length);
@@ -96,12 +65,11 @@ export function StepPlanOverview({
     touchStartXRef.current = null;
   };
 
-  const handleOpenMeal = (mealType: keyof DayMeals, meal: Recipe & { source?: "base" | "extra" }) => {
+  const handleOpenDish = (mealType: keyof Menu, dish: Dish) => {
     setActiveDish({
       day: currentDayKey,
       mealType,
-      recipe: meal,
-      source: meal.source === "extra" ? "extra" : "base",
+      dish,
     });
   };
 
@@ -113,44 +81,28 @@ export function StepPlanOverview({
     setAddMealDayKey(null);
   };
 
-  const ensureDayExtras = (day: keyof ExtraWeekMeals): ExtraDayMeals => {
-    return extraMeals[day] ?? { breakfast: [], lunch: [], dinner: [] };
-  };
-
   const handleSubmitAddMeal = ({
     mealType,
-    meal,
+    dish,
   }: {
-    mealType: keyof DayMeals;
-    meal: NonNullable<DayMeals[keyof DayMeals]>;
+    mealType: keyof Menu;
+    dish: Dish;
   }) => {
-    const base = mealPlan.days[currentDayKey][mealType];
-    if (base) {
-      const dayExtras = ensureDayExtras(currentDayKey);
-      const nextExtras: ExtraWeekMeals = {
-        ...extraMeals,
+    const dayMenu = menuBook.menus[currentDayKey];
+    const nextMenuBook: MenuBook = {
+      ...menuBook,
+      menus: {
+        ...menuBook.menus,
         [currentDayKey]: {
-          ...dayExtras,
-          [mealType]: [...(dayExtras[mealType] ?? []), meal],
-        },
-      };
-      onExtraMealsUpdated(nextExtras);
-      return;
-    }
-    const updatedPlan: MealPlan = {
-      ...mealPlan,
-      days: {
-        ...mealPlan.days,
-        [currentDayKey]: {
-          ...mealPlan.days[currentDayKey],
-          [mealType]: meal,
+          ...dayMenu,
+          [mealType]: [dish, ...(dayMenu[mealType] ?? [])],
         },
       },
     };
-    onPlanUpdated(updatedPlan, shoppingList);
+    onMenuBookUpdated(nextMenuBook);
   };
 
-  const handleModifyPlan = async () => {
+  const handleModifyMenu = async () => {
     const trimmed = modification.trim();
     if (!trimmed) return;
 
@@ -158,11 +110,12 @@ export function StepPlanOverview({
     clearError();
 
     try {
-      const result = await updatePlan(mealPlan, trimmed, shoppingList);
-      onPlanUpdated(result.plan, result.list);
+      const updated = await updateMenu(menuBook, trimmed);
+      const list = await generateList(updated);
+      onMenuBookUpdated({ ...updated, shoppingList: list });
       setModification("");
       setShowModifyModal(false);
-      setSuccessMessage("Plan updated successfully.");
+      setSuccessMessage("Menu updated successfully.");
     } catch {
       // Errors piped through global store
     }
@@ -174,7 +127,7 @@ export function StepPlanOverview({
         <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">
           REVIEW
         </p>
-        <p className="mt-1 text-[11px] text-text-secondary">{getWeekDateRange(mealPlan.createdAt)}</p>
+        <p className="mt-1 text-[11px] text-text-secondary">{getWeekDateRange(menuBook.createdAt)}</p>
         {successMessage && (
           <p className="mt-1 text-[11px] text-success">{successMessage}</p>
         )}
@@ -182,7 +135,7 @@ export function StepPlanOverview({
 
       <div className="px-5">
         <WeekDateBar
-          createdAt={mealPlan.createdAt}
+          createdAt={menuBook.createdAt}
           activeIndex={currentDayIndex}
           onSelect={setCurrentDayIndex}
         />
@@ -199,34 +152,28 @@ export function StepPlanOverview({
         <DailyMenuCard
           day={currentDayLabel}
           dateLabel={dateLabel}
-          meals={currentMeals}
-          onOpenMeal={handleOpenMeal}
+          menu={currentMenu}
+          onOpenDish={handleOpenDish}
           onAddMeal={handleOpenAddMeal}
         />
       </div>
 
-      {/* Error display */}
       {globalError && <p className="px-5 pb-4 text-center text-[12px] text-error">{globalError}</p>}
 
-      {/* Dual action buttons */}
       <div className="sticky bottom-0 border-t border-border-subtle bg-paper-base px-5 pb-6 pt-4">
         <div className="flex gap-3">
-          <button
+          <Button
             type="button"
+            variant="outline"
+            className="flex-1"
             onClick={() => setShowModifyModal(true)}
             disabled={isGenerating}
-            className="flex flex-1 items-center justify-center rounded-xl border border-border-subtle bg-card-base px-4 py-2.5 text-[13px] font-semibold text-text-primary transition-colors hover:bg-paper-muted disabled:opacity-50"
           >
-            Modify
-          </button>
-          <button
-            type="button"
-            onClick={onViewShopping}
-            disabled={isGenerating}
-            className="flex flex-1 items-center justify-center rounded-xl bg-accent-base px-4 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-accent-base/90 disabled:opacity-50"
-          >
+            Modify Menu
+          </Button>
+          <Button type="button" className="flex-1" onClick={onViewShopping} disabled={isGenerating}>
             Generate Shopping List
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -247,9 +194,9 @@ export function StepPlanOverview({
                 onPointerDown={(event) => event.stopPropagation()}
               >
                 <div className="border-b border-border-subtle px-5 py-4">
-                  <h2 className="text-[16px] font-semibold text-text-primary">Modify Your Plan</h2>
+                  <h2 className="text-[16px] font-semibold text-text-primary">Modify Your Menu</h2>
                   <p className="mt-1 text-[12px] text-text-secondary">
-                    Describe what you'd like to change and we'll regenerate the week.
+                    Describe what you'd like to change and we'll regenerate the menu for the week.
                   </p>
                 </div>
                 <div className="flex-1 overflow-y-auto px-5 py-5">
@@ -265,10 +212,10 @@ export function StepPlanOverview({
                     <div className="flex items-center justify-between">
                       <p className="text-[11px] text-text-tertiary">{modification.length}/200</p>
                       <div className="flex gap-2">
-                        <Button variant="ghost" onClick={() => setShowModifyModal(false)}>
+                        <Button variant="ghost" size="sm" onClick={() => setShowModifyModal(false)}>
                           Cancel
                         </Button>
-                        <Button onClick={handleModifyPlan} disabled={isGenerating || !modification.trim()}>
+                        <Button size="sm" onClick={handleModifyMenu} disabled={isGenerating || !modification.trim()}>
                           {isGenerating ? "Sending..." : "SEND TO AI"}
                         </Button>
                       </div>
@@ -285,11 +232,11 @@ export function StepPlanOverview({
         key={addMealDayKey ?? "closed"}
         open={addMealDayKey !== null}
         dayLabel={addMealDayKey ? startCaseDay(addMealDayKey) : ""}
-        existingMeals={addMealDayKey ? mealPlan.days[addMealDayKey] : mealPlan.days[currentDayKey]}
+        existingMenu={addMealDayKey ? menuBook.menus[addMealDayKey] : menuBook.menus[currentDayKey]}
         onClose={handleCloseAddMeal}
         onSubmit={handleSubmitAddMeal}
-        defaultServings={mealPlan.preferences.numPeople}
-        defaultDifficulty={mealPlan.preferences.difficulty}
+        defaultServings={menuBook.preferences.numPeople}
+        defaultDifficulty={menuBook.preferences.difficulty}
       />
 
       {activeDish &&
@@ -298,77 +245,46 @@ export function StepPlanOverview({
           if (!container) return null;
           return createPortal(
             <RecipeDetailSheet
-              key={`${mealPlan.id}-${activeDish.recipe.id}`}
+              key={`${menuBook.id}-${activeDish.dish.id}`}
               active={{
-                book: {
-                  id: mealPlan.id,
-                  mealPlan,
-                  shoppingList,
-                },
+                book: menuBook,
                 day: activeDish.day,
                 mealType: activeDish.mealType,
-                recipe: activeDish.recipe,
+                dish: activeDish.dish,
               }}
               onClose={() => setActiveDish(null)}
               onSaveNotes={(notes) => {
-                if (activeDish.source === "extra") {
-                  const dayExtras = ensureDayExtras(activeDish.day);
-                  const nextExtras: ExtraWeekMeals = {
-                    ...extraMeals,
+                const dayMenu = menuBook.menus[activeDish.day];
+                const updatedMenuBook: MenuBook = {
+                  ...menuBook,
+                  menus: {
+                    ...menuBook.menus,
                     [activeDish.day]: {
-                      ...dayExtras,
-                      [activeDish.mealType]: (dayExtras[activeDish.mealType] ?? []).map((recipe) =>
-                        recipe.id === activeDish.recipe.id ? { ...recipe, notes } : recipe,
+                      ...dayMenu,
+                      [activeDish.mealType]: (dayMenu[activeDish.mealType] ?? []).map((dish) =>
+                        dish.id === activeDish.dish.id ? { ...dish, notes } : dish,
                       ),
-                    },
-                  };
-                  onExtraMealsUpdated(nextExtras);
-                  setActiveDish(null);
-                  return;
-                }
-                const updatedPlan: MealPlan = {
-                  ...mealPlan,
-                  days: {
-                    ...mealPlan.days,
-                    [activeDish.day]: {
-                      ...mealPlan.days[activeDish.day],
-                      [activeDish.mealType]: {
-                        ...activeDish.recipe,
-                        notes,
-                      },
                     },
                   },
                 };
-                onPlanUpdated(updatedPlan, shoppingList);
+                onMenuBookUpdated(updatedMenuBook);
                 setActiveDish(null);
               }}
               onDelete={() => {
-                if (activeDish.source === "extra") {
-                  const dayExtras = ensureDayExtras(activeDish.day);
-                  const nextExtras: ExtraWeekMeals = {
-                    ...extraMeals,
+                const dayMenu = menuBook.menus[activeDish.day];
+                const updatedMenuBook: MenuBook = {
+                  ...menuBook,
+                  menus: {
+                    ...menuBook.menus,
                     [activeDish.day]: {
-                      ...dayExtras,
-                      [activeDish.mealType]: (dayExtras[activeDish.mealType] ?? []).filter(
-                        (recipe) => recipe.id !== activeDish.recipe.id,
+                      ...dayMenu,
+                      [activeDish.mealType]: (dayMenu[activeDish.mealType] ?? []).filter(
+                        (dish) => dish.id !== activeDish.dish.id,
                       ),
-                    },
-                  };
-                  onExtraMealsUpdated(nextExtras);
-                  setActiveDish(null);
-                  return;
-                }
-                const updatedPlan: MealPlan = {
-                  ...mealPlan,
-                  days: {
-                    ...mealPlan.days,
-                    [activeDish.day]: {
-                      ...mealPlan.days[activeDish.day],
-                      [activeDish.mealType]: null,
                     },
                   },
                 };
-                onPlanUpdated(updatedPlan, shoppingList);
+                onMenuBookUpdated(updatedMenuBook);
                 setActiveDish(null);
               }}
             />,

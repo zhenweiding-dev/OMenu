@@ -2,6 +2,8 @@
 
 用于验证 vibe coding 生成的代码是否符合设计规范的快速检查清单。
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 ---
 
 ## 🏠 Menu Book 页面
@@ -96,7 +98,7 @@
 - [ ] 点击 Add 可添加自定义标签（≤20字符）
 - [ ] 点击 Next 进入下一步
 
-### Step 3: Must-Have Items
+### Step 3: Preferred Items
 
 - [ ] 类似 Step 2 的标签选择
 - [ ] 显示食材分类
@@ -107,7 +109,7 @@
 
 ### Step 5: Sentence Style
 
-- [ ] 显示句子 "The meal plan is for **2** people with **$100** budget and **medium** difficulty to cook."
+- [ ] 显示句子 "The menu is for **2** people with **$100** budget and **medium** difficulty to cook."
 - [ ] 可编辑值为橙色（#D97706）
 - [ ] 可编辑值有虚线下划线
 
@@ -137,7 +139,7 @@
 ### Step 7: Loading
 
 - [ ] 显示加载动画（👨‍🍳）
-- [ ] 显示 "Generating your meal plan..."
+- [ ] 显示 "Generating your menu book..."
 - [ ] 显示计时器
 - [ ] 1 分钟后显示 "Go to Home" 按钮
 - [ ] 2 分钟超时显示错误
@@ -197,7 +199,7 @@
 ## 👤 Me 页面
 
 - [ ] 显示 Keywords 卡片
-- [ ] 显示 Must-Have Items 卡片
+- [ ] 显示 Preferred Items 卡片
 - [ ] 显示 Disliked Items 卡片
 - [ ] 显示 Default Settings 卡片（人数/预算/难度）
 - [ ] 每个卡片有 Edit 按钮
@@ -259,7 +261,7 @@
 - [ ] 刷新页面后恢复进度
 - [ ] 完成后清除草稿
 
-### Meal Plan Store
+### Menu Book Store
 
 - [ ] 正确存储当前计划
 - [ ] 支持多个菜单本

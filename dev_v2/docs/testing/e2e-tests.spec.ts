@@ -75,7 +75,7 @@ test.describe('Menu Book', () => {
       await page.goto('/');
       await page.evaluate(() => {
         // 注入测试数据
-        localStorage.setItem('omenu_meal_plans', JSON.stringify([/* mock data */]));
+        localStorage.setItem('omenu_app_state', JSON.stringify([/* mock data */]));
       });
       await page.reload();
     });
@@ -183,8 +183,8 @@ test.describe('Create Flow', () => {
     await page.getByText('Chinese').click();
     await page.getByRole('button', { name: /next/i }).click();
     
-    // Step 3: Must-Have
-    await expect(page.getByText(/must-have/i)).toBeVisible();
+    // Step 3: Preferred
+    await expect(page.getByText(/preferred/i)).toBeVisible();
     await page.getByText('Eggs').click();
     await page.getByText('Chicken').click();
     await page.getByRole('button', { name: /next/i }).click();
@@ -195,7 +195,7 @@ test.describe('Create Flow', () => {
     await page.getByRole('button', { name: /next/i }).click();
     
     // Step 5: Sentence
-    await expect(page.getByText(/meal plan is for/i)).toBeVisible();
+    await expect(page.getByText(/menu is for/i)).toBeVisible();
     await page.getByRole('button', { name: /next/i }).click();
     
     // Step 6: Schedule
@@ -515,7 +515,7 @@ test.describe('Navigation', () => {
 test.describe('Error Handling', () => {
   test('API 超时显示错误', async ({ page }) => {
     // 模拟超慢响应
-    await page.route('**/api/meal-plans/generate', async route => {
+    await page.route('**/api/menu-books/generate', async route => {
       await new Promise(r => setTimeout(r, 130000)); // 超过 2 分钟
       await route.fulfill({ json: {} });
     });
@@ -566,7 +566,7 @@ test.describe('State Persistence', () => {
     
     // 检查 localStorage 是否清除
     const draft = await page.evaluate(() => 
-      localStorage.getItem('omenu_meal_plan_draft')
+      localStorage.getItem('omenu-draft')
     );
     expect(draft).toBeNull();
   });

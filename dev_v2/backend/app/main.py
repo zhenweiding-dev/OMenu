@@ -4,11 +4,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import meal_plans, shopping, user_state
+from app.routers import menu_books, shopping, user_state
 
 app = FastAPI(
     title="OMenu API",
-    description="AI-powered meal planning backend",
+    description="AI-powered menu planning backend",
     version="1.0.0",
 )
 
@@ -20,7 +20,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(meal_plans.router, prefix="/api/meal-plans", tags=["Meal Plans"])
+# NOTE: menu_books router was previously meal_plans; renamed to match MenuBook terminology.
+app.include_router(menu_books.router, prefix="/api/menu-books", tags=["Menu Books"])
 app.include_router(shopping.router, prefix="/api/shopping-lists", tags=["Shopping Lists"])
 app.include_router(user_state.router, prefix="/api/user-state", tags=["User State"])
 

@@ -81,47 +81,53 @@ export function StepPeopleBudget({
       onClick={() => setEditingField(null)}
     >
       <div className="px-5 pb-3">
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={(event) => {
             event.stopPropagation();
             onBack();
           }}
-          className="mb-4 flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary"
+          className="mb-4 h-auto px-0 py-0 text-[12px] uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary"
         >
           ← Back
-        </button>
+        </Button>
       </div>
 
       {/* Sentence style input */}
       <div className="flex-1 px-5 py-10 flex items-center">
         <p className="text-[24px] font-semibold leading-[1.5] text-text-primary">
-          The meal plan is for{" "}
+          The menu is for{" "}
           <span className="relative inline-block">
             <span className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-paper-muted px-2 py-1 align-middle">
-              <button
+              <Button
                 type="button"
+                size="icon"
+                variant="outline"
                 onClick={(event) => {
                   event.stopPropagation();
                   onUpdatePeople(Math.max(1, numPeople - 1));
                 }}
-                className="flex h-6 w-6 items-center justify-center rounded-full border border-border-subtle bg-white text-text-primary hover:bg-paper-muted"
+                className="h-7 w-7 rounded-full bg-white"
               >
                 <MinusIcon />
-              </button>
+              </Button>
               <span className="min-w-[22px] text-center text-[20px] font-semibold text-accent-base">
                 {numPeople}
               </span>
-              <button
+              <Button
                 type="button"
+                size="icon"
+                variant="outline"
                 onClick={(event) => {
                   event.stopPropagation();
                   onUpdatePeople(Math.min(10, numPeople + 1));
                 }}
-                className="flex h-6 w-6 items-center justify-center rounded-full border border-border-subtle bg-white text-text-primary hover:bg-paper-muted"
+                className="h-7 w-7 rounded-full bg-white"
               >
                 <PlusIcon />
-              </button>
+              </Button>
             </span>
           </span>{" "}
           people with{" "}
@@ -138,7 +144,7 @@ export function StepPeopleBudget({
             </button>
             {editingField === "budget" && (
               <span
-                className="absolute left-1/2 top-full z-20 mt-2 max-h-48 -translate-x-1/2 overflow-y-auto rounded-2xl border border-border-subtle bg-white py-2 shadow-soft"
+                className="absolute left-1/2 top-full z-20 mt-2 max-h-48 -translate-x-1/2 overflow-y-auto rounded-2xl border border-border-subtle bg-card-base py-2 shadow-soft"
                 onClick={(event) => event.stopPropagation()}
               >
                 {BUDGET_OPTIONS.map((opt) => (
@@ -150,7 +156,7 @@ export function StepPeopleBudget({
                       setEditingField(null);
                     }}
                     className={cn(
-                      "block w-full px-6 py-2 text-center text-sm hover:bg-paper-muted",
+                      "block w-full px-6 py-2 text-center text-[13px] hover:bg-paper-muted",
                       opt === budget ? "bg-accent-soft font-semibold text-accent-base" : "text-text-primary"
                     )}
                     ref={opt === budget ? activeBudgetRef : null}
@@ -176,7 +182,7 @@ export function StepPeopleBudget({
             </button>
             {editingField === "difficulty" && (
               <span
-                className="absolute left-1/2 top-full z-20 mt-2 -translate-x-1/2 rounded-2xl border border-border-subtle bg-white py-2 shadow-soft"
+                className="absolute left-1/2 top-full z-20 mt-2 -translate-x-1/2 rounded-2xl border border-border-subtle bg-card-base py-2 shadow-soft"
                 onClick={(event) => event.stopPropagation()}
               >
                 {DIFFICULTIES.map((level) => (
@@ -188,7 +194,7 @@ export function StepPeopleBudget({
                       setEditingField(null);
                     }}
                     className={cn(
-                      "block w-full px-6 py-2 text-center text-sm capitalize hover:bg-paper-muted",
+                      "block w-full px-6 py-2 text-center text-[13px] capitalize hover:bg-paper-muted",
                       level === difficulty ? "bg-accent-soft font-semibold text-accent-base" : "text-text-primary"
                     )}
                   >
@@ -204,10 +210,7 @@ export function StepPeopleBudget({
 
       {/* Footer */}
       <div className="sticky bottom-0 border-t border-border-subtle bg-paper-base px-5 pb-4 pt-3">
-        <Button
-          onClick={onNext}
-          className="w-full rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
-        >
+        <Button onClick={onNext} className="w-full">
           Next
         </Button>
       </div>

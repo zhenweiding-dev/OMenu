@@ -1,5 +1,7 @@
 # Backend Test Report — 2026-02-01 (Updated)
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 ## Command
 
 ```bash
@@ -18,7 +20,7 @@ asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None,
 collected 13 items
 
 tests/test_health.py .
-tests/test_meal_plan_routes.py .....
+tests/test_menu_book_routes.py .....
 tests/test_prompts.py ....
 tests/test_shopping_routes.py ...
 
@@ -27,7 +29,7 @@ tests/test_shopping_routes.py ...
 
 ## Coverage Additions
 
-- Added [tests/test_meal_plan_routes.py](../../backend/tests/test_meal_plan_routes.py) to verify successful generation, Gemini timeout handling, and AI parse failures for both generate and modify flows.
+- Added [tests/test_menu_book_routes.py](../../backend/tests/test_menu_book_routes.py) to verify successful generation, Gemini timeout handling, and AI parse failures for both generate and modify flows.
 - Added [tests/test_shopping_routes.py](../../backend/tests/test_shopping_routes.py) to cover happy path, invalid category validation, and timeout handling for shopping list generation.
 
 ## Notes

@@ -1,5 +1,7 @@
 # Documentation Changelog
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 ## Version 2.0 - Frontend-Backend Separation
 
 **Date**: January 31, 2025
@@ -72,7 +74,7 @@ This update restructures OMenu from a monolithic React application to a separate
 1. **Added**: Pydantic model definitions for backend
 2. **Updated**: Storage strategy section
    - localStorage: UI drafts only
-   - Backend: All generated data (meal plans, shopping lists)
+   - Backend: All generated data (menu books, shopping lists)
 3. **Added**: API request/response format section
 4. **Maintained**: TypeScript interfaces for frontend (unchanged)
 

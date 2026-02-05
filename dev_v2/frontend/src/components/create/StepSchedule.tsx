@@ -43,34 +43,40 @@ export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDesele
     <div className="flex flex-1 flex-col">
       {/* Header */}
       <div className="px-5 pb-3">
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={onBack}
-          className="mb-4 flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary"
+          className="mb-4 h-auto px-0 py-0 text-[12px] uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary"
         >
           ← Back
-        </button>
+        </Button>
         <h2 className="text-[22px] font-semibold leading-tight text-text-primary">
-          Choose meals to plan
+          Choose meals to include
         </h2>
       </div>
 
       {/* Quick actions */}
       <div className="mb-4 flex gap-3 px-5">
-        <button
+        <Button
           type="button"
           onClick={onSelectAll}
-          className="rounded-xl border border-border-tag px-4 py-2 text-[13px] font-semibold text-text-secondary hover:border-accent-base hover:text-accent-base"
+          variant="outline"
+          size="sm"
+          className="flex-1 border-border-tag text-text-secondary hover:border-accent-base hover:text-accent-base"
         >
           Select All
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={onDeselectAll}
-          className="rounded-xl border border-border-tag px-4 py-2 text-[13px] font-semibold text-text-secondary hover:border-accent-base hover:text-accent-base"
+          variant="outline"
+          size="sm"
+          className="flex-1 border-border-tag text-text-secondary hover:border-accent-base hover:text-accent-base"
         >
           Deselect All
-        </button>
+        </Button>
       </div>
 
       {/* Schedule grid */}
@@ -100,7 +106,7 @@ export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDesele
                       type="button"
                       onClick={() => onToggleMeal(day, meal)}
                       className={cn(
-                        "mx-auto h-8 w-8 rounded-lg border transition-all",
+                        "mx-auto h-8 w-8 rounded-xl border transition-all",
                         selected
                           ? "border-accent-base bg-accent-soft"
                           : "border-border-subtle bg-transparent hover:border-accent-light"
@@ -117,17 +123,8 @@ export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDesele
 
       {/* Footer */}
       <div className="sticky bottom-0 border-t border-border-subtle bg-paper-base px-5 pb-4 pt-3">
-        <Button
-          onClick={onNext}
-          disabled={!hasSelectedMeals}
-          className={cn(
-            "w-full rounded-xl py-2.5 text-[13px] font-semibold text-white",
-            hasSelectedMeals
-              ? "bg-accent-base hover:bg-accent-base/90"
-              : "cursor-not-allowed bg-text-disabled"
-          )}
-        >
-          Generate Plan
+        <Button onClick={onNext} disabled={!hasSelectedMeals} className="w-full">
+          Generate Menu
         </Button>
       </div>
     </div>

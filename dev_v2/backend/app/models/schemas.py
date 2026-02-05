@@ -22,10 +22,15 @@ class IngredientCategory(str, Enum):
     others = "others"
 
 
-class MealPlanStatus(str, Enum):
+class MenuBookStatus(str, Enum):
     generating = "generating"
     ready = "ready"
     error = "error"
+
+
+class DishSource(str, Enum):
+    ai = "ai"
+    manual = "manual"
 
 
 class MealSelection(BaseModel):
@@ -46,7 +51,7 @@ class CookSchedule(BaseModel):
 
 class UserPreferences(BaseModel):
     keywords: List[str] = Field(default_factory=list)
-    mustHaveItems: List[str] = Field(default_factory=list)
+    preferredItems: List[str] = Field(default_factory=list)
     dislikedItems: List[str] = Field(default_factory=list)
     numPeople: int = Field(ge=1, le=10, default=2)
     budget: int = Field(ge=50, le=500, default=100)
@@ -61,7 +66,7 @@ class Ingredient(BaseModel):
     category: IngredientCategory
 
 
-class Recipe(BaseModel):
+class Dish(BaseModel):
     id: str
     name: str
     ingredients: List[Ingredient]
@@ -70,47 +75,24 @@ class Recipe(BaseModel):
     servings: int
     difficulty: Difficulty
     totalCalories: int
+    source: DishSource
     notes: Optional[str] = None
 
 
-class DayMeals(BaseModel):
-    breakfast: Optional[Recipe] = None
-    lunch: Optional[Recipe] = None
-    dinner: Optional[Recipe] = None
+class Menu(BaseModel):
+    breakfast: List[Dish] = Field(default_factory=list)
+    lunch: List[Dish] = Field(default_factory=list)
+    dinner: List[Dish] = Field(default_factory=list)
 
 
-class ExtraDayMeals(BaseModel):
-    breakfast: List[Recipe] = Field(default_factory=list)
-    lunch: List[Recipe] = Field(default_factory=list)
-    dinner: List[Recipe] = Field(default_factory=list)
-
-
-class WeekDays(BaseModel):
-    monday: DayMeals
-    tuesday: DayMeals
-    wednesday: DayMeals
-    thursday: DayMeals
-    friday: DayMeals
-    saturday: DayMeals
-    sunday: DayMeals
-
-
-class ExtraWeekMeals(BaseModel):
-    monday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
-    tuesday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
-    wednesday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
-    thursday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
-    friday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
-    saturday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
-    sunday: ExtraDayMeals = Field(default_factory=ExtraDayMeals)
-
-
-class MealPlan(BaseModel):
-    id: str
-    createdAt: datetime
-    status: MealPlanStatus
-    preferences: UserPreferences
-    days: WeekDays
+class WeekMenus(BaseModel):
+    monday: Menu
+    tuesday: Menu
+    wednesday: Menu
+    thursday: Menu
+    friday: Menu
+    saturday: Menu
+    sunday: Menu
 
 
 class ShoppingItem(BaseModel):
@@ -125,21 +107,23 @@ class ShoppingItem(BaseModel):
 
 class ShoppingList(BaseModel):
     id: str
-    mealPlanId: str
+    menuBookId: str
     createdAt: datetime
     items: List[ShoppingItem]
 
 
 class MenuBook(BaseModel):
     id: str
-    mealPlan: MealPlan
+    createdAt: datetime
+    status: MenuBookStatus
+    preferences: UserPreferences
+    menus: WeekMenus
     shoppingList: ShoppingList
-    extraMeals: Optional[ExtraWeekMeals] = None
 
 
-class GenerateMealPlanRequest(BaseModel):
+class GenerateMenuBookRequest(BaseModel):
     keywords: List[str] = Field(default_factory=list)
-    mustHaveItems: List[str] = Field(default_factory=list)
+    preferredItems: List[str] = Field(default_factory=list)
     dislikedItems: List[str] = Field(default_factory=list)
     numPeople: int = Field(ge=1, le=10, default=2)
     budget: int = Field(ge=50, le=500, default=100)
@@ -147,14 +131,14 @@ class GenerateMealPlanRequest(BaseModel):
     cookSchedule: CookSchedule
 
 
-class ModifyMealPlanRequest(BaseModel):
+class ModifyMenuBookRequest(BaseModel):
     modification: str = Field(max_length=200)
-    currentPlan: MealPlan
+    currentMenuBook: MenuBook
 
 
 class GenerateShoppingListRequest(BaseModel):
-    mealPlanId: str
-    mealPlan: MealPlan
+    menuBookId: str
+    menus: WeekMenus
 
 
 class ErrorDetail(BaseModel):

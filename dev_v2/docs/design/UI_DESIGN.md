@@ -1,5 +1,7 @@
 # UI Design Specification
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 ## Design Philosophy
 
 - **Warm & Inviting**: Paper-like neutral tones that feel natural and calming
@@ -175,7 +177,7 @@ The bottom nav uses icons that reflect the app's menu book concept:
 
 | Tab | Icon | Description |
 |-----|------|-------------|
-| Plan | Book | Represents meal plan as a menu book |
+| Plan | Book | Represents menu book as a menu book |
 | List | Checklist | Shopping list with checkmarks |
 | Me | Person | User profile and preferences |
 

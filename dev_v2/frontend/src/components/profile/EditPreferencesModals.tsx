@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/utils/cn";
 import type { Difficulty } from "@/types";
 
@@ -66,28 +67,26 @@ function ModalWrapper({ isOpen, onClose, title, children, onSave, showSaveButton
       }}
     >
       <div
-        className="flex max-h-[85%] w-full flex-col overflow-hidden rounded-t-[24px] bg-card-base shadow-2xl"
+        className="flex max-h-[85%] w-full flex-col overflow-hidden rounded-t-3xl bg-card-base shadow-2xl"
         onPointerDown={(event) => event.stopPropagation()}
       >
         {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-subtle bg-card-base px-5 py-4">
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-text-primary transition-colors hover:bg-paper-dark"
+            className="h-9 w-9 rounded-full bg-paper-muted text-text-primary hover:bg-paper-dark"
             aria-label="Close"
           >
             <CloseIcon />
-          </button>
+          </Button>
           <h2 className="text-[16px] font-semibold text-text-primary">{title}</h2>
           {showSaveButton && (
-            <button
-              type="button"
-              onClick={onSave}
-              className="text-[14px] font-semibold text-accent-base hover:opacity-80"
-            >
+            <Button type="button" variant="ghost" size="sm" onClick={onSave} className="h-8 px-2 text-accent-base hover:text-accent-base/80">
               Save
-            </button>
+            </Button>
           )}
         </div>
         {/* Body */}
@@ -184,8 +183,8 @@ export function EditKeywordsModal({ isOpen, onClose, keywords, onSave }: EditKey
                       type="button"
                       onClick={() => toggleKeyword(tag)}
                       className={cn(
-                        "rounded-md border px-2.5 py-1.5 text-[12px] transition-all",
-                        "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary",
+                        "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
+                        "hover:border-accent-light hover:text-text-primary",
                       )}
                     >
                       {tag}
@@ -197,17 +196,17 @@ export function EditKeywordsModal({ isOpen, onClose, keywords, onSave }: EditKey
           })}
         </div>
 
-        <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-1 pt-3">
+        <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-4 pt-3">
           {showCustomInput ? (
             <div className="mb-4 flex items-center gap-2">
-              <input
+              <Input
                 type="text"
                 value={customInput}
                 onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
                 onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
                 placeholder="Custom keyword"
                 autoFocus
-                className="flex-1 rounded-md border border-accent-base bg-white px-3 py-2 text-[13px] outline-none"
+                className="flex-1 h-9"
               />
               <Button size="sm" onClick={handleAddCustom} className="h-9">
                 Add
@@ -218,17 +217,18 @@ export function EditKeywordsModal({ isOpen, onClose, keywords, onSave }: EditKey
             </div>
           ) : (
             <div className="mb-4 flex gap-3">
-              <button
+              <Button
                 type="button"
                 onClick={() => setShowCustomInput(true)}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-dashed border-border-tag py-2.5 text-[13px] font-semibold text-text-secondary hover:border-accent-base hover:text-accent-base"
+                variant="outline"
+                className="flex-1 gap-2 border-dashed border-border-tag bg-transparent text-text-secondary hover:border-accent-base hover:text-accent-base"
               >
                 <PlusIcon />
                 Add keyword
-              </button>
+              </Button>
               <Button
                 onClick={handleSave}
-                className="flex-1 rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+                className="flex-1"
               >
                 Save
               </Button>
@@ -237,7 +237,7 @@ export function EditKeywordsModal({ isOpen, onClose, keywords, onSave }: EditKey
           {showCustomInput && (
             <Button
               onClick={handleSave}
-              className="w-full rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+              className="w-full"
             >
               Save
             </Button>
@@ -248,7 +248,7 @@ export function EditKeywordsModal({ isOpen, onClose, keywords, onSave }: EditKey
   );
 }
 
-// ===== Must-Have Items Modal =====
+// ===== Preferred Items Modal =====
 const ITEM_CATEGORIES = {
   Proteins: [
     { label: "Eggs", emoji: "🥚" },
@@ -284,14 +284,14 @@ const ITEM_CATEGORIES = {
   ],
 };
 
-interface EditMustHaveModalProps {
+interface EditPreferredModalProps {
   isOpen: boolean;
   onClose: () => void;
   items: string[];
   onSave: (items: string[]) => void;
 }
 
-export function EditMustHaveModal({ isOpen, onClose, items, onSave }: EditMustHaveModalProps) {
+export function EditPreferredModal({ isOpen, onClose, items, onSave }: EditPreferredModalProps) {
   const [selected, setSelected] = useState<string[]>(items);
   const [customInput, setCustomInput] = useState("");
   const [showCustomInput, setShowCustomInput] = useState(false);
@@ -322,13 +322,13 @@ export function EditMustHaveModal({ isOpen, onClose, items, onSave }: EditMustHa
   };
 
   return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Must-Have Items" onSave={handleSave} showSaveButton={false}>
+    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Preferred Items" onSave={handleSave} showSaveButton={false}>
       <div className="flex min-h-[60vh] flex-col">
         <div className="flex-1 space-y-4 pb-2">
           {selected.length > 0 && (
             <div>
               <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-base">
-                Your Must-Haves
+                Your Preferred Items
               </p>
               <div className="flex flex-wrap gap-2">
                 {selected.map((tag) => (
@@ -359,8 +359,8 @@ export function EditMustHaveModal({ isOpen, onClose, items, onSave }: EditMustHa
                       type="button"
                       onClick={() => toggleItem(label)}
                       className={cn(
-                        "rounded-md border px-2.5 py-1.5 text-[12px] transition-all",
-                        "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary",
+                        "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
+                        "hover:border-accent-light hover:text-text-primary",
                       )}
                     >
                       {emoji} {label}
@@ -372,17 +372,17 @@ export function EditMustHaveModal({ isOpen, onClose, items, onSave }: EditMustHa
           })}
         </div>
 
-        <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-1 pt-3">
+        <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-4 pt-3">
           {showCustomInput ? (
             <div className="mb-4 flex items-center gap-2">
-              <input
+              <Input
                 type="text"
                 value={customInput}
                 onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
                 onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
                 placeholder="Custom item"
                 autoFocus
-                className="flex-1 rounded-md border border-accent-base bg-white px-3 py-2 text-[13px] outline-none"
+                className="flex-1 h-9"
               />
               <Button size="sm" onClick={handleAddCustom} className="h-9">
                 Add
@@ -393,17 +393,18 @@ export function EditMustHaveModal({ isOpen, onClose, items, onSave }: EditMustHa
             </div>
           ) : (
             <div className="mb-4 flex gap-3">
-              <button
+              <Button
                 type="button"
                 onClick={() => setShowCustomInput(true)}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-dashed border-border-tag py-2.5 text-[13px] font-semibold text-text-secondary hover:border-accent-base hover:text-accent-base"
+                variant="outline"
+                className="flex-1 gap-2 border-dashed border-border-tag bg-transparent text-text-secondary hover:border-accent-base hover:text-accent-base"
               >
                 <PlusIcon />
                 Add item
-              </button>
+              </Button>
               <Button
                 onClick={handleSave}
-                className="flex-1 rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+                className="flex-1"
               >
                 Save
               </Button>
@@ -412,7 +413,7 @@ export function EditMustHaveModal({ isOpen, onClose, items, onSave }: EditMustHa
           {showCustomInput && (
             <Button
               onClick={handleSave}
-              className="w-full rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+              className="w-full"
             >
               Save
             </Button>
@@ -536,8 +537,8 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
                       type="button"
                       onClick={() => toggleItem(label)}
                       className={cn(
-                        "rounded-md border px-2.5 py-1.5 text-[12px] transition-all",
-                        "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary",
+                        "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
+                        "hover:border-accent-light hover:text-text-primary",
                       )}
                     >
                       {emoji} {label}
@@ -549,17 +550,17 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
           })}
         </div>
 
-        <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-1 pt-3">
+        <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-4 pt-3">
           {showCustomInput ? (
             <div className="mb-4 flex items-center gap-2">
-              <input
+              <Input
                 type="text"
                 value={customInput}
                 onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
                 onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
                 placeholder="Custom item"
                 autoFocus
-                className="flex-1 rounded-md border border-accent-base bg-white px-3 py-2 text-[13px] outline-none"
+                className="flex-1 h-9"
               />
               <Button size="sm" onClick={handleAddCustom} className="h-9">
                 Add
@@ -570,17 +571,18 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
             </div>
           ) : (
             <div className="mb-4 flex gap-3">
-              <button
+              <Button
                 type="button"
                 onClick={() => setShowCustomInput(true)}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-dashed border-border-tag py-2.5 text-[13px] font-semibold text-text-secondary hover:border-accent-base hover:text-accent-base"
+                variant="outline"
+                className="flex-1 gap-2 border-dashed border-border-tag bg-transparent text-text-secondary hover:border-accent-base hover:text-accent-base"
               >
                 <PlusIcon />
                 Add item
-              </button>
+              </Button>
               <Button
                 onClick={handleSave}
-                className="flex-1 rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+                className="flex-1"
               >
                 Save
               </Button>
@@ -589,7 +591,7 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
           {showCustomInput && (
             <Button
               onClick={handleSave}
-              className="w-full rounded-xl bg-accent-base py-2.5 text-[13px] font-semibold text-white hover:bg-accent-base/90"
+              className="w-full"
             >
               Save
             </Button>
@@ -632,78 +634,96 @@ export function EditSettingsModal({ isOpen, onClose, numPeople, budget, difficul
   };
 
   return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Default Settings" onSave={handleSave}>
-      <div className="space-y-6">
-        {/* People */}
-        <div>
-          <p className="mb-3 text-[11px] font-medium uppercase tracking-wider text-text-secondary">
-            Number of People
-          </p>
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={() => setLocalPeople(Math.max(1, localPeople - 1))}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-border-subtle bg-card-base hover:bg-paper-muted"
-            >
-              <MinusIcon />
-            </button>
-            <span className="min-w-[40px] text-center text-[20px] font-semibold text-text-primary">{localPeople}</span>
-            <button
-              type="button"
-              onClick={() => setLocalPeople(Math.min(10, localPeople + 1))}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-border-subtle bg-card-base hover:bg-paper-muted"
-            >
-              <PlusIcon />
-            </button>
+    <ModalWrapper
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Edit Default Settings"
+      onSave={handleSave}
+      showSaveButton={false}
+    >
+      <div className="flex min-h-[60vh] flex-col">
+        <div className="flex-1 space-y-6 pb-2">
+          {/* People */}
+          <div>
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+              Number of People
+            </p>
+            <div className="flex items-center gap-4">
+              <Button
+                type="button"
+                size="icon"
+                variant="outline"
+                onClick={() => setLocalPeople(Math.max(1, localPeople - 1))}
+                className="h-10 w-10 rounded-full"
+              >
+                <MinusIcon />
+              </Button>
+              <span className="min-w-[40px] text-center text-[20px] font-semibold text-text-primary">{localPeople}</span>
+              <Button
+                type="button"
+                size="icon"
+                variant="outline"
+                onClick={() => setLocalPeople(Math.min(10, localPeople + 1))}
+                className="h-10 w-10 rounded-full"
+              >
+                <PlusIcon />
+              </Button>
+            </div>
+          </div>
+
+          {/* Budget */}
+          <div>
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+              Weekly Budget
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {BUDGET_OPTIONS.map((opt) => (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => setLocalBudget(opt)}
+                  className={cn(
+                    "rounded-full border px-4 py-2 text-[12px] font-medium transition-all",
+                    opt === localBudget
+                      ? "border-accent-base bg-accent-soft font-semibold text-accent-base"
+                      : "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary"
+                  )}
+                >
+                  ${opt}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Difficulty */}
+          <div>
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+              Cooking Difficulty
+            </p>
+            <div className="flex gap-3">
+              {DIFFICULTIES.map((level) => (
+                <button
+                  key={level}
+                  type="button"
+                  onClick={() => setLocalDifficulty(level)}
+                  className={cn(
+                    "flex-1 rounded-full border px-4 py-2 text-[12px] font-semibold capitalize transition-all",
+                    level === localDifficulty
+                      ? "border-accent-base bg-accent-base text-white"
+                      : "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary"
+                  )}
+                >
+                  {level}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Budget */}
-        <div>
-          <p className="mb-3 text-[11px] font-medium uppercase tracking-wider text-text-secondary">
-            Weekly Budget
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {BUDGET_OPTIONS.map((opt) => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => setLocalBudget(opt)}
-                className={cn(
-                  "rounded-md border px-4 py-2 text-[13px] transition-all",
-                  opt === localBudget
-                    ? "border-accent-orange bg-accent-orangeLight font-semibold text-accent-orange"
-                    : "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary"
-                )}
-              >
-                ${opt}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Difficulty */}
-        <div>
-          <p className="mb-3 text-[11px] font-medium uppercase tracking-wider text-text-secondary">
-            Cooking Difficulty
-          </p>
-          <div className="flex gap-3">
-            {DIFFICULTIES.map((level) => (
-              <button
-                key={level}
-                type="button"
-                onClick={() => setLocalDifficulty(level)}
-                className={cn(
-                  "flex-1 rounded-lg border py-3 text-[14px] font-medium capitalize transition-all",
-                  level === localDifficulty
-                    ? "border-accent-base bg-accent-base text-white"
-                    : "border-border-tag bg-transparent text-text-secondary hover:border-accent-light hover:text-text-primary"
-                )}
-              >
-                {level}
-              </button>
-            ))}
-          </div>
+        <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-4 pt-3">
+          <Button onClick={handleSave} className="w-full">
+            Save
+          </Button>
         </div>
       </div>
     </ModalWrapper>

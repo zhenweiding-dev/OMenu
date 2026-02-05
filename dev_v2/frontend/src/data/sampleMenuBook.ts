@@ -1,7 +1,7 @@
-import type { MenuBook, Recipe } from "@/types";
+import type { Dish, MenuBook } from "@/types";
 
-const breakfastRecipe: Recipe = {
-  id: "recipe_avocado_toast",
+const breakfastDish: Dish = {
+  id: "dish_avocado_toast",
   name: "Avocado Toast with Eggs",
   ingredients: [
     { name: "Sourdough bread", quantity: 2, unit: "slices", category: "grains" },
@@ -16,10 +16,11 @@ const breakfastRecipe: Recipe = {
   servings: 1,
   difficulty: "easy",
   totalCalories: 320,
+  source: "ai",
 };
 
-const lunchRecipe: Recipe = {
-  id: "recipe_chicken_salad",
+const lunchDish: Dish = {
+  id: "dish_chicken_salad",
   name: "Herbed Chicken Salad Bowl",
   ingredients: [
     { name: "Chicken breast", quantity: 1, unit: "lb", category: "proteins" },
@@ -35,10 +36,11 @@ const lunchRecipe: Recipe = {
   servings: 2,
   difficulty: "medium",
   totalCalories: 540,
+  source: "ai",
 };
 
-const dinnerRecipe: Recipe = {
-  id: "recipe_salmon",
+const dinnerDish: Dish = {
+  id: "dish_salmon",
   name: "Citrus Herb Salmon",
   ingredients: [
     { name: "Salmon fillet", quantity: 4, unit: "oz", category: "proteins" },
@@ -54,52 +56,50 @@ const dinnerRecipe: Recipe = {
   servings: 2,
   difficulty: "easy",
   totalCalories: 610,
+  source: "ai",
 };
 
-function buildDayMeals() {
+function buildDayMenu() {
   return {
-    breakfast: { ...breakfastRecipe },
-    lunch: { ...lunchRecipe },
-    dinner: { ...dinnerRecipe },
+    breakfast: [{ ...breakfastDish }],
+    lunch: [{ ...lunchDish }],
+    dinner: [{ ...dinnerDish }],
   } as const;
 }
 
 export const SAMPLE_MENU_BOOK: MenuBook = {
   id: "demo_week_01",
-  mealPlan: {
-    id: "mealplan_demo_01",
-    createdAt: "2026-01-29T08:00:00.000Z",
-    status: "ready",
-    preferences: {
-      keywords: ["Healthy", "Quick"],
-      mustHaveItems: ["Avocado"],
-      dislikedItems: ["Mushrooms"],
-      numPeople: 2,
-      budget: 120,
-      difficulty: "easy",
-      cookSchedule: {
-        monday: { breakfast: true, lunch: true, dinner: true },
-        tuesday: { breakfast: true, lunch: true, dinner: true },
-        wednesday: { breakfast: true, lunch: true, dinner: true },
-        thursday: { breakfast: true, lunch: true, dinner: true },
-        friday: { breakfast: true, lunch: true, dinner: true },
-        saturday: { breakfast: true, lunch: true, dinner: true },
-        sunday: { breakfast: true, lunch: true, dinner: true },
-      },
+  createdAt: "2026-01-29T08:00:00.000Z",
+  status: "ready",
+  preferences: {
+    keywords: ["Healthy", "Quick"],
+    preferredItems: ["Avocado"],
+    dislikedItems: ["Mushrooms"],
+    numPeople: 2,
+    budget: 120,
+    difficulty: "easy",
+    cookSchedule: {
+      monday: { breakfast: true, lunch: true, dinner: true },
+      tuesday: { breakfast: true, lunch: true, dinner: true },
+      wednesday: { breakfast: true, lunch: true, dinner: true },
+      thursday: { breakfast: true, lunch: true, dinner: true },
+      friday: { breakfast: true, lunch: true, dinner: true },
+      saturday: { breakfast: true, lunch: true, dinner: true },
+      sunday: { breakfast: true, lunch: true, dinner: true },
     },
-    days: {
-      monday: buildDayMeals(),
-      tuesday: buildDayMeals(),
-      wednesday: buildDayMeals(),
-      thursday: buildDayMeals(),
-      friday: buildDayMeals(),
-      saturday: buildDayMeals(),
-      sunday: buildDayMeals(),
-    },
+  },
+  menus: {
+    monday: buildDayMenu(),
+    tuesday: buildDayMenu(),
+    wednesday: buildDayMenu(),
+    thursday: buildDayMenu(),
+    friday: buildDayMenu(),
+    saturday: buildDayMenu(),
+    sunday: buildDayMenu(),
   },
   shoppingList: {
     id: "shopping_demo_01",
-    mealPlanId: "mealplan_demo_01",
+    menuBookId: "demo_week_01",
     createdAt: "2026-01-29T09:00:00.000Z",
     items: [
       {

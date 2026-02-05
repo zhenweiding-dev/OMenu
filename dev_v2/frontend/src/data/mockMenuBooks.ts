@@ -13,22 +13,18 @@ function buildMockBook(offsetWeeks: number): MenuBook {
   const weekStart = startOfWeek(addWeeks(new Date(), offsetWeeks), { weekStartsOn: 1 });
   const isoWeekStart = weekStart.toISOString();
   const idSuffix = isoWeekStart.slice(0, 10).replace(/-/g, "");
-  const mealPlanId = `mock_mealplan_${idSuffix}_${offsetWeeks}`;
+  const bookId = `mock_book_${idSuffix}_${offsetWeeks}`;
   const shoppingListId = `mock_list_${idSuffix}_${offsetWeeks}`;
 
   const base = clone(SAMPLE_MENU_BOOK);
   return {
     ...base,
-    id: `mock_book_${idSuffix}_${offsetWeeks}`,
-    mealPlan: {
-      ...base.mealPlan,
-      id: mealPlanId,
-      createdAt: isoWeekStart,
-    },
+    id: bookId,
+    createdAt: isoWeekStart,
     shoppingList: {
       ...base.shoppingList,
       id: shoppingListId,
-      mealPlanId,
+      menuBookId: bookId,
       createdAt: isoWeekStart,
     },
   };

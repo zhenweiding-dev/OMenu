@@ -1,6 +1,10 @@
 # Gemini Prompt Templates
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 This document defines the prompt templates for Gemini API integration. All prompt generation and API calls are handled by the backend.
+
+> 备注：本文已将 “Meal Plan” 统一更名为 “Menu Book”（一周菜单簿），并同步更新 prompt 命名与字段。
 
 **Location**: `backend/app/services/prompts.py`
 
@@ -10,13 +14,13 @@ This document defines the prompt templates for Gemini API integration. All promp
 
 | Step | Prompt | Purpose |
 |------|--------|---------|
-| 1 | `meal_plan_prompt` | Generate natural language meal plan |
-| 2 | `structured_plan_prompt` | Convert to structured JSON |
-| 3 | `modification_prompt` | Modify existing plan |
+| 1 | `menu_book_prompt` | Generate natural language menu book |
+| 2 | `structured_menu_prompt` | Convert to structured JSON |
+| 3 | `modification_prompt` | Modify existing menu book |
 | 4 | `shopping_list_prompt` | Generate shopping list |
 
 **API calls per flow:** 
-- New plan: 2 calls (generate → structure)
+- New menu book: 2 calls (generate → structure)
 - Modification: 1 call
 - Shopping list: 1 call
 
@@ -33,40 +37,40 @@ User Preferences (for Gemini)
       │
       ▼
 ┌─────────────────────────────────────┐
-│ Step 1: meal_plan_prompt            │
-│ "Generate a personalized meal plan" │
+│ Step 1: menu_book_prompt            │
+│ "Generate a personalized menu book" │
 └─────────────────────────────────────┘
       │
       ▼  Gemini API Call #1
       │
-Natural Language Meal Plan
+Natural Language Menu Book
 (semi-structured, creative)
       │
       ▼
 ┌─────────────────────────────────────┐
-│ Step 2: generate_structured_plan    │
+│ Step 2: structured_menu_prompt      │
 │ "Convert to JSON format"            │
 └─────────────────────────────────────┘
       │
       ▼  Gemini API Call #2
       │
-Structured JSON Meal Plan
+Structured JSON Menu Book
       │
       ├──────────────────────────────────┐
       │                                  │
       ▼  (optional)                      │
 ┌─────────────────────────────────────┐  │
-│ user_manipulation_prompt            │  │
+│ modification_prompt                 │  │
 │ "Adjust based on user input"        │  │
 └─────────────────────────────────────┘  │
       │                                  │
       ▼  Gemini API Call #3             │
       │                                  │
-Modified Meal Plan ◄────────────────────┘
+Modified Menu Book ◄────────────────────┘
       │
       ▼
 ┌─────────────────────────────────────┐
-│ generate_shopping_list_prompt       │
+│ shopping_list_prompt                │
 │ "Create consolidated shopping list" │
 └─────────────────────────────────────┘
       │
@@ -76,7 +80,7 @@ Shopping List JSON
 ```
 
 **Total API calls:**
-- New plan generation: 2 calls (Step 1 + Step 2)
+- New menu book generation: 2 calls (Step 1 + Step 2)
 - Modification: 1 call
 - Shopping list: 1 call
 - **First-time full flow: 3 calls** (generate + structure + shopping)
@@ -88,85 +92,92 @@ This two-step approach produces better results than asking for structured JSON d
 
 ## Prompt Templates
 
-### 1. Meal Plan Generation (Step 1)
+### 1. Menu Book Generation (Step 1)
 
-**Function**: `meal_plan_prompt(user_preferences: str)`
+**Function**: `menu_book_prompt(preferences: UserPreferences)`
 
 **Template**:
 ```
-Task: Based on the user's preferences, generate a personalized meal plan in JSON format, every meal should include recipeName, ingredients and brief description.
+Task: Based on the user's preferences, generate a personalized weekly menu in JSON format; every meal must include dishName, ingredients, and a brief description.
+Important: preferredItems should appear at least once during the week, not necessarily in every meal.
+Budget:$<budget>.
 
-User Preferences: {user_preferences_json}
+User Preferences: {preferences_json}
 ```
 
 **Notes:**
 - Keep prompt simple and concise
-- Let the model be creative with the plan
+- Let the model be creative with the menu
 - Output is natural language / semi-structured
 
 ---
 
-### 2. Structured Plan Conversion (Step 2)
+### 2. Structured Menu Conversion (Step 2)
 
-**Function**: `structured_plan_prompt(extracted_plan: str)`
+**Function**: `structured_menu_prompt(natural_menu: str, preferences: UserPreferences)`
 
 **Template**:
 ```
-Task: Convert the following meal plan into a structured JSON format according to the schema.
+Task: Convert the following menu into a structured JSON format according to the schema.
 
-Meal Plan: {extracted_plan}
+Menu: {natural_menu}
 
 Output Schema:
 {
   "monday": {
-    "breakfast": {
-      "id": "mon-breakfast-001",
-      "name": "Scrambled Eggs with Tomato",
-      "ingredients": [
-        {"name": "eggs", "quantity": 2, "unit": "count", "category": "proteins"},
-        {"name": "tomato", "quantity": 100, "unit": "g", "category": "vegetables"},
-        {"name": "oil", "quantity": 15, "unit": "ml", "category": "seasonings"}
-      ],
-      "instructions": "1. Beat eggs... 2. Stir fry tomato... 3. Mix together...",
-      "estimatedTime": 15,
-      "servings": 2,
-      "difficulty": "easy",
-      "totalCalories": 180
-    },
-    "lunch": { ... },
-    "dinner": { ... }
+    "breakfast": [
+      {
+        "id": "mon-breakfast-001",
+        "name": "Scrambled Eggs with Tomato",
+        "ingredients": [
+          {"name": "eggs", "quantity": 2, "unit": "count", "category": "proteins"},
+          {"name": "tomato", "quantity": 100, "unit": "g", "category": "vegetables"},
+          {"name": "oil", "quantity": 0, "unit": "", "category": "seasonings"}
+        ],
+        "instructions": "1. Beat eggs... 2. Stir fry tomato... 3. Mix together...",
+        "estimatedTime": 15,
+        "servings": 2,
+        "difficulty": "easy",
+        "totalCalories": 180,
+        "source": "ai"
+      }
+    ],
+    "lunch": [],
+    "dinner": []
   },
   "tuesday": { ... },
   ...
 }
 
 Requirements:
-1. All 7 days must be present (monday through sunday)
-2. Each day has breakfast, lunch, dinner (null if not scheduled)
-3. Recipe ID format: {day}-{meal}-{number} (e.g., "mon-breakfast-001")
+1. All 7 days present (monday through sunday)
+2. Each day has breakfast, lunch, dinner (use empty array if not scheduled)
+3. Dish ID format: {day}-{meal}-{number} (e.g., "mon-breakfast-001")
 4. Ingredient categories: proteins, vegetables, fruits, grains, dairy, seasonings, pantry_staples, others
-5. For seasonings: quantity can be 0, unit can be empty
+5. Seasonings use quantity 0 and empty unit
+6. <=5 ingredients per dish and instructions <=200 characters
+7. Each dish includes source="ai"
 
-RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json blocks).
+RETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks).
 ```
 
 ---
 
-### 3. Meal Plan Modification
+### 3. Menu Book Modification
 
-**Function**: `modification_prompt(user_input: str, user_preferences: str, previous_plan: str)`
+**Function**: `modification_prompt(modification: str, current_menu: str, preferences: UserPreferences)`
 
 **Template**:
 ```
-Task: Based on user's new input, previous preferences and meal plan, adjust the meal plan accordingly. DO NOT change the format of the meal plan.
+Task: Based on user's new input, previous preferences, and menu, adjust the menu accordingly without changing the format.
+Make the minimal modifications needed to satisfy the request.
+Note: preferredItems are items the user wants included at least once during the week, not in every meal.
 
-Return exactly the same format as previous meal plan. Do minimal changes to accommodate user's new input.
+User's new input: {modification}
+Previous user preferences: {preferences_json}
+Previous menu: {current_menu}
 
-User's new input: {user_input}
-Previous user preferences: {user_preferences}
-Previous meal plan: {previous_plan}
-
-RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json blocks).
+RETURN ONLY THE MODIFIED JSON OBJECT. Do not use Markdown formatting (no ```json blocks).
 ```
 
 **Notes:**
@@ -178,11 +189,11 @@ RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json bloc
 
 ### 4. Shopping List Generation
 
-**Function**: `shopping_list_prompt(structured_plan: str)`
+**Function**: `shopping_list_prompt(menus: WeekMenus)`
 
 **Template**:
 ```
-Task: Convert the Meal Plan into a consolidated North American shopping list (JSON).
+Task: Generate a consolidated shopping list from the weekly menus (North American units).
 
 CRITICAL RULES:
 1. **MERGE AGGRESSIVELY**: Combine interchangeable ingredients into broad categories.
@@ -198,7 +209,7 @@ CRITICAL RULES:
 
 4. **Seasonings**: Set totalQuantity to 0 and unit to "" (not displayed in UI)
 
-Meal Plan: {structured_plan}
+Menus: {menus_json}
 
 Output Format:
 {
@@ -219,7 +230,7 @@ RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json bloc
 ```json
 {
   "keywords": ["chinese food", "healthy"],
-  "mustHaveItems": ["eggs", "tofu"],
+  "preferredItems": ["eggs", "tofu"],
   "dislikedItems": ["organ meat"],
   "budget": 140,
   "numPeople": 2,
@@ -236,7 +247,7 @@ RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json bloc
 ```json
 {
   "keywords": ["chinese food", "healthy"],
-  "mustHaveItems": ["eggs", "tofu"],
+  "preferredItems": ["eggs", "tofu"],
   "dislikedItems": ["organ meat"],
   "budget": 140,
   "numPeople": 2,
@@ -273,7 +284,7 @@ Based on original `prompt_simple.py` test case:
 ```python
 user_preferences = {
     "keywords": ["chinese food", "healthy", "quick food", "nutritious"],
-    "mustHaveItems": ["braised beef", "noodles", "tofu skin", "eggs"],
+    "preferredItems": ["braised beef", "noodles", "tofu skin", "eggs"],
     "dislikedItems": ["organ meat"],
     "budget": 140,
     "numPeople": 2,
@@ -294,7 +305,7 @@ user_preferences = {
 ### User Modification Example
 
 ```python
-user_manipulation_input = "Please add dinner on Sunday with high-protein meals."
+modification_input = "Please add dinner on Sunday with high-protein meals."
 ```
 
 ### Weekday Lunch/Dinner Only
@@ -302,7 +313,7 @@ user_manipulation_input = "Please add dinner on Sunday with high-protein meals."
 ```python
 user_preferences = {
     "keywords": ["quick", "easy", "meal prep"],
-    "mustHaveItems": ["chicken", "rice"],
+    "preferredItems": ["chicken", "rice"],
     "dislikedItems": ["seafood"],
     "budget": 100,
     "numPeople": 1,

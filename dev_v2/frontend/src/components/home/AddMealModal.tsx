@@ -3,9 +3,9 @@ import { createPortal } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import type { DayMeals, Difficulty, Ingredient } from "@/types";
+import type { Dish, Difficulty, Ingredient, Menu } from "@/types";
 
-const MEAL_TYPE_OPTIONS: Array<{ value: keyof DayMeals; label: string }> = [
+const MEAL_TYPE_OPTIONS: Array<{ value: keyof Menu; label: string }> = [
   { value: "breakfast", label: "Breakfast" },
   { value: "lunch", label: "Lunch" },
   { value: "dinner", label: "Dinner" },
@@ -14,14 +14,11 @@ const MEAL_TYPE_OPTIONS: Array<{ value: keyof DayMeals; label: string }> = [
 interface AddMealModalProps {
   open: boolean;
   dayLabel: string;
-  existingMeals: DayMeals;
+  existingMenu: Menu;
   defaultServings: number;
   defaultDifficulty: Difficulty;
   onClose: () => void;
-  onSubmit: (payload: {
-    mealType: keyof DayMeals;
-    meal: NonNullable<DayMeals[keyof DayMeals]>;
-  }) => void;
+  onSubmit: (payload: { mealType: keyof Menu; dish: Dish }) => void;
 }
 
 const DEFAULT_DIFFICULTY: Difficulty = "easy";
@@ -69,7 +66,7 @@ function FlameIcon() {
   );
 }
 
-function buildManualMealId(dayLabel: string, mealType: keyof DayMeals) {
+function buildManualDishId(dayLabel: string, mealType: keyof Menu) {
   const sanitized = dayLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   return `manual_${mealType}_${sanitized}_${Date.now()}`;
 }
@@ -90,20 +87,13 @@ function parseIngredients(raw: string): Ingredient[] {
 export function AddMealModal({
   open,
   dayLabel,
-  existingMeals,
+  existingMenu,
   defaultServings,
   defaultDifficulty,
   onClose,
   onSubmit,
 }: AddMealModalProps) {
-  const emptyMealType = useMemo(() => {
-    if (!existingMeals.breakfast) return "breakfast";
-    if (!existingMeals.lunch) return "lunch";
-    if (!existingMeals.dinner) return "dinner";
-    return "breakfast";
-  }, [existingMeals]);
-
-  const [mealType, setMealType] = useState<keyof DayMeals>("breakfast");
+  const [mealType, setMealType] = useState<keyof Menu>("breakfast");
   const [name, setName] = useState("");
   const [ingredientsInput, setIngredientsInput] = useState("");
   const [estimatedTime, setEstimatedTime] = useState("");
@@ -119,9 +109,16 @@ export function AddMealModal({
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
 
+  const recommendedMealType = useMemo(() => {
+    if (existingMenu.breakfast.length === 0) return "breakfast";
+    if (existingMenu.lunch.length === 0) return "lunch";
+    if (existingMenu.dinner.length === 0) return "dinner";
+    return "breakfast";
+  }, [existingMenu]);
+
   useEffect(() => {
     if (!open) return;
-    setMealType("breakfast");
+    setMealType(recommendedMealType);
     setName("");
     setIngredientsInput("");
     setEstimatedTime("");
@@ -135,7 +132,7 @@ export function AddMealModal({
     setIsEditingIngredients(false);
     setIsEditingInstructions(true);
     setIsEditingNotes(false);
-  }, [emptyMealType, open]);
+  }, [defaultDifficulty, defaultServings, open, recommendedMealType]);
 
   useEffect(() => {
     if (!open) return;
@@ -150,8 +147,8 @@ export function AddMealModal({
 
     const parsedIngredients = parseIngredients(ingredientsInput);
 
-    const newMeal = {
-      id: buildManualMealId(dayLabel, mealType as keyof DayMeals),
+    const newDish: Dish = {
+      id: buildManualDishId(dayLabel, mealType),
       name: name.trim(),
       ingredients: parsedIngredients,
       instructions: instructions.trim(),
@@ -160,9 +157,10 @@ export function AddMealModal({
       difficulty: (difficulty || defaultDifficulty || DEFAULT_DIFFICULTY) as Difficulty,
       totalCalories: Number.parseInt(calories, 10) || 0,
       notes: notes.trim(),
-    } as NonNullable<DayMeals[keyof DayMeals]>;
+      source: "manual",
+    };
 
-    onSubmit({ mealType, meal: newMeal });
+    onSubmit({ mealType, dish: newDish });
     onClose();
   };
 
@@ -185,25 +183,25 @@ export function AddMealModal({
         className="flex max-h-[85%] w-full flex-col overflow-hidden rounded-t-3xl bg-card-base"
         onPointerDown={(event) => event.stopPropagation()}
       >
-        {/* Modal Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-subtle bg-card-base px-5 py-4">
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onPointerDown={(event) => {
               event.preventDefault();
               onClose();
             }}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-text-primary transition-colors hover:bg-paper-dark"
+            className="h-9 w-9 rounded-full bg-paper-muted text-text-primary hover:bg-paper-dark"
             aria-label="Close"
           >
             <CloseIcon />
-          </button>
+          </Button>
           <Button type="button" size="sm" onClick={handleSubmit} disabled={nameError || mealTypeError}>
             Save Dish
           </Button>
         </div>
 
-        {/* Modal Body */}
         <div className="flex-1 overflow-y-auto px-5 py-5">
           <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base">
             <span>{dayLabel.toUpperCase()}</span>
@@ -239,7 +237,7 @@ export function AddMealModal({
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   onBlur={() => setIsEditingName(false)}
-                  className="h-auto rounded-xl border border-border-subtle bg-transparent px-3 py-2 text-[22px] font-semibold leading-tight text-text-primary focus-visible:ring-0"
+                  className="h-auto rounded-xl border border-border-subtle bg-transparent px-3 py-2 text-[18px] font-semibold leading-tight text-text-primary focus-visible:ring-0"
                 />
                 {nameError && <p className="mt-1 text-xs text-[#C67B7B]">Name is required.</p>}
               </>
@@ -247,7 +245,7 @@ export function AddMealModal({
               <button
                 type="button"
                 onClick={() => setIsEditingName(true)}
-                className="text-left text-[22px] font-semibold leading-tight text-text-primary"
+                className="text-left text-[18px] font-semibold leading-tight text-text-primary"
               >
                 {name ? (
                   name
@@ -258,157 +256,154 @@ export function AddMealModal({
             )}
           </div>
 
-          <div className="mt-4">
-            {isEditingMeta ? (
-              <div className="flex flex-wrap gap-4">
-                <label className="flex items-center gap-2 text-[13px] text-text-secondary">
-                  <ClockIcon />
-                  <Input
-                    type="number"
-                    inputMode="numeric"
-                    min={0}
-                    value={estimatedTime}
-                    onChange={(event) => setEstimatedTime(event.target.value)}
-                    placeholder="20"
-                    className="h-8 w-[70px] rounded-lg border border-border-tag bg-white px-2 text-[13px]"
-                  />
-                  <span>min</span>
-                </label>
-                <label className="flex items-center gap-2 text-[13px] text-text-secondary">
-                  <UsersIcon />
-                  <Input
-                    type="number"
-                    inputMode="numeric"
-                    min={0}
-                    value={servings}
-                    onChange={(event) => setServings(event.target.value)}
-                    placeholder="2"
-                    className="h-8 w-[60px] rounded-lg border border-border-tag bg-white px-2 text-[13px]"
-                  />
-                  <span>servings</span>
-                </label>
-                <label className="flex items-center gap-2 text-[13px] text-text-secondary">
-                  <ChartIcon />
-                  <select
-                    value={difficulty}
-                    onChange={(event) => setDifficulty(event.target.value as Difficulty)}
-                    className="h-8 rounded-lg border border-border-tag bg-white px-2 text-[13px] text-text-primary"
-                  >
-                    <option value="">Select</option>
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                  </select>
-                </label>
-                <label className="flex items-center gap-2 text-[13px] text-text-secondary">
-                  <FlameIcon />
-                  <Input
-                    type="number"
-                    inputMode="numeric"
-                    min={0}
-                    value={calories}
-                    onChange={(event) => setCalories(event.target.value)}
-                    placeholder="520"
-                    className="h-8 w-[70px] rounded-lg border border-border-tag bg-white px-2 text-[13px]"
-                  />
-                  <span>cal</span>
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setIsEditingMeta(false)}
-                  className="text-[12px] text-accent-base"
-                >
-                  Done
-                </button>
-              </div>
-            ) : (
+          <div className="mt-5 rounded-2xl border border-border-subtle bg-paper-muted/30 p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary">
+                Meal details
+              </p>
               <button
                 type="button"
-                onClick={() => setIsEditingMeta(true)}
-                className="flex flex-wrap gap-4 text-left text-[13px] text-text-secondary"
+                onClick={() => setIsEditingMeta((prev) => !prev)}
+                className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base"
               >
-                <span className="flex items-center gap-2">
-                  <ClockIcon />
-                  <span>{estimatedTime ? `${estimatedTime} min` : "— min"}</span>
-                </span>
-                <span className="flex items-center gap-2">
-                  <UsersIcon />
-                  <span>{servings ? `${servings} servings` : "— servings"}</span>
-                </span>
-                <span className="flex items-center gap-2">
-                  <ChartIcon />
-                  <span>{difficulty ? difficulty : "—"}</span>
-                </span>
-                <span className="flex items-center gap-2">
-                  <FlameIcon />
-                  <span>{calories ? `${calories} cal` : "— cal"}</span>
-                </span>
+                {isEditingMeta ? "Done" : "Edit"}
               </button>
+            </div>
+
+            {isEditingMeta ? (
+              <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                <label className="flex flex-col gap-1 text-[12px] text-text-tertiary">
+                  Time (min)
+                  <Input
+                    value={estimatedTime}
+                    onChange={(event) => setEstimatedTime(event.target.value)}
+                    className="h-9 rounded-xl"
+                  />
+                </label>
+                <label className="flex flex-col gap-1 text-[12px] text-text-tertiary">
+                  Servings
+                  <Input
+                    value={servings}
+                    onChange={(event) => setServings(event.target.value)}
+                    className="h-9 rounded-xl"
+                  />
+                </label>
+                <label className="flex flex-col gap-1 text-[12px] text-text-tertiary">
+                  Difficulty
+                  <Input
+                    value={difficulty}
+                    onChange={(event) => setDifficulty(event.target.value as Difficulty)}
+                    className="h-9 rounded-xl"
+                  />
+                </label>
+                <label className="flex flex-col gap-1 text-[12px] text-text-tertiary">
+                  Calories
+                  <Input
+                    value={calories}
+                    onChange={(event) => setCalories(event.target.value)}
+                    className="h-9 rounded-xl"
+                  />
+                </label>
+              </div>
+            ) : (
+              <div className="mt-4 grid grid-cols-2 gap-4 text-[12px] text-text-secondary">
+                <div className="flex items-center gap-2">
+                  <ClockIcon />
+                  <span>{estimatedTime || "—"} min</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <UsersIcon />
+                  <span>{servings || "—"} servings</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ChartIcon />
+                  <span>{difficulty || "—"}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FlameIcon />
+                  <span>{calories || "—"} cal</span>
+                </div>
+              </div>
             )}
           </div>
 
-          <section className="mt-6">
-            <h3 className="text-[14px] font-semibold text-text-primary">Ingredients</h3>
+          <div className="mt-5 rounded-2xl border border-border-subtle bg-paper-muted/30 p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary">Ingredients</p>
+              <button
+                type="button"
+                onClick={() => setIsEditingIngredients((prev) => !prev)}
+                className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base"
+              >
+                {isEditingIngredients ? "Done" : "Edit"}
+              </button>
+            </div>
+
             {isEditingIngredients ? (
               <Textarea
-                id="manual-meal-ingredients"
-                placeholder="Tomato, Basil, Olive oil"
                 value={ingredientsInput}
                 onChange={(event) => setIngredientsInput(event.target.value)}
-                className="mt-3 min-h-[90px]"
+                placeholder="Add ingredients separated by commas"
+                className="mt-3 min-h-[80px]"
               />
             ) : (
+              <p className="mt-3 text-[13px] text-text-secondary">
+                {ingredientsInput ? ingredientsInput : "Tap edit to add ingredients."}
+              </p>
+            )}
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-border-subtle bg-paper-muted/30 p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary">Instructions</p>
               <button
                 type="button"
-                onClick={() => setIsEditingIngredients(true)}
-                className="mt-3 text-[14px] text-text-tertiary"
+                onClick={() => setIsEditingInstructions((prev) => !prev)}
+                className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base"
               >
-                Tap to add ingredients
+                {isEditingInstructions ? "Done" : "Edit"}
               </button>
-            )}
-          </section>
+            </div>
 
-          <section className="mt-6">
-            <h3 className="text-[14px] font-semibold text-text-primary">Instructions</h3>
             {isEditingInstructions ? (
               <Textarea
-                id="manual-meal-instructions"
-                placeholder="Describe steps or cooking notes"
                 value={instructions}
                 onChange={(event) => setInstructions(event.target.value)}
-                className="mt-3 min-h-[120px]"
+                placeholder="Add step-by-step instructions"
+                className="mt-3 min-h-[100px]"
               />
             ) : (
+              <p className="mt-3 text-[13px] text-text-secondary">
+                {instructions ? instructions : "Tap edit to add instructions."}
+              </p>
+            )}
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-border-subtle bg-paper-muted/30 p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary">Notes</p>
               <button
                 type="button"
-                onClick={() => setIsEditingInstructions(true)}
-                className="mt-3 text-[14px] text-text-secondary"
+                onClick={() => setIsEditingNotes((prev) => !prev)}
+                className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base"
               >
-                {instructions ? instructions : "No instructions provided."}
+                {isEditingNotes ? "Done" : "Edit"}
               </button>
-            )}
-          </section>
+            </div>
 
-          <section className="mt-6">
-            <h3 className="text-[14px] font-semibold text-text-primary">Notes</h3>
             {isEditingNotes ? (
               <Textarea
-                id="manual-meal-notes"
-                placeholder="Add your notes here"
                 value={notes}
                 onChange={(event) => setNotes(event.target.value)}
-                className="mt-3 min-h-[90px]"
+                placeholder="Add notes (optional)"
+                className="mt-3 min-h-[60px]"
               />
             ) : (
-              <button
-                type="button"
-                onClick={() => setIsEditingNotes(true)}
-                className="mt-3 text-[14px] text-text-tertiary"
-              >
-                Tap to add notes
-              </button>
+              <p className="mt-3 text-[13px] text-text-secondary">
+                {notes ? notes : "Tap edit to add notes."}
+              </p>
             )}
-          </section>
+          </div>
         </div>
       </div>
     </div>,

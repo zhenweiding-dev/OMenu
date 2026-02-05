@@ -10,7 +10,15 @@ class Settings(BaseSettings):
 
     gemini_api_key: str = ""
     gemini_model: str = "gemini-2.0-flash"
-    cors_origins: List[str] | str = Field(default_factory=lambda: ["http://localhost:5173"])
+    # NOTE: Include common Vite dev ports to prevent CORS failures during local development.
+    cors_origins: List[str] | str = Field(
+        default_factory=lambda: [
+            "http://localhost:5173",
+            "http://localhost:5174",
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:5174",
+        ]
+    )
     environment: str = "development"
 
     model_config = SettingsConfigDict(

@@ -16,7 +16,7 @@ import { WEEK_DAYS } from "@/utils/constants";
 import { getDayDisplay, getWeekDateRange, isCurrentCalendarWeek, startCaseDay } from "@/utils/helpers";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
-import type { DayMeals, MenuBook, Recipe } from "@/types";
+import type { Dish, Menu, MenuBook } from "@/types";
 
 function PlusIcon() {
   return (
@@ -33,37 +33,33 @@ export function HomePage() {
   const currentDayIndex = useAppStore((state) => state.currentDayIndex);
   const setCurrentDayIndex = useAppStore((state) => state.setCurrentDayIndex);
   const deleteMenuBook = useAppStore((state) => state.deleteMenuBook);
-  const setDayMeal = useAppStore((state) => state.setDayMeal);
-  const clearDayMeal = useAppStore((state) => state.clearDayMeal);
-  const updateMealNotes = useAppStore((state) => state.updateMealNotes);
+  const removeDish = useAppStore((state) => state.removeDish);
+  const updateDishNotes = useAppStore((state) => state.updateDishNotes);
   const isMenuPickerOpen = useAppStore((state) => state.isMenuPickerOpen);
   const setIsMenuPickerOpen = useAppStore((state) => state.setIsMenuPickerOpen);
 
-  const addExtraMeal = useAppStore((state) => state.addExtraMeal);
-  const updateExtraMealNotes = useAppStore((state) => state.updateExtraMealNotes);
-  const removeExtraMeal = useAppStore((state) => state.removeExtraMeal);
-  const resetDraft = useDraftStore((state) => state.resetDraft);
+  const addDish = useAppStore((state) => state.addDish);
+  const resetDraftProgress = useDraftStore((state) => state.resetDraftProgress);
   const navigate = useNavigate();
 
   const [pendingDelete, setPendingDelete] = useState<MenuBook | null>(null);
   const [addMealDayKey, setAddMealDayKey] = useState<(typeof WEEK_DAYS)[number] | null>(null);
   const [activeDish, setActiveDish] = useState<{
     book: MenuBook;
-    day: keyof MenuBook["mealPlan"]["days"];
-    mealType: keyof DayMeals;
-    recipe: Recipe;
-    source: "base" | "extra";
+    day: keyof MenuBook["menus"];
+    mealType: keyof Menu;
+    dish: Dish;
   } | null>(null);
 
   const hasUserSelectedWeekRef = useRef(false);
 
   const orderedBooks = useMemo(
-    () => [...menuBooks].sort((a, b) => (a.mealPlan.createdAt < b.mealPlan.createdAt ? -1 : 1)),
+    () => [...menuBooks].sort((a, b) => (a.createdAt < b.createdAt ? -1 : 1)),
     [menuBooks],
   );
 
   const currentWeekBook = useMemo(
-    () => menuBooks.find((book) => isCurrentCalendarWeek(book.mealPlan.createdAt)) ?? null,
+    () => menuBooks.find((book) => isCurrentCalendarWeek(book.createdAt)) ?? null,
     [menuBooks],
   );
 
@@ -80,12 +76,12 @@ export function HomePage() {
     > = [];
 
     orderedBooks.forEach((book, index) => {
-      const bookWeekStart = getWeekStart(book.mealPlan.createdAt);
+      const bookWeekStart = getWeekStart(book.createdAt);
       items.push({ type: "book", book });
 
       const nextBook = orderedBooks[index + 1];
       if (nextBook) {
-        const nextWeekStart = getWeekStart(nextBook.mealPlan.createdAt);
+        const nextWeekStart = getWeekStart(nextBook.createdAt);
         const gap = differenceInCalendarWeeks(nextWeekStart, bookWeekStart, { weekStartsOn: 1 });
         if (gap > 1) {
           for (let step = 1; step < gap; step += 1) {
@@ -120,31 +116,33 @@ export function HomePage() {
   useEffect(() => {
     if (import.meta.env.VITE_USE_MOCK !== "true") return;
     if (!currentBook) return;
-    const hasExtras = currentBook.extraMeals
-      ? Object.values(currentBook.extraMeals).some((day) => Object.values(day).some((items) => items.length > 0))
-      : false;
-    if (hasExtras) return;
+    const hasManualDishes = Object.values(currentBook.menus).some((day) =>
+      Object.values(day).some((items) => items.some((dish) => dish.source === "manual")),
+    );
+    if (hasManualDishes) return;
 
-    const baseLunch = currentBook.mealPlan.days.monday.lunch ?? currentBook.mealPlan.days.monday.breakfast;
+    const baseLunch = currentBook.menus.monday.lunch[0] ?? currentBook.menus.monday.breakfast[0];
     if (!baseLunch) return;
 
-    addExtraMeal(currentBook.id, "monday", "lunch", {
+    addDish(currentBook.id, "monday", "lunch", {
       ...baseLunch,
       id: `${baseLunch.id}-side`,
       name: "Citrus Side Salad",
       totalCalories: 180,
       estimatedTime: 10,
       servings: baseLunch.servings || 2,
+      source: "manual",
     });
-    addExtraMeal(currentBook.id, "wednesday", "dinner", {
+    addDish(currentBook.id, "wednesday", "dinner", {
       ...baseLunch,
       id: `${baseLunch.id}-soup`,
       name: "Herbed Veggie Soup",
       totalCalories: 220,
       estimatedTime: 20,
       servings: baseLunch.servings || 2,
+      source: "manual",
     });
-  }, [addExtraMeal, currentBook]);
+  }, [addDish, currentBook]);
 
   const handleRequestDelete = (book: MenuBook) => {
     setPendingDelete(book);
@@ -186,21 +184,19 @@ export function HomePage() {
   const activeBook = shouldShowWelcome ? null : currentBook ?? currentWeekBook;
   const hasCurrentBook = Boolean(activeBook);
   const currentDayKey = hasCurrentBook ? WEEK_DAYS[currentDayIndex] : WEEK_DAYS[0];
-  const currentMeals = hasCurrentBook ? activeBook.mealPlan.days[currentDayKey] : null;
+  const currentMeals = hasCurrentBook ? activeBook.menus[currentDayKey] : null;
   const currentDayLabel = startCaseDay(currentDayKey);
   const { dateLabel } = hasCurrentBook
-    ? getDayDisplay(activeBook.mealPlan.createdAt, currentDayIndex)
+    ? getDayDisplay(activeBook.createdAt, currentDayIndex)
     : { dateLabel: "" };
 
-  const handleOpenMeal = (mealType: keyof DayMeals, meal: Recipe) => {
+  const handleOpenDish = (mealType: keyof Menu, dish: Dish) => {
     if (!activeBook) return;
-    const source = (meal as Recipe & { source?: "base" | "extra" }).source === "extra" ? "extra" : "base";
     setActiveDish({
       book: activeBook,
       day: currentDayKey,
       mealType,
-      recipe: meal,
-      source,
+      dish,
     });
   };
 
@@ -212,21 +208,10 @@ export function HomePage() {
     setAddMealDayKey(null);
   };
 
-  const handleSubmitAddMeal = ({
-    mealType,
-    meal,
-  }: {
-    mealType: keyof DayMeals;
-    meal: NonNullable<DayMeals[keyof DayMeals]>;
-  }) => {
+  const handleSubmitAddMeal = ({ mealType, dish }: { mealType: keyof Menu; dish: Dish }) => {
     if (!addMealDayKey) return;
     if (!activeBook) return;
-    const existingMeal = activeBook.mealPlan.days[addMealDayKey][mealType];
-    if (existingMeal) {
-      addExtraMeal(activeBook.id, addMealDayKey, mealType, meal);
-    } else {
-      setDayMeal(activeBook.id, addMealDayKey, mealType, meal);
-    }
+    addDish(activeBook.id, addMealDayKey, mealType, dish);
     setAddMealDayKey(null);
   };
 
@@ -249,39 +234,12 @@ export function HomePage() {
     touchStartXRef.current = null;
   };
 
-  const currentMealEntries = useMemo(() => {
-    if (!activeBook || !currentMeals) {
-      return {
-        breakfast: [] as Recipe[],
-        lunch: [] as Recipe[],
-        dinner: [] as Recipe[],
-      };
-    }
-    const extraMealsForDay = activeBook.extraMeals?.[currentDayKey] ?? {
-      breakfast: [],
-      lunch: [],
-      dinner: [],
-    };
-    const buildEntries = (mealType: keyof DayMeals) => {
-      const baseMeal = currentMeals[mealType];
-      const extraMeals = extraMealsForDay[mealType] ?? [];
-      const baseEntries = baseMeal ? [{ ...baseMeal, source: "base" as const }] : [];
-      const extraEntries = extraMeals.map((meal) => ({ ...meal, source: "extra" as const }));
-      return [...baseEntries, ...extraEntries];
-    };
-    return {
-      breakfast: buildEntries("breakfast"),
-      lunch: buildEntries("lunch"),
-      dinner: buildEntries("dinner"),
-    };
-  }, [activeBook, currentMeals, currentDayKey]);
-
   // Menu Open view - current day card with swipe
   const openView = (
     <div className="space-y-4">
       {activeBook && (
         <WeekDateBar
-          createdAt={activeBook.mealPlan.createdAt}
+          createdAt={activeBook.createdAt}
           activeIndex={currentDayIndex}
           onSelect={setCurrentDayIndex}
         />
@@ -299,8 +257,8 @@ export function HomePage() {
         <DailyMenuCard
           day={currentDayLabel}
           dateLabel={dateLabel}
-          meals={currentMealEntries}
-          onOpenMeal={handleOpenMeal}
+          menu={currentMeals ?? { breakfast: [], lunch: [], dinner: [] }}
+          onOpenDish={handleOpenDish}
           onAddMeal={handleOpenAddMeal}
         />
       </div>
@@ -312,7 +270,7 @@ export function HomePage() {
       className={
         shouldShowWelcome
           ? "px-0 pt-0 pb-0 flex flex-col"
-          : "pb-20"
+          : "pb-4"
       }
     >
       {shouldShowWelcome ? (
@@ -320,7 +278,7 @@ export function HomePage() {
           label="WELCOME"
           inline
           onNext={() => {
-            resetDraft();
+            resetDraftProgress();
             navigate("/create", { state: { startStep: 2, skipResume: true } });
           }}
         />
@@ -341,16 +299,18 @@ export function HomePage() {
             <h2 className="text-[16px] font-semibold text-text-primary">Menu Book</h2>
             <p className="mt-1 text-[12px] text-text-secondary">Long press a menu book to delete.</p>
           </div>
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onClick={() => setIsMenuPickerOpen(false)}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-muted text-text-primary hover:bg-paper-dark"
+            className="h-9 w-9 rounded-full bg-paper-muted text-text-primary hover:bg-paper-dark"
             aria-label="Close menu picker"
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
-          </button>
+          </Button>
         </div>
         <div className="mt-4 flex flex-col gap-3">
           {menuPickerItems.map((item) => {
@@ -363,7 +323,7 @@ export function HomePage() {
                   onSelect={handleSelectBook}
                   onLongPress={handleRequestDelete}
                   isActive={book.id === activeBook?.id}
-                  showCurrentWeekBadge={isCurrentCalendarWeek(book.mealPlan.createdAt)}
+                  showCurrentWeekBadge={isCurrentCalendarWeek(book.createdAt)}
                 />
               );
             }
@@ -396,7 +356,7 @@ export function HomePage() {
         title="Delete this menu book?"
         description={
           pendingDelete
-            ? `This will remove the week of ${getWeekDateRange(pendingDelete.mealPlan.createdAt)} and its shopping list.`
+            ? `This will remove the week of ${getWeekDateRange(pendingDelete.createdAt)} and its shopping list.`
             : undefined
         }
         onClose={handleCancelDelete}
@@ -423,9 +383,9 @@ export function HomePage() {
           key={addMealDayKey ?? "closed"}
           open={addMealDayKey !== null}
           dayLabel={addMealDayKey ? startCaseDay(addMealDayKey) : ""}
-          existingMeals={addMealDayKey ? activeBook.mealPlan.days[addMealDayKey] : activeBook.mealPlan.days[currentDayKey]}
-          defaultServings={activeBook.mealPlan.preferences.numPeople}
-          defaultDifficulty={activeBook.mealPlan.preferences.difficulty}
+          existingMenu={addMealDayKey ? activeBook.menus[addMealDayKey] : activeBook.menus[currentDayKey]}
+          defaultServings={activeBook.preferences.numPeople}
+          defaultDifficulty={activeBook.preferences.difficulty}
           onClose={handleCloseAddMeal}
           onSubmit={handleSubmitAddMeal}
         />
@@ -437,27 +397,19 @@ export function HomePage() {
           if (!container) return null;
           return createPortal(
             <RecipeDetailSheet
-              key={`${activeDish.book.id}-${activeDish.recipe.id}`}
+              key={`${activeDish.book.id}-${activeDish.dish.id}`}
               active={{
                 book: activeDish.book,
                 day: activeDish.day,
                 mealType: activeDish.mealType,
-                recipe: activeDish.recipe,
+                dish: activeDish.dish,
               }}
               onClose={() => setActiveDish(null)}
               onSaveNotes={(notes) => {
-                if (activeDish.source === "extra") {
-                  updateExtraMealNotes(activeDish.book.id, activeDish.day, activeDish.mealType, activeDish.recipe.id, notes);
-                } else {
-                  updateMealNotes(activeDish.book.id, activeDish.day, activeDish.mealType, notes);
-                }
+                updateDishNotes(activeDish.book.id, activeDish.day, activeDish.mealType, activeDish.dish.id, notes);
               }}
               onDelete={() => {
-                if (activeDish.source === "extra") {
-                  removeExtraMeal(activeDish.book.id, activeDish.day, activeDish.mealType, activeDish.recipe.id);
-                } else {
-                  clearDayMeal(activeDish.book.id, activeDish.day, activeDish.mealType);
-                }
+                removeDish(activeDish.book.id, activeDish.day, activeDish.mealType, activeDish.dish.id);
                 setActiveDish(null);
               }}
             />,

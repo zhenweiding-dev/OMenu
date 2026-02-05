@@ -2,6 +2,8 @@
 
 This document describes all pages, states, and user flows in OMenu.
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 ---
 
 ## Key Design Decisions
@@ -9,7 +11,7 @@ This document describes all pages, states, and user flows in OMenu.
 | Decision | Value |
 |----------|-------|
 | **Week Starts On** | Monday |
-| **Shopping List Generation** | User clicks "Shopping List" button after Meal Plan generated (not auto-generated) |
+| **Shopping List Generation** | User clicks "Shopping List" button after Menu Book generated (not auto-generated) |
 | **Data Storage (MVP)** | Pure local storage (IndexedDB), backend is stateless AI service |
 | **Draft Persistence** | Saved when user exits Create flow mid-way, restored when returning to `/create` |
 | **Delete MenuBook** | Long-press on MenuBook card → Confirm → Delete MenuBook + ShoppingList together |
@@ -29,7 +31,7 @@ App
 └── Create Plan Flow (/create)
     ├── Step 1: Welcome + Begin
     ├── Step 2: Keywords
-    ├── Step 3: Must-Have Items
+    ├── Step 3: Preferred Items
     ├── Step 4: Disliked Items
     ├── Step 5: People & Budget (Sentence Style)
     ├── Step 6: Schedule Grid
@@ -237,7 +239,7 @@ Present on: **Home, Shopping, My Page**
 
 **Purpose:** View and manage shopping list for the currently selected Menu Book (week).
 
-**Key Concept:** Each Menu Book (weekly meal plan) has its own Shopping List. When switching weeks in the Home Page, the Shopping Page shows the corresponding week's list. There is no week switcher on this page — users switch weeks from Home Page.
+**Key Concept:** Each Menu Book (weekly menu book) has its own Shopping List. When switching weeks in the Home Page, the Shopping Page shows the corresponding week's list. There is no week switcher on this page — users switch weeks from Home Page.
 
 **Layout:**
 ```
@@ -286,7 +288,7 @@ Present on: **Home, Shopping, My Page**
 **Empty State (no shopping list for current week):**
 - Icon: 🛒
 - Text: "No shopping list yet"
-- Subtext: "Generate a shopping list from your meal plan"
+- Subtext: "Generate a shopping list from your menu book"
 
 **Interactions:**
 - Tap checkbox → Toggle purchased status
@@ -320,8 +322,8 @@ Present on: **Home, Shopping, My Page**
 - Default budget
 - Default difficulty
 
-**Future: Meal Plan History** *(Not in MVP)*
-- List of past meal plans
+**Future: Menu Book History** *(Not in MVP)*
+- List of past menu books
 - Tap to view details
 
 **Interactions:**
@@ -371,7 +373,7 @@ Present on: **Home, Shopping, My Page**
 ### Step 2: Keywords Selection
 
 **Display:**
-- Header: "Choose some keywords for your meal plan"
+- Header: "Choose some keywords for your menu book"
 - Subheader: "Select all that apply"
 - Content: Tags grouped by category with section labels + "+" button at the end
 - Footer: "Next" button
@@ -415,10 +417,10 @@ Kid-Friendly, Family-Style, Comfort Food, Budget-Friendly, BBQ, Soul Food
 
 ---
 
-### Step 3: Must-Have Items
+### Step 3: Preferred Items
 
 **Display:**
-- Header: "Select something you must have"
+- Header: "Select items you'd like this week"
 - Subheader: "Select all that apply"
 - Content: Items grouped by category with section labels + "+" button at the end
 - Footer: "Next" button
@@ -467,7 +469,7 @@ Kid-Friendly, Family-Style, Comfort Food, Budget-Friendly, BBQ, Soul Food
 - Tap "+" → Open inline input for custom item
 - Tap "Next" → Save to draft, navigate to Step 4
 
-**Data Saved:** `draft.mustHaveItems: string[]`
+**Data Saved:** `draft.preferredItems: string[]`
 
 ---
 
@@ -545,7 +547,7 @@ Kid-Friendly, Family-Style, Comfort Food, Budget-Friendly, BBQ, Soul Food
 │                                     │
 │                                     │
 │                                     │
-│  The meal plan is for 2 people      │
+│  The menu is for 2 people      │
 │  with $100 budget and medium        │
 │  difficulty to cook.                │
 │                                     │
@@ -563,7 +565,7 @@ Kid-Friendly, Family-Style, Comfort Food, Budget-Friendly, BBQ, Soul Food
 
 **Sentence Structure:**
 ```
-The meal plan is for [n] people with $[X] budget and [difficulty] difficulty to cook.
+The menu is for [n] people with $[X] budget and [difficulty] difficulty to cook.
 ```
 
 - Static text: Primary text color (`#2C2C2C`)
@@ -573,7 +575,7 @@ The meal plan is for [n] people with $[X] budget and [difficulty] difficulty to 
 
 **People (tap on number):**
 ```
-The meal plan is for [-] 2 [+] people...
+The menu is for [-] 2 [+] people...
                       ↑
               +/- buttons appear inline
 ```
@@ -585,7 +587,7 @@ The meal plan is for [-] 2 [+] people...
 ```
                     ┌─────────┐
                     │   $90   │
-The meal plan is... │  $100   │ ...budget and...
+The menu book is... │  $100   │ ...budget and...
                     │  $110   │
                     └─────────┘
                         ↑
@@ -701,7 +703,7 @@ The meal plan is... │  $100   │ ...budget and...
 
 **Display:**
 - Animated chef cooking different foods (center)
-- Text: "Generating your meal plan..."
+- Text: "Generating your menu book..."
 - Progress indicator or elapsed time (optional)
 - Secondary button: "Go to Home" (bottom, appears after minimum wait)
 - Subtext: "Don't worry, we'll keep working on it in the background"
@@ -714,7 +716,7 @@ The meal plan is... │  $100   │ ...budget and...
 │                                     │
 │         👨‍🍳 (animated)              │
 │                                     │
-│    Generating your meal plan...     │
+│    Generating your menu book...     │
 │                                     │
 │         ⏱️ 0:45                      │
 │                                     │
@@ -732,9 +734,9 @@ The "Go to Home" button and success navigation are blocked until at least 1 minu
 
 **API Call:**
 ```typescript
-const mealPlan = await api.generateMealPlan({
+const menuBook = await api.generateMenuBook({
   keywords: draft.keywords,
-  mustHaveItems: draft.mustHaveItems,
+  preferredItems: draft.preferredItems,
   dislikedItems: draft.dislikedItems,
   numPeople: draft.numPeople,
   budget: draft.budget,
@@ -851,7 +853,7 @@ const mealPlan = await api.generateMealPlan({
 **API Call (Modification):**
 ```typescript
 // 1. Modify plan
-const modifiedPlan = await api.modifyMealPlan(
+const modifiedPlan = await api.modifyMenuBook(
   currentPlan.id,
   modificationText,
   currentPlan
@@ -954,7 +956,7 @@ Navigates to **Shopping Page** (`/shopping`) with newly generated list.
 Every step change saves to localStorage via Zustand persist middleware:
 
 ```typescript
-// Automatically persisted to localStorage key: 'omenu_meal_plan_draft'
+// Automatically persisted to localStorage key: 'omenu-draft'
 useDraftStore.getState().setStep(3);
 useDraftStore.getState().setKeywords(['Healthy', 'Chinese']);
 ```
@@ -1044,13 +1046,13 @@ interface MenuBook {
   id: string;
   weekStartDate: string;  // ISO date string
   weekEndDate: string;
-  mealPlan: MealPlan;
-  shoppingList: ShoppingList | null;  // One-to-one relationship with MealPlan
+  menuBook: MenuBook;
+  shoppingList: ShoppingList | null;  // One-to-one relationship with MenuBook
   createdAt: string;
 }
 ```
 
-**Note:** Each MenuBook has a one-to-one relationship with a ShoppingList. When a meal plan is modified, the shopping list should be regenerated.
+**Note:** Each MenuBook has a one-to-one relationship with a ShoppingList. When a menu book is modified, the shopping list should be regenerated.
 ```
 
 **Note:** v3.5 uses `isMenuOpen` state to toggle between Menu Open and Menu Closed views within the Home Page. There is no separate `/menus` route.

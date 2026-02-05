@@ -4,6 +4,8 @@ This document provides an overview of the technology choices for OMenu. For deta
 - [Frontend Guide](./FRONTEND.md) - React application details
 - [Backend Guide](./BACKEND.md) - FastAPI server details
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 ---
 
 ## Architecture Decision
@@ -80,7 +82,7 @@ OMenu uses a **separated frontend-backend architecture**.
 
 | Service | Purpose |
 |---------|---------|
-| Google Gemini API | AI meal plan generation |
+| Google Gemini API | AI menu book generation |
 | Vercel | Frontend hosting |
 | Railway / Render | Backend hosting |
 
@@ -88,27 +90,27 @@ OMenu uses a **separated frontend-backend architecture**.
 
 ## Data Flow
 
-### Generate Meal Plan
+### Generate Menu Book
 
 ```
 1. User completes create flow (Steps 1-6)
-2. Frontend sends POST /api/meal-plans/generate
+2. Frontend sends POST /api/menu-books/generate
 3. Backend builds prompt from preferences
 4. Backend calls Gemini API
 5. Backend validates & parses response
-6. Backend returns MealPlan to frontend
+6. Backend returns MenuBook to frontend
 7. Frontend displays in Step 8
 ```
 
-### Modify Meal Plan
+### Modify Menu Book
 
 ```
 1. User types modification request
-2. Frontend sends POST /api/meal-plans/{id}/modify
+2. Frontend sends POST /api/menu-books/{id}/modify
 3. Backend builds modification prompt
 4. Backend calls Gemini API
-5. Backend validates & returns modified MealPlan
-6. Frontend displays updated plan
+5. Backend validates & returns modified MenuBook
+6. Frontend displays updated menu book
 7. Shopping list should be regenerated after modification
 ```
 
@@ -124,7 +126,7 @@ OMenu uses a **separated frontend-backend architecture**.
 7. Frontend displays in Shopping Page
 ```
 
-**Key Concept:** Each MenuBook (weekly plan) has a one-to-one relationship with a ShoppingList. When switching weeks, the Shopping Page displays the corresponding week's list.
+**Key Concept:** Each MenuBook (weekly menu book) has a one-to-one relationship with a ShoppingList. When switching weeks, the Shopping Page displays the corresponding week's list.
 
 ---
 
@@ -136,7 +138,7 @@ OMenu uses a **separated frontend-backend architecture**.
 
 | Store | Purpose |
 |-------|---------|
-| `useAppStore` | MenuBooks (mealPlan + shoppingList per week), current week, view state |
+| `useAppStore` | MenuBooks (menuBook + shoppingList per week), current week, view state |
 | `useDraftStore` | Create flow draft (persisted to localStorage) |
 | `useShoppingStore` | Shopping list UI state (purchased items, manual additions) |
 
@@ -153,7 +155,7 @@ OMenu uses a **separated frontend-backend architecture**.
 |------|---------|----------|
 | Create flow draft | localStorage | Frontend |
 | User preferences | localStorage | Frontend |
-| Menu books (meal plans + shopping lists) | In-memory (Zustand) | Frontend |
+| Menu books (menu books + shopping lists) | In-memory (Zustand) | Frontend |
 
 ---
 

@@ -4,6 +4,8 @@
 
 本文档定义了 OMenu 应用的测试策略和测试用例，用于验证 vibe coding 生成的代码是否符合设计规范。
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 ### 测试框架推荐
 
 | 类型 | 框架 | 用途 |
@@ -57,7 +59,7 @@ describe('useDraftStore', () => {
       const state = useDraftStore.getState();
       expect(state.currentStep).toBe(1);
       expect(state.keywords).toEqual([]);
-      expect(state.mustHaveItems).toEqual([]);
+      expect(state.preferredItems).toEqual([]);
       expect(state.dislikedItems).toEqual([]);
       expect(state.numPeople).toBe(2);
       expect(state.budget).toBe(100);
@@ -251,7 +253,7 @@ describe('useDraftStore', () => {
       useDraftStore.getState().setKeywords(['Quick', 'Healthy']);
       
       // 检查 localStorage
-      const stored = localStorage.getItem('omenu_meal_plan_draft');
+      const stored = localStorage.getItem('omenu-draft');
       expect(stored).toBeTruthy();
       
       const parsed = JSON.parse(stored!);
@@ -261,66 +263,66 @@ describe('useDraftStore', () => {
 });
 ```
 
-### 1.2 useMealPlanStore - 餐饮计划状态
+### 1.2 useMenuBookStore - 餐饮计划状态
 
 ```typescript
-// stores/__tests__/useMealPlanStore.test.ts
+// stores/__tests__/useMenuBookStore.test.ts
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useMealPlanStore } from '../useMealPlanStore';
+import { useMenuBookStore } from '../useMenuBookStore';
 
-describe('useMealPlanStore', () => {
+describe('useMenuBookStore', () => {
   beforeEach(() => {
-    useMealPlanStore.getState().clearCurrentPlan();
+    useMenuBookStore.getState().clearCurrentPlan();
   });
 
   describe('setCurrentPlan', () => {
     it('应该设置当前计划', () => {
-      const mockPlan = createMockMealPlan();
-      useMealPlanStore.getState().setCurrentPlan(mockPlan);
-      expect(useMealPlanStore.getState().currentPlan).toEqual(mockPlan);
+      const mockPlan = createMockMenuBook();
+      useMenuBookStore.getState().setCurrentPlan(mockPlan);
+      expect(useMenuBookStore.getState().currentPlan).toEqual(mockPlan);
     });
   });
 
   describe('getMealsForDay', () => {
     it('应该返回指定日期的餐食', () => {
-      const mockPlan = createMockMealPlan();
-      useMealPlanStore.getState().setCurrentPlan(mockPlan);
+      const mockPlan = createMockMenuBook();
+      useMenuBookStore.getState().setCurrentPlan(mockPlan);
       
-      const mondayMeals = useMealPlanStore.getState().getMealsForDay('monday');
+      const mondayMeals = useMenuBookStore.getState().getMealsForDay('monday');
       expect(mondayMeals.breakfast).toBeDefined();
       expect(mondayMeals.lunch).toBeDefined();
       expect(mondayMeals.dinner).toBeDefined();
     });
 
     it('如果没有计划应该返回空对象', () => {
-      const meals = useMealPlanStore.getState().getMealsForDay('monday');
+      const meals = useMenuBookStore.getState().getMealsForDay('monday');
       expect(meals).toEqual({});
     });
   });
 
   describe('getTotalCaloriesForDay', () => {
     it('应该正确计算一天的总卡路里', () => {
-      const mockPlan = createMockMealPlan();
-      useMealPlanStore.getState().setCurrentPlan(mockPlan);
+      const mockPlan = createMockMenuBook();
+      useMenuBookStore.getState().setCurrentPlan(mockPlan);
       
-      const calories = useMealPlanStore.getState().getTotalCaloriesForDay('monday');
+      const calories = useMenuBookStore.getState().getTotalCaloriesForDay('monday');
       expect(calories).toBe(320 + 450 + 580); // 基于 mock 数据
     });
   });
 
   describe('getMealCount', () => {
     it('应该正确计算总餐数', () => {
-      const mockPlan = createMockMealPlan();
-      useMealPlanStore.getState().setCurrentPlan(mockPlan);
+      const mockPlan = createMockMenuBook();
+      useMenuBookStore.getState().setCurrentPlan(mockPlan);
       
-      const count = useMealPlanStore.getState().getMealCount();
+      const count = useMenuBookStore.getState().getMealCount();
       expect(count).toBeGreaterThan(0);
     });
   });
 });
 
 // 辅助函数
-function createMockMealPlan() {
+function createMockMenuBook() {
   return {
     id: 'test-plan-1',
     weekStartDate: '2025-01-27',
@@ -454,7 +456,7 @@ function createMockMenuBook(id = 'test-book-1') {
     id,
     weekStartDate: '2025-01-27',
     weekEndDate: '2025-02-02',
-    mealPlan: createMockMealPlan(),
+    menuBook: createMockMenuBook(),
     createdAt: new Date().toISOString(),
   };
 }
@@ -939,7 +941,7 @@ describe('CreateFlow', () => {
     it('点击 Next 应该进入 Step 3', async () => {
       fireEvent.click(screen.getByRole('button', { name: /next/i }));
       await waitFor(() => {
-        expect(screen.getByText(/must-have/i)).toBeInTheDocument();
+        expect(screen.getByText(/preferred/i)).toBeInTheDocument();
       });
     });
   });
@@ -951,7 +953,7 @@ describe('CreateFlow', () => {
     });
 
     it('应该显示句子格式', () => {
-      expect(screen.getByText(/meal plan is for/i)).toBeInTheDocument();
+      expect(screen.getByText(/menu is for/i)).toBeInTheDocument();
     });
 
     it('可编辑值应该是橙色', () => {
@@ -1171,14 +1173,14 @@ import { api } from '../api';
 
 // Mock Server
 const server = setupServer(
-  http.post('/api/meal-plans/generate', () => {
+  http.post('/api/menu-books/generate', () => {
     return HttpResponse.json({
       id: 'plan-1',
       days: { /* mock data */ },
     });
   }),
   
-  http.post('/api/meal-plans/:id/modify', () => {
+  http.post('/api/menu-books/:id/modify', () => {
     return HttpResponse.json({
       id: 'plan-1',
       days: { /* modified data */ },
@@ -1198,11 +1200,11 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe('API Service', () => {
-  describe('generateMealPlan', () => {
+  describe('generateMenuBook', () => {
     it('应该发送正确的请求参数', async () => {
       const params = {
         keywords: ['Quick', 'Healthy'],
-        mustHaveItems: ['Eggs'],
+        preferredItems: ['Eggs'],
         dislikedItems: ['Mushrooms'],
         numPeople: 2,
         budget: 100,
@@ -1210,7 +1212,7 @@ describe('API Service', () => {
         cookSchedule: { /* ... */ },
       };
 
-      const result = await api.generateMealPlan(params);
+      const result = await api.generateMenuBook(params);
       
       expect(result).toBeDefined();
       expect(result.id).toBe('plan-1');
@@ -1218,18 +1220,18 @@ describe('API Service', () => {
 
     it('超时应该抛出错误', async () => {
       server.use(
-        http.post('/api/meal-plans/generate', async () => {
+        http.post('/api/menu-books/generate', async () => {
           await new Promise(resolve => setTimeout(resolve, 150000)); // 超过 2 分钟
           return HttpResponse.json({});
         })
       );
 
-      await expect(api.generateMealPlan({})).rejects.toThrow(/timeout/i);
+      await expect(api.generateMenuBook({})).rejects.toThrow(/timeout/i);
     });
 
     it('API 错误应该正确处理', async () => {
       server.use(
-        http.post('/api/meal-plans/generate', () => {
+        http.post('/api/menu-books/generate', () => {
           return HttpResponse.json(
             { error: 'Internal Server Error' },
             { status: 500 }
@@ -1237,19 +1239,19 @@ describe('API Service', () => {
         })
       );
 
-      await expect(api.generateMealPlan({})).rejects.toThrow();
+      await expect(api.generateMenuBook({})).rejects.toThrow();
     });
   });
 
-  describe('modifyMealPlan', () => {
+  describe('modifyMenuBook', () => {
     it('应该发送修改请求', async () => {
-      const result = await api.modifyMealPlan('plan-1', 'Add more vegetables');
+      const result = await api.modifyMenuBook('plan-1', 'Add more vegetables');
       expect(result).toBeDefined();
     });
 
     it('修改文本不能超过 200 字符', async () => {
       const longText = 'a'.repeat(201);
-      await expect(api.modifyMealPlan('plan-1', longText)).rejects.toThrow(/200/);
+      await expect(api.modifyMenuBook('plan-1', longText)).rejects.toThrow(/200/);
     });
   });
 
@@ -1292,8 +1294,8 @@ test.describe('OMenu Complete Flow', () => {
     await page.getByText('Chinese').click();
     await page.getByRole('button', { name: 'Next' }).click();
     
-    // 5. Step 3: Must-Have - 选择必须项
-    await expect(page.getByText(/must-have/i)).toBeVisible();
+    // 5. Step 3: Preferred - 选择偏好项
+    await expect(page.getByText(/preferred/i)).toBeVisible();
     await page.getByText('Eggs').click();
     await page.getByText('Chicken').click();
     await page.getByRole('button', { name: 'Next' }).click();
@@ -1304,7 +1306,7 @@ test.describe('OMenu Complete Flow', () => {
     await page.getByRole('button', { name: 'Next' }).click();
     
     // 7. Step 5: Sentence - 设置人数和预算
-    await expect(page.getByText(/meal plan is for/i)).toBeVisible();
+    await expect(page.getByText(/menu is for/i)).toBeVisible();
     // 保持默认值或修改
     await page.getByRole('button', { name: 'Next' }).click();
     

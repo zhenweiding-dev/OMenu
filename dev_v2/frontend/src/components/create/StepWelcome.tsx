@@ -42,7 +42,7 @@ export function StepWelcome({
 
       {/* Title */}
       <h1 className="mb-4 text-[24px] font-semibold leading-snug text-text-primary">
-        Let&apos;s plan meals
+        Let&apos;s design a menu
         <br />
         for next week!
       </h1>
@@ -51,13 +51,14 @@ export function StepWelcome({
       <p className="mb-12 text-[15px] leading-relaxed text-text-secondary">
         Tell us your preferences and we&apos;ll
         <br />
-        create a personalized meal plan for you.
+        create a personalized menu for you.
       </p>
 
       {/* Begin button */}
       <Button
         onClick={onNext}
-        className="rounded-xl bg-accent-base px-16 py-4 text-[15px] font-semibold text-white hover:bg-accent-base/90"
+        size="lg"
+        className="px-16"
       >
         Begin
       </Button>

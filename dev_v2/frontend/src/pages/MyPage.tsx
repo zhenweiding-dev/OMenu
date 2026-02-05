@@ -4,27 +4,28 @@ import { useDraftStore } from "@/stores/useDraftStore";
 import { formatCurrency } from "@/utils/helpers";
 import type { UserPreferences, Difficulty } from "@/types";
 import { useShallow } from "zustand/react/shallow";
+import { Button } from "@/components/ui/button";
 import {
   EditKeywordsModal,
-  EditMustHaveModal,
+  EditPreferredModal,
   EditDislikedModal,
   EditSettingsModal,
 } from "@/components/profile/EditPreferencesModals";
 
-type EditModalType = "keywords" | "mustHave" | "disliked" | "settings" | null;
+type EditModalType = "keywords" | "preferred" | "disliked" | "settings" | null;
 
 export function MyPage() {
   const [activeModal, setActiveModal] = useState<EditModalType>(null);
 
   const draftPreferences = useDraftStore((state) => {
-    const { keywords, mustHaveItems, dislikedItems, numPeople, budget, difficulty, cookSchedule } = state;
-    return { keywords, mustHaveItems, dislikedItems, numPeople, budget, difficulty, cookSchedule } satisfies UserPreferences;
+    const { keywords, preferredItems, dislikedItems, numPeople, budget, difficulty, cookSchedule } = state;
+    return { keywords, preferredItems, dislikedItems, numPeople, budget, difficulty, cookSchedule } satisfies UserPreferences;
   });
 
   const draftActions = useDraftStore(
     useShallow((state) => ({
       setKeywords: state.setKeywords,
-      setMustHaveItems: state.setMustHaveItems,
+      setPreferredItems: state.setPreferredItems,
       setDislikedItems: state.setDislikedItems,
       setNumPeople: state.setNumPeople,
       setBudget: state.setBudget,
@@ -37,7 +38,7 @@ export function MyPage() {
   const applyPreferenceUpdate = (updates: Partial<UserPreferences>) => {
     const nextPreferences: UserPreferences = { ...preferences, ...updates };
     draftActions.setKeywords(nextPreferences.keywords);
-    draftActions.setMustHaveItems(nextPreferences.mustHaveItems);
+    draftActions.setPreferredItems(nextPreferences.preferredItems);
     draftActions.setDislikedItems(nextPreferences.dislikedItems);
     draftActions.setNumPeople(nextPreferences.numPeople);
     draftActions.setBudget(nextPreferences.budget);
@@ -49,8 +50,8 @@ export function MyPage() {
     applyPreferenceUpdate({ keywords });
   };
 
-  const handleSaveMustHave = (items: string[]) => {
-    applyPreferenceUpdate({ mustHaveItems: items });
+  const handleSavePreferred = (items: string[]) => {
+    applyPreferenceUpdate({ preferredItems: items });
   };
 
   const handleSaveDisliked = (items: string[]) => {
@@ -85,33 +86,37 @@ export function MyPage() {
       <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
         <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
           <h3 className="text-[14px] font-semibold text-text-primary">Keywords</h3>
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => setActiveModal("keywords")}
-            className="text-[13px] font-medium text-accent-base hover:opacity-80"
+            className="h-8 px-2 text-accent-base hover:text-accent-base/80"
           >
             Edit
-          </button>
+          </Button>
           </div>
         <div className="px-4 py-4">
               {renderTags(preferences.keywords, "No keywords saved yet.")}
             </div>
       </section>
 
-      {/* Must-Have Items Section */}
+      {/* Preferred Items Section */}
       <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
         <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
-          <h3 className="text-[14px] font-semibold text-text-primary">Must-Have Items</h3>
-          <button
+          <h3 className="text-[14px] font-semibold text-text-primary">Preferred Items</h3>
+          <Button
             type="button"
-            onClick={() => setActiveModal("mustHave")}
-            className="text-[13px] font-medium text-accent-base hover:opacity-80"
+            variant="ghost"
+            size="sm"
+            onClick={() => setActiveModal("preferred")}
+            className="h-8 px-2 text-accent-base hover:text-accent-base/80"
           >
             Edit
-          </button>
+          </Button>
         </div>
         <div className="px-4 py-4">
-              {renderTags(preferences.mustHaveItems, "No must-have items saved yet.")}
+              {renderTags(preferences.preferredItems, "No preferred items saved yet.")}
             </div>
       </section>
 
@@ -119,13 +124,15 @@ export function MyPage() {
       <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
         <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
           <h3 className="text-[14px] font-semibold text-text-primary">Disliked Items</h3>
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => setActiveModal("disliked")}
-            className="text-[13px] font-medium text-accent-base hover:opacity-80"
+            className="h-8 px-2 text-accent-base hover:text-accent-base/80"
           >
             Edit
-          </button>
+          </Button>
         </div>
         <div className="px-4 py-4">
               {renderTags(preferences.dislikedItems, "No dislikes added yet.")}
@@ -136,13 +143,15 @@ export function MyPage() {
       <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
         <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
           <h3 className="text-[14px] font-semibold text-text-primary">Default Settings</h3>
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => setActiveModal("settings")}
-            className="text-[13px] font-medium text-accent-base hover:opacity-80"
+            className="h-8 px-2 text-accent-base hover:text-accent-base/80"
           >
             Edit
-          </button>
+          </Button>
             </div>
         <div className="flex flex-col gap-3 px-4 py-4">
           <div className="flex items-center justify-between">
@@ -169,11 +178,11 @@ export function MyPage() {
         keywords={preferences.keywords}
         onSave={handleSaveKeywords}
       />
-      <EditMustHaveModal
-        isOpen={activeModal === "mustHave"}
+      <EditPreferredModal
+        isOpen={activeModal === "preferred"}
         onClose={() => setActiveModal(null)}
-        items={preferences.mustHaveItems}
-        onSave={handleSaveMustHave}
+        items={preferences.preferredItems}
+        onSave={handleSavePreferred}
       />
       <EditDislikedModal
         isOpen={activeModal === "disliked"}

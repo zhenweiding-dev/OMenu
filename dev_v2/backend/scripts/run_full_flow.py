@@ -8,16 +8,18 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from app.models.schemas import (
     CookSchedule,
-    GenerateMealPlanRequest,
-    MealPlan,
-    MealPlanStatus,
+    GenerateMenuBookRequest,
     MealSelection,
+    Menu,
+    MenuBook,
+    MenuBookStatus,
+    ShoppingList,
     UserPreferences,
-    WeekDays,
+    WeekMenus,
 )
 from app.services.gemini import ParseError, gemini_service
-from app.services.prompts import meal_plan_prompt, shopping_list_prompt, structured_plan_prompt
-from app.utils.validators import validate_meal_plan, validate_shopping_list
+from app.services.prompts import menu_book_prompt, shopping_list_prompt, structured_menu_prompt
+from app.utils.validators import validate_menus, validate_shopping_list
 
 
 def to_json(data: object) -> str:
@@ -37,10 +39,10 @@ def build_schedule() -> CookSchedule:
     )
 
 
-def build_request(schedule: CookSchedule) -> GenerateMealPlanRequest:
-    return GenerateMealPlanRequest(
+def build_request(schedule: CookSchedule) -> GenerateMenuBookRequest:
+    return GenerateMenuBookRequest(
         keywords=["healthy", "quick"],
-        mustHaveItems=["chicken", "rice"],
+        preferredItems=["chicken", "rice"],
         dislikedItems=["mushrooms"],
         numPeople=2,
         budget=120,
@@ -74,36 +76,56 @@ def render_prompt_section(title: str, prompt: str, response: str) -> str:
     )
 
 
+def ensure_menu_payload(raw: dict) -> dict:
+    if "menus" in raw:
+        return raw["menus"]
+    if "days" in raw:
+        return raw["days"]
+    return raw
+
+
+def coerce_menus(payload: dict) -> WeekMenus:
+    return WeekMenus(**{day: Menu(**payload.get(day, {})) for day in payload})
+
+
 async def main() -> None:
     schedule = build_schedule()
     request_body = build_request(schedule)
     preferences = UserPreferences(**request_body.model_dump())
 
-    step1_prompt = meal_plan_prompt(preferences)
+    step1_prompt = menu_book_prompt(preferences)
     step1_response = await gemini_service.generate(step1_prompt)
 
-    compact_plan = step1_response
+    compact_menu = step1_response
     try:
-        parsed_plan = gemini_service.parse_json_response(step1_response)
-        compact_plan = json.dumps(parsed_plan, ensure_ascii=False, separators=(",", ":"))
+        parsed_menu = gemini_service.parse_json_response(step1_response)
+        compact_menu = json.dumps(parsed_menu, ensure_ascii=False, separators=(",", ":"))
     except ParseError:
         pass
 
-    step2_prompt = structured_plan_prompt(compact_plan, preferences)
+    step2_prompt = structured_menu_prompt(compact_menu, preferences)
     step2_response = await gemini_service.generate(step2_prompt)
     structured_data = gemini_service.parse_json_response(step2_response)
-    days_payload = structured_data.get("days", structured_data)
-    plan_valid = validate_meal_plan(days_payload)
+    menus_payload = ensure_menu_payload(structured_data)
+    menus_valid = validate_menus(menus_payload)
 
-    meal_plan = MealPlan(
-        id="mp_fulltest",
-        createdAt=datetime.now(timezone.utc),
-        status=MealPlanStatus.ready,
+    created_at = datetime.now(timezone.utc)
+    shopping_list = ShoppingList(
+        id="sl_fulltest",
+        menuBookId="mb_fulltest",
+        createdAt=created_at,
+        items=[],
+    )
+    menu_book = MenuBook(
+        id="mb_fulltest",
+        createdAt=created_at,
+        status=MenuBookStatus.ready,
         preferences=preferences,
-        days=WeekDays(**days_payload),
+        menus=coerce_menus(menus_payload),
+        shoppingList=shopping_list,
     )
 
-    step3_prompt = shopping_list_prompt(meal_plan)
+    step3_prompt = shopping_list_prompt(menu_book.menus)
     step3_response = await gemini_service.generate(step3_prompt)
     shopping_data = gemini_service.parse_json_response(step3_response)
     shopping_valid = validate_shopping_list(shopping_data)
@@ -123,14 +145,14 @@ async def main() -> None:
             "",
             f"```\n{step2_response}\n```",
             "",
-            "**Parsed Days (validated)**",
+            "**Parsed Menus (validated)**",
             "",
-            f"```json\n{to_json(days_payload)}\n```",
+            f"```json\n{to_json(menus_payload)}\n```",
             "",
-            f"Validation Result: {'✅' if plan_valid else '❌'}",
+            f"Validation Result: {'✅' if menus_valid else '❌'}",
         ]
     )
-    parts.append(render_section("Step 2 — Structured Plan", step2_body))
+    parts.append(render_section("Step 2 — Structured Menu", step2_body))
 
     step3_body = "\n".join(
         [

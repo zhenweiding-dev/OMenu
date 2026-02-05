@@ -30,7 +30,7 @@ describe("ShoppingPage interactions", () => {
     const editButton = screen.getByRole("button", { name: `Edit ${targetName}` });
     fireEvent.click(editButton);
 
-    expect(await screen.findByText("Edit Item")).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: /save item/i })).toBeInTheDocument();
 
     const deleteButton = await screen.findByRole("button", { name: /delete item/i });
     fireEvent.click(deleteButton);

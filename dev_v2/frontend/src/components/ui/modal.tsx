@@ -1,6 +1,7 @@
 import { type PropsWithChildren, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "@/utils/cn";
+import { Button } from "@/components/ui/button";
 
 interface ModalProps extends PropsWithChildren {
   open: boolean;
@@ -25,9 +26,8 @@ export function Modal({ open, title, description, onClose, children, className, 
 
   if (!open) return null;
 
-  // Get the phone screen container for portal rendering
-  const container = document.getElementById("phone-screen");
-  if (!container) return null;
+  // Get the phone screen container for portal rendering (fallback to body for tests/standalone)
+  const container = document.getElementById("phone-screen") ?? document.body;
 
   const modalContent = (
     <div
@@ -50,13 +50,9 @@ export function Modal({ open, title, description, onClose, children, className, 
         {description && <p className="mt-1 text-sm text-text-secondary">{description}</p>}
         <div className="mt-4 space-y-4">{children}</div>
         {onClose && showCloseButton && (
-          <button
-            type="button"
-            onClick={onClose}
-            className="mt-6 w-full rounded-lg border border-border-subtle px-3 py-2 text-sm font-medium text-text-secondary hover:bg-paper-muted"
-          >
+          <Button type="button" variant="outline" className="mt-6 w-full" onClick={onClose}>
             Close
-          </button>
+          </Button>
         )}
       </div>
     </div>

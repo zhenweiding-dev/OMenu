@@ -2,21 +2,23 @@ from datetime import datetime, timezone
 
 from app.models.schemas import (
     CookSchedule,
-    DayMeals,
     Difficulty,
+    Dish,
+    DishSource,
     Ingredient,
-    MealPlan,
-    MealPlanStatus,
     MealSelection,
-    Recipe,
+    Menu,
+    MenuBook,
+    MenuBookStatus,
+    ShoppingList,
     UserPreferences,
-    WeekDays,
+    WeekMenus,
 )
 from app.services.prompts import (
-    meal_plan_prompt,
+    menu_book_prompt,
     modification_prompt,
     shopping_list_prompt,
-    structured_plan_prompt,
+    structured_menu_prompt,
 )
 
 
@@ -37,7 +39,7 @@ def _sample_schedule() -> CookSchedule:
 def _sample_preferences() -> UserPreferences:
     return UserPreferences(
         keywords=["healthy"],
-        mustHaveItems=["chicken"],
+        preferredItems=["chicken"],
         dislikedItems=["mushrooms"],
         numPeople=2,
         budget=120,
@@ -46,8 +48,8 @@ def _sample_preferences() -> UserPreferences:
     )
 
 
-def _sample_meal_plan() -> MealPlan:
-    recipe = Recipe(
+def _sample_menu_book() -> MenuBook:
+    dish = Dish(
         id="mon-lunch-001",
         name="Grilled Chicken Bowl",
         ingredients=[
@@ -59,46 +61,56 @@ def _sample_meal_plan() -> MealPlan:
         servings=2,
         difficulty=Difficulty.easy,
         totalCalories=600,
+        source=DishSource.ai,
     )
-    days = WeekDays(
-        monday=DayMeals(lunch=recipe),
-        tuesday=DayMeals(),
-        wednesday=DayMeals(),
-        thursday=DayMeals(),
-        friday=DayMeals(),
-        saturday=DayMeals(),
-        sunday=DayMeals(),
+    menus = WeekMenus(
+        monday=Menu(lunch=[dish]),
+        tuesday=Menu(),
+        wednesday=Menu(),
+        thursday=Menu(),
+        friday=Menu(),
+        saturday=Menu(),
+        sunday=Menu(),
     )
-    return MealPlan(
-        id="mp_test",
-        createdAt=datetime.now(timezone.utc),
-        status=MealPlanStatus.ready,
+    created_at = datetime.now(timezone.utc)
+    shopping_list = ShoppingList(
+        id="sl_test",
+        menuBookId="mb_test",
+        createdAt=created_at,
+        items=[],
+    )
+    return MenuBook(
+        id="mb_test",
+        createdAt=created_at,
+        status=MenuBookStatus.ready,
         preferences=_sample_preferences(),
-        days=days,
+        menus=menus,
+        shoppingList=shopping_list,
     )
 
 
-def test_meal_plan_prompt_mentions_budget() -> None:
-    prompt = meal_plan_prompt(_sample_preferences())
+def test_menu_book_prompt_mentions_budget() -> None:
+    prompt = menu_book_prompt(_sample_preferences())
     assert "$120" in prompt
     assert "Grilled" not in prompt  # ensures prompt is template, not actual meals
 
 
-def test_structured_plan_prompt_mentions_servings() -> None:
+def test_structured_menu_prompt_mentions_servings() -> None:
     preferences = _sample_preferences()
-    prompt = structured_plan_prompt("Sample plan text", preferences)
+    prompt = structured_menu_prompt("Sample menu text", preferences)
     assert str(preferences.numPeople) in prompt
     assert "RETURN ONLY THE RAW JSON OBJECT" in prompt
 
 
 def test_modification_prompt_includes_request() -> None:
-    plan = _sample_meal_plan()
-    prompt = modification_prompt("Add more veggies", plan.model_dump_json(indent=2), plan.preferences.model_dump_json(indent=2))
+    book = _sample_menu_book()
+    prompt = modification_prompt("Add more veggies", book.menus.model_dump_json(indent=2), book.preferences)
     assert "Add more veggies" in prompt
     assert "RETURN ONLY THE MODIFIED JSON OBJECT" in prompt
 
 
 def test_shopping_list_prompt_contains_rules() -> None:
-    prompt = shopping_list_prompt(_sample_meal_plan())
+    menus = _sample_menu_book().menus
+    prompt = shopping_list_prompt(menus)
     assert "Generate a consolidated shopping list" in prompt
     assert "Valid categories" in prompt

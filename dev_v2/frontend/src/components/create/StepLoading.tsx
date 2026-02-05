@@ -1,18 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 interface StepLoadingProps {
   onGoHome?: () => void;
   minWaitSeconds?: number;
+  status?: "idle" | "retrying" | "failed";
+  attempt?: number;
+  maxRetries?: number;
+  onRetry?: () => void;
 }
 
 const MIN_WAIT_DEFAULT = 60; // 1 minute per spec
 
-export function StepLoading({ onGoHome, minWaitSeconds = MIN_WAIT_DEFAULT }: StepLoadingProps) {
+export function StepLoading({
+  onGoHome,
+  minWaitSeconds = MIN_WAIT_DEFAULT,
+  status = "idle",
+  attempt = 1,
+  maxRetries = 3,
+  onRetry,
+}: StepLoadingProps) {
   const navigate = useNavigate();
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
-  const showGoHomeButton = elapsedSeconds >= minWaitSeconds;
+  const showGoHomeButton = true;
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -35,6 +47,16 @@ export function StepLoading({ onGoHome, minWaitSeconds = MIN_WAIT_DEFAULT }: Ste
       navigate("/");
     }
   };
+
+  const statusMessage = useMemo(() => {
+    if (status === "retrying") {
+      return `Taking longer than expected. Retrying in the background (${attempt}/${maxRetries}).`;
+    }
+    if (status === "failed") {
+      return "We couldn't finish this time. Please try again.";
+    }
+    return null;
+  }, [attempt, maxRetries, status]);
 
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center px-5 py-20 text-center">
@@ -59,24 +81,38 @@ export function StepLoading({ onGoHome, minWaitSeconds = MIN_WAIT_DEFAULT }: Ste
       </p>
 
       {/* Timer */}
-      <div className="mb-10 text-[24px] font-semibold text-accent-base">
+      <div className="mb-6 text-[24px] font-semibold text-accent-base">
         ⏱️ {formatTime(elapsedSeconds)}
       </div>
 
-      {/* Go to Home button - appears after minimum wait */}
+      {statusMessage && (
+        <p className={status === "failed" ? "mb-4 text-[13px] text-error" : "mb-4 text-[13px] text-text-secondary"}>
+          {statusMessage}
+        </p>
+      )}
+
+      {/* Go to Home button */}
       {showGoHomeButton && (
         <div className="space-y-2">
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={handleGoHome}
-            className="bg-transparent border-none text-[15px] font-medium text-accent-base hover:opacity-80"
+            className="px-4"
           >
             Go to Home
-          </button>
+          </Button>
           <p className="text-[12px] text-text-secondary">
             We&apos;ll keep working in the background
           </p>
         </div>
+      )}
+
+      {status === "failed" && onRetry && (
+        <Button type="button" variant="outline" className="mt-4" onClick={onRetry}>
+          Try Again
+        </Button>
       )}
     </div>
   );

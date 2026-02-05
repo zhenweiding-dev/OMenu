@@ -2,6 +2,8 @@
 
 This document describes the React frontend architecture for OMenu.
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 ---
 
 ## Technology Stack
@@ -90,7 +92,7 @@ frontend/
 │   │
 │   ├── hooks/
 │   │   ├── useLocalStorage.ts
-│   │   └── useMealPlan.ts
+│   │   └── useMenuBook.ts
 │   │
 │   ├── utils/
 │   │   ├── constants.ts          # Default values, categories
@@ -118,7 +120,7 @@ The frontend communicates with the backend through a centralized API service wit
 ### services/api.ts
 
 ```typescript
-import type { UserPreferences, MealPlan, ShoppingList } from '@/types';
+import type { UserPreferences, MenuBook, ShoppingList } from '@/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
@@ -184,11 +186,11 @@ export async function healthCheck(): Promise<{ status: string; version: string }
   return handleResponse(response);
 }
 
-export async function generateMealPlan(
+export async function generateMenuBook(
   preferences: UserPreferences
-): Promise<MealPlan> {
+): Promise<MenuBook> {
   const response = await fetchWithTimeout(
-    `${API_BASE_URL}/api/meal-plans/generate`,
+    `${API_BASE_URL}/api/menu-books/generate`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -199,13 +201,13 @@ export async function generateMealPlan(
   return handleResponse(response);
 }
 
-export async function modifyMealPlan(
+export async function modifyMenuBook(
   planId: string,
   modification: string,
-  currentPlan: MealPlan
-): Promise<MealPlan> {
+  currentPlan: MenuBook
+): Promise<MenuBook> {
   const response = await fetchWithTimeout(
-    `${API_BASE_URL}/api/meal-plans/${planId}/modify`,
+    `${API_BASE_URL}/api/menu-books/${planId}/modify`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -217,15 +219,15 @@ export async function modifyMealPlan(
 }
 
 export async function generateShoppingList(
-  mealPlanId: string,
-  mealPlan: MealPlan
+  menuBookId: string,
+  menuBook: MenuBook
 ): Promise<ShoppingList> {
   const response = await fetchWithTimeout(
     `${API_BASE_URL}/api/shopping-lists/generate`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mealPlanId, mealPlan }),
+      body: JSON.stringify({ menuBookId, menuBook }),
     },
     GENERATION_TIMEOUT
   );
@@ -239,18 +241,18 @@ export { ApiTimeoutError };
 
 ## State Management
 
-Frontend uses Zustand for **UI state only**. All generated data (meal plans, shopping lists) comes from the backend.
+Frontend uses Zustand for **UI state only**. All generated data (menu books, shopping lists) comes from the backend.
 
 > **Note**: v3.5 architecture:
 > - Each **MenuBook** (weekly plan) has a one-to-one relationship with a **ShoppingList**
 > - `isMenuOpen` state toggles between Menu Open and Menu Closed views within the Home Page
-> - When switching weeks, both the meal plan and shopping list switch together
+> - When switching weeks, both the menu book and shopping list switch together
 
 ### stores/useAppStore.ts
 
 ```typescript
 import { create } from 'zustand';
-import type { MealPlan, ShoppingList, MenuBook } from '@/types';
+import type { MenuBook, ShoppingList, MenuBook } from '@/types';
 
 interface AppState {
   // Menu Books (each week's plan + shopping list)
@@ -263,7 +265,7 @@ interface AppState {
   currentWeekId: string | null;
   setCurrentWeekId: (id: string | null) => void;
   
-  // Computed: current menu book (meal plan + shopping list)
+  // Computed: current menu book (menu book + shopping list)
   getCurrentMenuBook: () => MenuBook | null;
   
   // Menu Open/Closed toggle (Home Page view state)
@@ -339,7 +341,7 @@ interface DraftState {
   // State
   currentStep: number;
   keywords: string[];
-  mustHaveItems: string[];
+  preferredItems: string[];
   dislikedItems: string[];
   numPeople: number;
   budget: number;
@@ -396,7 +398,7 @@ const initialCookSchedule: CookSchedule = {
 const initialState = {
   currentStep: 1,
   keywords: [] as string[],
-  mustHaveItems: [] as string[],
+  preferredItems: [] as string[],
   dislikedItems: [] as string[],
   numPeople: 2,
   budget: 100,
@@ -430,16 +432,16 @@ export const useDraftStore = create<DraftState>()(
       },
       
       // Must-have items
-      setMustHaveItems: (items) => set({ mustHaveItems: items, lastUpdated: new Date().toISOString() }),
+      setMustHaveItems: (items) => set({ preferredItems: items, lastUpdated: new Date().toISOString() }),
       addMustHaveItem: (item) => {
-        const { mustHaveItems } = get();
-        if (!mustHaveItems.includes(item)) {
-          set({ mustHaveItems: [...mustHaveItems, item], lastUpdated: new Date().toISOString() });
+        const { preferredItems } = get();
+        if (!preferredItems.includes(item)) {
+          set({ preferredItems: [...preferredItems, item], lastUpdated: new Date().toISOString() });
         }
       },
       removeMustHaveItem: (item) => {
-        const { mustHaveItems } = get();
-        set({ mustHaveItems: mustHaveItems.filter(i => i !== item), lastUpdated: new Date().toISOString() });
+        const { preferredItems } = get();
+        set({ preferredItems: preferredItems.filter(i => i !== item), lastUpdated: new Date().toISOString() });
       },
       
       // Disliked items
@@ -513,7 +515,7 @@ export const useDraftStore = create<DraftState>()(
       resetDraft: () => set({ ...initialState, lastUpdated: new Date().toISOString() }),
     }),
     {
-      name: 'omenu_meal_plan_draft',
+      name: 'omenu-draft',
       storage: createJSONStorage(() => localStorage),
     }
   )
@@ -622,7 +624,7 @@ export interface CookSchedule {
 
 export interface UserPreferences {
   keywords: string[];
-  mustHaveItems: string[];
+  preferredItems: string[];
   dislikedItems: string[];
   numPeople: number;
   budget: number;
@@ -673,14 +675,14 @@ export interface WeekDays {
   sunday: DayMeals;
 }
 
-// ===== Meal Plan =====
+// ===== Menu Book =====
 
-export type MealPlanStatus = 'generating' | 'ready' | 'error';
+export type MenuBookStatus = 'generating' | 'ready' | 'error';
 
-export interface MealPlan {
+export interface MenuBook {
   id: string;
   createdAt: string;
-  status: MealPlanStatus;
+  status: MenuBookStatus;
   preferences: UserPreferences;
   days: WeekDays;
 }
@@ -699,7 +701,7 @@ export interface ShoppingItem {
 
 export interface ShoppingList {
   id: string;
-  mealPlanId: string;
+  menuBookId: string;
   createdAt: string;
   items: ShoppingItem[];
 }
@@ -747,15 +749,15 @@ For frontend-only development, use mock data when backend is unavailable.
 ### utils/mockData.ts
 
 ```typescript
-import type { MealPlan, ShoppingList } from '@/types';
+import type { MenuBook, ShoppingList } from '@/types';
 
-export const mockMealPlan: MealPlan = {
-  id: 'mp_mock123',
+export const mockMenuBook: MenuBook = {
+  id: 'mb_mock123',
   createdAt: new Date().toISOString(),
   status: 'ready',
   preferences: {
     keywords: ['Healthy', 'Quick'],
-    mustHaveItems: ['Eggs', 'Chicken'],
+    preferredItems: ['Eggs', 'Chicken'],
     dislikedItems: ['Peanuts'],
     numPeople: 2,
     budget: 100,
@@ -800,7 +802,7 @@ export const mockMealPlan: MealPlan = {
 
 export const mockShoppingList: ShoppingList = {
   id: 'sl_mock456',
-  mealPlanId: 'mp_mock123',
+  menuBookId: 'mb_mock123',
   createdAt: new Date().toISOString(),
   items: [
     { id: 'item_001', name: 'Eggs', category: 'proteins', totalQuantity: 12, unit: 'count', purchased: false },
@@ -815,10 +817,10 @@ export const mockShoppingList: ShoppingList = {
 ```typescript
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
-export async function generateMealPlan(preferences: UserPreferences): Promise<MealPlan> {
+export async function generateMenuBook(preferences: UserPreferences): Promise<MenuBook> {
   if (USE_MOCK) {
     await new Promise((r) => setTimeout(r, 2000)); // Simulate delay
-    return mockMealPlan;
+    return mockMenuBook;
   }
   
   // Real API call with timeout...

@@ -9,14 +9,16 @@ VALID_CATEGORIES = [
     "others",
 ]
 
+VALID_SOURCES = ["ai", "manual"]
+
 DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 MEALS = ["breakfast", "lunch", "dinner"]
 VALID_DIFFICULTIES = ["easy", "medium", "hard"]
 
 
-def validate_recipe(recipe: dict) -> bool:
-    if recipe is None:
-        return True
+def validate_dish(dish: dict) -> bool:
+    if not isinstance(dish, dict):
+        return False
 
     required_fields = [
         "id",
@@ -27,16 +29,20 @@ def validate_recipe(recipe: dict) -> bool:
         "servings",
         "difficulty",
         "totalCalories",
+        "source",
     ]
 
     for field in required_fields:
-        if field not in recipe:
+        if field not in dish:
             return False
 
-    if recipe.get("difficulty") not in VALID_DIFFICULTIES:
+    if dish.get("difficulty") not in VALID_DIFFICULTIES:
         return False
 
-    ingredients = recipe.get("ingredients")
+    if dish.get("source") not in VALID_SOURCES:
+        return False
+
+    ingredients = dish.get("ingredients")
     if not isinstance(ingredients, list):
         return False
 
@@ -63,7 +69,7 @@ def validate_ingredient(ingredient: dict) -> bool:
     return True
 
 
-def validate_meal_plan(data: dict) -> bool:
+def validate_menus(data: dict) -> bool:
     if not isinstance(data, dict):
         return False
 
@@ -79,8 +85,13 @@ def validate_meal_plan(data: dict) -> bool:
             if meal not in day_data:
                 return False
 
-            if not validate_recipe(day_data[meal]):
+            meals = day_data[meal]
+            if not isinstance(meals, list):
                 return False
+
+            for dish in meals:
+                if not validate_dish(dish):
+                    return False
 
     return True
 

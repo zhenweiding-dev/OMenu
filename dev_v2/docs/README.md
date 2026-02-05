@@ -1,8 +1,10 @@
-# OMenu - AI-Powered Meal Planning App
+# OMenu - AI-Powered Menu Planning App
 
 ## Overview
 
-OMenu is an AI-powered meal planning application that helps users plan weekly meals, automatically generate shopping lists, and simplify home cooking workflows.
+OMenu is an AI-powered menu planning application that helps users plan weekly menus, automatically generate shopping lists, and simplify home cooking workflows.
+
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
 
 ### Core Value Proposition
 
@@ -11,7 +13,7 @@ OMenu is an AI-powered meal planning application that helps users plan weekly me
 ### Core Flow
 
 ```
-User Preferences → AI Generates Weekly Plan → User Adjusts → Generate Shopping List → Daily Cooking
+User Preferences → AI Generates Weekly Menu Book → User Adjusts → Generate Shopping List → Daily Cooking
 ```
 
 ---
@@ -117,7 +119,7 @@ omenu/
 │   │   ├── main.py              # FastAPI app entry point
 │   │   ├── config.py            # Environment configuration
 │   │   ├── routers/
-│   │   │   ├── meal_plans.py    # /api/meal-plans endpoints
+│   │   │   ├── menu_books.py    # /api/menu-books endpoints
 │   │   │   └── shopping.py      # /api/shopping-lists endpoints
 │   │   ├── services/
 │   │   │   ├── gemini.py        # Gemini API client
@@ -154,7 +156,7 @@ omenu/
 
 | Feature | Description |
 |---------|-------------|
-| Create Meal Plan | Step-by-step guided creation (7 steps) |
+| Create Menu Book | Step-by-step guided creation (7 steps) |
 | AI Plan Generation | Personalized weekly plan via Gemini API |
 | View & Adjust Plan | View full plan, modify via chat |
 | Shopping List | Auto-aggregated ingredients, manual add/check |
@@ -229,8 +231,8 @@ Frontend will be available at `http://localhost:5173`
 # Health check
 curl http://localhost:8000/api/health
 
-# Generate meal plan
-curl -X POST http://localhost:8000/api/meal-plans/generate \
+# Generate menu book
+curl -X POST http://localhost:8000/api/menu-books/generate \
   -H "Content-Type: application/json" \
   -d '{"keywords":["healthy","quick"],"numPeople":2,"budget":100,...}'
 ```

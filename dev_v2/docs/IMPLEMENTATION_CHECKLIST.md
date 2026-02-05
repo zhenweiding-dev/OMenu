@@ -5,6 +5,8 @@
 
 Use this checklist to track development progress. Check off items as they are completed.
 
+> 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
+
 ---
 
 ## Phase 1: Backend Setup
@@ -31,7 +33,7 @@ Location: `backend/app/models/schemas.py`
 
 - [ ] `IngredientCategory` enum
 - [ ] `Difficulty` enum
-- [ ] `MealPlanStatus` enum
+- [ ] `MenuBookStatus` enum
 - [ ] `MealSelection` model
 - [ ] `CookSchedule` model
 - [ ] `Ingredient` model (with `category` field)
@@ -39,7 +41,7 @@ Location: `backend/app/models/schemas.py`
 - [ ] `UserPreferences` model (budget: 50-500)
 - [ ] `DayMeals` model
 - [ ] `WeekDays` model
-- [ ] `MealPlan` model (with `status`, `preferences`)
+- [ ] `MenuBook` model (with `status`, `preferences`)
 - [ ] `ShoppingItem` model (with `totalQuantity`, `purchased`)
 - [ ] `ShoppingList` model (flat `items` array)
 - [ ] Request/Response models for API endpoints
@@ -49,7 +51,7 @@ Location: `backend/app/models/schemas.py`
 
 Location: `backend/app/services/prompts.py`
 
-- [ ] `meal_plan_prompt()` - Step 1: Natural language generation
+- [ ] `menu_book_prompt()` - Step 1: Natural language generation
 - [ ] `structured_plan_prompt()` - Step 2: JSON conversion
 - [ ] `modification_prompt()` - Plan modification
 - [ ] `shopping_list_prompt()` - Shopping list generation
@@ -74,9 +76,9 @@ Location: `backend/app/routers/`
 **Health Check** (`main.py`):
 - [ ] `GET /api/health` (returns status, version, timestamp)
 
-**Meal Plans** (`meal_plans.py`):
-- [ ] `POST /api/meal-plans/generate` - Two-step generation
-- [ ] `POST /api/meal-plans/{id}/modify` - Modify plan
+**Menu Books** (`menu_books.py`):
+- [ ] `POST /api/menu-books/generate` - Two-step generation
+- [ ] `POST /api/menu-books/{id}/modify` - Modify plan
 
 **Shopping Lists** (`shopping.py`):
 - [ ] `POST /api/shopping-lists/generate`
@@ -87,14 +89,14 @@ Location: `backend/app/utils/validators.py`
 
 - [ ] `validate_recipe()` - Single recipe validation
 - [ ] `validate_ingredient()` - Single ingredient validation
-- [ ] `validate_meal_plan()` - Complete plan validation
+- [ ] `validate_menu_book()` - Complete plan validation
 - [ ] `validate_shopping_list()` - Shopping list validation
 
 ### 1.7 Backend Testing
 
 - [ ] Test with curl: Health check
-- [ ] Test with curl: Generate meal plan
-- [ ] Test with curl: Modify meal plan
+- [ ] Test with curl: Generate menu book
+- [ ] Test with curl: Modify menu book
 - [ ] Test with curl: Generate shopping list
 - [ ] Verify JSON response format matches `DATA_MODELS.md`
 - [ ] Verify error response format
@@ -128,10 +130,10 @@ Location: `frontend/src/types/index.ts`
 - [ ] `Recipe` interface (with `estimatedTime`, `totalCalories`)
 - [ ] `DayMeals` interface
 - [ ] `WeekDays` interface
-- [ ] `MealPlan` interface (with `status`, `preferences`)
+- [ ] `MenuBook` interface (with `status`, `preferences`)
 - [ ] `ShoppingItem` interface (with `totalQuantity`, `purchased`)
 - [ ] `ShoppingList` interface (flat `items` array)
-- [ ] `MenuBook` interface (mealPlan + shoppingList per week)
+- [ ] `MenuBook` interface (menuBook + shoppingList per week)
 - [ ] `DayOfWeek` type and `DAYS_OF_WEEK` constant
 
 ### 2.3 API Service
@@ -142,8 +144,8 @@ Location: `frontend/src/services/api.ts`
 - [ ] `ApiTimeoutError` class
 - [ ] `handleResponse()` helper
 - [ ] `healthCheck()` - GET /api/health
-- [ ] `generateMealPlan()` - POST /api/meal-plans/generate
-- [ ] `modifyMealPlan()` - POST /api/meal-plans/{id}/modify
+- [ ] `generateMenuBook()` - POST /api/menu-books/generate
+- [ ] `modifyMenuBook()` - POST /api/menu-books/{id}/modify
 - [ ] `generateShoppingList()` - POST /api/shopping-lists/generate
 
 ### 2.4 Zustand Stores
@@ -153,7 +155,7 @@ Location: `frontend/src/stores/`
 **useAppStore**:
 - [ ] `menuBooks: MenuBook[]` - All weekly plans with their shopping lists
 - [ ] `currentWeekId: string | null` - Currently selected week
-- [ ] `getCurrentMenuBook()` - Get current MenuBook (mealPlan + shoppingList)
+- [ ] `getCurrentMenuBook()` - Get current MenuBook (menuBook + shoppingList)
 - [ ] `isMenuOpen: boolean` - Toggle Menu Open/Closed views
 - [ ] `currentDayIndex: number` (0-6 for swipe navigation)
 - [ ] `isGenerating: boolean`
@@ -163,7 +165,7 @@ Location: `frontend/src/stores/`
 **useDraftStore** (persisted to localStorage):
 - [ ] `currentStep: number` (1-8)
 - [ ] `keywords: string[]`
-- [ ] `mustHaveItems: string[]`
+- [ ] `preferredItems: string[]`
 - [ ] `dislikedItems: string[]`
 - [ ] `numPeople: number` (1-10)
 - [ ] `budget: number` (50-500, step 10)
@@ -234,7 +236,7 @@ Location: `frontend/src/stores/`
 
 - [ ] Header: "Profile"
 - [ ] Preferences card
-- [ ] Editable: keywords, must-have items, disliked items
+- [ ] Editable: keywords, preferred items, disliked items
 - [ ] Default: people count, budget, difficulty
 - [ ] Auto-save to localStorage
 
@@ -258,7 +260,7 @@ Location: `frontend/src/stores/`
 - [ ] "Next" button → Step 3
 - [ ] Auto-save to draft
 
-### 4.3 Step 3: Must-Have Items
+### 4.3 Step 3: Preferred Items
 
 - [ ] Item categories with emojis
 - [ ] Item selection toggle
@@ -276,7 +278,7 @@ Location: `frontend/src/stores/`
 
 ### 4.5 Step 5: People, Budget & Difficulty (Inline Sentence)
 
-- [ ] Sentence: "The meal plan is for **[n]** people with **$[X]** budget and **[difficulty]** difficulty to cook."
+- [ ] Sentence: "The menu is for **[n]** people with **$[X]** budget and **[difficulty]** difficulty to cook."
 - [ ] Orange accent color for editable values (`#D97706`)
 - [ ] **People**: Tap → Show `[-] n [+]` inline control (1-10)
 - [ ] **Budget**: Tap → Show scrollable picker ($50-$500, step $10)
@@ -297,12 +299,12 @@ Location: `frontend/src/stores/`
 ### 4.7 Step 7: Generating (Loading)
 
 - [ ] Animated chef illustration
-- [ ] "Generating your meal plan..." text
+- [ ] "Generating your menu book..." text
 - [ ] Timer display (elapsed time)
 - [ ] **Minimum wait: 1 minute** before allowing navigation
 - [ ] **Timeout: 2 minutes** → Error message
 - [ ] "Go to Home" button (appears after 1 min)
-- [ ] API call: `generateMealPlan()`
+- [ ] API call: `generateMenuBook()`
 - [ ] On success (after min wait) → Step 8
 - [ ] Clear draft on success
 
@@ -340,7 +342,7 @@ Location: `frontend/src/stores/`
 
 - [ ] Chat input modal (max 200 chars)
 - [ ] Submit → Loading state (Step 7)
-- [ ] API call: `modifyMealPlan()`
+- [ ] API call: `modifyMenuBook()`
 - [ ] On success → Return to Step 8 with updated plan
 - [ ] **Auto-regenerate shopping list** when user clicks Shopping List button
 
@@ -349,7 +351,7 @@ Location: `frontend/src/stores/`
 ## Phase 5: Draft Persistence & Resume
 
 - [ ] `useDraftStore` with Zustand persist middleware
-- [ ] localStorage key: `omenu_meal_plan_draft`
+- [ ] localStorage key: `omenu-draft`
 - [ ] On navigate to `/create`:
   - [ ] If `currentStep > 1`, show "Continue where you left off?" prompt
   - [ ] Yes → Resume from `currentStep`
@@ -478,7 +480,7 @@ Location: `frontend/src/stores/`
 
 | Entity | Prefix | Example |
 |--------|--------|---------|
-| Meal Plan | `mp_` | `mp_abc123` |
+| Menu Book | `mb_` | `mb_abc123` |
 | Shopping List | `sl_` | `sl_xyz789` |
 | Shopping Item | `item_` | `item_001` |
 | Recipe | `{day}-{meal}-{number}` | `mon-breakfast-001` |

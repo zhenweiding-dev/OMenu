@@ -10,6 +10,8 @@ export type IngredientCategory =
   | "pantry_staples"
   | "others";
 
+export type DishSource = "ai" | "manual";
+
 export interface Ingredient {
   name: string;
   quantity: number;
@@ -17,7 +19,7 @@ export interface Ingredient {
   category: IngredientCategory;
 }
 
-export interface Recipe {
+export interface Dish {
   id: string;
   name: string;
   ingredients: Ingredient[];
@@ -26,29 +28,19 @@ export interface Recipe {
   servings: number;
   difficulty: Difficulty;
   totalCalories: number;
-  notes?: string;
+  source: DishSource;
+  notes?: string | null;
 }
 
-export interface DayMeals {
-  breakfast: Recipe | null;
-  lunch: Recipe | null;
-  dinner: Recipe | null;
+export interface Menu {
+  breakfast: Dish[];
+  lunch: Dish[];
+  dinner: Dish[];
 }
 
-export type WeekDays = Record<
+export type WeekMenus = Record<
   "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday",
-  DayMeals
->;
-
-export interface ExtraDayMeals {
-  breakfast: Recipe[];
-  lunch: Recipe[];
-  dinner: Recipe[];
-}
-
-export type ExtraWeekMeals = Record<
-  "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday",
-  ExtraDayMeals
+  Menu
 >;
 
 export interface MealSelection {
@@ -57,11 +49,11 @@ export interface MealSelection {
   dinner: boolean;
 }
 
-export type CookSchedule = Record<keyof WeekDays, MealSelection>;
+export type CookSchedule = Record<keyof WeekMenus, MealSelection>;
 
 export interface UserPreferences {
   keywords: string[];
-  mustHaveItems: string[];
+  preferredItems: string[];
   dislikedItems: string[];
   numPeople: number;
   budget: number;
@@ -69,12 +61,13 @@ export interface UserPreferences {
   cookSchedule: CookSchedule;
 }
 
-export interface MealPlan {
+export interface MenuBook {
   id: string;
   createdAt: string;
   status: "generating" | "ready" | "error";
   preferences: UserPreferences;
-  days: WeekDays;
+  menus: WeekMenus;
+  shoppingList: ShoppingList;
 }
 
 export interface ShoppingItem {
@@ -89,16 +82,9 @@ export interface ShoppingItem {
 
 export interface ShoppingList {
   id: string;
-  mealPlanId: string;
+  menuBookId: string;
   createdAt: string;
   items: ShoppingItem[];
-}
-
-export interface MenuBook {
-  id: string;
-  mealPlan: MealPlan;
-  shoppingList: ShoppingList;
-  extraMeals?: ExtraWeekMeals;
 }
 
 export interface UserState {
