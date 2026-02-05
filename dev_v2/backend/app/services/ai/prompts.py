@@ -20,6 +20,11 @@ class PromptBuilder:
         return result
 
     @staticmethod
+    def _compact(value: object) -> str:
+        """Dump JSON without newlines to reduce token usage."""
+        return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
+
+    @staticmethod
     def _build_preferences_payload(preferences: UserPreferences) -> dict:
         """Build preferences payload for prompts."""
         payload = preferences.model_dump()
@@ -30,26 +35,31 @@ class PromptBuilder:
 
     @classmethod
     def menu_book(cls, preferences: UserPreferences) -> str:
-        """Generate prompt for natural language menu creation."""
-        prompt_payload = cls._build_preferences_payload(preferences)
-        preferences_json = json.dumps(
-            prompt_payload, ensure_ascii=False, separators=(",", ":")
+        """Generate prompt for natural language meal plan creation."""
+        schedule_json = cls._compact(
+            cls._schedule_to_array_format(preferences.cookSchedule)
         )
-        budget_text = f"Budget:${preferences.budget}"
+        preferences_json = cls._compact(preferences.specificPreferences)
+        disliked_json = cls._compact(preferences.specificDisliked)
+        budget_json = cls._compact(preferences.budget)
+        people_json = cls._compact(preferences.numPeople)
 
         return (
             "As a professional nutritionist and chef, create a weekly meal plan with user preferences and dislikes."
             "The meal plan should be diverse, balanced, and consider making full use of ingredients throughout the week."
             "Avoid repeating the simiar dishes on different days."
             "And ensure the meals align with the user's budget constraints and number of people to serve."
-            f"Budget: {budget_text} in USD. Servings per meal: {preferences.numPeople}.\n"
-            f"Preference: {preferences.specificPreferences}.\n"
-            f"Dislikes: {preferences.specificDisliked}.\n"
+            f"BudgetUSD: {budget_json}. "
+            f"People: {people_json}. "
+            f"Preferences: {preferences_json}. "
+            f"Dislikes: {disliked_json}. "
+            f"CookSchedule: {schedule_json}."
         )
 
     @classmethod
     def structured_menu(cls, natural_menu: str, preferences: UserPreferences) -> str:
-        """Generate prompt to convert natural menu to structured JSON."""
+        """Generate prompt to convert natural meal plan to structured JSON."""
+        meal_plan_text = cls._compact(natural_menu)
         schema_example = {
             "monday": {
                 "breakfast": [
@@ -81,7 +91,7 @@ class PromptBuilder:
             "tuesday": "{ ... }",
             "...": "...",
         }
-        schema_block = json.dumps(schema_example, ensure_ascii=False, separators=(",", ":"))
+        schema_block = cls._compact(schema_example)
 
         requirements = (
             "Requirements: "
@@ -92,43 +102,63 @@ class PromptBuilder:
         )
 
         return (
-            "Convert the following menu into a structured JSON format according to the schema. "
+            "Convert the following meal plan into a structured JSON format according to the schema. "
             "Important: Please skip long internal reasoning and output the JSON directly. "
             f"{requirements} RETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks)."
-            f"Menu: {natural_menu} "
-            f"Output Schema: {schema_block} "
+            f"MealPlanText: {meal_plan_text} "
+            f"OutputSchema: {schema_block} "
         )
 
     @classmethod
     def modification(
-        cls, modification: str, current_menu: str, preferences: UserPreferences
+        cls, modification: str, current_menu: object, preferences: UserPreferences
     ) -> str:
-        """Generate prompt for menu modification."""
-        preferences_json = json.dumps(
-            cls._build_preferences_payload(preferences),
-            ensure_ascii=False,
-            separators=(",", ":"),
+        """Generate prompt for meal plan modification."""
+        schedule_json = cls._compact(
+            cls._schedule_to_array_format(preferences.cookSchedule)
         )
+        preferences_json = cls._compact(preferences.specificPreferences)
+        disliked_json = cls._compact(preferences.specificDisliked)
+        budget_json = cls._compact(preferences.budget)
+        people_json = cls._compact(preferences.numPeople)
+        modification_text = cls._compact(modification)
+        current_plan = cls._compact(current_menu)
 
         return (
             "Task: Based on user's new input, previous preferences, and meal plan, "
-            "adjust the menu accordingly without changing the format. "
+            "adjust the meal plan accordingly without changing the format. "
             "Make the minimal modifications needed to satisfy the request.\n"
             "Note: specificPreferences are items the user wants included at least once during the week, "
             "not in every meal. Avoid items in specificDisliked.\n"
-            f"User's new input: {modification}\n"
-            f"Previous user preferences: {preferences_json}\n"
-            f"Previous meal plan: {current_menu}\n"
+            f"UserInput: {modification_text}\n"
+            f"BudgetUSD: {budget_json}\n"
+            f"People: {people_json}\n"
+            f"Preferences: {preferences_json}\n"
+            f"Dislikes: {disliked_json}\n"
+            f"CookSchedule: {schedule_json}\n"
+            f"PreviousMealPlan: {current_plan}\n"
             "RETURN ONLY THE MODIFIED JSON OBJECT. Do not use Markdown formatting (no ```json blocks)."
         )
 
     @classmethod
     def shopping_list(cls, menus: WeekMenus) -> str:
         """Generate prompt for shopping list generation."""
-        menus_json = menus.model_dump_json()
+        menus_json = cls._compact(menus.model_dump())
+        output_schema = cls._compact(
+            {
+                "items": [
+                    {
+                        "name": "ingredient_name",
+                        "category": "predefined_category",
+                        "totalQuantity": 0,
+                        "unit": "unit",
+                    }
+                ]
+            }
+        )
 
         return (
-            "Task: Generate a consolidated shopping list from the weekly menus (North American units).\n"
+            "Task: Generate a consolidated shopping list from the weekly meal plan (North American units).\n"
             "CRITICAL RULES:\n"
             "1. **MERGE AGGRESSIVELY**: Combine interchangeable ingredients into broad categories "
             "(e.g., \"Beef strips\" + \"Flank steak\" -> \"Beef (Stir-fry cut)\", "
@@ -139,12 +169,7 @@ class PromptBuilder:
             "4. Seasonings set totalQuantity to 0 and unit to \"\".\n"
             "5. Limit the list to at most 12 items and keep field values concise (ingredient names <=4 words).\n"
             "6. Respond with compact JSON (no comments or prose) to stay within model token limits.\n"
-            f"Menus: {menus_json}\n"
-            "Output Format:{\n"
-            '  "items": [\n'
-            '    {"name": "ingredient_name", "category": "predefined_category", "totalQuantity": 0, "unit": "unit"},\n'
-            "    ...\n"
-            "  ]\n"
-            "}\n"
+            f"MealPlan: {menus_json}\n"
+            f"OutputSchema: {output_schema}\n"
             "RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json blocks)."
         )

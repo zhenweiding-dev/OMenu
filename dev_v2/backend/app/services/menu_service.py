@@ -86,7 +86,7 @@ class MenuService:
         """
         prompt = self._prompts.modification(
             modification=modification,
-            current_menu=current_book.menus.model_dump_json(indent=2),
+            current_menu=current_book.menus.model_dump(),
             preferences=current_book.preferences,
         )
 
