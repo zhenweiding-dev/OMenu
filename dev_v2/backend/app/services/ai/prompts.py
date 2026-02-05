@@ -38,11 +38,13 @@ class PromptBuilder:
         budget_text = f"Budget:${preferences.budget}"
 
         return (
-            "Task: Based on the user's preferences, generate a personalized weekly menu in JSON format; "
-            "every meal must include dishName, ingredients, and a brief description. Keep the JSON compact by limiting "
-            "each meal to at most 5 ingredients and a description under 25 words. "
-            "Important: preferredItems should appear at least once during the week, not necessarily in every meal. "
-            f"{budget_text}.\nUser Preferences: {preferences_json}"
+            "As a professional nutritionist and chef, create a weekly meal plan with user preferences and dislikes."
+            "The meal plan should be diverse, balanced, and consider making full use of ingredients throughout the week."
+            "Avoid repeating the simiar dishes on different days."
+            "And ensure the meals align with the user's budget constraints and number of people to serve."
+            f"Budget: {budget_text} in USD. Servings per meal: {preferences.numPeople}.\n"
+            f"Preference: {preferences.specificPreferences}.\n"
+            f"Dislikes: {preferences.specificDisliked}.\n"
         )
 
     @classmethod
@@ -52,7 +54,6 @@ class PromptBuilder:
             "monday": {
                 "breakfast": [
                     {
-                        "id": "mon-breakfast-001",
                         "name": "Scrambled Eggs with Tomato",
                         "ingredients": [
                             {
@@ -74,11 +75,8 @@ class PromptBuilder:
                         "servings": preferences.numPeople,
                         "difficulty": "easy",
                         "totalCalories": 180,
-                        "source": "ai",
                     }
                 ],
-                "lunch": [],
-                "dinner": [],
             },
             "tuesday": "{ ... }",
             "...": "...",
@@ -86,21 +84,19 @@ class PromptBuilder:
         schema_block = json.dumps(schema_example, ensure_ascii=False, separators=(",", ":"))
 
         requirements = (
-            "Requirements: 1) All 7 days present (monday through sunday). "
-            "2) Each day has breakfast, lunch, dinner (use empty array if not scheduled). "
-            "3) Dish ID format {day}-{meal}-{number} (e.g., \"mon-breakfast-001\"). "
-            "4) Ingredient categories: proteins, vegetables, fruits, grains, dairy, "
+            "Requirements: "
+            "1) Days or meals without any selected meals may be omitted. "
+            "2) Ingredient categories: proteins, vegetables, fruits, grains, dairy, "
             "seasonings, pantry_staples, others. "
-            "5) Seasonings use quantity 0 and empty unit. "
-            "6) <=5 ingredients per meal and instructions <=200 characters. "
-            "7) Each dish must include source=\"ai\"."
+            "4) instructions <=200 characters. "
         )
 
         return (
-            "Task: Convert the following menu into a structured JSON format according to the schema. "
+            "Convert the following menu into a structured JSON format according to the schema. "
+            "Important: Please skip long internal reasoning and output the JSON directly. "
+            f"{requirements} RETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks)."
             f"Menu: {natural_menu} "
             f"Output Schema: {schema_block} "
-            f"{requirements} RETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks)."
         )
 
     @classmethod
@@ -115,14 +111,14 @@ class PromptBuilder:
         )
 
         return (
-            "Task: Based on user's new input, previous preferences, and menu, "
+            "Task: Based on user's new input, previous preferences, and meal plan, "
             "adjust the menu accordingly without changing the format. "
             "Make the minimal modifications needed to satisfy the request.\n"
-            "Note: preferredItems are items the user wants included at least once during the week, "
-            "not in every meal.\n"
+            "Note: specificPreferences are items the user wants included at least once during the week, "
+            "not in every meal. Avoid items in specificDisliked.\n"
             f"User's new input: {modification}\n"
             f"Previous user preferences: {preferences_json}\n"
-            f"Previous menu: {current_menu}\n"
+            f"Previous meal plan: {current_menu}\n"
             "RETURN ONLY THE MODIFIED JSON OBJECT. Do not use Markdown formatting (no ```json blocks)."
         )
 

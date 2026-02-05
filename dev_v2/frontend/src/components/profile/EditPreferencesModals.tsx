@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/utils/cn";
+import { DISLIKE_TAGS, PREFERENCE_TAGS } from "@/utils/constants";
 import type { Difficulty } from "@/types";
 
 // ===== Icons =====
@@ -100,189 +101,11 @@ function ModalWrapper({ isOpen, onClose, title, children, onSave, showSaveButton
   return createPortal(modalContent, container);
 }
 
-// ===== Keywords Modal =====
-const KEYWORD_CATEGORIES = {
-  "Cooking Style": ["Quick", "Easy", "One-Pot", "Healthy", "Under 30 Min", "Meal Prep"],
-  "Diet & Health": ["Healthy", "Vegetarian", "Vegan", "Low-Carb", "High-Protein", "Gluten-Free"],
-  "Cuisine": ["Italian", "Mexican", "Japanese", "Thai", "Chinese", "Mediterranean"],
-  "Other": ["Kid-Friendly", "Comfort Food", "Budget-Friendly", "BBQ"],
-};
-
-interface EditKeywordsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  keywords: string[];
-  onSave: (keywords: string[]) => void;
-}
-
-export function EditKeywordsModal({ isOpen, onClose, keywords, onSave }: EditKeywordsModalProps) {
-  const [selected, setSelected] = useState<string[]>(keywords);
-  const [customInput, setCustomInput] = useState("");
-  const [showCustomInput, setShowCustomInput] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      setSelected(keywords);
-    }
-  }, [isOpen, keywords]);
-
-  const toggleKeyword = (keyword: string) => {
-    setSelected((prev) =>
-      prev.includes(keyword) ? prev.filter((k) => k !== keyword) : [...prev, keyword]
-    );
-  };
-
-  const handleAddCustom = () => {
-    if (customInput.trim() && customInput.length <= 20) {
-      setSelected((prev) => [...prev, customInput.trim()]);
-      setCustomInput("");
-      setShowCustomInput(false);
-    }
-  };
-
-  const handleSave = () => {
-    onSave(selected);
-    onClose();
-  };
-
-  return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Keywords" onSave={handleSave} showSaveButton={false}>
-      <div className="flex min-h-[60vh] flex-col">
-        <div className="flex-1 space-y-4 pb-2">
-          {selected.length > 0 && (
-            <div>
-              <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-base">
-                Your Keywords
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {selected.map((tag) => (
-                  <button
-                    key={`selected-${tag}`}
-                    type="button"
-                    onClick={() => toggleKeyword(tag)}
-                    className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
-                  >
-                    {tag}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-          {Object.entries(KEYWORD_CATEGORIES).map(([category, tags]) => {
-            const visibleTags = tags.filter((tag) => !selected.includes(tag));
-            if (visibleTags.length === 0) return null;
-            return (
-              <div key={category}>
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
-                  {category}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {visibleTags.map((tag) => (
-                    <button
-                      key={tag}
-                      type="button"
-                      onClick={() => toggleKeyword(tag)}
-                      className={cn(
-                        "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
-                        "hover:border-accent-light hover:text-text-primary",
-                      )}
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-4 pt-3">
-          {showCustomInput ? (
-            <div className="mb-4 flex items-center gap-2">
-              <Input
-                type="text"
-                value={customInput}
-                onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
-                onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
-                placeholder="Custom keyword"
-                autoFocus
-                className="flex-1 h-9"
-              />
-              <Button size="sm" onClick={handleAddCustom} className="h-9">
-                Add
-              </Button>
-              <Button size="sm" variant="ghost" onClick={() => setShowCustomInput(false)} className="h-9">
-                Cancel
-              </Button>
-            </div>
-          ) : (
-            <div className="mb-4 flex gap-3">
-              <Button
-                type="button"
-                onClick={() => setShowCustomInput(true)}
-                variant="outline"
-                className="flex-1 gap-2 border-dashed border-border-tag bg-transparent text-text-secondary hover:border-accent-base hover:text-accent-base"
-              >
-                <PlusIcon />
-                Add keyword
-              </Button>
-              <Button
-                onClick={handleSave}
-                className="flex-1"
-              >
-                Save
-              </Button>
-            </div>
-          )}
-          {showCustomInput && (
-            <Button
-              onClick={handleSave}
-              className="w-full"
-            >
-              Save
-            </Button>
-          )}
-        </div>
-      </div>
-    </ModalWrapper>
-  );
-}
-
 // ===== Preferred Items Modal =====
-const ITEM_CATEGORIES = {
-  Proteins: [
-    { label: "Eggs", emoji: "🥚" },
-    { label: "Chicken", emoji: "🍗" },
-    { label: "Beef", emoji: "🥩" },
-    { label: "Shrimp", emoji: "🦐" },
-  ],
-  "Grains & Carbs": [
-    { label: "Bread", emoji: "🍞" },
-    { label: "Rice", emoji: "🍚" },
-    { label: "Pasta", emoji: "🍝" },
-    { label: "Potatoes", emoji: "🥔" },
-  ],
-  Dairy: [
-    { label: "Milk", emoji: "🥛" },
-    { label: "Cheese", emoji: "🧀" },
-    { label: "Yogurt", emoji: "🥛" },
-  ],
-  Vegetables: [
-    { label: "Broccoli", emoji: "🥦" },
-    { label: "Carrots", emoji: "🥕" },
-    { label: "Salad", emoji: "🥗" },
-  ],
-  "Meal Types": [
-    { label: "Pizza", emoji: "🍕" },
-    { label: "Tacos", emoji: "🌮" },
-    { label: "Burgers", emoji: "🍔" },
-    { label: "Soup", emoji: "🍜" },
-  ],
-  Pantry: [
-    { label: "Beans", emoji: "🫘" },
-    { label: "Nuts", emoji: "🥜" },
-  ],
-};
+const PREFERENCE_ICON_MAP = new Map(PREFERENCE_TAGS.map(({ label, icon }) => [label, icon]));
+const DISLIKE_ICON_MAP = new Map(DISLIKE_TAGS.map(({ label, icon }) => [label, icon]));
+const getPreferenceIcon = (label: string) => PREFERENCE_ICON_MAP.get(label) ?? "✨";
+const getDislikeIcon = (label: string) => DISLIKE_ICON_MAP.get(label) ?? "✨";
 
 interface EditPreferredModalProps {
   isOpen: boolean;
@@ -309,7 +132,7 @@ export function EditPreferredModal({ isOpen, onClose, items, onSave }: EditPrefe
   };
 
   const handleAddCustom = () => {
-    if (customInput.trim() && customInput.length <= 20) {
+    if (customInput.trim() && customInput.length <= 40) {
       setSelected((prev) => [...prev, customInput.trim()]);
       setCustomInput("");
       setShowCustomInput(false);
@@ -322,13 +145,13 @@ export function EditPreferredModal({ isOpen, onClose, items, onSave }: EditPrefe
   };
 
   return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Preferred Items" onSave={handleSave} showSaveButton={false}>
+    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Preferences" onSave={handleSave} showSaveButton={false}>
       <div className="flex min-h-[60vh] flex-col">
         <div className="flex-1 space-y-4 pb-2">
           {selected.length > 0 && (
             <div>
               <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-base">
-                Your Preferred Items
+                Your Preferences
               </p>
               <div className="flex flex-wrap gap-2">
                 {selected.map((tag) => (
@@ -338,38 +161,33 @@ export function EditPreferredModal({ isOpen, onClose, items, onSave }: EditPrefe
                     onClick={() => toggleItem(tag)}
                     className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
                   >
-                    {tag}
+                    <span className="inline-flex items-center gap-1">
+                      <span aria-hidden="true">{getPreferenceIcon(tag)}</span>
+                      <span>{tag}</span>
+                    </span>
                   </button>
                 ))}
               </div>
             </div>
           )}
-          {Object.entries(ITEM_CATEGORIES).map(([category, categoryItems]) => {
-            const visibleItems = categoryItems.filter((item) => !selected.includes(item.label));
-            if (visibleItems.length === 0) return null;
-            return (
-              <div key={category}>
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
-                  {category}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {visibleItems.map(({ label, emoji }) => (
-                    <button
-                      key={label}
-                      type="button"
-                      onClick={() => toggleItem(label)}
-                      className={cn(
-                        "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
-                        "hover:border-accent-light hover:text-text-primary",
-                      )}
-                    >
-                      {emoji} {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+          <div className="flex flex-wrap gap-2">
+            {PREFERENCE_TAGS.filter((tag) => !selected.includes(tag.label)).map(({ label, icon }) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => toggleItem(label)}
+                className={cn(
+                  "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
+                  "hover:border-accent-light hover:text-text-primary",
+                )}
+              >
+                <span className="inline-flex items-center gap-1">
+                  <span aria-hidden="true">{icon}</span>
+                  <span>{label}</span>
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-4 pt-3">
@@ -378,9 +196,9 @@ export function EditPreferredModal({ isOpen, onClose, items, onSave }: EditPrefe
               <Input
                 type="text"
                 value={customInput}
-                onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
+                onChange={(e) => setCustomInput(e.target.value.slice(0, 40))}
                 onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
-                placeholder="Custom item"
+                placeholder="Add a preference"
                 autoFocus
                 className="flex-1 h-9"
               />
@@ -400,7 +218,7 @@ export function EditPreferredModal({ isOpen, onClose, items, onSave }: EditPrefe
                 className="flex-1 gap-2 border-dashed border-border-tag bg-transparent text-text-secondary hover:border-accent-base hover:text-accent-base"
               >
                 <PlusIcon />
-                Add item
+                Add preference
               </Button>
               <Button
                 onClick={handleSave}
@@ -425,42 +243,6 @@ export function EditPreferredModal({ isOpen, onClose, items, onSave }: EditPrefe
 }
 
 // ===== Disliked Items Modal =====
-const DISLIKE_CATEGORIES = {
-  "Common Allergens": [
-    { label: "Peanuts", emoji: "🥜" },
-    { label: "Tree Nuts", emoji: "🌰" },
-    { label: "Dairy/Lactose", emoji: "🥛" },
-    { label: "Gluten", emoji: "🌾" },
-    { label: "Eggs", emoji: "🥚" },
-    { label: "Shellfish", emoji: "🦐" },
-    { label: "Fish", emoji: "🐟" },
-  ],
-  Vegetables: [
-    { label: "Onion", emoji: "🧅" },
-    { label: "Garlic", emoji: "🧄" },
-    { label: "Cilantro", emoji: "🌿" },
-    { label: "Mushrooms", emoji: "🍄" },
-    { label: "Bell Peppers", emoji: "🫑" },
-    { label: "Eggplant", emoji: "🍆" },
-  ],
-  Meats: [
-    { label: "Pork", emoji: "🐷" },
-    { label: "Red Meat", emoji: "🥩" },
-  ],
-  "Flavors & Textures": [
-    { label: "Spicy Food", emoji: "🌶️" },
-    { label: "Ginger", emoji: "🫚" },
-    { label: "Coconut", emoji: "🥥" },
-  ],
-  "Cooking Styles": [
-    { label: "Fried Food", emoji: "🛢️" },
-    { label: "Butter", emoji: "🧈" },
-  ],
-  Other: [
-    { label: "Artificial Sweeteners", emoji: "🧃" },
-    { label: "High Sodium", emoji: "🧂" },
-  ],
-};
 
 interface EditDislikedModalProps {
   isOpen: boolean;
@@ -487,7 +269,7 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
   };
 
   const handleAddCustom = () => {
-    if (customInput.trim() && customInput.length <= 20) {
+    if (customInput.trim() && customInput.length <= 40) {
       setSelected((prev) => [...prev, customInput.trim()]);
       setCustomInput("");
       setShowCustomInput(false);
@@ -500,7 +282,7 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
   };
 
   return (
-    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Disliked Items" onSave={handleSave} showSaveButton={false}>
+    <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Dislikes" onSave={handleSave} showSaveButton={false}>
       <div className="flex min-h-[60vh] flex-col">
         <div className="flex-1 space-y-4 pb-2">
           {selected.length > 0 && (
@@ -516,38 +298,33 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
                     onClick={() => toggleItem(tag)}
                     className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
                   >
-                    {tag}
+                    <span className="inline-flex items-center gap-1">
+                      <span aria-hidden="true">{getDislikeIcon(tag)}</span>
+                      <span>{tag}</span>
+                    </span>
                   </button>
                 ))}
               </div>
             </div>
           )}
-          {Object.entries(DISLIKE_CATEGORIES).map(([category, categoryItems]) => {
-            const visibleItems = categoryItems.filter((item) => !selected.includes(item.label));
-            if (visibleItems.length === 0) return null;
-            return (
-              <div key={category}>
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
-                  {category}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {visibleItems.map(({ label, emoji }) => (
-                    <button
-                      key={label}
-                      type="button"
-                      onClick={() => toggleItem(label)}
-                      className={cn(
-                        "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
-                        "hover:border-accent-light hover:text-text-primary",
-                      )}
-                    >
-                      {emoji} {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+          <div className="flex flex-wrap gap-2">
+            {DISLIKE_TAGS.filter((tag) => !selected.includes(tag.label)).map(({ label, icon }) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => toggleItem(label)}
+                className={cn(
+                  "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
+                  "hover:border-accent-light hover:text-text-primary",
+                )}
+              >
+                <span className="inline-flex items-center gap-1">
+                  <span aria-hidden="true">{icon}</span>
+                  <span>{label}</span>
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="sticky bottom-0 border-t border-border-subtle bg-card-base pb-4 pt-3">
@@ -556,9 +333,9 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
               <Input
                 type="text"
                 value={customInput}
-                onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
+                onChange={(e) => setCustomInput(e.target.value.slice(0, 40))}
                 onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
-                placeholder="Custom item"
+                placeholder="Add a dislike"
                 autoFocus
                 className="flex-1 h-9"
               />
@@ -578,7 +355,7 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
                 className="flex-1 gap-2 border-dashed border-border-tag bg-transparent text-text-secondary hover:border-accent-base hover:text-accent-base"
               >
                 <PlusIcon />
-                Add item
+                Add dislike
               </Button>
               <Button
                 onClick={handleSave}

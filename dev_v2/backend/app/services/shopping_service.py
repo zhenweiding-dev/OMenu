@@ -31,7 +31,7 @@ class ShoppingService:
             Consolidated ShoppingList.
         """
         prompt = self._prompts.shopping_list(menus)
-        response_text = await self._client.generate(prompt)
+        response_text = await self._client.generate_json(prompt)
         data = self._parser.parse_json(response_text)
 
         # Validate and build items

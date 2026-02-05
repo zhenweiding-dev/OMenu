@@ -1,15 +1,6 @@
 {
   "preferences": {
-    "keywords": [
-      "Healthy",
-      "Chinese",
-      "Italian",
-      "Low-Carb",
-      "每餐都有一道主要的蔬菜",
-      "多一点汤汤水水",
-      "早上只吃咖啡鸡蛋水果"
-    ],
-    "preferredItems": [
+    "specificPreferences": [
       "Eggs",
       "Chicken",
       "Rice",
@@ -18,7 +9,7 @@
       "Soup",
       "叉烧"
     ],
-    "dislikedItems": [
+    "specificDisliked": [
       "High Sodium"
     ],
     "numPeople": 2,
@@ -57,8 +48,8 @@
       },
       "sunday": {
         "breakfast": true,
-        "lunch": false,
-        "dinner": false
+        "lunch": true,
+        "dinner": true
       }
     }
   },

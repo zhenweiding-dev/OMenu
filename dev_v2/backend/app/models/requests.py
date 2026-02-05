@@ -12,9 +12,8 @@ from app.models.user import CookSchedule
 class GenerateMenuBookRequest(BaseModel):
     """Request to generate a new menu book."""
 
-    keywords: list[str] = Field(default_factory=list)
-    preferredItems: list[str] = Field(default_factory=list)
-    dislikedItems: list[str] = Field(default_factory=list)
+    specificPreferences: list[str] = Field(default_factory=list)
+    specificDisliked: list[str] = Field(default_factory=list)
     numPeople: int = Field(ge=1, le=10, default=2)
     budget: int = Field(ge=50, le=500, default=100)
     difficulty: Difficulty = Difficulty.medium

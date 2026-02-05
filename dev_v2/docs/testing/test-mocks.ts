@@ -196,9 +196,8 @@ export const mockDefaultCookSchedule: CookSchedule = {
 // ============================================
 
 export const mockUserPreferences: UserPreferences = {
-  keywords: ['Quick', 'Healthy', 'Chinese'],
-  preferredItems: ['Eggs', 'Chicken', 'Rice'],
-  dislikedItems: ['Mushrooms', 'Cilantro'],
+  specificPreferences: ['Eggs', 'Chicken', 'Rice'],
+  specificDisliked: ['Mushrooms', 'Cilantro'],
   numPeople: 2,
   budget: 100,
   difficulty: 'medium',
@@ -336,9 +335,8 @@ export const mockCompleteMenuBook: MenuBook = {
 
 export const mockEmptyDraft = {
   currentStep: 1,
-  keywords: [] as string[],
-  preferredItems: [] as string[],
-  dislikedItems: [] as string[],
+  specificPreferences: [] as string[],
+  specificDisliked: [] as string[],
   numPeople: 2,
   budget: 100,
   difficulty: 'medium' as Difficulty,
@@ -348,9 +346,8 @@ export const mockEmptyDraft = {
 
 export const mockPartialDraft = {
   currentStep: 4,
-  keywords: ['Quick', 'Healthy', 'Chinese'],
-  preferredItems: ['Eggs', 'Chicken'],
-  dislikedItems: ['Mushrooms'],
+  specificPreferences: ['Eggs', 'Chicken'],
+  specificDisliked: ['Mushrooms'],
   numPeople: 2,
   budget: 100,
   difficulty: 'medium' as Difficulty,
@@ -360,9 +357,8 @@ export const mockPartialDraft = {
 
 export const mockCompleteDraft = {
   currentStep: 6,
-  keywords: ['Quick', 'Healthy', 'High-Protein', 'Chinese'],
-  preferredItems: ['Eggs', 'Chicken', 'Rice'],
-  dislikedItems: ['Mushrooms', 'Cilantro'],
+  specificPreferences: ['Eggs', 'Chicken', 'Rice'],
+  specificDisliked: ['Mushrooms', 'Cilantro'],
   numPeople: 2,
   budget: 100,
   difficulty: 'medium' as Difficulty,
@@ -430,7 +426,7 @@ export const mockApiResponses = {
 };
 
 // ============================================
-// Keywords/Tags Mock
+// Preferences/Tags Mock
 // ============================================
 
 export const mockKeywordCategories = {

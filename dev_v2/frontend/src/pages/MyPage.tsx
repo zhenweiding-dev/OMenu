@@ -2,31 +2,32 @@ import { useState } from "react";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { formatCurrency } from "@/utils/helpers";
+import { DISLIKE_TAGS, PREFERENCE_TAGS } from "@/utils/constants";
 import type { UserPreferences, Difficulty } from "@/types";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/ui/button";
 import {
-  EditKeywordsModal,
   EditPreferredModal,
   EditDislikedModal,
   EditSettingsModal,
 } from "@/components/profile/EditPreferencesModals";
 
-type EditModalType = "keywords" | "preferred" | "disliked" | "settings" | null;
+type EditModalType = "preferred" | "disliked" | "settings" | null;
+const TAG_ICON_MAP = new Map([...PREFERENCE_TAGS, ...DISLIKE_TAGS].map(({ label, icon }) => [label, icon]));
+const getTagIcon = (label: string) => TAG_ICON_MAP.get(label) ?? "✨";
 
 export function MyPage() {
   const [activeModal, setActiveModal] = useState<EditModalType>(null);
 
   const draftPreferences = useDraftStore((state) => {
-    const { keywords, preferredItems, dislikedItems, numPeople, budget, difficulty, cookSchedule } = state;
-    return { keywords, preferredItems, dislikedItems, numPeople, budget, difficulty, cookSchedule } satisfies UserPreferences;
+    const { specificPreferences, specificDisliked, numPeople, budget, difficulty, cookSchedule } = state;
+    return { specificPreferences, specificDisliked, numPeople, budget, difficulty, cookSchedule } satisfies UserPreferences;
   });
 
   const draftActions = useDraftStore(
     useShallow((state) => ({
-      setKeywords: state.setKeywords,
-      setPreferredItems: state.setPreferredItems,
-      setDislikedItems: state.setDislikedItems,
+      setSpecificPreferences: state.setSpecificPreferences,
+      setSpecificDisliked: state.setSpecificDisliked,
       setNumPeople: state.setNumPeople,
       setBudget: state.setBudget,
       setDifficulty: state.setDifficulty,
@@ -37,25 +38,20 @@ export function MyPage() {
 
   const applyPreferenceUpdate = (updates: Partial<UserPreferences>) => {
     const nextPreferences: UserPreferences = { ...preferences, ...updates };
-    draftActions.setKeywords(nextPreferences.keywords);
-    draftActions.setPreferredItems(nextPreferences.preferredItems);
-    draftActions.setDislikedItems(nextPreferences.dislikedItems);
+    draftActions.setSpecificPreferences(nextPreferences.specificPreferences);
+    draftActions.setSpecificDisliked(nextPreferences.specificDisliked);
     draftActions.setNumPeople(nextPreferences.numPeople);
     draftActions.setBudget(nextPreferences.budget);
     draftActions.setDifficulty(nextPreferences.difficulty);
   };
 
   // Save handlers for each modal
-  const handleSaveKeywords = (keywords: string[]) => {
-    applyPreferenceUpdate({ keywords });
-  };
-
   const handleSavePreferred = (items: string[]) => {
-    applyPreferenceUpdate({ preferredItems: items });
+    applyPreferenceUpdate({ specificPreferences: items });
   };
 
   const handleSaveDisliked = (items: string[]) => {
-    applyPreferenceUpdate({ dislikedItems: items });
+    applyPreferenceUpdate({ specificDisliked: items });
   };
 
   const handleSaveSettings = (settings: { numPeople: number; budget: number; difficulty: Difficulty }) => {
@@ -73,7 +69,10 @@ export function MyPage() {
             key={item}
             className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
           >
-            {item}
+            <span className="inline-flex items-center gap-1">
+              <span aria-hidden="true">{getTagIcon(item)}</span>
+              <span>{item}</span>
+            </span>
           </span>
         ))}
       </div>
@@ -82,29 +81,10 @@ export function MyPage() {
 
   return (
     <PageContainer className="space-y-4">
-      {/* Keywords Section */}
+      {/* Preferences Section */}
       <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
         <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
-          <h3 className="text-[14px] font-semibold text-text-primary">Keywords</h3>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => setActiveModal("keywords")}
-            className="h-8 px-2 text-accent-base hover:text-accent-base/80"
-          >
-            Edit
-          </Button>
-          </div>
-        <div className="px-4 py-4">
-              {renderTags(preferences.keywords, "No keywords saved yet.")}
-            </div>
-      </section>
-
-      {/* Preferred Items Section */}
-      <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
-        <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
-          <h3 className="text-[14px] font-semibold text-text-primary">Preferred Items</h3>
+          <h3 className="text-[14px] font-semibold text-text-primary">Preferences</h3>
           <Button
             type="button"
             variant="ghost"
@@ -116,14 +96,14 @@ export function MyPage() {
           </Button>
         </div>
         <div className="px-4 py-4">
-              {renderTags(preferences.preferredItems, "No preferred items saved yet.")}
+              {renderTags(preferences.specificPreferences, "No preferences added yet.")}
             </div>
       </section>
 
-      {/* Disliked Items Section */}
+      {/* Dislikes Section */}
       <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
         <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
-          <h3 className="text-[14px] font-semibold text-text-primary">Disliked Items</h3>
+          <h3 className="text-[14px] font-semibold text-text-primary">Dislikes</h3>
           <Button
             type="button"
             variant="ghost"
@@ -135,7 +115,7 @@ export function MyPage() {
           </Button>
         </div>
         <div className="px-4 py-4">
-              {renderTags(preferences.dislikedItems, "No dislikes added yet.")}
+              {renderTags(preferences.specificDisliked, "No dislikes added yet.")}
             </div>
       </section>
 
@@ -172,22 +152,16 @@ export function MyPage() {
       </section>
 
       {/* Edit Modals */}
-      <EditKeywordsModal
-        isOpen={activeModal === "keywords"}
-        onClose={() => setActiveModal(null)}
-        keywords={preferences.keywords}
-        onSave={handleSaveKeywords}
-      />
       <EditPreferredModal
         isOpen={activeModal === "preferred"}
         onClose={() => setActiveModal(null)}
-        items={preferences.preferredItems}
+        items={preferences.specificPreferences}
         onSave={handleSavePreferred}
       />
       <EditDislikedModal
         isOpen={activeModal === "disliked"}
         onClose={() => setActiveModal(null)}
-        items={preferences.dislikedItems}
+        items={preferences.specificDisliked}
         onSave={handleSaveDisliked}
       />
       <EditSettingsModal

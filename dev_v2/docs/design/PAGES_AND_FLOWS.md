@@ -30,7 +30,7 @@ App
 ├── My Page (/me)
 └── Create Plan Flow (/create)
     ├── Step 1: Welcome + Begin
-    ├── Step 2: Keywords
+    ├── Step 2: Preferences
     ├── Step 3: Preferred Items
     ├── Step 4: Disliked Items
     ├── Step 5: People & Budget (Sentence Style)
@@ -315,7 +315,7 @@ Present on: **Home, Shopping, My Page**
 **Sections:**
 
 **Preferences Card:**
-- Keywords (tags, editable)
+- Preferences (tags, editable)
 - Must-have items (tags, editable)
 - Disliked items (tags, editable)
 - Default people count
@@ -370,10 +370,9 @@ Present on: **Home, Shopping, My Page**
 
 ---
 
-### Step 2: Keywords Selection
+### Step 2: Preferences Selection
 
 **Display:**
-- Header: "Choose some keywords for your menu book"
 - Subheader: "Select all that apply"
 - Content: Tags grouped by category with section labels + "+" button at the end
 - Footer: "Next" button
@@ -413,7 +412,6 @@ Kid-Friendly, Family-Style, Comfort Food, Budget-Friendly, BBQ, Soul Food
 - Tap "+" → Open inline input for custom keyword
 - Tap "Next" → Save to draft, navigate to Step 3
 
-**Data Saved:** `draft.keywords: string[]`
 
 ---
 
@@ -469,7 +467,7 @@ Kid-Friendly, Family-Style, Comfort Food, Budget-Friendly, BBQ, Soul Food
 - Tap "+" → Open inline input for custom item
 - Tap "Next" → Save to draft, navigate to Step 4
 
-**Data Saved:** `draft.preferredItems: string[]`
+**Data Saved:** `draft.specificPreferences: string[]`
 
 ---
 
@@ -526,7 +524,7 @@ Kid-Friendly, Family-Style, Comfort Food, Budget-Friendly, BBQ, Soul Food
 - Tap "+" → Open inline input for custom item
 - Tap "Next" → Save to draft, navigate to Step 5
 
-**Data Saved:** `draft.dislikedItems: string[]`
+**Data Saved:** `draft.specificDisliked: string[]`
 
 ---
 
@@ -735,9 +733,8 @@ The "Go to Home" button and success navigation are blocked until at least 1 minu
 **API Call:**
 ```typescript
 const menuBook = await api.generateMenuBook({
-  keywords: draft.keywords,
-  preferredItems: draft.preferredItems,
-  dislikedItems: draft.dislikedItems,
+  specificPreferences: draft.specificPreferences,
+  specificDisliked: draft.specificDisliked,
   numPeople: draft.numPeople,
   budget: draft.budget,
   difficulty: draft.difficulty,
@@ -958,7 +955,7 @@ Every step change saves to localStorage via Zustand persist middleware:
 ```typescript
 // Automatically persisted to localStorage key: 'omenu-draft'
 useDraftStore.getState().setStep(3);
-useDraftStore.getState().setKeywords(['Healthy', 'Chinese']);
+useDraftStore.getState().setSpecificPreferences(['Healthy', 'Chinese']);
 ```
 
 ### Resume Logic

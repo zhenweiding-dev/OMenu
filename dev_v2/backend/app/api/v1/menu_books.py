@@ -19,9 +19,8 @@ async def generate_menu_book(request: GenerateMenuBookRequest) -> MenuBook:
     """Generate a new weekly menu book based on user preferences."""
     try:
         preferences = UserPreferences(
-            keywords=request.keywords,
-            preferredItems=request.preferredItems,
-            dislikedItems=request.dislikedItems,
+            specificPreferences=request.specificPreferences,
+            specificDisliked=request.specificDisliked,
             numPeople=request.numPeople,
             budget=request.budget,
             difficulty=request.difficulty,

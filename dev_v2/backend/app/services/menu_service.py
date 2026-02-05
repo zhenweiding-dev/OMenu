@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 
 from app.core.exceptions import ParseError
 from app.models import (
+    CookSchedule,
     MenuBook,
     MenuBookStatus,
     ShoppingList,
@@ -44,11 +45,11 @@ class MenuService:
 
         # Step 2: Convert to structured JSON
         structure_prompt = self._prompts.structured_menu(natural_menu, preferences)
-        structured_response = await self._client.generate(structure_prompt)
+        structured_response = await self._client.generate_json(structure_prompt)
         menu_data = self._parser.parse_json(structured_response)
 
         # Normalize and validate
-        normalized = self._normalize_menus(menu_data)
+        normalized = self._normalize_menus(menu_data, schedule=preferences.cookSchedule)
 
         # Build menu book
         book_id = f"mb_{uuid.uuid4().hex[:12]}"
@@ -89,9 +90,9 @@ class MenuService:
             preferences=current_book.preferences,
         )
 
-        response_text = await self._client.generate(prompt)
+        response_text = await self._client.generate_json(prompt)
         menu_data = self._parser.parse_json(response_text)
-        normalized = self._normalize_menus(menu_data)
+        normalized = self._normalize_menus(menu_data, schedule=current_book.preferences.cookSchedule)
 
         return MenuBook(
             id=book_id,
@@ -102,13 +103,16 @@ class MenuService:
             shoppingList=current_book.shoppingList,
         )
 
-    def _normalize_menus(self, raw_data: dict) -> dict:
+    def _normalize_menus(self, raw_data: dict, schedule: CookSchedule | None = None) -> dict:
         """Normalize menu data from AI response."""
         menus_data = raw_data.get("menus") or raw_data.get("days") or raw_data
         if not isinstance(menus_data, dict):
             raise ParseError("Menu data must be an object")
 
         normalized: dict[str, dict[str, list[dict]]] = {}
+        schedule_map = None
+        if schedule is not None:
+            schedule_map = schedule.model_dump()
 
         for day in DAYS:
             day_data = menus_data.get(day, {})
@@ -117,6 +121,9 @@ class MenuService:
 
             normalized_day: dict[str, list[dict]] = {}
             for meal in MEALS:
+                if schedule_map and not schedule_map.get(day, {}).get(meal, False):
+                    normalized_day[meal] = []
+                    continue
                 value = day_data.get(meal, [])
                 if value is None:
                     meals = []
@@ -127,12 +134,25 @@ class MenuService:
                 else:
                     meals = []
 
-                # Ensure AI source is set
-                for dish in meals:
-                    if isinstance(dish, dict):
-                        dish["source"] = "ai"
+                normalized_meals: list[dict] = []
+                for index, dish in enumerate(meals):
+                    if not isinstance(dish, dict):
+                        continue
+                    normalized_dish = dict(dish)
+                    normalized_dish["id"] = f"{day[:3]}-{meal}-{index + 1:03d}"
+                    normalized_dish["source"] = "ai"
 
-                normalized_day[meal] = meals
+                    ingredients = normalized_dish.get("ingredients")
+                    if isinstance(ingredients, list):
+                        for ingredient in ingredients:
+                            if not isinstance(ingredient, dict):
+                                continue
+                            if ingredient.get("category") == "seasonings":
+                                ingredient["quantity"] = 0
+                                ingredient["unit"] = ""
+                    normalized_meals.append(normalized_dish)
+
+                normalized_day[meal] = normalized_meals
 
             normalized[day] = normalized_day
 

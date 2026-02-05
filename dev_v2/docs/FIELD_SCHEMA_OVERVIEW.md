@@ -77,9 +77,8 @@
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
-| `keywords` | `string[]` | 关键词 |
-| `preferredItems` | `string[]` | 偏好项（希望本周出现即可） |
-| `dislikedItems` | `string[]` | 讨厌项 |
+| `specificPreferences` | `string[]` | 偏好项（希望本周出现即可） |
+| `specificDisliked` | `string[]` | 讨厌项 |
 | `numPeople` | `number` | 人数 |
 | `budget` | `number` | 预算 |
 | `difficulty` | `Difficulty` | 难度 |

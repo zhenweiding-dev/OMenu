@@ -2,64 +2,24 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/utils/cn";
+import { PREFERENCE_TAGS } from "@/utils/constants";
 
 interface StepPreferredProps {
-  preferredItems: string[];
+  specificPreferences: string[];
   onAddItem: (item: string) => void;
   onRemoveItem: (item: string) => void;
   onNext: () => void;
   onBack: () => void;
 }
 
-const ITEM_CATEGORIES = {
-  "Proteins": [
-    { label: "Eggs", emoji: "🥚" },
-    { label: "Chicken", emoji: "🍗" },
-    { label: "Beef", emoji: "🥩" },
-    { label: "Shrimp", emoji: "🦐" },
-  ],
-  "Grains & Carbs": [
-    { label: "Bread", emoji: "🍞" },
-    { label: "Rice", emoji: "🍚" },
-    { label: "Pasta", emoji: "🍝" },
-    { label: "Potatoes", emoji: "🥔" },
-  ],
-  "Dairy": [
-    { label: "Milk", emoji: "🥛" },
-    { label: "Cheese", emoji: "🧀" },
-    { label: "Yogurt", emoji: "🥛" },
-  ],
-  "Vegetables": [
-    { label: "Broccoli", emoji: "🥦" },
-    { label: "Carrots", emoji: "🥕" },
-    { label: "Salad", emoji: "🥗" },
-  ],
-  "Meal Types": [
-    { label: "Pizza", emoji: "🍕" },
-    { label: "Tacos", emoji: "🌮" },
-    { label: "Burgers", emoji: "🍔" },
-    { label: "Soup", emoji: "🍜" },
-  ],
-  "Pantry": [
-    { label: "Beans", emoji: "🫘" },
-    { label: "Nuts", emoji: "🥜" },
-  ],
-};
+const PREFERENCE_ICON_MAP = new Map(PREFERENCE_TAGS.map(({ label, icon }) => [label, icon]));
+const getPreferenceIcon = (label: string) => PREFERENCE_ICON_MAP.get(label) ?? "✨";
 
-function PlusIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
-      <path d="M12 5v14M5 12h14" />
-    </svg>
-  );
-}
-
-export function StepPreferred({ preferredItems, onAddItem, onRemoveItem, onNext, onBack }: StepPreferredProps) {
+export function StepPreferred({ specificPreferences, onAddItem, onRemoveItem, onNext, onBack }: StepPreferredProps) {
   const [customInput, setCustomInput] = useState("");
-  const [showCustomInput, setShowCustomInput] = useState(false);
 
   const toggleItem = (item: string) => {
-    if (preferredItems.includes(item)) {
+    if (specificPreferences.includes(item)) {
       onRemoveItem(item);
     } else {
       onAddItem(item);
@@ -67,10 +27,10 @@ export function StepPreferred({ preferredItems, onAddItem, onRemoveItem, onNext,
   };
 
   const handleAddCustom = () => {
-    if (customInput.trim() && customInput.length <= 20) {
-      onAddItem(customInput.trim());
+    const value = customInput.trim();
+    if (value && value.length <= 40) {
+      onAddItem(value);
       setCustomInput("");
-      setShowCustomInput(false);
     }
   };
 
@@ -88,106 +48,81 @@ export function StepPreferred({ preferredItems, onAddItem, onRemoveItem, onNext,
           ← Back
         </Button>
         <h2 className="text-[22px] font-semibold leading-tight text-text-primary">
-          Select items you'd like this week
+          I want my meals to be:
         </h2>
+        <p className="mt-2 text-[13px] text-text-secondary">
+          Type anything! We&apos;ll handle the rest.
+        </p>
       </div>
 
-      {/* Items by category */}
+      {/* Input */}
+      <div className="px-5 pb-4">
+        <div className="flex items-center gap-2">
+          <Input
+            type="text"
+            value={customInput}
+            onChange={(e) => setCustomInput(e.target.value.slice(0, 40))}
+            onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
+            placeholder="Add a preference"
+            className="flex-1 h-10"
+          />
+          <Button size="sm" onClick={handleAddCustom} className="h-10 px-4">
+            ADD
+          </Button>
+        </div>
+      </div>
+
+      {/* Tags */}
       <div className="flex-1 space-y-4 px-5 pb-2">
-        {preferredItems.length > 0 && (
+        {specificPreferences.length > 0 && (
           <div>
             <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-base">
-              Your Preferred Items
+              Your Preferences
             </p>
             <div className="flex flex-wrap gap-2">
-              {preferredItems.map((tag) => (
+              {specificPreferences.map((tag) => (
                 <button
                   key={`selected-${tag}`}
                   type="button"
                   onClick={() => toggleItem(tag)}
                   className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
                 >
-                  {tag}
+                  <span className="inline-flex items-center gap-1">
+                    <span aria-hidden="true">{getPreferenceIcon(tag)}</span>
+                    <span>{tag}</span>
+                  </span>
                 </button>
               ))}
             </div>
           </div>
         )}
-        {Object.entries(ITEM_CATEGORIES).map(([category, items]) => {
-          const visibleItems = items.filter((item) => !preferredItems.includes(item.label));
-          if (visibleItems.length === 0) return null;
-          return (
-          <div key={category}>
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
-              {category}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {visibleItems.map(({ label, emoji }) => (
-                <button
-                  key={label}
-                  type="button"
-                  onClick={() => toggleItem(label)}
-                  className={cn(
-                    "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
-                    "hover:border-accent-light hover:text-text-primary"
-                  )}
-                >
-                  {emoji} {label}
-                </button>
-              ))}
-            </div>
+        <div>
+          <div className="flex flex-wrap gap-2">
+            {PREFERENCE_TAGS.filter((tag) => !specificPreferences.includes(tag.label)).map(({ label, icon }) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => toggleItem(label)}
+                className={cn(
+                  "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
+                  "hover:border-accent-light hover:text-text-primary"
+                )}
+              >
+                <span className="inline-flex items-center gap-1">
+                  <span aria-hidden="true">{icon}</span>
+                  <span>{label}</span>
+                </span>
+              </button>
+            ))}
           </div>
-        );
-        })}
+        </div>
       </div>
 
       {/* Footer with Back and Next */}
       <div className="sticky bottom-0 border-t border-border-subtle bg-paper-base px-5 pb-4 pt-3">
-        {showCustomInput ? (
-          <div className="mb-4 flex items-center gap-2">
-            <Input
-              type="text"
-              value={customInput}
-              onChange={(e) => setCustomInput(e.target.value.slice(0, 20))}
-              onKeyDown={(e) => e.key === "Enter" && handleAddCustom()}
-              placeholder="Custom item"
-              autoFocus
-              className="flex-1 h-9"
-            />
-            <Button size="sm" onClick={handleAddCustom} className="h-9">
-              Add
-            </Button>
-            <Button size="sm" variant="ghost" onClick={() => setShowCustomInput(false)} className="h-9">
-              Cancel
-            </Button>
-          </div>
-        ) : (
-          <div className="mb-4 flex gap-3">
-            <Button
-              type="button"
-              onClick={() => setShowCustomInput(true)}
-              variant="outline"
-              className="flex-1 gap-2 border-dashed border-border-tag bg-transparent text-text-secondary hover:border-accent-base hover:text-accent-base"
-            >
-              <PlusIcon />
-              Add item
-            </Button>
-            <Button
-              onClick={onNext}
-              className="flex-1"
-            >
-              Next
-            </Button>
-          </div>
-        )}
-        {showCustomInput && (
-          <Button
-            onClick={onNext}
-            className="w-full"
-          >
-            Next
-          </Button>
-        )}
+        <Button onClick={onNext} className="w-full">
+          Next
+        </Button>
       </div>
     </div>
   );

@@ -99,7 +99,7 @@ This two-step approach produces better results than asking for structured JSON d
 **Template**:
 ```
 Task: Based on the user's preferences, generate a personalized weekly menu in JSON format; every meal must include dishName, ingredients, and a brief description.
-Important: preferredItems should appear at least once during the week, not necessarily in every meal.
+Important: specificPreferences should appear at least once during the week, not necessarily in every meal.
 Budget:$<budget>.
 
 User Preferences: {preferences_json}
@@ -171,7 +171,7 @@ RETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json bloc
 ```
 Task: Based on user's new input, previous preferences, and menu, adjust the menu accordingly without changing the format.
 Make the minimal modifications needed to satisfy the request.
-Note: preferredItems are items the user wants included at least once during the week, not in every meal.
+Note: specificPreferences are items the user wants included at least once during the week, not in every meal.
 
 User's new input: {modification}
 Previous user preferences: {preferences_json}
@@ -229,9 +229,8 @@ RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json bloc
 **Frontend Format** (boolean schedule):
 ```json
 {
-  "keywords": ["chinese food", "healthy"],
-  "preferredItems": ["eggs", "tofu"],
-  "dislikedItems": ["organ meat"],
+  "specificPreferences": ["eggs", "tofu"],
+  "specificDisliked": ["organ meat"],
   "budget": 140,
   "numPeople": 2,
   "difficulty": "medium",
@@ -246,9 +245,8 @@ RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json bloc
 **Converted for Gemini** (array schedule):
 ```json
 {
-  "keywords": ["chinese food", "healthy"],
-  "preferredItems": ["eggs", "tofu"],
-  "dislikedItems": ["organ meat"],
+  "specificPreferences": ["eggs", "tofu"],
+  "specificDisliked": ["organ meat"],
   "budget": 140,
   "numPeople": 2,
   "difficulty": "medium",
@@ -283,9 +281,8 @@ Based on original `prompt_simple.py` test case:
 
 ```python
 user_preferences = {
-    "keywords": ["chinese food", "healthy", "quick food", "nutritious"],
-    "preferredItems": ["braised beef", "noodles", "tofu skin", "eggs"],
-    "dislikedItems": ["organ meat"],
+    "specificPreferences": ["braised beef", "noodles", "tofu skin", "eggs"],
+    "specificDisliked": ["organ meat"],
     "budget": 140,
     "numPeople": 2,
     "difficulty": "medium",
@@ -312,9 +309,8 @@ modification_input = "Please add dinner on Sunday with high-protein meals."
 
 ```python
 user_preferences = {
-    "keywords": ["quick", "easy", "meal prep"],
-    "preferredItems": ["chicken", "rice"],
-    "dislikedItems": ["seafood"],
+    "specificPreferences": ["chicken", "rice"],
+    "specificDisliked": ["seafood"],
     "budget": 100,
     "numPeople": 1,
     "difficulty": "easy",

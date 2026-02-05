@@ -176,7 +176,7 @@ test.describe('Create Flow', () => {
     await expect(page.getByText(/let's plan meals/i)).toBeVisible();
     await page.getByRole('button', { name: /begin/i }).click();
     
-    // Step 2: Keywords
+    // Step 2: Preferences
     await expect(page.getByText('Cooking Style')).toBeVisible();
     await page.getByText('Quick').click();
     await page.getByText('Healthy').click();
@@ -210,7 +210,7 @@ test.describe('Create Flow', () => {
     await expect(page.getByText('Your New Menu')).toBeVisible({ timeout: 150000 });
   });
 
-  test.describe('Step 2: Keywords', () => {
+  test.describe('Step 2: Preferences', () => {
     test.beforeEach(async ({ page }) => {
       await navigateToCreateFlow(page);
       await page.getByRole('button', { name: /begin/i }).click();

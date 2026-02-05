@@ -28,9 +28,8 @@ function App() {
   const setDraftPreferences = useDraftStore((state) => state.setPreferences);
   const draftPreferences = useDraftStore(
     useShallow((state) => ({
-      keywords: state.keywords,
-      preferredItems: state.preferredItems,
-      dislikedItems: state.dislikedItems,
+      specificPreferences: state.specificPreferences,
+      specificDisliked: state.specificDisliked,
       numPeople: state.numPeople,
       budget: state.budget,
       difficulty: state.difficulty,

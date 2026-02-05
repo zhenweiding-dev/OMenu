@@ -41,9 +41,8 @@ def build_schedule() -> CookSchedule:
 
 def build_request(schedule: CookSchedule) -> GenerateMenuBookRequest:
     return GenerateMenuBookRequest(
-        keywords=["healthy", "quick"],
-        preferredItems=["chicken", "rice"],
-        dislikedItems=["mushrooms"],
+        specificPreferences=["chicken", "rice"],
+        specificDisliked=["mushrooms"],
         numPeople=2,
         budget=120,
         difficulty="medium",

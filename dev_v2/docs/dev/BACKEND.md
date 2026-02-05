@@ -174,9 +174,8 @@ class CookSchedule(BaseModel):
 # ===== User Preferences (Request) =====
 
 class UserPreferences(BaseModel):
-    keywords: List[str] = []
-    preferredItems: List[str] = []
-    dislikedItems: List[str] = []
+    specificPreferences: List[str] = []
+    specificDisliked: List[str] = []
     numPeople: int = Field(ge=1, le=10, default=2)
     budget: int = Field(ge=50, le=500, default=100)  # USD, step $10
     difficulty: Difficulty = Difficulty.medium
@@ -251,9 +250,8 @@ class ShoppingList(BaseModel):
 
 class GenerateMenuBookRequest(BaseModel):
     """Request body for POST /api/menu-books/generate"""
-    keywords: List[str] = []
-    preferredItems: List[str] = []
-    dislikedItems: List[str] = []
+    specificPreferences: List[str] = []
+    specificDisliked: List[str] = []
     numPeople: int = Field(ge=1, le=10, default=2)
     budget: int = Field(ge=50, le=500, default=100)  # USD, step $10
     difficulty: Difficulty = Difficulty.medium
@@ -383,9 +381,8 @@ def menu_book_prompt(preferences: UserPreferences) -> str:
     return f"""You are a professional menu bookner. Create a weekly menu book based on these preferences:
 
 **Preferences:**
-- Keywords/Style: {', '.join(preferences.keywords) if preferences.keywords else 'Any'}
-- Must include: {', '.join(preferences.preferredItems) if preferences.preferredItems else 'None specified'}
-- Avoid: {', '.join(preferences.dislikedItems) if preferences.dislikedItems else 'None'}
+- Must include: {', '.join(preferences.specificPreferences) if preferences.specificPreferences else 'None specified'}
+- Avoid: {', '.join(preferences.specificDisliked) if preferences.specificDisliked else 'None'}
 - Number of people: {preferences.numPeople}
 - Weekly budget: ${preferences.budget} USD
 - Difficulty level: {preferences.difficulty.value}
@@ -539,9 +536,8 @@ async def generate_menu_book(request: GenerateMenuBookRequest):
     try:
         # Build preferences object
         preferences = UserPreferences(
-            keywords=request.keywords,
-            preferredItems=request.preferredItems,
-            dislikedItems=request.dislikedItems,
+            specificPreferences=request.specificPreferences,
+            specificDisliked=request.specificDisliked,
             numPeople=request.numPeople,
             budget=request.budget,
             difficulty=request.difficulty,
@@ -912,9 +908,8 @@ curl http://localhost:8000/api/health
 curl -X POST http://localhost:8000/api/menu-books/generate \
   -H "Content-Type: application/json" \
   -d '{
-    "keywords": ["healthy", "quick"],
-    "preferredItems": ["chicken", "rice"],
-    "dislikedItems": ["mushrooms"],
+    "specificPreferences": ["chicken", "rice"],
+    "specificDisliked": ["mushrooms"],
     "numPeople": 2,
     "budget": 100,
     "difficulty": "medium",

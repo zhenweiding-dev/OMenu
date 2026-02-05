@@ -7,9 +7,8 @@ const createTestMenuBook = (): MenuBook => ({
   createdAt: "2026-01-29T08:00:00.000Z",
   status: "ready",
   preferences: {
-    keywords: ["Healthy"],
-    preferredItems: ["Avocado"],
-    dislikedItems: ["Mushrooms"],
+    specificPreferences: ["Avocado"],
+    specificDisliked: ["Mushrooms"],
     numPeople: 2,
     budget: 120,
     difficulty: "easy",

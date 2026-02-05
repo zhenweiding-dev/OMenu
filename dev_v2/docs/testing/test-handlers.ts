@@ -32,9 +32,8 @@ export const successHandlers = [
       numPeople: body.numPeople || 2,
       budget: body.budget || 100,
       difficulty: body.difficulty || 'medium',
-      keywords: body.keywords || [],
-      preferredItems: body.preferredItems || [],
-      dislikedItems: body.dislikedItems || [],
+      specificPreferences: body.specificPreferences || [],
+      specificDisliked: body.specificDisliked || [],
       createdAt: new Date().toISOString(),
     };
     

@@ -42,16 +42,12 @@ export function StepWelcome({
 
       {/* Title */}
       <h1 className="mb-4 text-[24px] font-semibold leading-snug text-text-primary">
-        Let&apos;s design a menu
-        <br />
-        for next week!
+        Let&apos;s design a menu together!
       </h1>
 
       {/* Subtitle */}
       <p className="mb-12 text-[15px] leading-relaxed text-text-secondary">
-        Tell us your preferences and we&apos;ll
-        <br />
-        create a personalized menu for you.
+        Tell us your preferences and let magic happen.
       </p>
 
       {/* Begin button */}
@@ -60,7 +56,7 @@ export function StepWelcome({
         size="lg"
         className="px-16"
       >
-        Begin
+        Let's go!
       </Button>
     </div>
   );

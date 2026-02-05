@@ -62,7 +62,14 @@ class GeminiClient:
             self._client = genai.Client(api_key=settings.gemini_api_key)
         return self._client
 
-    async def generate(self, prompt: str, timeout_seconds: float | None = None) -> str:
+    async def generate(
+        self,
+        prompt: str,
+        timeout_seconds: float | None = None,
+        *,
+        response_mime_type: str | None = None,
+        response_schema: Any | None = None,
+    ) -> str:
         """Generate content using Gemini API.
 
         Args:
@@ -83,6 +90,15 @@ class GeminiClient:
             raise GeminiError("GEMINI_API_KEY is not configured.")
 
         timeout = timeout_seconds or self._timeout_seconds
+        base_config: dict[str, Any] = {
+            "temperature": 0.7,
+            "max_output_tokens": 65536,
+        }
+        base_config.update(self._thinking_config())
+        if response_mime_type:
+            base_config["response_mime_type"] = response_mime_type
+        if response_schema:
+            base_config["response_schema"] = response_schema
 
         try:
             with fail_after(timeout):
@@ -92,10 +108,7 @@ class GeminiClient:
                             self.client.models.generate_content,
                             model=self._model_name,
                             contents=prompt,
-                            config={
-                                "temperature": 0.7,
-                                "max_output_tokens": 8192,
-                            },
+                            config=base_config,
                         )
                     )
                 else:
@@ -105,7 +118,7 @@ class GeminiClient:
                             prompt,
                             generation_config={
                                 "temperature": 0.7,
-                                "max_output_tokens": 8192,
+                                "max_output_tokens": 65536,
                             },
                         )
                     )
@@ -134,6 +147,32 @@ class GeminiClient:
             raise GeminiError(exc.message or str(exc)) from exc
         except Exception as exc:  # pragma: no cover
             raise GeminiError(f"Gemini API error: {exc}") from exc
+
+    async def generate_json(
+        self,
+        prompt: str,
+        timeout_seconds: float | None = None,
+        *,
+        response_schema: Any | None = None,
+    ) -> str:
+        """Generate JSON content with explicit JSON response mode."""
+        return await self.generate(
+            prompt,
+            timeout_seconds=timeout_seconds,
+            response_mime_type="application/json",
+            response_schema=response_schema,
+        )
+
+    def _thinking_config(self) -> dict[str, Any]:
+        """Reduce model thinking budget to avoid MAX_TOKENS truncation."""
+        if not _USING_NEW_SDK:
+            return {}
+        model = (self._model_name or "").lower()
+        if model.startswith("gemini-3"):
+            return {"thinking_config": {"thinking_level": "MINIMAL"}}
+        if "2.5" in model:
+            return {"thinking_config": {"thinking_budget": 0}}
+        return {}
 
     def _extract_text(self, response: Any) -> str:
         """Extract text content from Gemini response."""

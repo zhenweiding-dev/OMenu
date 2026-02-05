@@ -58,8 +58,8 @@ frontend/
 │   │   │
 │   │   ├── create/               # Create flow components
 │   │   │   ├── StepWelcome.tsx
-│   │   │   ├── StepKeywords.tsx
-│   │   │   ├── StepMustHave.tsx
+│   │   │   ├── StepPreferred.tsx
+│   │   │   ├── StepPreferred.tsx
 │   │   │   ├── StepDisliked.tsx
 │   │   │   ├── StepPeopleBudget.tsx
 │   │   │   ├── StepSchedule.tsx
@@ -340,9 +340,8 @@ type MealType = 'breakfast' | 'lunch' | 'dinner';
 interface DraftState {
   // State
   currentStep: number;
-  keywords: string[];
-  preferredItems: string[];
-  dislikedItems: string[];
+  specificPreferences: string[];
+  specificDisliked: string[];
   numPeople: number;
   budget: number;
   difficulty: Difficulty;
@@ -352,20 +351,19 @@ interface DraftState {
   // Step navigation
   setStep: (step: number) => void;
   
-  // Keywords actions
-  setKeywords: (keywords: string[]) => void;
-  addKeyword: (keyword: string) => void;
-  removeKeyword: (keyword: string) => void;
+  // Preferences actions
+  addSpecificPreference: (keyword: string) => void;
+  removeSpecificPreference: (keyword: string) => void;
   
   // Must-have items actions
-  setMustHaveItems: (items: string[]) => void;
-  addMustHaveItem: (item: string) => void;
-  removeMustHaveItem: (item: string) => void;
+  setSpecificPreferences: (items: string[]) => void;
+  addSpecificPreference: (item: string) => void;
+  removeSpecificPreference: (item: string) => void;
   
   // Disliked items actions
-  setDislikedItems: (items: string[]) => void;
-  addDislikedItem: (item: string) => void;
-  removeDislikedItem: (item: string) => void;
+  setSpecificDisliked: (items: string[]) => void;
+  addSpecificDisliked: (item: string) => void;
+  removeSpecificDisliked: (item: string) => void;
   
   // Settings actions
   setNumPeople: (n: number) => void;
@@ -397,9 +395,8 @@ const initialCookSchedule: CookSchedule = {
 
 const initialState = {
   currentStep: 1,
-  keywords: [] as string[],
-  preferredItems: [] as string[],
-  dislikedItems: [] as string[],
+  specificPreferences: [] as string[],
+  specificDisliked: [] as string[],
   numPeople: 2,
   budget: 100,
   difficulty: 'medium' as Difficulty,
@@ -418,43 +415,37 @@ export const useDraftStore = create<DraftState>()(
         lastUpdated: new Date().toISOString() 
       }),
       
-      // Keywords
-      setKeywords: (keywords) => set({ keywords, lastUpdated: new Date().toISOString() }),
-      addKeyword: (keyword) => {
-        const { keywords } = get();
-        if (!keywords.includes(keyword)) {
-          set({ keywords: [...keywords, keyword], lastUpdated: new Date().toISOString() });
+      // Preferences
+      addSpecificPreference: (keyword) => {
         }
       },
-      removeKeyword: (keyword) => {
-        const { keywords } = get();
-        set({ keywords: keywords.filter(k => k !== keyword), lastUpdated: new Date().toISOString() });
+      removeSpecificPreference: (keyword) => {
       },
       
       // Must-have items
-      setMustHaveItems: (items) => set({ preferredItems: items, lastUpdated: new Date().toISOString() }),
-      addMustHaveItem: (item) => {
-        const { preferredItems } = get();
-        if (!preferredItems.includes(item)) {
-          set({ preferredItems: [...preferredItems, item], lastUpdated: new Date().toISOString() });
+      setSpecificPreferences: (items) => set({ specificPreferences: items, lastUpdated: new Date().toISOString() }),
+      addSpecificPreference: (item) => {
+        const { specificPreferences } = get();
+        if (!specificPreferences.includes(item)) {
+          set({ specificPreferences: [...specificPreferences, item], lastUpdated: new Date().toISOString() });
         }
       },
-      removeMustHaveItem: (item) => {
-        const { preferredItems } = get();
-        set({ preferredItems: preferredItems.filter(i => i !== item), lastUpdated: new Date().toISOString() });
+      removeSpecificPreference: (item) => {
+        const { specificPreferences } = get();
+        set({ specificPreferences: specificPreferences.filter(i => i !== item), lastUpdated: new Date().toISOString() });
       },
       
       // Disliked items
-      setDislikedItems: (items) => set({ dislikedItems: items, lastUpdated: new Date().toISOString() }),
-      addDislikedItem: (item) => {
-        const { dislikedItems } = get();
-        if (!dislikedItems.includes(item)) {
-          set({ dislikedItems: [...dislikedItems, item], lastUpdated: new Date().toISOString() });
+      setSpecificDisliked: (items) => set({ specificDisliked: items, lastUpdated: new Date().toISOString() }),
+      addSpecificDisliked: (item) => {
+        const { specificDisliked } = get();
+        if (!specificDisliked.includes(item)) {
+          set({ specificDisliked: [...specificDisliked, item], lastUpdated: new Date().toISOString() });
         }
       },
-      removeDislikedItem: (item) => {
-        const { dislikedItems } = get();
-        set({ dislikedItems: dislikedItems.filter(i => i !== item), lastUpdated: new Date().toISOString() });
+      removeSpecificDisliked: (item) => {
+        const { specificDisliked } = get();
+        set({ specificDisliked: specificDisliked.filter(i => i !== item), lastUpdated: new Date().toISOString() });
       },
       
       // Settings with validation
@@ -623,9 +614,8 @@ export interface CookSchedule {
 // ===== User Preferences =====
 
 export interface UserPreferences {
-  keywords: string[];
-  preferredItems: string[];
-  dislikedItems: string[];
+  specificPreferences: string[];
+  specificDisliked: string[];
   numPeople: number;
   budget: number;
   difficulty: Difficulty;
@@ -756,9 +746,8 @@ export const mockMenuBook: MenuBook = {
   createdAt: new Date().toISOString(),
   status: 'ready',
   preferences: {
-    keywords: ['Healthy', 'Quick'],
-    preferredItems: ['Eggs', 'Chicken'],
-    dislikedItems: ['Peanuts'],
+    specificPreferences: ['Eggs', 'Chicken'],
+    specificDisliked: ['Peanuts'],
     numPeople: 2,
     budget: 100,
     difficulty: 'medium',

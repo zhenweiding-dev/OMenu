@@ -7,9 +7,8 @@ type MealType = (typeof MEAL_TYPES)[number];
 
 interface DraftState {
   currentStep: number;
-  keywords: string[];
-  preferredItems: string[];
-  dislikedItems: string[];
+  specificPreferences: string[];
+  specificDisliked: string[];
   numPeople: number;
   budget: number;
   difficulty: Difficulty;
@@ -19,17 +18,13 @@ interface DraftState {
   generationStartTime: number | null;
 
   setStep: (step: number) => void;
-  setKeywords: (keywords: string[]) => void;
-  addKeyword: (keyword: string) => void;
-  removeKeyword: (keyword: string) => void;
+  setSpecificPreferences: (items: string[]) => void;
+  addSpecificPreference: (item: string) => void;
+  removeSpecificPreference: (item: string) => void;
 
-  setPreferredItems: (items: string[]) => void;
-  addPreferredItem: (item: string) => void;
-  removePreferredItem: (item: string) => void;
-
-  setDislikedItems: (items: string[]) => void;
-  addDislikedItem: (item: string) => void;
-  removeDislikedItem: (item: string) => void;
+  setSpecificDisliked: (items: string[]) => void;
+  addSpecificDisliked: (item: string) => void;
+  removeSpecificDisliked: (item: string) => void;
 
   setNumPeople: (count: number) => void;
   setBudget: (budget: number) => void;
@@ -58,9 +53,8 @@ const initialSchedule = WEEK_DAYS.reduce<CookSchedule>((acc, day) => {
 
 const initialState = {
   currentStep: 1,
-  keywords: [],
-  preferredItems: [],
-  dislikedItems: [],
+  specificPreferences: [],
+  specificDisliked: [],
   numPeople: DEFAULT_NUM_PEOPLE,
   budget: DEFAULT_BUDGET,
   difficulty: "medium" as Difficulty,
@@ -75,39 +69,27 @@ export const useDraftStore = create<DraftState>()((set, get) => ({
 
   setStep: (step) => set({ currentStep: Math.max(1, step) }),
 
-  setKeywords: (keywords) => set({ keywords, lastUpdated: new Date().toISOString() }),
-  addKeyword: (keyword) =>
+  setSpecificPreferences: (items) => set({ specificPreferences: items, lastUpdated: new Date().toISOString() }),
+  addSpecificPreference: (item) =>
     set((state) => ({
-      keywords: [...new Set([...state.keywords, keyword.trim()])].filter(Boolean),
+      specificPreferences: [...new Set([...state.specificPreferences, item.trim()])].filter(Boolean),
       lastUpdated: new Date().toISOString(),
     })),
-  removeKeyword: (keyword) =>
+  removeSpecificPreference: (item) =>
     set((state) => ({
-      keywords: state.keywords.filter((item) => item !== keyword),
-      lastUpdated: new Date().toISOString(),
-    })),
-
-  setPreferredItems: (items) => set({ preferredItems: items, lastUpdated: new Date().toISOString() }),
-  addPreferredItem: (item) =>
-    set((state) => ({
-      preferredItems: [...new Set([...state.preferredItems, item.trim()])].filter(Boolean),
-      lastUpdated: new Date().toISOString(),
-    })),
-  removePreferredItem: (item) =>
-    set((state) => ({
-      preferredItems: state.preferredItems.filter((value) => value !== item),
+      specificPreferences: state.specificPreferences.filter((value) => value !== item),
       lastUpdated: new Date().toISOString(),
     })),
 
-  setDislikedItems: (items) => set({ dislikedItems: items, lastUpdated: new Date().toISOString() }),
-  addDislikedItem: (item) =>
+  setSpecificDisliked: (items) => set({ specificDisliked: items, lastUpdated: new Date().toISOString() }),
+  addSpecificDisliked: (item) =>
     set((state) => ({
-      dislikedItems: [...new Set([...state.dislikedItems, item.trim()])].filter(Boolean),
+      specificDisliked: [...new Set([...state.specificDisliked, item.trim()])].filter(Boolean),
       lastUpdated: new Date().toISOString(),
     })),
-  removeDislikedItem: (item) =>
+  removeSpecificDisliked: (item) =>
     set((state) => ({
-      dislikedItems: state.dislikedItems.filter((value) => value !== item),
+      specificDisliked: state.specificDisliked.filter((value) => value !== item),
       lastUpdated: new Date().toISOString(),
     })),
 
@@ -144,9 +126,8 @@ export const useDraftStore = create<DraftState>()((set, get) => ({
 
   setPreferences: (preferences) =>
     set({
-      keywords: preferences.keywords,
-      preferredItems: preferences.preferredItems,
-      dislikedItems: preferences.dislikedItems,
+      specificPreferences: preferences.specificPreferences,
+      specificDisliked: preferences.specificDisliked,
       numPeople: preferences.numPeople,
       budget: preferences.budget,
       difficulty: preferences.difficulty,
@@ -174,9 +155,8 @@ export const useDraftStore = create<DraftState>()((set, get) => ({
       pendingResult: null,
       generationStartTime: null,
       lastUpdated: new Date().toISOString(),
-      keywords: state.keywords,
-      preferredItems: state.preferredItems,
-      dislikedItems: state.dislikedItems,
+      specificPreferences: state.specificPreferences,
+      specificDisliked: state.specificDisliked,
       numPeople: state.numPeople,
       budget: state.budget,
       difficulty: state.difficulty,

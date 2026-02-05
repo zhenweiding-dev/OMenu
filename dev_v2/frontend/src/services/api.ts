@@ -1,7 +1,7 @@
 import type { MenuBook, ShoppingList, UserPreferences, UserState, WeekMenus } from "@/types";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
-const GENERATION_TIMEOUT = 120_000;
+const GENERATION_TIMEOUT = 180_000;
 
 function toErrorMessage(payload: unknown, fallback: string) {
   if (!payload || typeof payload !== "object") return fallback;

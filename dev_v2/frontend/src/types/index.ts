@@ -52,9 +52,8 @@ export interface MealSelection {
 export type CookSchedule = Record<keyof WeekMenus, MealSelection>;
 
 export interface UserPreferences {
-  keywords: string[];
-  preferredItems: string[];
-  dislikedItems: string[];
+  specificPreferences: string[];
+  specificDisliked: string[];
   numPeople: number;
   budget: number;
   difficulty: Difficulty;

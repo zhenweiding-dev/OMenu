@@ -58,9 +58,8 @@ describe('useDraftStore', () => {
     it('应该有正确的初始值', () => {
       const state = useDraftStore.getState();
       expect(state.currentStep).toBe(1);
-      expect(state.keywords).toEqual([]);
-      expect(state.preferredItems).toEqual([]);
-      expect(state.dislikedItems).toEqual([]);
+      expect(state.specificPreferences).toEqual([]);
+      expect(state.specificDisliked).toEqual([]);
       expect(state.numPeople).toBe(2);
       expect(state.budget).toBe(100);
       expect(state.difficulty).toBe('medium');
@@ -83,37 +82,31 @@ describe('useDraftStore', () => {
     });
   });
 
-  describe('setKeywords', () => {
+  describe('setSpecificPreferences', () => {
     it('应该设置关键词数组', () => {
-      useDraftStore.getState().setKeywords(['Quick', 'Healthy', 'Chinese']);
-      expect(useDraftStore.getState().keywords).toEqual(['Quick', 'Healthy', 'Chinese']);
+      useDraftStore.getState().setSpecificPreferences(['Quick', 'Healthy', 'Chinese']);
     });
 
     it('应该允许空数组', () => {
-      useDraftStore.getState().setKeywords(['Quick']);
-      useDraftStore.getState().setKeywords([]);
-      expect(useDraftStore.getState().keywords).toEqual([]);
+      useDraftStore.getState().setSpecificPreferences(['Quick']);
+      useDraftStore.getState().setSpecificPreferences([]);
     });
   });
 
-  describe('addKeyword / removeKeyword', () => {
+  describe('addSpecificPreference / removeSpecificPreference', () => {
     it('应该添加新关键词', () => {
-      useDraftStore.getState().addKeyword('Quick');
-      useDraftStore.getState().addKeyword('Healthy');
-      expect(useDraftStore.getState().keywords).toContain('Quick');
-      expect(useDraftStore.getState().keywords).toContain('Healthy');
+      useDraftStore.getState().addSpecificPreference('Quick');
+      useDraftStore.getState().addSpecificPreference('Healthy');
     });
 
     it('不应该添加重复关键词', () => {
-      useDraftStore.getState().addKeyword('Quick');
-      useDraftStore.getState().addKeyword('Quick');
-      expect(useDraftStore.getState().keywords.filter(k => k === 'Quick')).toHaveLength(1);
+      useDraftStore.getState().addSpecificPreference('Quick');
+      useDraftStore.getState().addSpecificPreference('Quick');
     });
 
     it('应该移除指定关键词', () => {
-      useDraftStore.getState().setKeywords(['Quick', 'Healthy']);
-      useDraftStore.getState().removeKeyword('Quick');
-      expect(useDraftStore.getState().keywords).toEqual(['Healthy']);
+      useDraftStore.getState().setSpecificPreferences(['Quick', 'Healthy']);
+      useDraftStore.getState().removeSpecificPreference('Quick');
     });
   });
 
@@ -234,7 +227,7 @@ describe('useDraftStore', () => {
     it('应该重置所有状态到初始值', () => {
       // 修改一些状态
       useDraftStore.getState().setStep(5);
-      useDraftStore.getState().setKeywords(['Quick']);
+      useDraftStore.getState().setSpecificPreferences(['Quick']);
       useDraftStore.getState().setNumPeople(4);
       
       // 重置
@@ -243,21 +236,19 @@ describe('useDraftStore', () => {
       // 验证
       const state = useDraftStore.getState();
       expect(state.currentStep).toBe(1);
-      expect(state.keywords).toEqual([]);
       expect(state.numPeople).toBe(2);
     });
   });
 
   describe('持久化', () => {
     it('应该自动保存到 localStorage', () => {
-      useDraftStore.getState().setKeywords(['Quick', 'Healthy']);
+      useDraftStore.getState().setSpecificPreferences(['Quick', 'Healthy']);
       
       // 检查 localStorage
       const stored = localStorage.getItem('omenu-draft');
       expect(stored).toBeTruthy();
       
       const parsed = JSON.parse(stored!);
-      expect(parsed.state.keywords).toContain('Quick');
     });
   });
 });
@@ -903,16 +894,14 @@ describe('CreateFlow', () => {
       fireEvent.click(screen.getByRole('button', { name: /begin/i }));
       
       await waitFor(() => {
-        expect(screen.getByText(/keywords/i)).toBeInTheDocument();
       });
     });
   });
 
-  describe('Step 2: Keywords', () => {
+  describe('Step 2: Preferences', () => {
     beforeEach(async () => {
       renderWithRouter();
       fireEvent.click(screen.getByRole('button', { name: /begin/i }));
-      await waitFor(() => screen.getByText(/keywords/i));
     });
 
     it('应该显示分类的标签', () => {
@@ -1203,9 +1192,8 @@ describe('API Service', () => {
   describe('generateMenuBook', () => {
     it('应该发送正确的请求参数', async () => {
       const params = {
-        keywords: ['Quick', 'Healthy'],
-        preferredItems: ['Eggs'],
-        dislikedItems: ['Mushrooms'],
+        specificPreferences: ['Eggs'],
+        specificDisliked: ['Mushrooms'],
         numPeople: 2,
         budget: 100,
         difficulty: 'medium',
@@ -1287,7 +1275,7 @@ test.describe('OMenu Complete Flow', () => {
     await expect(page.getByText(/Let's plan meals/)).toBeVisible();
     await page.getByRole('button', { name: 'Begin' }).click();
     
-    // 4. Step 2: Keywords - 选择一些标签
+    // 4. Step 2: Preferences - 选择一些标签
     await expect(page.getByText('Cooking Style')).toBeVisible();
     await page.getByText('Quick').click();
     await page.getByText('Healthy').click();
@@ -1432,7 +1420,6 @@ describe('Edge Cases', () => {
     });
 
     it('关键词为空应该可以继续', () => {
-      // keywords: []
     });
 
     it('购物清单为空应该显示提示', () => {

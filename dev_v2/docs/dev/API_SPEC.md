@@ -59,9 +59,8 @@ This produces more creative and reliable results.
 
 ```json
 {
-  "keywords": ["Quick", "Healthy", "Chinese"],
-  "preferredItems": ["Eggs", "Chicken", "Rice"],
-  "dislikedItems": ["Peanuts", "Cilantro"],
+  "specificPreferences": ["Eggs", "Chicken", "Rice"],
+  "specificDisliked": ["Peanuts", "Cilantro"],
   "numPeople": 2,
   "budget": 100,
   "difficulty": "medium",
@@ -81,9 +80,8 @@ This produces more creative and reliable results.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `keywords` | string[] | No | Cooking style, diet, cuisine preferences |
-| `preferredItems` | string[] | No | Required ingredients or recipes |
-| `dislikedItems` | string[] | No | Ingredients to exclude |
+| `specificPreferences` | string[] | No | Required ingredients or recipes |
+| `specificDisliked` | string[] | No | Ingredients to exclude |
 | `numPeople` | integer | Yes | Number of people (1-10) |
 | `budget` | integer | Yes | Weekly budget in USD |
 | `difficulty` | string | Yes | "easy", "medium", or "hard" |

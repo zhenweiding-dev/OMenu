@@ -173,9 +173,8 @@ class CookSchedule(BaseModel):
 **TypeScript**
 ```typescript
 interface UserPreferences {
-  keywords: string[];                  // Quick, Healthy, Chinese, etc.
-  preferredItems: string[];             // Required ingredients/recipes
-  dislikedItems: string[];             // Excluded ingredients
+  specificPreferences: string[];             // Required ingredients/recipes
+  specificDisliked: string[];             // Excluded ingredients
   numPeople: number;
   budget: number;                      // USD
   difficulty: Difficulty;
@@ -186,9 +185,8 @@ interface UserPreferences {
 **Pydantic**
 ```python
 class UserPreferences(BaseModel):
-    keywords: List[str] = []
-    preferredItems: List[str] = []
-    dislikedItems: List[str] = []
+    specificPreferences: List[str] = []
+    specificDisliked: List[str] = []
     numPeople: int = Field(ge=1, le=10, default=2)
     budget: int = Field(ge=50, le=500, default=100)
     difficulty: Difficulty = Difficulty.medium
@@ -334,9 +332,8 @@ Stores intermediate state during plan creation for resume capability.
 ```typescript
 interface MenuBookDraft {
   currentStep: number;                 // Steps 1-9
-  keywords: string[];
-  preferredItems: string[];
-  dislikedItems: string[];
+  specificPreferences: string[];
+  specificDisliked: string[];
   numPeople: number;
   budget: number;
   difficulty: Difficulty;
@@ -376,9 +373,8 @@ All generated data is returned from the backend API. The MVP does not persist da
 
 ```json
 {
-  "keywords": ["chinese food", "healthy"],
-  "preferredItems": ["eggs", "tofu"],
-  "dislikedItems": ["peanuts"],
+  "specificPreferences": ["eggs", "tofu"],
+  "specificDisliked": ["peanuts"],
   "budget": 100,
   "numPeople": 2,
   "difficulty": "medium",

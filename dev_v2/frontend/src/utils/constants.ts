@@ -8,6 +8,31 @@ export const MENU_CLOSED_SURFACES = [
 
 export const MENU_CLOSED_EMOJI_FALLBACK = ["🍽️", "🥗", "🍲", "🥘", "🍱", "🥪"] as const;
 
+export const PREFERENCE_TAGS = [
+  { label: "Veggies with every meal", icon: "🥦" },
+  { label: "Ready in 15 mins", icon: "⏱️" },
+  { label: "Minimal cleanup", icon: "🧽" },
+  { label: "Budget-friendly", icon: "💰" },
+  { label: "Asian flavors", icon: "🍜" },
+  { label: "No-cook meal", icon: "🥗" },
+  { label: "Not too oily", icon: "🫒" },
+  { label: "Always include protein", icon: "💪" },
+  { label: "Fresh ingredients only", icon: "🥬" },
+  { label: "Extra fiber", icon: "🌾" },
+  { label: "Seasonal produce", icon: "🍂" },
+  { label: "No heavy sauces", icon: "🥫" },
+] as const;
+
+export const DISLIKE_TAGS = [
+  { label: "No cilantro", icon: "🌿" },
+  { label: "No spicy food", icon: "🌶️" },
+  { label: "I hate onions", icon: "🧅" },
+  { label: "Not too sweet", icon: "🍬" },
+  { label: "Dairy-free", icon: "🥛" },
+  { label: "No heavy frying", icon: "🛢️" },
+  { label: "Nut-free", icon: "🥜" },
+] as const;
+
 export const INGREDIENT_CATEGORIES = [
   "proteins",
   "vegetables",

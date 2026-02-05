@@ -18,9 +18,8 @@ def sample_preferences() -> dict:
         "sunday": {"breakfast": False, "lunch": False, "dinner": False},
     }
     return {
-        "keywords": ["quick"],
-        "preferredItems": ["chicken"],
-        "dislikedItems": ["mushrooms"],
+        "specificPreferences": ["chicken"],
+        "specificDisliked": ["mushrooms"],
         "numPeople": 2,
         "budget": 150,
         "difficulty": "easy",

@@ -4,7 +4,6 @@ import { useDraftStore } from "@/stores/useDraftStore";
 import { useMenuBook } from "@/hooks/useMenuBook";
 import { useAppStore } from "@/stores/useAppStore";
 import { StepWelcome } from "@/components/create/StepWelcome";
-import { StepKeywords } from "@/components/create/StepKeywords";
 import { StepPreferred } from "@/components/create/StepPreferred";
 import { StepDisliked } from "@/components/create/StepDisliked";
 import { StepPeopleBudget } from "@/components/create/StepPeopleBudget";
@@ -18,41 +17,40 @@ import type { MenuBook, ShoppingList } from "@/types";
 
 const steps = {
   welcome: 1,
-  keywords: 2,
-  preferred: 3,
-  disliked: 4,
-  peopleBudget: 5,
-  schedule: 6,
-  loading: 7,
-  overview: 8,
-  shoppingLoading: 9,
+  preferences: 2,
+  disliked: 3,
+  peopleBudget: 4,
+  schedule: 5,
+  loading: 6,
+  overview: 7,
+  shoppingLoading: 8,
 } as const;
 
 const STEP_LABELS: Record<number, string> = {
-  2: "Keywords",
-  3: "Preferred Items",
-  4: "Disliked Items",
-  5: "People & Budget",
-  6: "Schedule",
+  2: "Preferences",
+  3: "Dislikes",
+  4: "People & Budget",
+  5: "Schedule",
 };
 
 // Total steps for progress indicator (excluding welcome, loading, overview, shoppingLoading)
-const TOTAL_PROGRESS_STEPS = 6;
+const TOTAL_PROGRESS_STEPS = 4;
 
 interface ProgressDotsProps {
   currentStep: number;
 }
 
 function ProgressDots({ currentStep }: ProgressDotsProps) {
-  // Only show progress dots for steps 2-6
-  if (currentStep < 2 || currentStep > 6) return null;
+  // Only show progress dots for steps 2-5
+  if (currentStep < steps.preferences || currentStep > steps.schedule) return null;
+  const progressStep = currentStep - steps.preferences + 1;
   
   return (
     <div className="flex gap-2 px-5 pt-14 pb-5">
       {Array.from({ length: TOTAL_PROGRESS_STEPS }).map((_, index) => {
         const stepNum = index + 1;
-        const isActive = stepNum === currentStep;
-        const isCompleted = stepNum < currentStep;
+        const isActive = stepNum === progressStep;
+        const isCompleted = stepNum < progressStep;
         
         return (
           <div
@@ -205,9 +203,8 @@ export function CreatePlanPage() {
       try {
         const outcome = await withTimeout(
           createMenu({
-            keywords: draft.keywords,
-            preferredItems: draft.preferredItems,
-            dislikedItems: draft.dislikedItems,
+            specificPreferences: draft.specificPreferences,
+            specificDisliked: draft.specificDisliked,
             numPeople: draft.numPeople,
             budget: draft.budget,
             difficulty: draft.difficulty,
@@ -269,38 +266,27 @@ export function CreatePlanPage() {
 
   switch (draft.currentStep) {
     case steps.welcome:
-      content = <StepWelcome onNext={() => goToStep(steps.keywords)} />;
+      content = <StepWelcome onNext={() => goToStep(steps.preferences)} />;
       break;
-    case steps.keywords:
-      content = (
-        <StepKeywords
-          keywords={draft.keywords}
-          onAddKeyword={draft.addKeyword}
-          onRemoveKeyword={draft.removeKeyword}
-          onNext={() => goToStep(steps.preferred)}
-          onBack={() => goToStep(steps.welcome)}
-        />
-      );
-      break;
-    case steps.preferred:
+    case steps.preferences:
       content = (
         <StepPreferred
-          preferredItems={draft.preferredItems}
-          onAddItem={draft.addPreferredItem}
-          onRemoveItem={draft.removePreferredItem}
+          specificPreferences={draft.specificPreferences}
+          onAddItem={draft.addSpecificPreference}
+          onRemoveItem={draft.removeSpecificPreference}
           onNext={() => goToStep(steps.disliked)}
-          onBack={() => goToStep(steps.keywords)}
+          onBack={() => goToStep(steps.welcome)}
         />
       );
       break;
     case steps.disliked:
       content = (
         <StepDisliked
-          dislikedItems={draft.dislikedItems}
-          onAddItem={draft.addDislikedItem}
-          onRemoveItem={draft.removeDislikedItem}
+          specificDisliked={draft.specificDisliked}
+          onAddItem={draft.addSpecificDisliked}
+          onRemoveItem={draft.removeSpecificDisliked}
           onNext={() => goToStep(steps.peopleBudget)}
-          onBack={() => goToStep(steps.preferred)}
+          onBack={() => goToStep(steps.preferences)}
         />
       );
       break;
@@ -371,7 +357,7 @@ export function CreatePlanPage() {
       }
       break;
     default:
-      content = <StepWelcome onNext={() => goToStep(steps.keywords)} />;
+      content = <StepWelcome onNext={() => goToStep(steps.preferences)} />;
   }
 
   // Show resume prompt if user has a saved draft
@@ -393,14 +379,11 @@ export function CreatePlanPage() {
             <div className="space-y-2">
               <h3 className="text-[15px] font-semibold text-text-primary">Your saved progress:</h3>
               <ul className="space-y-1 text-[13px] text-text-secondary">
-                {draft.keywords.length > 0 && (
-                  <li>• {draft.keywords.length} keyword(s) selected</li>
+                {draft.specificPreferences.length > 0 && (
+                  <li>• {draft.specificPreferences.length} preference(s) added</li>
                 )}
-                {draft.preferredItems.length > 0 && (
-                  <li>• {draft.preferredItems.length} preferred item(s)</li>
-                )}
-                {draft.dislikedItems.length > 0 && (
-                  <li>• {draft.dislikedItems.length} disliked item(s)</li>
+                {draft.specificDisliked.length > 0 && (
+                  <li>• {draft.specificDisliked.length} disliked item(s)</li>
                 )}
                 <li>• {draft.numPeople} people, ${draft.budget} budget</li>
               </ul>

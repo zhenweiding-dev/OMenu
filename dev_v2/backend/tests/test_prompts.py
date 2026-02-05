@@ -38,9 +38,8 @@ def _sample_schedule() -> CookSchedule:
 
 def _sample_preferences() -> UserPreferences:
     return UserPreferences(
-        keywords=["healthy"],
-        preferredItems=["chicken"],
-        dislikedItems=["mushrooms"],
+        specificPreferences=["chicken"],
+        specificDisliked=["mushrooms"],
         numPeople=2,
         budget=120,
         difficulty=Difficulty.medium,
