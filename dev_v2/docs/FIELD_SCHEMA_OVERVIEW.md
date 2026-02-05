@@ -23,11 +23,11 @@
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
 | `id` | `string` | 菜单簿 ID |
-| `createdAt` | `string` | 生成时间（ISO） |
+| `createdAt` | `string` | 生成时间（ISO，可能带微秒） |
 | `status` | `"generating" \| "ready" \| "error"` | 生成状态 |
 | `preferences` | `UserPreferences` | 生成时使用的偏好 |
 | `menus` | `WeekMenus` | 一周 7 天菜单（按天） |
-| `shoppingList` | `ShoppingList` | 购物清单 |
+| `shoppingList` | `ShoppingList` | 购物清单（生成时先占位空列表） |
 
 ### 1.3 `Menu`（一天）
 
@@ -50,7 +50,7 @@
 | `difficulty` | `Difficulty` | 难度 |
 | `totalCalories` | `number` | 热量 |
 | `source` | `"ai" \| "manual"` | 来源（AI 或手动） |
-| `notes` | `string \| undefined` | 备注 |
+| `notes` | `string \| null \| undefined` | 备注（可能为空） |
 
 ### 1.5 `ShoppingList`
 
@@ -89,7 +89,7 @@
 
 ## 2. 后端模型（Pydantic）
 
-> 后端字段与前端完全一致（无历史兼容字段）。
+> 后端字段与前端一致（无历史兼容字段）。
 
 ### 2.1 `UserState`
 
@@ -106,14 +106,13 @@
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
 | `id` | `str` | 菜单簿 ID |
-| `createdAt` | `datetime` | 生成时间 |
+| `createdAt` | `datetime` | 生成时间（序列化为 ISO 字符串） |
 | `status` | `MenuBookStatus` | 状态 |
 | `preferences` | `UserPreferences` | 生成偏好 |
 | `menus` | `WeekMenus` | 一周菜单 |
 | `shoppingList` | `ShoppingList` | 清单 |
 
 ### 2.3 `Menu` / `Dish`
-
 与前端一致：
 - `Menu` 按早餐/午餐/晚餐分组
 - `Dish` 包含 `source: "ai" | "manual"`
@@ -131,14 +130,12 @@
 | 偏好 | `preferences` | `preferences` | 语义一致 |
 
 ## 4. 规则与约束（重要）
-
 1. **命名统一**：
    - 一周：`MenuBook`
    - 一天：`Menu`
    - 一餐：`meal`（字段 `breakfast/lunch/dinner`）
    - 一道菜：`Dish`
-2. **来源字段**：
-   - 每道菜必须携带 `source`，用于区分 `ai` / `manual`。
+2. **来源字段**：每道菜必须携带 `source`，用于区分 `ai` / `manual`。
 3. **购物清单生成**：
    - **仅在创建和修改（AI 交互）时触发**。
    - 手动增删改菜不触发清单重算。

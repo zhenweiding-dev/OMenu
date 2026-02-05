@@ -5,9 +5,8 @@
 > 基于 `dev_v2/frontend` 当前实现整理，按“前端交互 ↔ 数据流动”对照梳理。
 
 ## 1. 核心数据实体（前端类型）
-
 - **UserPreferences**：关键词、偏好项、讨厌项、人数、预算、难度、排期。
-- **MenuBook**：一周菜单簿（含 `menus + shoppingList + preferences`）。
+- **MenuBook**：一周菜单簿（`menus + shoppingList + preferences`）。
 - **Menu**：一天菜单（Breakfast/Lunch/Dinner）。
 - **Dish**：一道菜，带 `source: "ai" | "manual"`。
 - **ShoppingList**：购物清单，关联 `menuBookId`。
@@ -16,34 +15,28 @@
 
 ## 2. 状态层与持久化
 
-### 2.1 useAppStore（全局业务状态）
+### 2.1 useAppStore（业务状态）
 - **持久化**：localStorage `omenu_app_state`。
 - **关键字段**：`menuBooks`、`currentWeekId`、`currentDayIndex`、`isMenuOpen`、`error`、`isGenerating`。
-- **职责**：
-  - MenuBook 的增删改。
-  - 当前周/当前日。
-  - Dish 增删改（手动或 AI）。
-  - 购物清单条目增删改。
+- **职责**：MenuBook 的增删改、Dish 的增删改、ShoppingList 条目增删改。
 
 文件：`dev_v2/frontend/src/stores/useAppStore.ts`
 
 ### 2.2 useDraftStore（创建流程草稿）
 - **持久化**：localStorage `omenu-draft`。
 - **关键字段**：`currentStep`、create 相关表单、`pendingResult`（MenuBook）。
-- **职责**：
-  - create 流程断点续走。
-  - 生成结果临时保存（刷新不丢）。
+- **职责**：create 流程断点续走、生成结果临时保存（刷新不丢）。
 
 文件：`dev_v2/frontend/src/stores/useDraftStore.ts`
 
 ### 2.3 useShoppingStore（购物页 UI 状态）
-- **不持久化**：过滤、折叠、搜索、编辑态。
+- **不持久化**：筛选、折叠、搜索、编辑态。
 
 文件：`dev_v2/frontend/src/stores/useShoppingStore.ts`
 
 ## 3. 后端与 Mock
 
-- **Mock 模式**：`VITE_USE_MOCK=true`，本地样本生成菜单/清单。
+- **Mock 模式**：`VITE_USE_MOCK=true`（本地样本生成菜单/清单）。
 - **后端模式**：`VITE_API_BASE_URL`。
 
 API：
@@ -73,7 +66,6 @@ API：
 ## 5. 页面交互 ↔ 数据流映射
 
 ### 5.1 Menu 页（/）
-
 **交互：选择周菜单（MenuBook Picker）**
 - 行为：点击 MenuBook → `setCurrentWeekId` + `setCurrentDayIndex(0)`。
 - 数据：仅更新 `useAppStore`，不触发 API。
@@ -105,9 +97,7 @@ API：
 
 **交互：Generate Menu**
 - 调用：`useMenuBook.createMenu(preferences)` → `POST /menu-books/generate`。
-- 结果：
-  - 写入 `pendingResult`（MenuBook + 空 shoppingList）。
-  - 进入 Review。
+- 结果：写入 `pendingResult`（MenuBook + 空 shoppingList），进入 Review。
 
 **交互：Review 页面查看/修改**
 - UI 与 Menu 页一致（WeekDateBar + DailyMenuCard）。
@@ -115,25 +105,24 @@ API：
 
 **交互：Modify（SEND TO AI）**
 - 调用：`updateMenu(menuBook, modification)` → `POST /menu-books/:id/modify`。
-- 返回：新 `menus`（只含 AI 菜）。
+- 返回：新 `menus`（AI 菜）。
 - 行为：
   1. 合并 manual dish（保留用户手动菜）。
-  2. **自动触发 shopping list 生成**（仅使用 `source="ai"` dishes）。
+  2. 触发 shopping list 生成（仅使用 `source="ai"` dishes）。
   3. 更新 `pendingResult`。
 
 **交互：Generate Shopping List（确认保存）**
 - 行为：
   1. 将 `pendingResult` 写入 `menuBooks`。
-  2. 调用 `generateShoppingList` 生成清单（只用 AI 菜）。
-  3. 成功后跳转 `/shopping`。
+  2. 进入 ShoppingList Loading（无论是否已有 list，都走 loading）。
+  3. Loading 调用 `generateShoppingList`（仅 AI dishes）。
+  4. 成功后跳转 `/shopping`。
 
 文件：`dev_v2/frontend/src/pages/CreatePlanPage.tsx`
 
 ### 5.3 Shopping 页（/shopping）
-
 **交互：清单为空时**
-- 行为：不直接生成清单。
-- 引导用户回到 Menu / Create 流程生成（避免手动修改触发 AI）。
+- 行为：不自动生成清单，引导回 Create 生成。
 
 **交互：点击条目完成/取消**
 - 行为：`updateShoppingItem` 切换 `purchased`。
@@ -150,23 +139,20 @@ API：
 文件：`dev_v2/frontend/src/pages/ShoppingPage.tsx`
 
 ### 5.4 Profile 页（/me）
-
 **交互：编辑关键词/偏好**
-- 行为：仅更新 `useDraftStore`（Profile 偏好是独立版本）。  
-- **不回写** `menuBooks`，历史 MenuBook 保持原样。  
-- 新生成菜单时读取该 Profile 偏好作为默认值。  
+- 行为：更新 `useDraftStore`（Profile 偏好是独立版本）。
+- **不回写** `menuBooks`，历史 MenuBook 保持原样。
+- 新生成菜单时读取该 Profile 偏好作为默认值。
 
 文件：`dev_v2/frontend/src/pages/MyPage.tsx`
 
 ## 6. 错误与加载
-
 - 全局生成状态：`useAppStore.isGenerating`。
 - 错误提示：`useAppStore.error`。
-- API 超时：`ApiTimeoutError`（120s）。
+- API 超时：`ApiTimeoutError`（默认 120s）。
 
-## 7. 当前约束与约定
-
-1. **MenuBook** 只在用户确认（Generate Shopping List）时保存。
+## 7. 当前约束与约定（重点）
+1. **MenuBook** 仅在用户确认（Generate Shopping List）时保存。
 2. **手动 Dish 不触发 AI**，也不自动影响 Shopping List。
-3. **Shopping List 仅在 Create / Modify 时生成**，且只基于 `source="ai"` dishes。
+3. **Shopping List 仅在 Create / Modify 时生成**，且仅基于 `source === "ai"` dishes。
 4. **pendingResult** 仅用于 create 流程恢复，不是通用草稿系统。
