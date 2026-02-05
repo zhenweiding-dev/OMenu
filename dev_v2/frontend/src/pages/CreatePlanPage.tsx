@@ -13,6 +13,7 @@ import { StepPlanOverview } from "@/components/create/StepPlanOverview";
 import { StepShoppingLoading } from "@/components/create/StepShoppingLoading";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
+import { getRelativeWeekLabel, getWeekDateRange } from "@/utils/helpers";
 import type { MenuBook, ShoppingList } from "@/types";
 
 const steps = {
@@ -87,6 +88,8 @@ export function CreatePlanPage() {
   const generationStartTime = useDraftStore((state) => state.generationStartTime);
   const setGenerationStartTime = useDraftStore((state) => state.setGenerationStartTime);
   const clearGenerationStartTime = useDraftStore((state) => state.clearGenerationStartTime);
+  const targetWeekStart = useDraftStore((state) => state.targetWeekStart);
+  const setTargetWeekStart = useDraftStore((state) => state.setTargetWeekStart);
   const navigate = useNavigate();
 
   const [result, setResult] = useState<MenuBook | null>(pendingResult ?? null);
@@ -142,18 +145,27 @@ export function CreatePlanPage() {
   }, [draft.currentStep, generateStatus.status, generationStartTime, isGenerating, pendingResult, result, setStep]);
 
   useEffect(() => {
-    const state = location.state as { startStep?: number; skipResume?: boolean } | null;
+    const state = location.state as { startStep?: number; skipResume?: boolean; weekStart?: string } | null;
     if (!state?.startStep) return;
     if (state.skipResume) {
       setShowResumePrompt(false);
       setHasCheckedResume(true);
     }
+    if (state.weekStart) {
+      setTargetWeekStart(state.weekStart);
+    }
     setStep(state.startStep);
-  }, [location.state, setStep]);
+  }, [location.state, setStep, setTargetWeekStart]);
+
+  useEffect(() => {
+    const state = location.state as { weekStart?: string } | null;
+    if (!state?.weekStart) return;
+    setTargetWeekStart(state.weekStart);
+  }, [location.state, setTargetWeekStart]);
 
   // Check for resume on mount
   useEffect(() => {
-    const state = location.state as { startStep?: number; skipResume?: boolean } | null;
+    const state = location.state as { startStep?: number; skipResume?: boolean; weekStart?: string } | null;
     if (state?.skipResume) return;
     if (pendingResult) {
       setShowResumePrompt(false);
@@ -212,8 +224,11 @@ export function CreatePlanPage() {
           }),
           GENERATE_TIMEOUT_MS,
         );
-        setPendingResult(outcome);
-        setResult(outcome);
+        const adjustedOutcome = targetWeekStart
+          ? { ...outcome, createdAt: targetWeekStart }
+          : outcome;
+        setPendingResult(adjustedOutcome);
+        setResult(adjustedOutcome);
         setGenerateStatus({ status: "idle", attempt });
         hasGenerateAttemptRef.current = false;
         clearGenerationStartTime();
@@ -266,7 +281,13 @@ export function CreatePlanPage() {
 
   switch (draft.currentStep) {
     case steps.welcome:
-      content = <StepWelcome onNext={() => goToStep(steps.preferences)} />;
+      content = (
+        <StepWelcome
+          label={getRelativeWeekLabel(targetWeekStart ?? new Date().toISOString())}
+          dateRange={getWeekDateRange(targetWeekStart ?? new Date().toISOString())}
+          onNext={() => goToStep(steps.preferences)}
+        />
+      );
       break;
     case steps.preferences:
       content = (
@@ -311,6 +332,7 @@ export function CreatePlanPage() {
           onToggleMeal={draft.toggleMeal}
           onSelectAll={draft.selectAllMeals}
           onDeselectAll={draft.deselectAllMeals}
+          weekStart={targetWeekStart ?? new Date().toISOString()}
           onNext={handleGenerate}
           onBack={() => goToStep(steps.peopleBudget)}
         />

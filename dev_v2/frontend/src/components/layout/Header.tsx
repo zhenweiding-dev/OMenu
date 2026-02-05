@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { getRelativeWeekLabel, getWeekDateRange } from "@/utils/helpers";
 import { useAppStore } from "@/stores/useAppStore";
@@ -20,9 +21,24 @@ function PlusIcon() {
 export function Header() {
   const location = useLocation();
   const pathname = location.pathname;
+  const headerRef = useRef<HTMLElement | null>(null);
   const currentBook = useAppStore((state) => state.getCurrentMenuBook());
   const setIsMenuPickerOpen = useAppStore((state) => state.setIsMenuPickerOpen);
   const setShowAddItemModal = useShoppingStore((state) => state.setShowAddItemModal);
+
+  useLayoutEffect(() => {
+    if (pathname === "/create") return;
+    const updateHeaderHeight = () => {
+      const container = document.getElementById("phone-screen");
+      if (!container || !headerRef.current) return;
+      const height = Math.round(headerRef.current.getBoundingClientRect().height);
+      container.style.setProperty("--header-height", `${height}px`);
+    };
+
+    updateHeaderHeight();
+    window.addEventListener("resize", updateHeaderHeight);
+    return () => window.removeEventListener("resize", updateHeaderHeight);
+  }, [pathname, currentBook]);
 
   if (pathname === "/create") {
     return null;
@@ -35,7 +51,7 @@ export function Header() {
       : getWeekDateRange(new Date().toISOString());
 
     return (
-      <header className="sticky top-0 z-40 bg-paper-base">
+      <header ref={headerRef} className="sticky top-0 z-40 bg-paper-base">
         <div className="px-5 pb-4 pt-14">
           <div className="flex items-start justify-between gap-6">
             <div>
@@ -72,7 +88,7 @@ export function Header() {
   // Shopping page: Add button in header per spec
   if (pathname === "/shopping") {
     return (
-      <header className="sticky top-0 z-40 bg-paper-base">
+      <header ref={headerRef} className="sticky top-0 z-40 bg-paper-base">
         <div className="px-5 pb-4 pt-14">
           <div className="flex items-start justify-between">
             <div>
@@ -97,7 +113,7 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 bg-paper-base">
+    <header ref={headerRef} className="sticky top-0 z-40 bg-paper-base">
       <div className="px-5 pb-4 pt-14">
         <div className="flex items-start justify-between">
           <div>

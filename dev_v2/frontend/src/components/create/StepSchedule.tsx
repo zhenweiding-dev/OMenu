@@ -10,6 +10,7 @@ interface StepScheduleProps {
   onToggleMeal: (day: (typeof WEEK_DAYS)[number], meal: (typeof MEAL_TYPES)[number]) => void;
   onSelectAll: () => void;
   onDeselectAll: () => void;
+  weekStart?: string;
   onNext: () => void;
   onBack: () => void;
 }
@@ -24,15 +25,16 @@ const DAY_LABELS: Record<string, string> = {
   sunday: "Sunday",
 };
 
-export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDeselectAll, onNext, onBack }: StepScheduleProps) {
+export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDeselectAll, weekStart, onNext, onBack }: StepScheduleProps) {
   // Calculate dates for each day
   const dayDates = useMemo(() => {
-    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    const baseDate = weekStart ? new Date(weekStart) : new Date();
+    const weekStartDate = startOfWeek(baseDate, { weekStartsOn: 1 });
     return WEEK_DAYS.reduce((acc, day, index) => {
-      acc[day] = format(addDays(weekStart, index), "MMM d");
+      acc[day] = format(addDays(weekStartDate, index), "MMM d");
       return acc;
     }, {} as Record<string, string>);
-  }, []);
+  }, [weekStart]);
 
   // Check if at least one meal is selected
   const hasSelectedMeals = useMemo(() => {

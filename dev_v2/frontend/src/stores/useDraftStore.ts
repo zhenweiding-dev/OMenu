@@ -16,6 +16,7 @@ interface DraftState {
   lastUpdated: string;
   pendingResult: MenuBook | null;
   generationStartTime: number | null;
+  targetWeekStart: string | null;
 
   setStep: (step: number) => void;
   setSpecificPreferences: (items: string[]) => void;
@@ -39,6 +40,7 @@ interface DraftState {
   clearPendingResult: () => void;
   setGenerationStartTime: (time: number | null) => void;
   clearGenerationStartTime: () => void;
+  setTargetWeekStart: (isoDate: string | null) => void;
 
   getSelectedMealCount: () => number;
   resetDraft: () => void;
@@ -62,6 +64,7 @@ const initialState = {
   lastUpdated: new Date().toISOString(),
   pendingResult: null,
   generationStartTime: null as number | null,
+  targetWeekStart: null as string | null,
 };
 
 export const useDraftStore = create<DraftState>()((set, get) => ({
@@ -139,6 +142,7 @@ export const useDraftStore = create<DraftState>()((set, get) => ({
   clearPendingResult: () => set({ pendingResult: null }),
   setGenerationStartTime: (time) => set({ generationStartTime: time }),
   clearGenerationStartTime: () => set({ generationStartTime: null }),
+  setTargetWeekStart: (isoDate) => set({ targetWeekStart: isoDate }),
 
   getSelectedMealCount: () => {
     const { cookSchedule } = get();
@@ -148,7 +152,8 @@ export const useDraftStore = create<DraftState>()((set, get) => ({
     }, 0);
   },
 
-  resetDraft: () => set({ ...initialState, lastUpdated: new Date().toISOString(), generationStartTime: null }),
+  resetDraft: () =>
+    set({ ...initialState, lastUpdated: new Date().toISOString(), generationStartTime: null, targetWeekStart: null }),
   resetDraftProgress: () =>
     set((state) => ({
       currentStep: 1,
@@ -161,5 +166,6 @@ export const useDraftStore = create<DraftState>()((set, get) => ({
       budget: state.budget,
       difficulty: state.difficulty,
       cookSchedule: state.cookSchedule,
+      targetWeekStart: state.targetWeekStart,
     })),
 }));

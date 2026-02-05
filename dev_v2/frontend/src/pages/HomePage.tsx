@@ -11,7 +11,6 @@ import { DailyMenuCard } from "@/components/home/DailyMenuCard";
 import { AddMealModal } from "@/components/home/AddMealModal";
 import { RecipeDetailSheet } from "@/components/home/RecipeDetailModal";
 import { WeekDateBar } from "@/components/home/WeekDateBar";
-import { StepWelcome } from "@/components/create/StepWelcome";
 import { WEEK_DAYS } from "@/utils/constants";
 import { getDayDisplay, getWeekDateRange, isCurrentCalendarWeek, startCaseDay } from "@/utils/helpers";
 import { Modal } from "@/components/ui/modal";
@@ -25,6 +24,8 @@ function PlusIcon() {
     </svg>
   );
 }
+
+const WELCOME_EMOJIS = ["🍳", "🥗", "🍜"];
 
 export function HomePage() {
   const menuBooks = useAppStore((state) => state.menuBooks);
@@ -235,23 +236,44 @@ export function HomePage() {
     </div>
   );
 
+  const welcomeView = (
+    <div className="flex flex-1 flex-col px-5 pt-4 pb-4 text-center">
+      <div className="flex-1" />
+      <div className="flex flex-col items-center">
+        <div className="mb-8 flex h-[200px] w-[200px] items-center justify-center rounded-full bg-gradient-to-br from-paper-muted to-border-subtle animate-float">
+          <span className="text-5xl tracking-wider">{WELCOME_EMOJIS.join(" ")}</span>
+        </div>
+        <h1 className="mb-3 text-[24px] font-semibold leading-snug text-text-primary">
+          Let&apos;s design a menu together!
+        </h1>
+        <p className="mb-6 text-[15px] leading-relaxed text-text-secondary">
+          Tell us your preferences and let magic happen.
+        </p>
+        <Button
+          onClick={() => {
+            resetDraftProgress();
+            navigate("/create", { state: { startStep: 2, skipResume: true } });
+          }}
+          size="lg"
+          className="px-16"
+        >
+          Let&apos;s go!
+        </Button>
+      </div>
+      <div className="flex-1" />
+    </div>
+  );
+
   return (
     <PageContainer
       className={
         shouldShowWelcome
-          ? "px-0 pt-0 pb-0 flex flex-col"
+          ? "px-0 pt-0 pb-0 flex min-h-[calc(100%-var(--header-height,0px))] flex-col"
           : "pb-4"
       }
     >
       {shouldShowWelcome ? (
-        <StepWelcome
-          label="WELCOME"
-          inline
-          onNext={() => {
-            resetDraftProgress();
-            navigate("/create", { state: { startStep: 2, skipResume: true } });
-          }}
-        />
+        welcomeView
       ) : hasCurrentBook ? (
         openView
       ) : (
@@ -303,6 +325,7 @@ export function HomePage() {
               <Link
                 key={item.weekStart.toISOString()}
                 to="/create"
+                state={{ startStep: 1, skipResume: true, weekStart: item.weekStart.toISOString() }}
                 onClick={() => setIsMenuPickerOpen(false)}
                 className="flex items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-border-subtle bg-transparent px-4 py-3 transition hover:border-accent-base hover:bg-[rgba(139,148,105,0.03)]"
               >
