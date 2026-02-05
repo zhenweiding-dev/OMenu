@@ -1,38 +1,36 @@
 {
   "preferences": {
     "keywords": [
-      "Mexican",
-      "Quick"
+      "Under 30 Min",
+      "Vegetarian",
+      "One-Pot"
     ],
     "preferredItems": [
-      "Chicken",
-      "Tacos",
-      "rice"
+      "Carrots",
+      "Rice"
     ],
-    "dislikedItems": [
-      "Tree Nuts"
-    ],
+    "dislikedItems": [],
     "numPeople": 2,
     "budget": 120,
     "difficulty": "medium",
     "cookSchedule": {
       "monday": {
-        "breakfast": false,
+        "breakfast": true,
         "lunch": true,
         "dinner": true
       },
       "tuesday": {
-        "breakfast": false,
+        "breakfast": true,
         "lunch": true,
         "dinner": true
       },
       "wednesday": {
-        "breakfast": false,
+        "breakfast": true,
         "lunch": true,
         "dinner": true
       },
       "thursday": {
-        "breakfast": false,
+        "breakfast": true,
         "lunch": true,
         "dinner": true
       },
@@ -55,43 +53,43 @@
   },
   "menuBooks": [
     {
-      "id": "mb_7ad9b89f5a20",
-      "createdAt": "2026-02-04T16:11:13.189059Z",
+      "id": "mb_135e262d03aa",
+      "createdAt": "2026-02-05T01:58:55.892087Z",
       "status": "ready",
       "preferences": {
         "keywords": [
-          "Mexican",
-          "Quick"
+          "High-Protein",
+          "Meal Prep",
+          "Gluten-Free",
+          "Mediterranean",
+          "Comfort Food"
         ],
         "preferredItems": [
-          "Chicken",
-          "Tacos",
-          "rice"
+          "Carrots",
+          "Rice"
         ],
-        "dislikedItems": [
-          "Tree Nuts"
-        ],
+        "dislikedItems": [],
         "numPeople": 2,
         "budget": 120,
         "difficulty": "medium",
         "cookSchedule": {
           "monday": {
-            "breakfast": false,
+            "breakfast": true,
             "lunch": true,
             "dinner": true
           },
           "tuesday": {
-            "breakfast": false,
+            "breakfast": true,
             "lunch": true,
             "dinner": true
           },
           "wednesday": {
-            "breakfast": false,
+            "breakfast": true,
             "lunch": true,
             "dinner": true
           },
           "thursday": {
-            "breakfast": false,
+            "breakfast": true,
             "lunch": true,
             "dinner": true
           },
@@ -114,48 +112,80 @@
       },
       "menus": {
         "monday": {
-          "breakfast": [],
-          "lunch": [
+          "breakfast": [
             {
-              "id": "mon-lunch-001",
-              "name": "Quick Chicken Rice Bowl",
+              "id": "mon-breakfast-001",
+              "name": "Greek Yogurt with Berries",
               "ingredients": [
                 {
-                  "name": "Chicken breast",
-                  "quantity": 150.0,
+                  "name": "Greek Yogurt",
+                  "quantity": 200.0,
                   "unit": "g",
-                  "category": "proteins"
+                  "category": "dairy"
                 },
                 {
-                  "name": "White rice",
+                  "name": "Mixed Berries",
                   "quantity": 100.0,
                   "unit": "g",
-                  "category": "grains"
+                  "category": "fruits"
                 },
                 {
-                  "name": "Black beans",
-                  "quantity": 50.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Salsa",
+                  "name": "Honey",
                   "quantity": 0.0,
                   "unit": "",
                   "category": "seasonings"
                 },
                 {
-                  "name": "Corn",
-                  "quantity": 30.0,
+                  "name": "Almonds",
+                  "quantity": 20.0,
                   "unit": "g",
-                  "category": "vegetables"
+                  "category": "others"
                 }
               ],
-              "instructions": "Cook rice. Sauté chicken until done. Combine rice, chicken, beans, and corn in a bowl. Top with fresh salsa.",
-              "estimatedTime": 20,
+              "instructions": "1. Place yogurt in a bowl. 2. Top with berries and honey.",
+              "estimatedTime": 5,
               "servings": 1,
               "difficulty": "easy",
-              "totalCalories": 450,
+              "totalCalories": 250,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "mon-lunch-001",
+              "name": "Chicken Salad with Carrots",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 150.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Carrots",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Avocado Mayo",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "others"
+                },
+                {
+                  "name": "Lemon Juice",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Shred chicken. 2. Mix with carrots and mayo. 3. Add lemon juice.",
+              "estimatedTime": 10,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 300,
               "source": "ai",
               "notes": null
             }
@@ -163,202 +193,22 @@
           "dinner": [
             {
               "id": "mon-dinner-001",
-              "name": "Beef Soft Tacos",
+              "name": "Lentil Soup",
               "ingredients": [
                 {
-                  "name": "Ground beef",
-                  "quantity": 150.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Flour tortillas",
-                  "quantity": 2.0,
-                  "unit": "count",
-                  "category": "grains"
-                },
-                {
-                  "name": "Lettuce",
-                  "quantity": 20.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Cheese",
-                  "quantity": 30.0,
-                  "unit": "g",
-                  "category": "dairy"
-                },
-                {
-                  "name": "Salsa",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
-                }
-              ],
-              "instructions": "Brown beef in a pan. Warm tortillas. Fill tortillas with beef, shredded lettuce, cheese, and salsa.",
-              "estimatedTime": 15,
-              "servings": 1,
-              "difficulty": "easy",
-              "totalCalories": 520,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        },
-        "tuesday": {
-          "breakfast": [],
-          "lunch": [
-            {
-              "id": "tue-lunch-001",
-              "name": "Leftover Beef Tacos",
-              "ingredients": [
-                {
-                  "name": "Ground beef",
+                  "name": "Lentils",
                   "quantity": 100.0,
                   "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Tortillas",
-                  "quantity": 2.0,
-                  "unit": "count",
                   "category": "grains"
                 },
                 {
-                  "name": "Cheese",
-                  "quantity": 30.0,
-                  "unit": "g",
-                  "category": "dairy"
-                },
-                {
-                  "name": "Salsa",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
-                },
-                {
-                  "name": "Sour cream",
-                  "quantity": 20.0,
-                  "unit": "g",
-                  "category": "dairy"
-                }
-              ],
-              "instructions": "Reheat leftover beef. Warm tortillas. Assemble tacos with beef, cheese, salsa, and a dollop of sour cream.",
-              "estimatedTime": 10,
-              "servings": 1,
-              "difficulty": "easy",
-              "totalCalories": 480,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "dinner": [
-            {
-              "id": "tue-dinner-001",
-              "name": "Chicken Enchiladas",
-              "ingredients": [
-                {
-                  "name": "Chicken",
-                  "quantity": 150.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Tortillas",
-                  "quantity": 3.0,
-                  "unit": "count",
-                  "category": "grains"
-                },
-                {
-                  "name": "Enchilada sauce",
-                  "quantity": 100.0,
+                  "name": "Vegetable Broth",
+                  "quantity": 500.0,
                   "unit": "ml",
                   "category": "pantry_staples"
                 },
                 {
-                  "name": "Cheese",
-                  "quantity": 50.0,
-                  "unit": "g",
-                  "category": "dairy"
-                },
-                {
-                  "name": "Rice",
-                  "quantity": 100.0,
-                  "unit": "g",
-                  "category": "grains"
-                }
-              ],
-              "instructions": "Shred cooked chicken. Roll into tortillas. Place in dish, top with sauce and cheese. Bake until melted. Serve with rice.",
-              "estimatedTime": 35,
-              "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 650,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        },
-        "wednesday": {
-          "breakfast": [],
-          "lunch": [
-            {
-              "id": "wed-lunch-001",
-              "name": "Bean and Cheese Burritos",
-              "ingredients": [
-                {
-                  "name": "Refried beans",
-                  "quantity": 100.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Cheese",
-                  "quantity": 40.0,
-                  "unit": "g",
-                  "category": "dairy"
-                },
-                {
-                  "name": "Tortillas",
-                  "quantity": 2.0,
-                  "unit": "count",
-                  "category": "grains"
-                },
-                {
-                  "name": "Rice",
-                  "quantity": 50.0,
-                  "unit": "g",
-                  "category": "grains"
-                },
-                {
-                  "name": "Salsa",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
-                }
-              ],
-              "instructions": "Heat beans and rice. Spread onto tortillas. Add cheese and salsa. Fold into burritos and serve warm.",
-              "estimatedTime": 15,
-              "servings": 1,
-              "difficulty": "easy",
-              "totalCalories": 420,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "dinner": [
-            {
-              "id": "wed-dinner-001",
-              "name": "Sheet Pan Chicken Fajitas",
-              "ingredients": [
-                {
-                  "name": "Chicken",
-                  "quantity": 200.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Bell peppers",
+                  "name": "Tomatoes",
                   "quantity": 100.0,
                   "unit": "g",
                   "category": "vegetables"
@@ -370,126 +220,27 @@
                   "category": "vegetables"
                 },
                 {
-                  "name": "Tortillas",
-                  "quantity": 3.0,
-                  "unit": "count",
-                  "category": "grains"
-                },
-                {
-                  "name": "Lime",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "fruits"
-                }
-              ],
-              "instructions": "Slice chicken and vegetables. Season and roast on a sheet pan at 400F. Serve in warm tortillas with lime juice.",
-              "estimatedTime": 25,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 550,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        },
-        "thursday": {
-          "breakfast": [],
-          "lunch": [
-            {
-              "id": "thu-lunch-001",
-              "name": "Fajita Salad Bowl",
-              "ingredients": [
-                {
-                  "name": "Leftover chicken",
-                  "quantity": 100.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Peppers",
-                  "quantity": 50.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Greens",
-                  "quantity": 100.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Corn",
-                  "quantity": 30.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Salsa",
+                  "name": "Olive Oil",
                   "quantity": 0.0,
                   "unit": "",
                   "category": "seasonings"
                 }
               ],
-              "instructions": "Chop chicken and peppers. Toss with fresh greens and corn. Use salsa as a healthy dressing.",
-              "estimatedTime": 10,
-              "servings": 1,
-              "difficulty": "easy",
-              "totalCalories": 320,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "dinner": [
-            {
-              "id": "thu-dinner-001",
-              "name": "Mexican Rice Skillet",
-              "ingredients": [
-                {
-                  "name": "Ground beef",
-                  "quantity": 150.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Rice",
-                  "quantity": 100.0,
-                  "unit": "g",
-                  "category": "grains"
-                },
-                {
-                  "name": "Diced tomatoes",
-                  "quantity": 100.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Beans",
-                  "quantity": 50.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Spices",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
-                }
-              ],
-              "instructions": "Brown beef in a skillet. Add rice, tomatoes, beans, and spices. Simmer with water until rice is tender.",
-              "estimatedTime": 30,
+              "instructions": "1. Sauté onion. 2. Add lentils, tomatoes, and broth. 3. Simmer until lentils are soft.",
+              "estimatedTime": 45,
               "servings": 2,
               "difficulty": "medium",
-              "totalCalories": 580,
+              "totalCalories": 350,
               "source": "ai",
               "notes": null
             }
           ]
         },
-        "friday": {
+        "tuesday": {
           "breakfast": [
             {
-              "id": "fri-breakfast-001",
-              "name": "Breakfast Burritos",
+              "id": "tue-breakfast-001",
+              "name": "Scrambled Eggs with Spinach",
               "ingredients": [
                 {
                   "name": "Eggs",
@@ -498,98 +249,303 @@
                   "category": "proteins"
                 },
                 {
-                  "name": "Tortillas",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "grains"
+                  "name": "Spinach",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
                 },
                 {
-                  "name": "Cheese",
-                  "quantity": 20.0,
+                  "name": "Feta Cheese",
+                  "quantity": 30.0,
                   "unit": "g",
                   "category": "dairy"
                 },
                 {
-                  "name": "Chorizo",
-                  "quantity": 50.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Salsa",
+                  "name": "Olive Oil",
                   "quantity": 0.0,
                   "unit": "",
                   "category": "seasonings"
                 }
               ],
-              "instructions": "Cook chorizo. Scramble eggs. Fill tortilla with chorizo, eggs, cheese, and salsa. Roll and serve.",
-              "estimatedTime": 15,
+              "instructions": "1. Sauté spinach. 2. Whisk eggs and add to pan. 3. Crumble feta on top.",
+              "estimatedTime": 10,
               "servings": 1,
               "difficulty": "easy",
-              "totalCalories": 490,
+              "totalCalories": 200,
               "source": "ai",
               "notes": null
             }
           ],
           "lunch": [
             {
-              "id": "fri-lunch-001",
-              "name": "Rice and Bean Quesadillas",
+              "id": "tue-lunch-001",
+              "name": "Mediterranean Quinoa Bowl",
               "ingredients": [
                 {
-                  "name": "Tortillas",
-                  "quantity": 2.0,
-                  "unit": "count",
-                  "category": "grains"
-                },
-                {
-                  "name": "Rice",
-                  "quantity": 50.0,
+                  "name": "Quinoa",
+                  "quantity": 100.0,
                   "unit": "g",
                   "category": "grains"
                 },
                 {
-                  "name": "Black beans",
+                  "name": "Cucumber",
                   "quantity": 50.0,
                   "unit": "g",
-                  "category": "proteins"
+                  "category": "vegetables"
                 },
                 {
-                  "name": "Cheese",
-                  "quantity": 40.0,
+                  "name": "Tomatoes",
+                  "quantity": 50.0,
                   "unit": "g",
-                  "category": "dairy"
+                  "category": "vegetables"
                 },
                 {
-                  "name": "Salsa",
-                  "quantity": 0.0,
-                  "unit": "",
+                  "name": "Olives",
+                  "quantity": 20.0,
+                  "unit": "g",
+                  "category": "others"
+                },
+                {
+                  "name": "Lemon Vinaigrette",
+                  "quantity": 30.0,
+                  "unit": "ml",
                   "category": "seasonings"
                 }
               ],
-              "instructions": "Layer rice, beans, and cheese on a tortilla. Top with second tortilla. Grill until cheese is melted.",
-              "estimatedTime": 15,
+              "instructions": "1. Cook quinoa. 2. Chop vegetables. 3. Mix all ingredients with vinaigrette.",
+              "estimatedTime": 20,
               "servings": 1,
               "difficulty": "easy",
-              "totalCalories": 410,
+              "totalCalories": 350,
               "source": "ai",
               "notes": null
             }
           ],
           "dinner": [
             {
-              "id": "fri-dinner-001",
-              "name": "Chicken Tortilla Soup",
+              "id": "tue-dinner-001",
+              "name": "Baked Salmon with Asparagus",
               "ingredients": [
                 {
-                  "name": "Chicken",
+                  "name": "Salmon Fillets",
                   "quantity": 150.0,
                   "unit": "g",
                   "category": "proteins"
                 },
                 {
-                  "name": "Broth",
-                  "quantity": 300.0,
+                  "name": "Asparagus",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Lemon",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Olive Oil",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Season salmon and asparagus. 2. Bake at 400F for 15 minutes.",
+              "estimatedTime": 25,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 400,
+              "source": "ai",
+              "notes": null
+            }
+          ]
+        },
+        "wednesday": {
+          "breakfast": [
+            {
+              "id": "wed-breakfast-001",
+              "name": "Protein Smoothie",
+              "ingredients": [
+                {
+                  "name": "Protein Powder",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Banana",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Almond Milk",
+                  "quantity": 200.0,
+                  "unit": "ml",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Spinach",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Blend all ingredients until smooth.",
+              "estimatedTime": 5,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 250,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "wed-lunch-001",
+              "name": "Turkey and Avocado Lettuce Wraps",
+              "ingredients": [
+                {
+                  "name": "Turkey Breast",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Lettuce",
+                  "quantity": 4.0,
+                  "unit": "leaves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Tomato",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Slice turkey and avocado. 2. Wrap in lettuce with tomato.",
+              "estimatedTime": 10,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 280,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "wed-dinner-001",
+              "name": "Chicken Stir-Fry with Rice",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 150.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Broccoli",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Bell Peppers",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "grains"
+                }
+              ],
+              "instructions": "1. Stir-fry chicken and vegetables. 2. Add soy sauce. 3. Serve with rice.",
+              "estimatedTime": 25,
+              "servings": 1,
+              "difficulty": "medium",
+              "totalCalories": 450,
+              "source": "ai",
+              "notes": null
+            }
+          ]
+        },
+        "thursday": {
+          "breakfast": [
+            {
+              "id": "thu-breakfast-001",
+              "name": "Chia Seed Pudding",
+              "ingredients": [
+                {
+                  "name": "Chia Seeds",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Almond Milk",
+                  "quantity": 200.0,
+                  "unit": "ml",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Berries",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Mix chia seeds and almond milk. 2. Refrigerate overnight. 3. Top with berries and honey.",
+              "estimatedTime": 5,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 280,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "thu-lunch-001",
+              "name": "Leftover Lentil Soup",
+              "ingredients": [
+                {
+                  "name": "Lentils",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "grains"
+                },
+                {
+                  "name": "Vegetable Broth",
+                  "quantity": 500.0,
                   "unit": "ml",
                   "category": "pantry_staples"
                 },
@@ -600,23 +556,193 @@
                   "category": "vegetables"
                 },
                 {
-                  "name": "Corn",
+                  "name": "Onion",
                   "quantity": 50.0,
                   "unit": "g",
                   "category": "vegetables"
                 },
                 {
-                  "name": "Tortilla strips",
-                  "quantity": 20.0,
-                  "unit": "g",
-                  "category": "grains"
+                  "name": "Olive Oil",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
                 }
               ],
-              "instructions": "Simmer chicken, broth, tomatoes, and corn. Shred chicken. Serve hot topped with crunchy tortilla strips.",
-              "estimatedTime": 30,
-              "servings": 2,
+              "instructions": "1. Reheat lentil soup.",
+              "estimatedTime": 10,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 350,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "thu-dinner-001",
+              "name": "Ground Beef with Zucchini Noodles",
+              "ingredients": [
+                {
+                  "name": "Ground Beef",
+                  "quantity": 150.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Zucchini Noodles",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Tomato Sauce",
+                  "quantity": 100.0,
+                  "unit": "ml",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Olive Oil",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Brown ground beef. 2. Add tomato sauce and garlic. 3. Serve over zucchini noodles.",
+              "estimatedTime": 25,
+              "servings": 1,
               "difficulty": "medium",
-              "totalCalories": 380,
+              "totalCalories": 400,
+              "source": "ai",
+              "notes": null
+            }
+          ]
+        },
+        "friday": {
+          "breakfast": [
+            {
+              "id": "fri-breakfast-001",
+              "name": "Omelet with Vegetables",
+              "ingredients": [
+                {
+                  "name": "Eggs",
+                  "quantity": 2.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Bell Peppers",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Onion",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Cheese",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "dairy"
+                }
+              ],
+              "instructions": "1. Sauté vegetables. 2. Pour eggs over vegetables. 3. Sprinkle with cheese.",
+              "estimatedTime": 15,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 250,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "fri-lunch-001",
+              "name": "Tuna Salad with Cucumber",
+              "ingredients": [
+                {
+                  "name": "Tuna",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Cucumber",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Mayonnaise",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "others"
+                },
+                {
+                  "name": "Lemon Juice",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Mix tuna with cucumber and mayonnaise. 2. Add lemon juice.",
+              "estimatedTime": 10,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 300,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "fri-dinner-001",
+              "name": "Chicken and Vegetable Skewers",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 150.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Bell Peppers",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Onion",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Zucchini",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Olive Oil",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Marinate chicken and vegetables. 2. Thread onto skewers. 3. Grill until cooked.",
+              "estimatedTime": 30,
+              "servings": 1,
+              "difficulty": "medium",
+              "totalCalories": 350,
               "source": "ai",
               "notes": null
             }
@@ -626,44 +752,44 @@
           "breakfast": [
             {
               "id": "sat-breakfast-001",
-              "name": "Huevos Rancheros",
+              "name": "Avocado Toast with Egg",
               "ingredients": [
                 {
-                  "name": "Eggs",
-                  "quantity": 2.0,
+                  "name": "Avocado",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Egg",
+                  "quantity": 1.0,
                   "unit": "count",
                   "category": "proteins"
                 },
                 {
-                  "name": "Corn tortillas",
-                  "quantity": 2.0,
-                  "unit": "count",
+                  "name": "Gluten-Free Bread",
+                  "quantity": 1.0,
+                  "unit": "slice",
                   "category": "grains"
                 },
                 {
-                  "name": "Salsa",
+                  "name": "Salt",
                   "quantity": 0.0,
                   "unit": "",
                   "category": "seasonings"
                 },
                 {
-                  "name": "Beans",
-                  "quantity": 50.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Avocado",
-                  "quantity": 0.5,
-                  "unit": "count",
-                  "category": "fruits"
+                  "name": "Pepper",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
                 }
               ],
-              "instructions": "Fry eggs. Lightly toast tortillas. Top tortillas with warm beans, eggs, salsa, and avocado slices.",
-              "estimatedTime": 15,
+              "instructions": "1. Toast bread. 2. Mash avocado and spread on toast. 3. Top with fried egg.",
+              "estimatedTime": 10,
               "servings": 1,
               "difficulty": "easy",
-              "totalCalories": 420,
+              "totalCalories": 280,
               "source": "ai",
               "notes": null
             }
@@ -671,44 +797,44 @@
           "lunch": [
             {
               "id": "sat-lunch-001",
-              "name": "Quick Nachos",
+              "name": "Leftover Chicken and Vegetable Skewers",
               "ingredients": [
                 {
-                  "name": "Tortilla chips",
-                  "quantity": 50.0,
-                  "unit": "g",
-                  "category": "grains"
-                },
-                {
-                  "name": "Cheese",
-                  "quantity": 50.0,
-                  "unit": "g",
-                  "category": "dairy"
-                },
-                {
-                  "name": "Beans",
-                  "quantity": 50.0,
+                  "name": "Chicken Breast",
+                  "quantity": 150.0,
                   "unit": "g",
                   "category": "proteins"
                 },
                 {
-                  "name": "Jalapeños",
-                  "quantity": 10.0,
+                  "name": "Bell Peppers",
+                  "quantity": 50.0,
                   "unit": "g",
                   "category": "vegetables"
                 },
                 {
-                  "name": "Salsa",
+                  "name": "Onion",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Zucchini",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Olive Oil",
                   "quantity": 0.0,
                   "unit": "",
                   "category": "seasonings"
                 }
               ],
-              "instructions": "Spread chips on a tray. Top with beans, cheese, and jalapeños. Bake until melted. Serve with salsa.",
+              "instructions": "1. Reheat chicken skewers.",
               "estimatedTime": 10,
               "servings": 1,
               "difficulty": "easy",
-              "totalCalories": 450,
+              "totalCalories": 350,
               "source": "ai",
               "notes": null
             }
@@ -716,44 +842,44 @@
           "dinner": [
             {
               "id": "sat-dinner-001",
-              "name": "Shrimp Tacos",
+              "name": "Shepherd's Pie (Cauliflower Mash)",
               "ingredients": [
                 {
-                  "name": "Shrimp",
+                  "name": "Ground Lamb",
                   "quantity": 150.0,
                   "unit": "g",
                   "category": "proteins"
                 },
                 {
-                  "name": "Cabbage slaw",
+                  "name": "Carrots",
                   "quantity": 50.0,
                   "unit": "g",
                   "category": "vegetables"
                 },
                 {
-                  "name": "Tortillas",
-                  "quantity": 3.0,
-                  "unit": "count",
-                  "category": "grains"
+                  "name": "Peas",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
                 },
                 {
-                  "name": "Lime",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "fruits"
+                  "name": "Cauliflower",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "vegetables"
                 },
                 {
-                  "name": "Garlic",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
+                  "name": "Beef Broth",
+                  "quantity": 100.0,
+                  "unit": "ml",
+                  "category": "pantry_staples"
                 }
               ],
-              "instructions": "Sauté shrimp with garlic. Warm tortillas. Fill with shrimp and slaw. Squeeze fresh lime over the top.",
-              "estimatedTime": 20,
-              "servings": 1,
-              "difficulty": "easy",
-              "totalCalories": 390,
+              "instructions": "1. Cook lamb with vegetables. 2. Top with cauliflower mash. 3. Bake until golden.",
+              "estimatedTime": 60,
+              "servings": 2,
+              "difficulty": "hard",
+              "totalCalories": 500,
               "source": "ai",
               "notes": null
             }
@@ -763,14 +889,438 @@
           "breakfast": [
             {
               "id": "sun-breakfast-001",
-              "name": "Chilaquiles Rojos",
+              "name": "Pancakes (Gluten-Free)",
               "ingredients": [
                 {
-                  "name": "Tortilla chips",
+                  "name": "Gluten-Free Flour",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "grains"
+                },
+                {
+                  "name": "Eggs",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Almond Milk",
+                  "quantity": 150.0,
+                  "unit": "ml",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Baking Powder",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Mix all ingredients. 2. Cook on a griddle.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 300,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "sun-lunch-001",
+              "name": "Chicken Caesar Salad",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 150.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Romaine Lettuce",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Parmesan Cheese",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Caesar Dressing",
+                  "quantity": 30.0,
+                  "unit": "ml",
+                  "category": "others"
+                }
+              ],
+              "instructions": "1. Grill chicken. 2. Mix with lettuce, parmesan, and dressing.",
+              "estimatedTime": 15,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 350,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "sun-dinner-001",
+              "name": "Roasted Chicken with Vegetables",
+              "ingredients": [
+                {
+                  "name": "Whole Chicken",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Potatoes",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Carrots",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Onion",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Rosemary",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Roast chicken with vegetables and rosemary.",
+              "estimatedTime": 90,
+              "servings": 4,
+              "difficulty": "hard",
+              "totalCalories": 600,
+              "source": "ai",
+              "notes": null
+            }
+          ]
+        }
+      },
+      "shoppingList": {
+        "id": "sl_c6ca6b99d608",
+        "menuBookId": "mb_135e262d03aa",
+        "createdAt": "2026-02-05T01:59:11.093279Z",
+        "items": [
+          {
+            "id": "item_94a69da4",
+            "name": "Chicken Breast",
+            "category": "proteins",
+            "totalQuantity": 1.6,
+            "unit": "lbs",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_08633134",
+            "name": "Ground Beef/Lamb",
+            "category": "proteins",
+            "totalQuantity": 0.7,
+            "unit": "lbs",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_f48ab6cc",
+            "name": "Eggs",
+            "category": "proteins",
+            "totalQuantity": 6.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_87c736e6",
+            "name": "Mixed Berries",
+            "category": "fruits",
+            "totalQuantity": 0.0,
+            "unit": "oz",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_41398b6e",
+            "name": "Avocado",
+            "category": "fruits",
+            "totalQuantity": 2.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_2deaed79",
+            "name": "Onion",
+            "category": "vegetables",
+            "totalQuantity": 4.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_1576a8ad",
+            "name": "Carrots",
+            "category": "vegetables",
+            "totalQuantity": 0.7,
+            "unit": "lbs",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_feec55c0",
+            "name": "Tomatoes",
+            "category": "vegetables",
+            "totalQuantity": 0.7,
+            "unit": "lbs",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_ed0195c7",
+            "name": "Almond Milk",
+            "category": "dairy",
+            "totalQuantity": 2.0,
+            "unit": "cups",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_a78d3b7f",
+            "name": "Lentils",
+            "category": "grains",
+            "totalQuantity": 0.4,
+            "unit": "lbs",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_d872806e",
+            "name": "Vegetable Broth",
+            "category": "pantry_staples",
+            "totalQuantity": 2.0,
+            "unit": "cups",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_3dbf0bde",
+            "name": "Olive Oil",
+            "category": "seasonings",
+            "totalQuantity": 0.0,
+            "unit": "",
+            "purchased": false,
+            "isManuallyAdded": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "mb_beab1642c71c",
+      "createdAt": "2026-02-05T02:02:11.941529Z",
+      "status": "ready",
+      "preferences": {
+        "keywords": [
+          "Under 30 Min",
+          "Vegetarian",
+          "One-Pot"
+        ],
+        "preferredItems": [
+          "Carrots",
+          "Rice"
+        ],
+        "dislikedItems": [],
+        "numPeople": 2,
+        "budget": 120,
+        "difficulty": "medium",
+        "cookSchedule": {
+          "monday": {
+            "breakfast": true,
+            "lunch": true,
+            "dinner": true
+          },
+          "tuesday": {
+            "breakfast": true,
+            "lunch": true,
+            "dinner": true
+          },
+          "wednesday": {
+            "breakfast": true,
+            "lunch": true,
+            "dinner": true
+          },
+          "thursday": {
+            "breakfast": true,
+            "lunch": true,
+            "dinner": true
+          },
+          "friday": {
+            "breakfast": true,
+            "lunch": true,
+            "dinner": true
+          },
+          "saturday": {
+            "breakfast": true,
+            "lunch": true,
+            "dinner": true
+          },
+          "sunday": {
+            "breakfast": true,
+            "lunch": true,
+            "dinner": true
+          }
+        }
+      },
+      "menus": {
+        "monday": {
+          "breakfast": [
+            {
+              "id": "mon-breakfast-001",
+              "name": "Oatmeal with Berries",
+              "ingredients": [
+                {
+                  "name": "Oats",
                   "quantity": 50.0,
                   "unit": "g",
                   "category": "grains"
                 },
+                {
+                  "name": "Berries",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Milk",
+                  "quantity": 120.0,
+                  "unit": "ml",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Cook oats with milk. 2. Top with berries and honey.",
+              "estimatedTime": 10,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 250,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "mon-lunch-001",
+              "name": "Lentil Soup",
+              "ingredients": [
+                {
+                  "name": "Lentils",
+                  "quantity": 75.0,
+                  "unit": "g",
+                  "category": "grains"
+                },
+                {
+                  "name": "Vegetable Broth",
+                  "quantity": 250.0,
+                  "unit": "ml",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Carrots",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Onion",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Spices",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Combine all ingredients. 2. Simmer until lentils are tender.",
+              "estimatedTime": 25,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 280,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "mon-dinner-001",
+              "name": "Vegetarian Chili",
+              "ingredients": [
+                {
+                  "name": "Kidney Beans",
+                  "quantity": 150.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Diced Tomatoes",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Corn",
+                  "quantity": 75.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Onion",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Chili Powder",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Combine all ingredients. 2. Simmer for 20 minutes.",
+              "estimatedTime": 30,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 350,
+              "source": "ai",
+              "notes": null
+            }
+          ]
+        },
+        "tuesday": {
+          "breakfast": [
+            {
+              "id": "tue-breakfast-001",
+              "name": "Scrambled Eggs",
+              "ingredients": [
                 {
                   "name": "Eggs",
                   "quantity": 2.0,
@@ -778,10 +1328,10 @@
                   "category": "proteins"
                 },
                 {
-                  "name": "Red salsa",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
+                  "name": "Milk",
+                  "quantity": 30.0,
+                  "unit": "ml",
+                  "category": "dairy"
                 },
                 {
                   "name": "Cheese",
@@ -790,59 +1340,53 @@
                   "category": "dairy"
                 },
                 {
-                  "name": "Onions",
-                  "quantity": 20.0,
+                  "name": "Spinach",
+                  "quantity": 30.0,
                   "unit": "g",
                   "category": "vegetables"
                 }
               ],
-              "instructions": "Simmer chips in red salsa until slightly softened. Top with fried eggs, cheese, and diced onions.",
-              "estimatedTime": 20,
+              "instructions": "1. Whisk eggs and milk. 2. Cook in pan. 3. Add cheese and spinach.",
+              "estimatedTime": 10,
               "servings": 1,
-              "difficulty": "medium",
-              "totalCalories": 460,
+              "difficulty": "easy",
+              "totalCalories": 220,
               "source": "ai",
               "notes": null
             }
           ],
           "lunch": [
             {
-              "id": "sun-lunch-001",
-              "name": "Chicken Taco Salad",
+              "id": "tue-lunch-001",
+              "name": "Rice and Bean Bowl",
               "ingredients": [
                 {
-                  "name": "Chicken",
-                  "quantity": 150.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Lettuce",
+                  "name": "Rice",
                   "quantity": 100.0,
                   "unit": "g",
-                  "category": "vegetables"
+                  "category": "grains"
                 },
                 {
-                  "name": "Beans",
+                  "name": "Black Beans",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Salsa",
                   "quantity": 50.0,
                   "unit": "g",
-                  "category": "proteins"
+                  "category": "pantry_staples"
                 },
                 {
-                  "name": "Corn",
-                  "quantity": 30.0,
+                  "name": "Avocado",
+                  "quantity": 50.0,
                   "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Cilantro dressing",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
+                  "category": "fruits"
                 }
               ],
-              "instructions": "Grill chicken and slice. Combine lettuce, beans, and corn in a bowl. Top with chicken and dressing.",
-              "estimatedTime": 20,
+              "instructions": "1. Cook rice. 2. Combine with beans, salsa, and avocado.",
+              "estimatedTime": 15,
               "servings": 1,
               "difficulty": "easy",
               "totalCalories": 380,
@@ -852,45 +1396,658 @@
           ],
           "dinner": [
             {
-              "id": "sun-dinner-001",
-              "name": "Arroz con Pollo",
+              "id": "tue-dinner-001",
+              "name": "Pasta with Tomato Sauce",
               "ingredients": [
                 {
-                  "name": "Chicken thighs",
+                  "name": "Pasta",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "grains"
+                },
+                {
+                  "name": "Tomato Sauce",
+                  "quantity": 150.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Basil",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Parmesan",
+                  "quantity": 20.0,
+                  "unit": "g",
+                  "category": "dairy"
+                }
+              ],
+              "instructions": "1. Cook pasta. 2. Heat tomato sauce with garlic and basil. 3. Top with parmesan.",
+              "estimatedTime": 20,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 420,
+              "source": "ai",
+              "notes": null
+            }
+          ]
+        },
+        "wednesday": {
+          "breakfast": [
+            {
+              "id": "wed-breakfast-001",
+              "name": "Yogurt Parfait",
+              "ingredients": [
+                {
+                  "name": "Yogurt",
                   "quantity": 200.0,
                   "unit": "g",
-                  "category": "proteins"
+                  "category": "dairy"
+                },
+                {
+                  "name": "Granola",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "grains"
+                },
+                {
+                  "name": "Fruit",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Layer yogurt, granola, and fruit. 2. Drizzle with honey.",
+              "estimatedTime": 5,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 300,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "wed-lunch-001",
+              "name": "Quesadillas",
+              "ingredients": [
+                {
+                  "name": "Tortillas",
+                  "quantity": 2.0,
+                  "unit": "count",
+                  "category": "grains"
+                },
+                {
+                  "name": "Cheese",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Black Beans",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Salsa",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Fill tortillas with cheese, beans, and salsa. 2. Grill until cheese is melted.",
+              "estimatedTime": 10,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 350,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "wed-dinner-001",
+              "name": "Vegetable Curry",
+              "ingredients": [
+                {
+                  "name": "Coconut Milk",
+                  "quantity": 200.0,
+                  "unit": "ml",
+                  "category": "others"
+                },
+                {
+                  "name": "Chickpeas",
+                  "quantity": 150.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Spinach",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Curry Powder",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
                 },
                 {
                   "name": "Rice",
                   "quantity": 100.0,
                   "unit": "g",
                   "category": "grains"
+                }
+              ],
+              "instructions": "1. Simmer chickpeas, spinach, and curry powder in coconut milk. 2. Serve with rice.",
+              "estimatedTime": 30,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 400,
+              "source": "ai",
+              "notes": null
+            }
+          ]
+        },
+        "thursday": {
+          "breakfast": [
+            {
+              "id": "thu-breakfast-001",
+              "name": "Toast with Avocado",
+              "ingredients": [
+                {
+                  "name": "Bread",
+                  "quantity": 2.0,
+                  "unit": "slices",
+                  "category": "grains"
                 },
                 {
-                  "name": "Peas",
-                  "quantity": 30.0,
+                  "name": "Avocado",
+                  "quantity": 75.0,
+                  "unit": "g",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Egg",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Everything Bagel Seasoning",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Toast bread. 2. Mash avocado on toast. 3. Top with fried egg and seasoning.",
+              "estimatedTime": 10,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 320,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "thu-lunch-001",
+              "name": "Leftover Curry",
+              "ingredients": [
+                {
+                  "name": "Leftover Curry",
+                  "quantity": 300.0,
+                  "unit": "g",
+                  "category": "others"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "grains"
+                }
+              ],
+              "instructions": "1. Reheat curry. 2. Serve with rice.",
+              "estimatedTime": 5,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 400,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "thu-dinner-001",
+              "name": "Mushroom Risotto",
+              "ingredients": [
+                {
+                  "name": "Arborio Rice",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "grains"
+                },
+                {
+                  "name": "Mushrooms",
+                  "quantity": 150.0,
                   "unit": "g",
                   "category": "vegetables"
+                },
+                {
+                  "name": "Vegetable Broth",
+                  "quantity": 500.0,
+                  "unit": "ml",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Parmesan",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Onion",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Cook onion and mushrooms. 2. Add rice and broth gradually. 3. Stir in parmesan.",
+              "estimatedTime": 45,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 450,
+              "source": "ai",
+              "notes": null
+            }
+          ]
+        },
+        "friday": {
+          "breakfast": [
+            {
+              "id": "fri-breakfast-001",
+              "name": "Smoothie",
+              "ingredients": [
+                {
+                  "name": "Spinach",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Banana",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Almond Milk",
+                  "quantity": 200.0,
+                  "unit": "ml",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Protein Powder",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "proteins"
+                }
+              ],
+              "instructions": "1. Blend all ingredients until smooth.",
+              "estimatedTime": 5,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 280,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "fri-lunch-001",
+              "name": "Vegetable Wraps",
+              "ingredients": [
+                {
+                  "name": "Tortillas",
+                  "quantity": 2.0,
+                  "unit": "count",
+                  "category": "grains"
+                },
+                {
+                  "name": "Hummus",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
                 },
                 {
                   "name": "Carrots",
-                  "quantity": 30.0,
+                  "quantity": 50.0,
                   "unit": "g",
                   "category": "vegetables"
                 },
                 {
-                  "name": "Chicken broth",
+                  "name": "Cucumber",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Spinach",
+                  "quantity": 30.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Spread hummus on tortillas. 2. Add carrots, cucumber, and spinach. 3. Wrap.",
+              "estimatedTime": 10,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 320,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "fri-dinner-001",
+              "name": "Pizza",
+              "ingredients": [
+                {
+                  "name": "Pizza Dough",
                   "quantity": 200.0,
+                  "unit": "g",
+                  "category": "grains"
+                },
+                {
+                  "name": "Tomato Sauce",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Cheese",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Vegetables",
+                  "quantity": 150.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Spread sauce on dough. 2. Add cheese and vegetables. 3. Bake until crust is golden.",
+              "estimatedTime": 35,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 500,
+              "source": "ai",
+              "notes": null
+            }
+          ]
+        },
+        "saturday": {
+          "breakfast": [
+            {
+              "id": "sat-breakfast-001",
+              "name": "Pancakes",
+              "ingredients": [
+                {
+                  "name": "Pancake Mix",
+                  "quantity": 150.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Milk",
+                  "quantity": 150.0,
+                  "unit": "ml",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Egg",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Berries",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "fruits"
+                }
+              ],
+              "instructions": "1. Mix pancake mix, milk and egg. 2. Cook pancakes. 3. Top with berries.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 400,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "sat-lunch-001",
+              "name": "Grilled Cheese",
+              "ingredients": [
+                {
+                  "name": "Bread",
+                  "quantity": 2.0,
+                  "unit": "slices",
+                  "category": "grains"
+                },
+                {
+                  "name": "Cheese",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Butter",
+                  "quantity": 10.0,
+                  "unit": "g",
+                  "category": "dairy"
+                }
+              ],
+              "instructions": "1. Butter bread. 2. Place cheese between slices. 3. Grill until golden.",
+              "estimatedTime": 10,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 300,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "sat-dinner-001",
+              "name": "Pasta Primavera",
+              "ingredients": [
+                {
+                  "name": "Pasta",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "grains"
+                },
+                {
+                  "name": "Asparagus",
+                  "quantity": 75.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Peas",
+                  "quantity": 75.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Lemon",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Parmesan",
+                  "quantity": 20.0,
+                  "unit": "g",
+                  "category": "dairy"
+                }
+              ],
+              "instructions": "1. Cook pasta. 2. Add vegetables and lemon. 3. Top with parmesan.",
+              "estimatedTime": 25,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 400,
+              "source": "ai",
+              "notes": null
+            }
+          ]
+        },
+        "sunday": {
+          "breakfast": [
+            {
+              "id": "sun-breakfast-001",
+              "name": "Waffles",
+              "ingredients": [
+                {
+                  "name": "Waffle Mix",
+                  "quantity": 150.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Milk",
+                  "quantity": 120.0,
+                  "unit": "ml",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Egg",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Fruit",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "fruits"
+                }
+              ],
+              "instructions": "1. Mix waffle mix, milk, and egg. 2. Cook waffles. 3. Top with fruit.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 420,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "sun-lunch-001",
+              "name": "Salad",
+              "ingredients": [
+                {
+                  "name": "Lettuce",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Tomatoes",
+                  "quantity": 75.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Cucumber",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Dressing",
+                  "quantity": 30.0,
                   "unit": "ml",
                   "category": "pantry_staples"
                 }
               ],
-              "instructions": "Brown chicken. Add rice, broth, peas, and carrots. Cover and simmer until rice and chicken are cooked.",
-              "estimatedTime": 40,
+              "instructions": "1. Combine all ingredients in a bowl.",
+              "estimatedTime": 10,
+              "servings": 1,
+              "difficulty": "easy",
+              "totalCalories": 250,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "sun-dinner-001",
+              "name": "Vegetable Skewers",
+              "ingredients": [
+                {
+                  "name": "Bell Peppers",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Zucchini",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Onion",
+                  "quantity": 50.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Tofu",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Marinade",
+                  "quantity": 50.0,
+                  "unit": "ml",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Marinate tofu and vegetables. 2. Skewer and grill.",
+              "estimatedTime": 30,
               "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 620,
+              "difficulty": "easy",
+              "totalCalories": 350,
               "source": "ai",
               "notes": null
             }
@@ -898,94 +2055,67 @@
         }
       },
       "shoppingList": {
-        "id": "sl_4f063674ac93",
-        "menuBookId": "mb_7ad9b89f5a20",
-        "createdAt": "2026-02-04T16:13:43.769559Z",
+        "id": "sl_946a0dbe5978",
+        "menuBookId": "mb_beab1642c71c",
+        "createdAt": "2026-02-05T02:02:18.749669Z",
         "items": [
           {
-            "id": "item_e452824a",
-            "name": "Chicken",
-            "category": "proteins",
-            "totalQuantity": 2.2,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_00a205e1",
-            "name": "Ground Beef & Chorizo",
-            "category": "proteins",
-            "totalQuantity": 1.0,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_618f71d2",
-            "name": "Shrimp",
-            "category": "proteins",
-            "totalQuantity": 5.3,
-            "unit": "oz",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_c4953e7b",
+            "id": "item_e5fa3376",
             "name": "Eggs",
             "category": "proteins",
-            "totalQuantity": 6.0,
+            "totalQuantity": 4.0,
             "unit": "count",
             "purchased": false,
             "isManuallyAdded": null
           },
           {
-            "id": "item_5874bafb",
-            "name": "Beans",
+            "id": "item_b9694e7b",
+            "name": "Tofu",
             "category": "proteins",
-            "totalQuantity": 0.9,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_cdb32765",
-            "name": "White Rice",
-            "category": "grains",
-            "totalQuantity": 1.1,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_07b2e55b",
-            "name": "Tortillas & Chips",
-            "category": "grains",
-            "totalQuantity": 25.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_0e7ad499",
-            "name": "Cheese & Sour Cream",
-            "category": "dairy",
-            "totalQuantity": 10.9,
+            "totalQuantity": 4.0,
             "unit": "oz",
             "purchased": false,
             "isManuallyAdded": null
           },
           {
-            "id": "item_5d6e0a3b",
-            "name": "Mixed Vegetables",
-            "category": "vegetables",
-            "totalQuantity": 9.0,
-            "unit": "count",
+            "id": "item_2906f574",
+            "name": "Rice",
+            "category": "grains",
+            "totalQuantity": 10.6,
+            "unit": "oz",
             "purchased": false,
             "isManuallyAdded": null
           },
           {
-            "id": "item_0e4f13f0",
-            "name": "Limes & Avocado",
+            "id": "item_098d7758",
+            "name": "Pasta",
+            "category": "grains",
+            "totalQuantity": 7.0,
+            "unit": "oz",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_0588ea2b",
+            "name": "Cheese",
+            "category": "dairy",
+            "totalQuantity": 8.8,
+            "unit": "oz",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_4a670637",
+            "name": "Milk",
+            "category": "dairy",
+            "totalQuantity": 2.1,
+            "unit": "cup",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_b2d2192e",
+            "name": "Avocado",
             "category": "fruits",
             "totalQuantity": 3.0,
             "unit": "count",
@@ -993,20 +2123,47 @@
             "isManuallyAdded": null
           },
           {
-            "id": "item_4d829c26",
-            "name": "Broth & Sauces",
-            "category": "pantry_staples",
-            "totalQuantity": 20.3,
+            "id": "item_810e0397",
+            "name": "Berries",
+            "category": "fruits",
+            "totalQuantity": 7.0,
             "unit": "oz",
             "purchased": false,
             "isManuallyAdded": null
           },
           {
-            "id": "item_ff7a4138",
-            "name": "Seasonings & Salsa",
-            "category": "seasonings",
-            "totalQuantity": 0.0,
-            "unit": "",
+            "id": "item_ca1ae0af",
+            "name": "Onion",
+            "category": "vegetables",
+            "totalQuantity": 7.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_bb48bdcb",
+            "name": "Spinach",
+            "category": "vegetables",
+            "totalQuantity": 8.8,
+            "unit": "oz",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_37b5d01f",
+            "name": "Vegetable Broth",
+            "category": "pantry_staples",
+            "totalQuantity": 3.0,
+            "unit": "cup",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_196135ea",
+            "name": "Salsa",
+            "category": "pantry_staples",
+            "totalQuantity": 4.2,
+            "unit": "oz",
             "purchased": false,
             "isManuallyAdded": null
           }
@@ -1014,7 +2171,7 @@
       }
     }
   ],
-  "currentWeekId": "mb_7ad9b89f5a20",
+  "currentWeekId": "mb_135e262d03aa",
   "currentDayIndex": 0,
   "isMenuOpen": true
 }

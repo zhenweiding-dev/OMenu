@@ -10,7 +10,6 @@ import { RecipeDetailModal } from "@/components/home/RecipeDetailModal";
 import { useAppStore } from "@/stores/useAppStore";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { fetchUserState, saveUserState } from "@/services/api";
-import { buildMockMenuBooks } from "@/data/mockMenuBooks";
 import { useShallow } from "zustand/react/shallow";
 
 function App() {
@@ -49,12 +48,6 @@ function App() {
   useEffect(() => {
     let isMounted = true;
     const loadRemoteState = async () => {
-      if (import.meta.env.VITE_USE_MOCK === "true") {
-        if (isMounted) {
-          setRemoteStateReady(true);
-        }
-        return;
-      }
       try {
         const remoteState = await fetchUserState();
         if (!isMounted) return;
@@ -72,6 +65,7 @@ function App() {
           setDraftPreferences(remoteState.preferences);
         }
       } catch {
+        // Backend unavailable - app will work with empty state
       } finally {
         if (isMounted) {
           setRemoteStateReady(true);
@@ -86,15 +80,7 @@ function App() {
   }, [setCurrentDayIndex, setDraftPreferences, setIsMenuOpen, setMenuBooks]);
 
   useEffect(() => {
-    if (import.meta.env.VITE_USE_MOCK !== "true") return;
     if (!remoteStateReady) return;
-    if (menuBooks.length > 0) return;
-    setMenuBooks(buildMockMenuBooks());
-  }, [menuBooks.length, remoteStateReady, setMenuBooks]);
-
-  useEffect(() => {
-    if (!remoteStateReady) return;
-    if (import.meta.env.VITE_USE_MOCK === "true") return;
     if (syncTimeoutRef.current) {
       window.clearTimeout(syncTimeoutRef.current);
     }

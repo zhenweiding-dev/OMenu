@@ -4,35 +4,44 @@ import { Button } from "@/components/ui/button";
 
 interface StepLoadingProps {
   onGoHome?: () => void;
-  minWaitSeconds?: number;
   status?: "idle" | "retrying" | "failed";
   attempt?: number;
   maxRetries?: number;
   onRetry?: () => void;
+  startTime?: number | null;
 }
-
-const MIN_WAIT_DEFAULT = 60; // 1 minute per spec
 
 export function StepLoading({
   onGoHome,
-  minWaitSeconds = MIN_WAIT_DEFAULT,
   status = "idle",
   attempt = 1,
   maxRetries = 3,
   onRetry,
+  startTime,
 }: StepLoadingProps) {
   const navigate = useNavigate();
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [elapsedSeconds, setElapsedSeconds] = useState(() => {
+    // Calculate initial elapsed time from startTime if available
+    if (startTime) {
+      return Math.floor((Date.now() - startTime) / 1000);
+    }
+    return 0;
+  });
 
   const showGoHomeButton = true;
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setElapsedSeconds((prev) => prev + 1);
+      if (startTime) {
+        // Calculate elapsed from start time to keep it accurate across navigation
+        setElapsedSeconds(Math.floor((Date.now() - startTime) / 1000));
+      } else {
+        setElapsedSeconds((prev) => prev + 1);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [startTime]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);

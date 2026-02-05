@@ -113,36 +113,6 @@ export function HomePage() {
     }
   }, [currentWeekBook, setCurrentWeekId]);
 
-  useEffect(() => {
-    if (import.meta.env.VITE_USE_MOCK !== "true") return;
-    if (!currentBook) return;
-    const hasManualDishes = Object.values(currentBook.menus).some((day) =>
-      Object.values(day).some((items) => items.some((dish) => dish.source === "manual")),
-    );
-    if (hasManualDishes) return;
-
-    const baseLunch = currentBook.menus.monday.lunch[0] ?? currentBook.menus.monday.breakfast[0];
-    if (!baseLunch) return;
-
-    addDish(currentBook.id, "monday", "lunch", {
-      ...baseLunch,
-      id: `${baseLunch.id}-side`,
-      name: "Citrus Side Salad",
-      totalCalories: 180,
-      estimatedTime: 10,
-      servings: baseLunch.servings || 2,
-      source: "manual",
-    });
-    addDish(currentBook.id, "wednesday", "dinner", {
-      ...baseLunch,
-      id: `${baseLunch.id}-soup`,
-      name: "Herbed Veggie Soup",
-      totalCalories: 220,
-      estimatedTime: 20,
-      servings: baseLunch.servings || 2,
-      source: "manual",
-    });
-  }, [addDish, currentBook]);
 
   const handleRequestDelete = (book: MenuBook) => {
     setPendingDelete(book);
@@ -184,9 +154,9 @@ export function HomePage() {
   const activeBook = shouldShowWelcome ? null : currentBook ?? currentWeekBook;
   const hasCurrentBook = Boolean(activeBook);
   const currentDayKey = hasCurrentBook ? WEEK_DAYS[currentDayIndex] : WEEK_DAYS[0];
-  const currentMeals = hasCurrentBook ? activeBook.menus[currentDayKey] : null;
+  const currentMeals = activeBook ? activeBook.menus[currentDayKey] : null;
   const currentDayLabel = startCaseDay(currentDayKey);
-  const { dateLabel } = hasCurrentBook
+  const { dateLabel } = activeBook
     ? getDayDisplay(activeBook.createdAt, currentDayIndex)
     : { dateLabel: "" };
 

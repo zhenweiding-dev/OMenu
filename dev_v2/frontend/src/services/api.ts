@@ -1,47 +1,7 @@
 import type { MenuBook, ShoppingList, UserPreferences, UserState, WeekMenus } from "@/types";
-import { SAMPLE_MENU_BOOK } from "@/data/sampleMenuBook";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 const GENERATION_TIMEOUT = 120_000;
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-function clone<T>(value: T): T {
-  if (typeof structuredClone === "function") {
-    return structuredClone(value);
-  }
-  return JSON.parse(JSON.stringify(value)) as T;
-}
-
-function buildMockMenuBook(preferences: UserPreferences): MenuBook {
-  const menuBook = clone(SAMPLE_MENU_BOOK);
-  const now = new Date().toISOString();
-  const suffix = now.replace(/[-:.TZ]/g, "");
-  return {
-    ...menuBook,
-    id: `mock_book_${suffix}`,
-    createdAt: now,
-    preferences,
-    shoppingList: {
-      ...menuBook.shoppingList,
-      id: `mock_list_${suffix}`,
-      menuBookId: `mock_book_${suffix}`,
-      createdAt: now,
-    },
-  };
-}
-
-function buildMockShoppingList(menuBookId: string, createdAt: string): ShoppingList {
-  const list = clone(SAMPLE_MENU_BOOK.shoppingList);
-  const suffix = createdAt.replace(/[-:.TZ]/g, "");
-  return {
-    ...list,
-    id: `mock_list_${suffix}`,
-    menuBookId,
-    createdAt,
-  };
-}
 
 function toErrorMessage(payload: unknown, fallback: string) {
   if (!payload || typeof payload !== "object") return fallback;
@@ -104,10 +64,6 @@ export async function healthCheck() {
 }
 
 export async function generateMenuBook(preferences: UserPreferences) {
-  if (USE_MOCK) {
-    await delay(1200);
-    return buildMockMenuBook(preferences);
-  }
   const response = await fetchWithTimeout(
     `${API_BASE_URL}/api/menu-books/generate`,
     {
@@ -121,10 +77,6 @@ export async function generateMenuBook(preferences: UserPreferences) {
 }
 
 export async function modifyMenuBook(bookId: string, modification: string, currentMenuBook: MenuBook) {
-  if (USE_MOCK) {
-    await delay(800);
-    return { ...currentMenuBook };
-  }
   const response = await fetchWithTimeout(
     `${API_BASE_URL}/api/menu-books/${bookId}/modify`,
     {
@@ -138,10 +90,6 @@ export async function modifyMenuBook(bookId: string, modification: string, curre
 }
 
 export async function generateShoppingList(menuBookId: string, menus: WeekMenus) {
-  if (USE_MOCK) {
-    await delay(800);
-    return buildMockShoppingList(menuBookId, new Date().toISOString());
-  }
   const response = await fetchWithTimeout(
     `${API_BASE_URL}/api/shopping-lists/generate`,
     {

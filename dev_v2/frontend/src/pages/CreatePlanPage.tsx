@@ -86,6 +86,9 @@ export function CreatePlanPage() {
   const setPendingResult = useDraftStore((state) => state.setPendingResult);
   const clearPendingResult = useDraftStore((state) => state.clearPendingResult);
   const setStep = useDraftStore((state) => state.setStep);
+  const generationStartTime = useDraftStore((state) => state.generationStartTime);
+  const setGenerationStartTime = useDraftStore((state) => state.setGenerationStartTime);
+  const clearGenerationStartTime = useDraftStore((state) => state.clearGenerationStartTime);
   const navigate = useNavigate();
 
   const [result, setResult] = useState<MenuBook | null>(pendingResult ?? null);
@@ -95,7 +98,6 @@ export function CreatePlanPage() {
     status: "idle",
     attempt: 1,
   });
-  const [loadingKey, setLoadingKey] = useState(0);
   const hasGenerateAttemptRef = useRef(false);
 
   const MAX_GENERATE_RETRIES = 3;
@@ -131,7 +133,7 @@ export function CreatePlanPage() {
 
   useEffect(() => {
     if (draft.currentStep < steps.loading) return;
-    if (result || isGenerating) return;
+    if (result || isGenerating || generationStartTime) return;
     if (pendingResult) return;
     if (draft.currentStep === steps.loading && (generateStatus.status === "failed" || hasGenerateAttemptRef.current)) {
       return;
@@ -139,7 +141,7 @@ export function CreatePlanPage() {
     // If we refreshed while in loading/overview/shoppingLoading and no pending result exists,
     // return to the last editable step to avoid a stuck loading screen.
     setStep(steps.schedule);
-  }, [draft.currentStep, generateStatus.status, isGenerating, pendingResult, result, setStep]);
+  }, [draft.currentStep, generateStatus.status, generationStartTime, isGenerating, pendingResult, result, setStep]);
 
   useEffect(() => {
     const state = location.state as { startStep?: number; skipResume?: boolean } | null;
@@ -194,7 +196,10 @@ export function CreatePlanPage() {
     clearError();
     hasGenerateAttemptRef.current = true;
     goToStep(steps.loading);
-    setLoadingKey((prev) => prev + 1);
+    // Only set start time if not already generating (prevents reset on retry)
+    if (!generationStartTime) {
+      setGenerationStartTime(Date.now());
+    }
     for (let attempt = 1; attempt <= MAX_GENERATE_RETRIES; attempt += 1) {
       setGenerateStatus({ status: attempt === 1 ? "idle" : "retrying", attempt });
       try {
@@ -214,6 +219,7 @@ export function CreatePlanPage() {
         setResult(outcome);
         setGenerateStatus({ status: "idle", attempt });
         hasGenerateAttemptRef.current = false;
+        clearGenerationStartTime();
         goToStep(steps.overview);
         return;
       } catch {
@@ -223,6 +229,7 @@ export function CreatePlanPage() {
           continue;
         }
         setGenerateStatus({ status: "failed", attempt });
+        clearGenerationStartTime();
         return;
       }
     }
@@ -326,11 +333,11 @@ export function CreatePlanPage() {
     case steps.loading:
       content = (
         <StepLoading
-          key={loadingKey}
           status={generateStatus.status}
           attempt={generateStatus.attempt}
           maxRetries={MAX_GENERATE_RETRIES}
           onRetry={handleGenerate}
+          startTime={generationStartTime}
         />
       );
       break;
