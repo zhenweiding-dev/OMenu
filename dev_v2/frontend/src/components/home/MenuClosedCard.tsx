@@ -1,6 +1,6 @@
 import { useMemo, useRef } from "react";
 import { cn } from "@/utils/cn";
-import { formatCurrency, getRelativeWeekLabel, getWeekDateRange } from "@/utils/helpers";
+import { formatCurrency, getWeekDateRange } from "@/utils/helpers";
 import { MENU_CLOSED_EMOJI_FALLBACK, MENU_CLOSED_SURFACES } from "@/utils/constants";
 import type { IngredientCategory, MenuBook } from "@/types";
 
@@ -9,7 +9,7 @@ interface MenuClosedCardProps {
   onSelect: (id: string) => void;
   onLongPress?: (book: MenuBook) => void;
   isActive: boolean;
-  showCurrentWeekBadge: boolean;
+  badgeLabel?: string;
 }
 
 const CATEGORY_EMOJI: Record<IngredientCategory, string> = {
@@ -57,11 +57,10 @@ function buildEmojiCover(book: MenuBook) {
   return selection;
 }
 
-export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurrentWeekBadge }: MenuClosedCardProps) {
+export function MenuClosedCard({ book, onSelect, onLongPress, isActive, badgeLabel }: MenuClosedCardProps) {
   const surfaceClass = useMemo(() => pickSurface(book.id), [book.id]);
   const emojiCover = buildEmojiCover(book);
   const weekRange = getWeekDateRange(book.createdAt);
-  const relativeLabel = getRelativeWeekLabel(book.createdAt);
   const budget = formatCurrency(book.preferences.budget);
   const totalDishes = Object.values(book.menus).reduce((count, day) => {
     return count + day.breakfast.length + day.lunch.length + day.dinner.length;
@@ -147,9 +146,9 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, showCurr
         </div>
 
         {/* Tag */}
-        {showCurrentWeekBadge && (
+        {badgeLabel && (
           <span className="rounded-full border border-accent-base/30 bg-accent-soft px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-base">
-            {relativeLabel}
+            {badgeLabel}
           </span>
         )}
       </div>

@@ -5,7 +5,7 @@
 > 基于 `dev_v2/frontend` 当前实现整理，按“前端交互 ↔ 数据流动”对照梳理。
 
 ## 1. 核心数据实体（前端类型）
-- **UserPreferences**：关键词、偏好项、讨厌项、人数、预算、难度、排期。
+- **UserPreferences**：具体偏好、具体不喜欢、人数、预算、难度、排期。
 - **MenuBook**：一周菜单簿（`menus + shoppingList + preferences`）。
 - **Menu**：一天菜单（Breakfast/Lunch/Dinner）。
 - **Dish**：一道菜，带 `source: "ai" | "manual"`。
@@ -24,7 +24,7 @@
 
 ### 2.2 useDraftStore（创建流程草稿）
 - **持久化**：localStorage `omenu-draft`。
-- **关键字段**：`currentStep`、create 相关表单、`pendingResult`（MenuBook）。
+- **关键字段**：`currentStep`、create 相关表单、`pendingResult`（MenuBook）、`targetWeekStart`（目标周周一）。
 - **职责**：create 流程断点续走、生成结果临时保存（刷新不丢）。
 
 文件：`dev_v2/frontend/src/stores/useDraftStore.ts`
@@ -66,9 +66,21 @@ API：
 ## 5. 页面交互 ↔ 数据流映射
 
 ### 5.1 Menu 页（/）
+**交互：默认周与欢迎页**
+- 默认展示当前周（周一对齐）的 MenuBook。
+- **当前周为空且未手动选择周**时显示欢迎页。
+  - `Plan this week`：进入 create，并锁定当前周（从排期页开始）。
+  - `View next week`：若下周已有 MenuBook，直接切换到下周查看。
+  - `Plan next week`：若下周为空，进入 create 并锁定下周。
+
 **交互：选择周菜单（MenuBook Picker）**
 - 行为：点击 MenuBook → `setCurrentWeekId` + `setCurrentDayIndex(0)`。
 - 数据：仅更新 `useAppStore`，不触发 API。
+**规则（展示顺序与占位）**
+- 历史周：只展示已有 MenuBook（不补空缺）。
+- 当前周及未来周：按周顺序展示，**保证当前周与下周必出现**。
+- 未来周有空缺：用 “Add” 占位卡补齐。
+- 若未来已有菜单，最后一周后追加一个占位卡（用于顺序创建）。
 
 **交互：切换天（WeekDateBar / 滑动）**
 - 行为：更新 `currentDayIndex`。
@@ -91,13 +103,15 @@ API：
 
 ### 5.2 Create 流程（/create）
 
-**步骤 1–6（关键词/偏好/排期）**
+**步骤 1–6（偏好/不喜欢/排期）**
 - 行为：写入 `useDraftStore`。
 - 数据：仅本地草稿，未写 MenuBook。
+- 入口可携带 `targetWeekStart`（来自欢迎页/占位卡），用于确定本次创建目标周。
 
 **交互：Generate Menu**
 - 调用：`useMenuBook.createMenu(preferences)` → `POST /menu-books/generate`。
 - 结果：写入 `pendingResult`（MenuBook + 空 shoppingList），进入 Review。
+- `pendingResult.createdAt` 会对齐到 `targetWeekStart`（周一）以锁定所属周。
 
 **交互：Review 页面查看/修改**
 - UI 与 Menu 页一致（WeekDateBar + DailyMenuCard）。
@@ -117,6 +131,9 @@ API：
   2. 进入 ShoppingList Loading（无论是否已有 list，都走 loading）。
   3. Loading 调用 `generateShoppingList`（仅 AI dishes）。
   4. 成功后跳转 `/shopping`。
+
+**交互：排期（StepSchedule）**
+- 当 `targetWeekStart` 是当前周时，**今天之前的天数不可选**，并在提交前自动清除这些天的已选餐。
 
 文件：`dev_v2/frontend/src/pages/CreatePlanPage.tsx`
 
@@ -139,7 +156,7 @@ API：
 文件：`dev_v2/frontend/src/pages/ShoppingPage.tsx`
 
 ### 5.4 Profile 页（/me）
-**交互：编辑关键词/偏好**
+**交互：编辑偏好/不喜欢**
 - 行为：更新 `useDraftStore`（Profile 偏好是独立版本）。
 - **不回写** `menuBooks`，历史 MenuBook 保持原样。
 - 新生成菜单时读取该 Profile 偏好作为默认值。

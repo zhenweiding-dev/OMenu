@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
+import { LayoutGrid } from "lucide-react";
 import { getRelativeWeekLabel, getWeekDateRange } from "@/utils/helpers";
 import { useAppStore } from "@/stores/useAppStore";
 import { useShoppingStore } from "@/stores/useShoppingStore";
@@ -68,10 +69,7 @@ export function Header() {
               size="sm"
               className="h-10 gap-2 rounded-full px-4 text-[11px] uppercase tracking-[0.12em] shadow-btn"
             >
-              <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="none" stroke="currentColor" strokeWidth={1.8}>
-                <path d="M4 19.5A2.5 2.5 0 016.5 17H20" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <LayoutGrid className="h-5 w-5 text-accent-base" strokeWidth={1.8} aria-hidden />
               MENUBOOK
             </Button>
           </div>

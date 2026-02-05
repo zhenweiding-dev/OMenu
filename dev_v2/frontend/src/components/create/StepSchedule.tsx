@@ -1,9 +1,9 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { WEEK_DAYS, MEAL_TYPES } from "@/utils/constants";
 import type { CookSchedule } from "@/types";
 import { cn } from "@/utils/cn";
-import { startOfWeek, addDays, format } from "date-fns";
+import { startOfWeek, addDays, format, isBefore, isSameWeek, startOfDay } from "date-fns";
 
 interface StepScheduleProps {
   cookSchedule: CookSchedule;
@@ -26,20 +26,56 @@ const DAY_LABELS: Record<string, string> = {
 };
 
 export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDeselectAll, weekStart, onNext, onBack }: StepScheduleProps) {
-  // Calculate dates for each day
-  const dayDates = useMemo(() => {
-    const baseDate = weekStart ? new Date(weekStart) : new Date();
-    const weekStartDate = startOfWeek(baseDate, { weekStartsOn: 1 });
-    return WEEK_DAYS.reduce((acc, day, index) => {
-      acc[day] = format(addDays(weekStartDate, index), "MMM d");
-      return acc;
-    }, {} as Record<string, string>);
-  }, [weekStart]);
+  const baseDate = weekStart ? new Date(weekStart) : new Date();
+  const weekStartDate = startOfWeek(baseDate, { weekStartsOn: 1 });
+  const todayStart = startOfDay(new Date());
+  const isCurrentWeek = isSameWeek(weekStartDate, todayStart, { weekStartsOn: 1 });
+  const disabledDays = isCurrentWeek
+    ? WEEK_DAYS.filter((_, index) => isBefore(addDays(weekStartDate, index), todayStart))
+    : [];
+
+  const dayDates = WEEK_DAYS.reduce((acc, day, index) => {
+    acc[day] = format(addDays(weekStartDate, index), "MMM d");
+    return acc;
+  }, {} as Record<string, string>);
+
+  useEffect(() => {
+    if (!isCurrentWeek || disabledDays.length === 0) return;
+    disabledDays.forEach((day) => {
+      MEAL_TYPES.forEach((meal) => {
+        if (cookSchedule[day][meal]) {
+          onToggleMeal(day, meal);
+        }
+      });
+    });
+  }, [cookSchedule, disabledDays, isCurrentWeek, onToggleMeal]);
+
+  const handleSelectAll = () => {
+    if (!isCurrentWeek) {
+      onSelectAll();
+      return;
+    }
+    WEEK_DAYS.forEach((day) => {
+      if (disabledDays.includes(day)) return;
+      MEAL_TYPES.forEach((meal) => {
+        if (!cookSchedule[day][meal]) {
+          onToggleMeal(day, meal);
+        }
+      });
+    });
+  };
+
+  const handleDeselectAll = () => {
+    onDeselectAll();
+  };
 
   // Check if at least one meal is selected
   const hasSelectedMeals = useMemo(() => {
-    return WEEK_DAYS.some((day) => MEAL_TYPES.some((meal) => cookSchedule[day][meal]));
-  }, [cookSchedule]);
+    return WEEK_DAYS.some((day) => {
+      if (disabledDays.includes(day)) return false;
+      return MEAL_TYPES.some((meal) => cookSchedule[day][meal]);
+    });
+  }, [cookSchedule, disabledDays]);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -63,7 +99,7 @@ export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDesele
       <div className="mb-4 flex gap-3 px-5">
         <Button
           type="button"
-          onClick={onSelectAll}
+          onClick={handleSelectAll}
           variant="outline"
           size="sm"
           className="flex-1 border-border-tag text-text-secondary hover:border-accent-base hover:text-accent-base"
@@ -72,7 +108,7 @@ export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDesele
         </Button>
         <Button
           type="button"
-          onClick={onDeselectAll}
+          onClick={handleDeselectAll}
           variant="outline"
           size="sm"
           className="flex-1 border-border-tag text-text-secondary hover:border-accent-base hover:text-accent-base"
@@ -97,21 +133,29 @@ export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDesele
                 className="grid grid-cols-[95px_repeat(3,1fr)] items-center px-3 py-2.5"
               >
                 <div className="flex flex-col">
-                  <span className="text-[13px] font-semibold text-text-primary">{DAY_LABELS[day]}</span>
-                  <span className="text-[10px] text-text-secondary">{dayDates[day]}</span>
+                  <span className={cn("text-[13px] font-semibold", disabledDays.includes(day) ? "text-text-tertiary" : "text-text-primary")}>
+                    {DAY_LABELS[day]}
+                  </span>
+                  <span className={cn("text-[10px]", disabledDays.includes(day) ? "text-text-tertiary" : "text-text-secondary")}>
+                    {dayDates[day]}
+                  </span>
                 </div>
                 {MEAL_TYPES.map((meal) => {
-                  const selected = cookSchedule[day][meal];
+                  const isDisabled = disabledDays.includes(day);
+                  const selected = !isDisabled && cookSchedule[day][meal];
                   return (
                     <button
                       key={meal}
                       type="button"
                       onClick={() => onToggleMeal(day, meal)}
+                      disabled={isDisabled}
                       className={cn(
                         "mx-auto h-8 w-8 rounded-xl border transition-all",
                         selected
                           ? "border-accent-base bg-accent-soft"
-                          : "border-border-subtle bg-transparent hover:border-accent-light"
+                          : isDisabled
+                            ? "border-border-subtle/60 bg-paper-muted/70 cursor-not-allowed"
+                            : "border-border-subtle bg-transparent hover:border-accent-light"
                       )}
                       aria-label={`${meal} on ${day}`}
                     />

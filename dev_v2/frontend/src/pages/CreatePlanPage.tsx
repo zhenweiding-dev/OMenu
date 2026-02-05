@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { startOfWeek } from "date-fns";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { useMenuBook } from "@/hooks/useMenuBook";
@@ -163,6 +164,14 @@ export function CreatePlanPage() {
     setTargetWeekStart(state.weekStart);
   }, [location.state, setTargetWeekStart]);
 
+  useEffect(() => {
+    const state = location.state as { weekStart?: string } | null;
+    if (state?.weekStart) return;
+    if (targetWeekStart) return;
+    const defaultWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 }).toISOString();
+    setTargetWeekStart(defaultWeekStart);
+  }, [location.state, setTargetWeekStart, targetWeekStart]);
+
   // Check for resume on mount
   useEffect(() => {
     const state = location.state as { startStep?: number; skipResume?: boolean; weekStart?: string } | null;
@@ -187,7 +196,11 @@ export function CreatePlanPage() {
 
   const handleStartFresh = () => {
     setShowResumePrompt(false);
+    const preservedWeekStart = targetWeekStart;
     resetDraft();
+    if (preservedWeekStart) {
+      setTargetWeekStart(preservedWeekStart);
+    }
     clearPendingResult();
     clearError();
   };

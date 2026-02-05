@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { addWeeks, differenceInCalendarWeeks, startOfWeek } from "date-fns";
+import { addWeeks, startOfWeek } from "date-fns";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
+import { ChefHat, Salad, Soup } from "lucide-react";
 import { useAppStore } from "@/stores/useAppStore";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { PageContainer } from "@/components/layout/PageContainer";
@@ -12,7 +13,7 @@ import { AddMealModal } from "@/components/home/AddMealModal";
 import { RecipeDetailSheet } from "@/components/home/RecipeDetailModal";
 import { WeekDateBar } from "@/components/home/WeekDateBar";
 import { WEEK_DAYS } from "@/utils/constants";
-import { getDayDisplay, getWeekDateRange, isCurrentCalendarWeek, startCaseDay } from "@/utils/helpers";
+import { getDayDisplay, getWeekDateRange, startCaseDay } from "@/utils/helpers";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import type { Dish, Menu, MenuBook } from "@/types";
@@ -24,8 +25,6 @@ function PlusIcon() {
     </svg>
   );
 }
-
-const WELCOME_EMOJIS = ["🍳", "🥗", "🍜"];
 
 export function HomePage() {
   const menuBooks = useAppStore((state) => state.menuBooks);
@@ -54,52 +53,86 @@ export function HomePage() {
 
   const hasUserSelectedWeekRef = useRef(false);
 
+  const currentWeekStart = useMemo(() => startOfWeek(new Date(), { weekStartsOn: 1 }), []);
+  const nextWeekStart = useMemo(() => addWeeks(currentWeekStart, 1), [currentWeekStart]);
+
   const orderedBooks = useMemo(
-    () => [...menuBooks].sort((a, b) => (a.createdAt < b.createdAt ? -1 : 1)),
+    () =>
+      [...menuBooks].sort(
+        (a, b) =>
+          startOfWeek(new Date(a.createdAt), { weekStartsOn: 1 }).getTime() -
+          startOfWeek(new Date(b.createdAt), { weekStartsOn: 1 }).getTime(),
+      ),
     [menuBooks],
   );
 
+  const booksByWeekStart = useMemo(() => {
+    const map = new Map<number, MenuBook>();
+    orderedBooks.forEach((book) => {
+      const key = startOfWeek(new Date(book.createdAt), { weekStartsOn: 1 }).getTime();
+      if (!map.has(key)) {
+        map.set(key, book);
+      }
+    });
+    return map;
+  }, [orderedBooks]);
+
   const currentWeekBook = useMemo(
-    () => menuBooks.find((book) => isCurrentCalendarWeek(book.createdAt)) ?? null,
-    [menuBooks],
+    () => booksByWeekStart.get(currentWeekStart.getTime()) ?? null,
+    [booksByWeekStart, currentWeekStart],
+  );
+
+  const nextWeekBook = useMemo(
+    () => booksByWeekStart.get(nextWeekStart.getTime()) ?? null,
+    [booksByWeekStart, nextWeekStart],
   );
 
   const menuPickerItems = useMemo(() => {
-    const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
-    if (orderedBooks.length === 0) {
-      return [{ type: "placeholder" as const, weekStart: currentWeekStart }];
-    }
-
-    const getWeekStart = (isoDate: string) => startOfWeek(new Date(isoDate), { weekStartsOn: 1 });
     const items: Array<
       | { type: "book"; book: MenuBook }
       | { type: "placeholder"; weekStart: Date }
     > = [];
 
-    orderedBooks.forEach((book, index) => {
-      const bookWeekStart = getWeekStart(book.createdAt);
-      items.push({ type: "book", book });
+    const pastBooks = orderedBooks.filter(
+      (book) =>
+        startOfWeek(new Date(book.createdAt), { weekStartsOn: 1 }).getTime() <
+        currentWeekStart.getTime(),
+    );
+    pastBooks.forEach((book) => items.push({ type: "book", book }));
 
-      const nextBook = orderedBooks[index + 1];
-      if (nextBook) {
-        const nextWeekStart = getWeekStart(nextBook.createdAt);
-        const gap = differenceInCalendarWeeks(nextWeekStart, bookWeekStart, { weekStartsOn: 1 });
-        if (gap > 1) {
-          for (let step = 1; step < gap; step += 1) {
-            const missingWeek = addWeeks(bookWeekStart, step);
-            if (differenceInCalendarWeeks(missingWeek, currentWeekStart, { weekStartsOn: 1 }) >= 0) {
-              items.push({ type: "placeholder", weekStart: missingWeek });
-            }
-          }
-        }
+    const futureBooks = orderedBooks.filter(
+      (book) =>
+        startOfWeek(new Date(book.createdAt), { weekStartsOn: 1 }).getTime() >=
+        currentWeekStart.getTime(),
+    );
+    const futureWeekStarts = futureBooks
+      .map((book) => startOfWeek(new Date(book.createdAt), { weekStartsOn: 1 }))
+      .sort((a, b) => a.getTime() - b.getTime());
+    const lastFutureWeekStart = futureWeekStarts[futureWeekStarts.length - 1] ?? null;
+    const endWeek = lastFutureWeekStart
+      ? addWeeks(lastFutureWeekStart, 1)
+      : nextWeekStart;
+
+    let cursor = currentWeekStart;
+    while (cursor.getTime() <= endWeek.getTime()) {
+      const key = cursor.getTime();
+      const book = booksByWeekStart.get(key);
+      if (book) {
+        items.push({ type: "book", book });
       } else {
-        const nextWeek = addWeeks(bookWeekStart, 1);
-        items.push({ type: "placeholder", weekStart: nextWeek });
+        items.push({ type: "placeholder", weekStart: cursor });
       }
-    });
+      cursor = addWeeks(cursor, 1);
+    }
 
     return items;
-  }, [orderedBooks]);
+  }, [booksByWeekStart, currentWeekStart, nextWeekStart, orderedBooks]);
+
+  const getWeekBadgeLabel = (weekStart: Date) => {
+    if (weekStart.getTime() === currentWeekStart.getTime()) return "THIS WEEK";
+    if (weekStart.getTime() === nextWeekStart.getTime()) return "NEXT WEEK";
+    return undefined;
+  };
 
   useEffect(() => {
     if (!currentWeekBook) return;
@@ -109,10 +142,10 @@ export function HomePage() {
   }, [currentBook?.id, currentWeekBook, setCurrentWeekId]);
 
   useEffect(() => {
-    if (!currentWeekBook && !hasUserSelectedWeekRef.current) {
+    if (!currentWeekBook && !currentBook && !hasUserSelectedWeekRef.current) {
       setCurrentWeekId(null);
     }
-  }, [currentWeekBook, setCurrentWeekId]);
+  }, [currentBook, currentWeekBook, setCurrentWeekId]);
 
 
   const handleRequestDelete = (book: MenuBook) => {
@@ -151,7 +184,19 @@ export function HomePage() {
     setIsMenuPickerOpen(false);
   };
 
-  const shouldShowWelcome = !currentWeekBook && !hasUserSelectedWeekRef.current;
+  const handlePlanWeek = (weekStart: Date) => {
+    resetDraftProgress();
+    navigate("/create", { state: { startStep: 2, skipResume: true, weekStart: weekStart.toISOString() } });
+  };
+
+  const handleViewNextWeek = () => {
+    if (!nextWeekBook) return;
+    hasUserSelectedWeekRef.current = true;
+    setCurrentWeekId(nextWeekBook.id);
+    setCurrentDayIndex(0);
+  };
+
+  const shouldShowWelcome = !currentWeekBook && !currentBook && !hasUserSelectedWeekRef.current;
   const activeBook = shouldShowWelcome ? null : currentBook ?? currentWeekBook;
   const hasCurrentBook = Boolean(activeBook);
   const currentDayKey = hasCurrentBook ? WEEK_DAYS[currentDayIndex] : WEEK_DAYS[0];
@@ -241,7 +286,11 @@ export function HomePage() {
       <div className="flex-1" />
       <div className="flex flex-col items-center">
         <div className="mb-8 flex h-[200px] w-[200px] items-center justify-center rounded-full bg-gradient-to-br from-paper-muted to-border-subtle animate-float">
-          <span className="text-5xl tracking-wider">{WELCOME_EMOJIS.join(" ")}</span>
+          <div className="flex items-center gap-4 text-accent-base/80" aria-hidden>
+            <ChefHat className="h-9 w-9" strokeWidth={1.7} />
+            <Salad className="h-9 w-9" strokeWidth={1.7} />
+            <Soup className="h-9 w-9" strokeWidth={1.7} />
+          </div>
         </div>
         <h1 className="mb-3 text-[24px] font-semibold leading-snug text-text-primary">
           Let&apos;s design a menu together!
@@ -249,16 +298,38 @@ export function HomePage() {
         <p className="mb-6 text-[15px] leading-relaxed text-text-secondary">
           Tell us your preferences and let magic happen.
         </p>
-        <Button
-          onClick={() => {
-            resetDraftProgress();
-            navigate("/create", { state: { startStep: 2, skipResume: true } });
-          }}
-          size="lg"
-          className="px-16"
-        >
-          Let&apos;s go!
-        </Button>
+        <div className="flex w-full max-w-[260px] flex-col gap-3">
+          <Button
+            onClick={() => {
+              if (nextWeekBook) {
+                handleViewNextWeek();
+              } else {
+                handlePlanWeek(currentWeekStart);
+              }
+            }}
+            size="lg"
+            className="w-full"
+          >
+            {nextWeekBook ? "View next week" : "Plan this week"}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() =>
+              nextWeekBook
+                ? handlePlanWeek(currentWeekStart)
+                : handlePlanWeek(nextWeekStart)
+            }
+            size="lg"
+            className="w-full"
+          >
+            {nextWeekBook ? "Plan this week" : "Plan next week"}
+          </Button>
+        </div>
+        {nextWeekBook && (
+          <p className="mt-3 text-[11px] text-text-tertiary">
+            Next week already has a menu.
+          </p>
+        )}
       </div>
       <div className="flex-1" />
     </div>
@@ -308,6 +379,8 @@ export function HomePage() {
           {menuPickerItems.map((item) => {
             if (item.type === "book") {
               const { book } = item;
+              const bookWeekStart = startOfWeek(new Date(book.createdAt), { weekStartsOn: 1 });
+              const badgeLabel = getWeekBadgeLabel(bookWeekStart);
               return (
                 <MenuClosedCard
                   key={book.id}
@@ -315,17 +388,18 @@ export function HomePage() {
                   onSelect={handleSelectBook}
                   onLongPress={handleRequestDelete}
                   isActive={book.id === activeBook?.id}
-                  showCurrentWeekBadge={isCurrentCalendarWeek(book.createdAt)}
+                  badgeLabel={badgeLabel}
                 />
               );
             }
 
             const weekRange = getWeekDateRange(item.weekStart.toISOString());
+            const badgeLabel = getWeekBadgeLabel(item.weekStart);
             return (
               <Link
                 key={item.weekStart.toISOString()}
                 to="/create"
-                state={{ startStep: 1, skipResume: true, weekStart: item.weekStart.toISOString() }}
+                state={{ startStep: 2, skipResume: true, weekStart: item.weekStart.toISOString() }}
                 onClick={() => setIsMenuPickerOpen(false)}
                 className="flex items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-border-subtle bg-transparent px-4 py-3 transition hover:border-accent-base hover:bg-[rgba(139,148,105,0.03)]"
               >
@@ -338,6 +412,11 @@ export function HomePage() {
                     <p className="mt-1 text-[11px] text-text-secondary">{weekRange}</p>
                   </div>
                 </div>
+                {badgeLabel && (
+                  <span className="rounded-full border border-accent-base/30 bg-accent-soft px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-base">
+                    {badgeLabel}
+                  </span>
+                )}
               </Link>
             );
           })}

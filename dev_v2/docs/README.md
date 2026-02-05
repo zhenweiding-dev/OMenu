@@ -8,6 +8,10 @@
   - Menu Book 只有在用户确认（Generate Shopping List）后写入。
   - 手动添加/编辑/删除 Dish **不触发** AI，也不联动 Shopping List。
   - Shopping List 仅在 **Create / Modify** 触发生成，且仅使用 `source="ai"` dishes。
+- **周逻辑**：
+  - 默认展示当前周 Menu Book；当前周为空时展示欢迎页。
+  - MenuBook 弹窗按周顺序排列，当前周与下周必出现，缺失周用占位卡补齐。
+  - Create 可携带目标周（当前周或下周），排期在当前周时自动禁用过去的日期。
 
 ## Root Docs（已更新）
 | 文件 | 说明 |

@@ -86,6 +86,22 @@
 
 来源：`dev_v2/frontend/src/types/index.ts`
 
+### 1.8 `CreateDraft`（前端草稿，仅本地）
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `currentStep` | `number` | 创建流程当前步骤 |
+| `specificPreferences` | `string[]` | 具体偏好（输入/标签） |
+| `specificDisliked` | `string[]` | 具体不喜欢（输入/标签） |
+| `numPeople` | `number` | 人数 |
+| `budget` | `number` | 预算 |
+| `difficulty` | `Difficulty` | 难度 |
+| `cookSchedule` | `CookSchedule` | 排期 |
+| `targetWeekStart` | `string \| null` | 目标周周一（ISO 字符串） |
+| `pendingResult` | `MenuBook \| null` | 生成后临时结果（未确认不写入） |
+
+来源：`dev_v2/frontend/src/stores/useDraftStore.ts`
+
 ## 2. 后端模型（Pydantic）
 
 > 后端字段与前端一致（无历史兼容字段）。
