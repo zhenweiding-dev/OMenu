@@ -64,26 +64,20 @@ interface ShoppingItemModalProps {
 }
 
 function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, onSubmit, onDelete }: ShoppingItemModalProps) {
-  const [name, setName] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [unit, setUnit] = useState("");
-  const [category, setCategory] = useState<IngredientCategory>(defaultCategory);
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [isEditingQuantity, setIsEditingQuantity] = useState(false);
+  const initialName = initialItem?.name ?? "";
+  const initialQuantity = initialItem && initialItem.totalQuantity > 0 ? String(initialItem.totalQuantity) : "";
+  const initialUnit = initialItem?.unit ?? "";
+  const initialCategory = initialItem?.category ?? defaultCategory;
+
+  const [name, setName] = useState(initialName);
+  const [quantity, setQuantity] = useState(initialQuantity);
+  const [unit, setUnit] = useState(initialUnit);
+  const [category, setCategory] = useState<IngredientCategory>(initialCategory);
+  const [isEditingName, setIsEditingName] = useState(true);
+  const [isEditingQuantity, setIsEditingQuantity] = useState(true);
   const [isEditingCategory, setIsEditingCategory] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    setName(initialItem?.name ?? "");
-    setQuantity(initialItem && initialItem.totalQuantity > 0 ? String(initialItem.totalQuantity) : "");
-    setUnit(initialItem?.unit ?? "");
-    setCategory(initialItem?.category ?? defaultCategory);
-    setIsEditingName(true);
-    setIsEditingQuantity(true);
-    setIsEditingCategory(false);
-  }, [defaultCategory, initialItem, mode, open]);
 
   useEffect(() => {
     if (!open || mode !== "add") return;
@@ -500,15 +494,18 @@ export function ShoppingPage() {
         );
       })}
 
-      <ShoppingItemSheet
-        open={modalOpen && Boolean(currentBook)}
-        mode={modalMode}
-        initialItem={editingItem ?? undefined}
-        defaultCategory={editingItem?.category ?? defaultModalCategory}
-        onClose={handleCloseModal}
-        onSubmit={handleSubmitItem}
-        onDelete={modalMode === "edit" ? handleRequestDelete : undefined}
-      />
+      {modalOpen && Boolean(currentBook) && (
+        <ShoppingItemSheet
+          key={modalMode === "edit" ? editingItem?.id ?? "edit" : `add-${defaultModalCategory}`}
+          open
+          mode={modalMode}
+          initialItem={editingItem ?? undefined}
+          defaultCategory={editingItem?.category ?? defaultModalCategory}
+          onClose={handleCloseModal}
+          onSubmit={handleSubmitItem}
+          onDelete={modalMode === "edit" ? handleRequestDelete : undefined}
+        />
+      )}
 
       <Modal
         open={Boolean(pendingDelete)}

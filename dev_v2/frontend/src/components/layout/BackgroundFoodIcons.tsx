@@ -43,7 +43,12 @@ const ICON_POSITIONS = [
 
 export function BackgroundFoodIcons() {
   const placements = useMemo(() => {
-    const seed = Math.floor(Math.random() * FOOD_ICONS.length);
+    const seedSource = typeof window !== "undefined" ? window.location.pathname : "omenu";
+    let hash = 0;
+    for (let i = 0; i < seedSource.length; i += 1) {
+      hash = (hash * 31 + seedSource.charCodeAt(i)) % 997;
+    }
+    const seed = Math.abs(hash) % FOOD_ICONS.length;
     return ICON_POSITIONS.map((position, index) => ({
       ...position,
       Icon: FOOD_ICONS[(index + seed) % FOOD_ICONS.length],

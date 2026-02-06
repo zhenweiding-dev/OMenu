@@ -152,26 +152,32 @@ export function MyPage() {
       </section>
 
       {/* Edit Modals */}
-      <EditPreferredModal
-        isOpen={activeModal === "preferred"}
-        onClose={() => setActiveModal(null)}
-        items={preferences.specificPreferences}
-        onSave={handleSavePreferred}
-      />
-      <EditDislikedModal
-        isOpen={activeModal === "disliked"}
-        onClose={() => setActiveModal(null)}
-        items={preferences.specificDisliked}
-        onSave={handleSaveDisliked}
-      />
-      <EditSettingsModal
-        isOpen={activeModal === "settings"}
-        onClose={() => setActiveModal(null)}
-        numPeople={preferences.numPeople}
-        budget={preferences.budget}
-        difficulty={preferences.difficulty}
-        onSave={handleSaveSettings}
-      />
+      {activeModal === "preferred" && (
+        <EditPreferredModal
+          isOpen
+          onClose={() => setActiveModal(null)}
+          items={preferences.specificPreferences}
+          onSave={handleSavePreferred}
+        />
+      )}
+      {activeModal === "disliked" && (
+        <EditDislikedModal
+          isOpen
+          onClose={() => setActiveModal(null)}
+          items={preferences.specificDisliked}
+          onSave={handleSaveDisliked}
+        />
+      )}
+      {activeModal === "settings" && (
+        <EditSettingsModal
+          isOpen
+          onClose={() => setActiveModal(null)}
+          numPeople={preferences.numPeople}
+          budget={preferences.budget}
+          difficulty={preferences.difficulty}
+          onSave={handleSaveSettings}
+        />
+      )}
     </PageContainer>
   );
 }

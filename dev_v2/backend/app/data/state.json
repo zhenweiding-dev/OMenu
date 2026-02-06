@@ -1,51 +1,43 @@
 {
   "preferences": {
-    "specificPreferences": [
-      "Not too oily",
-      "多一点汤",
-      "Asian flavors",
-      "有米饭",
-      "叉烧"
-    ],
-    "specificDisliked": [
-      "No heavy frying"
-    ],
+    "specificPreferences": [],
+    "specificDisliked": [],
     "numPeople": 2,
     "budget": 120,
     "difficulty": "medium",
     "cookSchedule": {
       "monday": {
         "breakfast": false,
-        "lunch": true,
-        "dinner": true
+        "lunch": false,
+        "dinner": false
       },
       "tuesday": {
         "breakfast": false,
-        "lunch": true,
-        "dinner": true
+        "lunch": false,
+        "dinner": false
       },
       "wednesday": {
         "breakfast": false,
-        "lunch": true,
-        "dinner": true
+        "lunch": false,
+        "dinner": false
       },
       "thursday": {
         "breakfast": false,
-        "lunch": true,
-        "dinner": true
+        "lunch": false,
+        "dinner": false
       },
       "friday": {
-        "breakfast": true,
-        "lunch": true,
-        "dinner": true
+        "breakfast": false,
+        "lunch": false,
+        "dinner": false
       },
       "saturday": {
-        "breakfast": true,
-        "lunch": true,
-        "dinner": true
+        "breakfast": false,
+        "lunch": false,
+        "dinner": false
       },
       "sunday": {
-        "breakfast": true,
+        "breakfast": false,
         "lunch": false,
         "dinner": false
       }
@@ -2049,9 +2041,566 @@
           }
         ]
       }
+    },
+    {
+      "id": "mb_2803083b16f4",
+      "createdAt": "2026-02-02T08:00:00Z",
+      "status": "ready",
+      "preferences": {
+        "specificPreferences": [
+          "Not too oily",
+          "多一点汤",
+          "Asian flavors",
+          "有米饭",
+          "叉烧"
+        ],
+        "specificDisliked": [
+          "No heavy frying"
+        ],
+        "numPeople": 2,
+        "budget": 120,
+        "difficulty": "medium",
+        "cookSchedule": {
+          "monday": {
+            "breakfast": false,
+            "lunch": false,
+            "dinner": false
+          },
+          "tuesday": {
+            "breakfast": false,
+            "lunch": false,
+            "dinner": false
+          },
+          "wednesday": {
+            "breakfast": false,
+            "lunch": false,
+            "dinner": false
+          },
+          "thursday": {
+            "breakfast": false,
+            "lunch": true,
+            "dinner": true
+          },
+          "friday": {
+            "breakfast": true,
+            "lunch": true,
+            "dinner": true
+          },
+          "saturday": {
+            "breakfast": true,
+            "lunch": true,
+            "dinner": true
+          },
+          "sunday": {
+            "breakfast": true,
+            "lunch": false,
+            "dinner": false
+          }
+        }
+      },
+      "menus": {
+        "monday": {
+          "breakfast": [],
+          "lunch": [],
+          "dinner": []
+        },
+        "tuesday": {
+          "breakfast": [],
+          "lunch": [],
+          "dinner": []
+        },
+        "wednesday": {
+          "breakfast": [],
+          "lunch": [],
+          "dinner": []
+        },
+        "thursday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "id": "thu-lunch-001",
+              "name": "Char Siu Rice Bowl",
+              "ingredients": [
+                {
+                  "name": "Pork Butt",
+                  "quantity": 1.0,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Jasmine Rice",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "grains"
+                },
+                {
+                  "name": "Bok Choy",
+                  "quantity": 2.0,
+                  "unit": "heads",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Honey/Soy Marinade",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Roast marinated pork butt. Serve sliced over steamed jasmine rice with blanched bok choy.",
+              "estimatedTime": 60,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 750,
+              "source": "ai",
+              "notes": "Increased pork portion for more meat."
+            }
+          ],
+          "dinner": [
+            {
+              "id": "thu-dinner-001",
+              "name": "Cantonese Wonton-style Soup",
+              "ingredients": [
+                {
+                  "name": "Char Siu Pork",
+                  "quantity": 8.0,
+                  "unit": "oz",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice Noodles",
+                  "quantity": 4.0,
+                  "unit": "oz",
+                  "category": "grains"
+                },
+                {
+                  "name": "Napa Cabbage",
+                  "quantity": 2.0,
+                  "unit": "leaves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 1.0,
+                  "unit": "slice",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Scallions",
+                  "quantity": 1.0,
+                  "unit": "stalk",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "Simmer ginger and scallions for broth. Add noodles, cabbage, and sliced pork until heated through.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 550,
+              "source": "ai",
+              "notes": "Increased meat portion."
+            }
+          ]
+        },
+        "friday": {
+          "breakfast": [
+            {
+              "id": "fri-breakfast-001",
+              "name": "Soft Scrambled Egg Congee",
+              "ingredients": [
+                {
+                  "name": "Jasmine Rice",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "grains"
+                },
+                {
+                  "name": "Eggs",
+                  "quantity": 2.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Minced Pork",
+                  "quantity": 4.0,
+                  "unit": "oz",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 1.0,
+                  "unit": "tsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "Boil rice in excess water to make porridge. Add seasoned minced pork early, then whisked eggs at the end.",
+              "estimatedTime": 45,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 420,
+              "source": "ai",
+              "notes": "Added minced pork to congee."
+            }
+          ],
+          "lunch": [
+            {
+              "id": "fri-lunch-001",
+              "name": "Leftover Char Siu Fried Rice",
+              "ingredients": [
+                {
+                  "name": "Day-old Rice",
+                  "quantity": 2.0,
+                  "unit": "cups",
+                  "category": "grains"
+                },
+                {
+                  "name": "Char Siu Pork",
+                  "quantity": 8.0,
+                  "unit": "oz",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Carrots",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Sesame Oil",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Toss rice, diced pork, and carrots in a pan with minimal oil. Finish with sesame oil for aroma.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 600,
+              "source": "ai",
+              "notes": "Doubled the meat content."
+            }
+          ],
+          "dinner": [
+            {
+              "id": "fri-dinner-001",
+              "name": "Steamed Fish with Daikon Soup",
+              "ingredients": [
+                {
+                  "name": "White Fish Fillets",
+                  "quantity": 1.5,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Daikon Radish",
+                  "quantity": 0.5,
+                  "unit": "lb",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Ginger/Scallions",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "Steam fish with ginger. Boil daikon in water for soup. Serve together with a side of rice.",
+              "estimatedTime": 30,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 450,
+              "source": "ai",
+              "notes": "Increased fish portion."
+            }
+          ]
+        },
+        "saturday": {
+          "breakfast": [
+            {
+              "id": "sat-breakfast-001",
+              "name": "Savory Steamed Egg Custard",
+              "ingredients": [
+                {
+                  "name": "Eggs",
+                  "quantity": 4.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Minced Pork Topping",
+                  "quantity": 2.0,
+                  "unit": "oz",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Cilantro",
+                  "quantity": 1.0,
+                  "unit": "sprig",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "Whisk eggs with water. Steam until set. Sauté minced pork and place on top with soy sauce.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 280,
+              "source": "ai",
+              "notes": "Added pork topping and extra egg."
+            }
+          ],
+          "lunch": [
+            {
+              "id": "sat-lunch-001",
+              "name": "Poached Chicken with Ginger-Scallion Oil",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 1.5,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 2.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Scallions",
+                  "quantity": 2.0,
+                  "unit": "tbsp",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Daikon Soup",
+                  "quantity": 2.0,
+                  "unit": "cups",
+                  "category": "others"
+                }
+              ],
+              "instructions": "Poach chicken in simmering water. Serve with a mash of ginger, scallion, and salt. Side of soup.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 550,
+              "source": "ai",
+              "notes": "Increased chicken portion."
+            }
+          ],
+          "dinner": [
+            {
+              "id": "sat-dinner-001",
+              "name": "Beef and Tofu Claypot Style",
+              "ingredients": [
+                {
+                  "name": "Sliced Beef",
+                  "quantity": 0.75,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Firm Tofu",
+                  "quantity": 0.5,
+                  "unit": "block",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Mushrooms",
+                  "quantity": 1.0,
+                  "unit": "pack",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Oyster Sauce",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "grains"
+                }
+              ],
+              "instructions": "Braise beef, tofu, and mushrooms in oyster sauce. Serve with steamed rice.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 520,
+              "source": "ai",
+              "notes": "Added beef to the claypot dish."
+            }
+          ]
+        },
+        "sunday": {
+          "breakfast": [
+            {
+              "id": "sun-breakfast-001",
+              "name": "Honey-Glazed Char Siu Toast",
+              "ingredients": [
+                {
+                  "name": "Char Siu Pork",
+                  "quantity": 4.0,
+                  "unit": "oz",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Bread/Buns",
+                  "quantity": 2.0,
+                  "unit": "slices",
+                  "category": "grains"
+                },
+                {
+                  "name": "Fruit",
+                  "quantity": 1.0,
+                  "unit": "serving",
+                  "category": "fruits"
+                }
+              ],
+              "instructions": "Warm pork with honey and serve on toasted bread with fruit.",
+              "estimatedTime": 10,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 440,
+              "source": "ai",
+              "notes": "Increased meat portion."
+            }
+          ],
+          "lunch": [],
+          "dinner": []
+        }
+      },
+      "shoppingList": {
+        "id": "sl_b5771232b3c2",
+        "menuBookId": "mb_2803083b16f4",
+        "createdAt": "2026-02-06T06:11:00.388418Z",
+        "items": [
+          {
+            "id": "item_e599c794",
+            "name": "Pork (Butt/Minced/Char Siu)",
+            "category": "proteins",
+            "totalQuantity": 2.37,
+            "unit": "lbs",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_416d4579",
+            "name": "White Fish Fillets",
+            "category": "proteins",
+            "totalQuantity": 1.5,
+            "unit": "lbs",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_bc59c798",
+            "name": "Chicken Breast",
+            "category": "proteins",
+            "totalQuantity": 1.5,
+            "unit": "lbs",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_666c7eee",
+            "name": "Beef (Sliced)",
+            "category": "proteins",
+            "totalQuantity": 0.75,
+            "unit": "lbs",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_70b86760",
+            "name": "Eggs",
+            "category": "proteins",
+            "totalQuantity": 6.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_3264ae8e",
+            "name": "Jasmine Rice",
+            "category": "grains",
+            "totalQuantity": 4.5,
+            "unit": "cups",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_eb3b435e",
+            "name": "Green Onions",
+            "category": "vegetables",
+            "totalQuantity": 2.0,
+            "unit": "bunch",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_d5db9b16",
+            "name": "Bok Choy",
+            "category": "vegetables",
+            "totalQuantity": 2.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_51456487",
+            "name": "Daikon Radish",
+            "category": "vegetables",
+            "totalQuantity": 0.5,
+            "unit": "lbs",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_464dcd83",
+            "name": "Mushrooms",
+            "category": "vegetables",
+            "totalQuantity": 1.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_ba069aaf",
+            "name": "Ginger",
+            "category": "pantry_staples",
+            "totalQuantity": 4.0,
+            "unit": "oz",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_89e6c931",
+            "name": "Seasoning/Sauces",
+            "category": "seasonings",
+            "totalQuantity": 0.0,
+            "unit": "",
+            "purchased": false,
+            "isManuallyAdded": null
+          }
+        ]
+      }
     }
   ],
   "currentWeekId": "mb_575bfa9c9256",
-  "currentDayIndex": 4,
+  "currentDayIndex": 0,
   "isMenuOpen": true
 }

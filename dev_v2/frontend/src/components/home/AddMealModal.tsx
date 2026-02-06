@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -96,54 +96,32 @@ export function AddMealModal({
   onClose,
   onSubmit,
 }: AddMealModalProps) {
-  const [mealType, setMealType] = useState<keyof Menu>("breakfast");
-  const [name, setName] = useState("");
-  const [ingredientsInput, setIngredientsInput] = useState("");
-  const [estimatedTime, setEstimatedTime] = useState("");
-  const [servings, setServings] = useState("");
-  const [calories, setCalories] = useState("");
-  const [difficulty, setDifficulty] = useState<Difficulty | "">("");
-  const [instructions, setInstructions] = useState("");
-  const [notes, setNotes] = useState("");
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [isEditingMeta, setIsEditingMeta] = useState(false);
-  const [isDifficultyOpen, setIsDifficultyOpen] = useState(false);
-  const [isEditingIngredients, setIsEditingIngredients] = useState(false);
-  const [isEditingInstructions, setIsEditingInstructions] = useState(false);
-  const [isEditingNotes, setIsEditingNotes] = useState(false);
-  const nameInputRef = useRef<HTMLInputElement>(null);
-  const difficultyDropdownRef = useRef<HTMLDivElement>(null);
-
-  const recommendedMealType = useMemo(() => {
+  const initialMealType = (() => {
     if (existingMenu.breakfast.length === 0) return "breakfast";
     if (existingMenu.lunch.length === 0) return "lunch";
     if (existingMenu.dinner.length === 0) return "dinner";
     return "breakfast";
-  }, [existingMenu]);
+  })();
+  const initialServings = defaultServings > 0 ? String(defaultServings) : "";
+  const initialDifficulty = defaultDifficulty ?? "";
 
-  useEffect(() => {
-    if (!open) return;
-    setMealType(recommendedMealType);
-    setName("");
-    setIngredientsInput("");
-    setEstimatedTime("");
-    setServings(defaultServings > 0 ? String(defaultServings) : "");
-    setCalories("");
-    setDifficulty(defaultDifficulty);
-    setInstructions("");
-    setNotes("");
-    setIsEditingName(true);
-    setIsEditingMeta(false);
-    setIsEditingIngredients(false);
-    setIsEditingInstructions(true);
-    setIsEditingNotes(false);
-  }, [defaultDifficulty, defaultServings, open, recommendedMealType]);
-
-  useEffect(() => {
-    if (!isEditingMeta) {
-      setIsDifficultyOpen(false);
-    }
-  }, [isEditingMeta]);
+  const [mealType, setMealType] = useState<keyof Menu>(initialMealType);
+  const [name, setName] = useState("");
+  const [ingredientsInput, setIngredientsInput] = useState("");
+  const [estimatedTime, setEstimatedTime] = useState("");
+  const [servings, setServings] = useState(initialServings);
+  const [calories, setCalories] = useState("");
+  const [difficulty, setDifficulty] = useState<Difficulty | "">(initialDifficulty);
+  const [instructions, setInstructions] = useState("");
+  const [notes, setNotes] = useState("");
+  const [isEditingName, setIsEditingName] = useState(true);
+  const [isEditingMeta, setIsEditingMeta] = useState(false);
+  const [isDifficultyOpen, setIsDifficultyOpen] = useState(false);
+  const [isEditingIngredients, setIsEditingIngredients] = useState(false);
+  const [isEditingInstructions, setIsEditingInstructions] = useState(true);
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const difficultyDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isDifficultyOpen) return;
@@ -286,7 +264,15 @@ export function AddMealModal({
               </p>
               <button
                 type="button"
-                onClick={() => setIsEditingMeta((prev) => !prev)}
+                onClick={() => {
+                  setIsEditingMeta((prev) => {
+                    const next = !prev;
+                    if (!next) {
+                      setIsDifficultyOpen(false);
+                    }
+                    return next;
+                  });
+                }}
                 className="ui-label-soft text-accent-base"
               >
                 {isEditingMeta ? "Done" : "Edit"}

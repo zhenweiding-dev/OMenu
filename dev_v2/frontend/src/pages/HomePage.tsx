@@ -51,7 +51,7 @@ export function HomePage() {
     dish: Dish;
   } | null>(null);
 
-  const hasUserSelectedWeekRef = useRef(false);
+  const [hasUserSelectedWeek, setHasUserSelectedWeek] = useState(false);
 
   const currentWeekStart = useMemo(() => startOfWeek(new Date(), { weekStartsOn: 1 }), []);
   const nextWeekStart = useMemo(() => addWeeks(currentWeekStart, 1), [currentWeekStart]);
@@ -136,16 +136,16 @@ export function HomePage() {
 
   useEffect(() => {
     if (!currentWeekBook) return;
-    if (hasUserSelectedWeekRef.current) return;
+    if (hasUserSelectedWeek) return;
     if (currentBook?.id === currentWeekBook.id) return;
     setCurrentWeekId(currentWeekBook.id);
-  }, [currentBook?.id, currentWeekBook, setCurrentWeekId]);
+  }, [currentBook?.id, currentWeekBook, hasUserSelectedWeek, setCurrentWeekId]);
 
   useEffect(() => {
-    if (!currentWeekBook && !currentBook && !hasUserSelectedWeekRef.current) {
+    if (!currentWeekBook && !currentBook && !hasUserSelectedWeek) {
       setCurrentWeekId(null);
     }
-  }, [currentBook, currentWeekBook, setCurrentWeekId]);
+  }, [currentBook, currentWeekBook, hasUserSelectedWeek, setCurrentWeekId]);
 
 
   const handleRequestDelete = (book: MenuBook) => {
@@ -178,7 +178,7 @@ export function HomePage() {
   const touchStartXRef = useRef<number | null>(null);
 
   const handleSelectBook = (id: string) => {
-    hasUserSelectedWeekRef.current = true;
+    setHasUserSelectedWeek(true);
     setCurrentWeekId(id);
     setCurrentDayIndex(0);
     setIsMenuPickerOpen(false);
@@ -191,12 +191,12 @@ export function HomePage() {
 
   const handleViewNextWeek = () => {
     if (!nextWeekBook) return;
-    hasUserSelectedWeekRef.current = true;
+    setHasUserSelectedWeek(true);
     setCurrentWeekId(nextWeekBook.id);
     setCurrentDayIndex(0);
   };
 
-  const shouldShowWelcome = !currentWeekBook && !currentBook && !hasUserSelectedWeekRef.current;
+  const shouldShowWelcome = !currentWeekBook && !currentBook && !hasUserSelectedWeek;
   const activeBook = shouldShowWelcome ? null : currentBook ?? currentWeekBook;
   const hasCurrentBook = Boolean(activeBook);
   const currentDayKey = hasCurrentBook ? WEEK_DAYS[currentDayIndex] : WEEK_DAYS[0];

@@ -6,6 +6,7 @@ import { DailyMenuCard } from "@/components/home/DailyMenuCard";
 import { WeekDateBar } from "@/components/home/WeekDateBar";
 import { AddMealModal } from "@/components/home/AddMealModal";
 import { RecipeDetailSheet } from "@/components/home/RecipeDetailModal";
+import { StepLoading } from "@/components/create/StepLoading";
 import { WEEK_DAYS } from "@/utils/constants";
 import { getDayDisplay, getWeekDateRange, startCaseDay } from "@/utils/helpers";
 import type { Dish, Menu, MenuBook } from "@/types";
@@ -29,6 +30,8 @@ export function StepPlanOverview({ menuBook, onMenuBookUpdated, onViewShopping }
   const [modification, setModification] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [addMealDayKey, setAddMealDayKey] = useState<(typeof WEEK_DAYS)[number] | null>(null);
+  const [isModifying, setIsModifying] = useState(false);
+  const [modifyStartTime, setModifyStartTime] = useState<number | null>(null);
   const [activeDish, setActiveDish] = useState<{
     day: keyof MenuBook["menus"];
     mealType: keyof Menu;
@@ -112,18 +115,27 @@ export function StepPlanOverview({ menuBook, onMenuBookUpdated, onViewShopping }
 
     setSuccessMessage("");
     clearError();
+    setShowModifyModal(false);
+    setIsModifying(true);
+    setModifyStartTime(Date.now());
 
     try {
       const updated = await updateMenu(menuBook, trimmed);
       const list = await generateList(updated);
       onMenuBookUpdated({ ...updated, shoppingList: list });
       setModification("");
-      setShowModifyModal(false);
       setSuccessMessage("Menu updated successfully.");
     } catch {
       // Errors piped through global store
+    } finally {
+      setIsModifying(false);
+      setModifyStartTime(null);
     }
   };
+
+  if (isModifying) {
+    return <StepLoading startTime={modifyStartTime} />;
+  }
 
   return (
     <div className="flex flex-1 flex-col">
@@ -164,7 +176,7 @@ export function StepPlanOverview({ menuBook, onMenuBookUpdated, onViewShopping }
 
       {globalError && <p className="px-5 pb-4 text-center ui-caption text-error">{globalError}</p>}
 
-      <div className="sticky bottom-0 border-t border-border-subtle bg-paper-base px-5 pb-6 pt-4">
+      <div className="sticky bottom-0 border-t border-border-subtle bg-paper-base px-5 pb-4 pt-3">
         <div className="flex gap-3">
           <Button
             type="button"

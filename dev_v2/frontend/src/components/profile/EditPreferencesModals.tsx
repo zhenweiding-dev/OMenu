@@ -116,15 +116,9 @@ interface EditPreferredModalProps {
 }
 
 export function EditPreferredModal({ isOpen, onClose, items, onSave }: EditPreferredModalProps) {
-  const [selected, setSelected] = useState<string[]>(items);
+  const [selected, setSelected] = useState<string[]>(() => [...items]);
   const [customInput, setCustomInput] = useState("");
   const [showCustomInput, setShowCustomInput] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      setSelected(items);
-    }
-  }, [isOpen, items]);
 
   const toggleItem = (item: string) => {
     setSelected((prev) =>
@@ -256,15 +250,9 @@ interface EditDislikedModalProps {
 }
 
 export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislikedModalProps) {
-  const [selected, setSelected] = useState<string[]>(items);
+  const [selected, setSelected] = useState<string[]>(() => [...items]);
   const [customInput, setCustomInput] = useState("");
   const [showCustomInput, setShowCustomInput] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      setSelected(items);
-    }
-  }, [isOpen, items]);
 
   const toggleItem = (item: string) => {
     setSelected((prev) =>
@@ -403,14 +391,6 @@ export function EditSettingsModal({ isOpen, onClose, numPeople, budget, difficul
   const [localPeople, setLocalPeople] = useState(numPeople);
   const [localBudget, setLocalBudget] = useState(budget);
   const [localDifficulty, setLocalDifficulty] = useState(difficulty);
-
-  useEffect(() => {
-    if (isOpen) {
-      setLocalPeople(numPeople);
-      setLocalBudget(budget);
-      setLocalDifficulty(difficulty);
-    }
-  }, [isOpen, numPeople, budget, difficulty]);
 
   const handleSave = () => {
     onSave({ numPeople: localPeople, budget: localBudget, difficulty: localDifficulty });

@@ -87,8 +87,42 @@ function FlameIcon() {
   );
 }
 
+function parseInstructionSteps(raw: string) {
+  const cleaned = raw.replace(/\r/g, "").trim();
+  if (!cleaned) return [];
+
+  const stripLeadingMarker = (text: string) =>
+    text.replace(/^\s*(?:step\s*)?\d{1,2}[).:-]?\s*/i, "").trim();
+
+  const splitByNumberedMarkers = (text: string) => {
+    const pattern = /(?:^|\s)(?:step\s*)?\d{1,2}[).:-]\s*/gi;
+    const matches = [...text.matchAll(pattern)];
+    if (matches.length === 0) {
+      return [stripLeadingMarker(text)];
+    }
+    const segments: string[] = [];
+    matches.forEach((match, index) => {
+      const start = match.index ?? 0;
+      const contentStart = start + match[0].length;
+      const end = index + 1 < matches.length ? (matches[index + 1].index ?? text.length) : text.length;
+      const segment = text.slice(contentStart, end).trim();
+      if (segment) segments.push(segment);
+    });
+    return segments.length > 0 ? segments : [stripLeadingMarker(text)];
+  };
+
+  const normalized = cleaned.replace(/\u2022/g, "\n");
+  const lines = normalized
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const steps = lines.flatMap((line) => splitByNumberedMarkers(line));
+  return steps.filter(Boolean);
+}
+
 export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: ModalContentProps) {
-  const { book, day, mealType, dish } = active;
+  const { day, mealType, dish } = active;
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [notesDraft, setNotesDraft] = useState(() => dish.notes ?? "");
   const notesRef = useRef<HTMLTextAreaElement>(null);
@@ -101,14 +135,7 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
     })).filter((group) => group.items.length > 0);
   }, [dish.ingredients]);
 
-  const instructionSteps = dish.instructions
-    .split(/\n+/)
-    .map((step) => step.trim())
-    .filter(Boolean)
-    .map((step) => {
-      const cleaned = step.replace(/^(?:step\s*\d+[:.-]?|\d+[).:\-\s]*|[-•\u2022]\s*)/i, "").trim();
-      return cleaned.length > 0 ? cleaned : step;
-    });
+  const instructionSteps = useMemo(() => parseInstructionSteps(dish.instructions), [dish.instructions]);
 
   const hasNotes = Boolean(dish.notes);
 

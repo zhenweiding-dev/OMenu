@@ -41,7 +41,7 @@ export function WeekDateBar({ createdAt, activeIndex, onSelect }: WeekDateBarPro
             <span className="ui-label-soft normal-case">{DAY_LABELS[day]}</span>
             <span
               className={cn(
-                "whitespace-nowrap ui-caption-soft",
+                "whitespace-nowrap ui-caption-soft text-[10px] leading-tight",
                 isActive ? "text-accent-base/80" : "text-text-tertiary",
               )}
             >

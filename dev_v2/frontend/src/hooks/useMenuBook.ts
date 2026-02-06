@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { generateMenuBook, generateShoppingList, modifyMenuBook } from "@/services/api";
 import { useAppStore } from "@/stores/useAppStore";
-import type { MenuBook, ShoppingList, UserPreferences, WeekMenus } from "@/types";
+import type { MenuBook, UserPreferences, WeekMenus } from "@/types";
 
 function buildAiMenus(menus: WeekMenus): WeekMenus {
   return Object.fromEntries(
