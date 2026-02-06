@@ -238,7 +238,7 @@ export function AddMealModal({
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   onBlur={() => setIsEditingName(false)}
-                  className="h-auto rounded-xl border border-border-subtle bg-transparent px-3 py-2 ui-heading focus-visible:ring-0"
+                  className="h-auto rounded-xl border border-border-subtle bg-transparent px-3 py-2 ui-title focus-visible:ring-0"
                 />
                 {nameError && <p className="mt-1 ui-caption text-[#C67B7B]">Name is required.</p>}
               </>
@@ -246,7 +246,7 @@ export function AddMealModal({
               <button
                 type="button"
                 onClick={() => setIsEditingName(true)}
-                className="text-left ui-heading"
+                className="w-full text-left ui-title"
               >
                 {name ? (
                   name
@@ -257,7 +257,7 @@ export function AddMealModal({
             )}
           </div>
 
-          <div className="mt-5 rounded-2xl border border-border-subtle bg-paper-muted/30 p-4">
+          <div className="mt-4 rounded-2xl border border-border-subtle bg-paper-muted/30 p-4">
             <div className="flex items-center justify-between">
               <p className="ui-label-soft text-text-secondary">
                 Meal details

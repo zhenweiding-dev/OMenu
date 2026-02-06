@@ -73,7 +73,7 @@ export function StepLoading({
       {/* Animated chef icon */}
       <div className="relative mb-8 flex h-[155px] w-[155px] items-center justify-center rounded-full bg-paper-muted animate-chef">
         <ChefHat className="h-14 w-14 text-accent-base ui-icon-strong" aria-hidden />
-        <Pizza className="absolute -left-4 top-6 h-7 w-7 text-accent-base/70 animate-ingredient-a ui-icon" aria-hidden />
+        <Pizza className="absolute -left-1 top-6 h-7 w-7 text-accent-base/70 animate-ingredient-a ui-icon" aria-hidden />
         <Soup className="absolute left-1 bottom-6 h-6 w-6 text-accent-base/70 animate-ingredient-b ui-icon" aria-hidden />
         <CookingPot className="absolute -right-3 top-10 h-6 w-6 text-accent-base/70 animate-ingredient-c ui-icon" aria-hidden />
         <Salad className="absolute right-3 bottom-7 h-6 w-6 text-accent-base/70 animate-ingredient-d ui-icon" aria-hidden />

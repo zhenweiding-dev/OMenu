@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Apple, Carrot, LeafyGreen, Milk, ShoppingCart, Clock3 } from "lucide-react";
+import { Apple, Carrot, LeafyGreen, Milk, ShoppingCart, Wheat, Clock3 } from "lucide-react";
 import { useMenuBook } from "@/hooks/useMenuBook";
 import { useAppStore } from "@/stores/useAppStore";
 import { Button } from "@/components/ui/button";
@@ -102,14 +102,38 @@ export function StepShoppingLoading({ menuBook, onGenerated }: StepShoppingLoadi
 
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center px-5 py-20 text-center">
-      <div className="relative h-36 w-36">
-        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-paper-muted/80 animate-pulse-subtle">
-          <ShoppingCart className="h-10 w-10 text-accent-base ui-icon-strong" />
-        </div>
-        <Apple className="absolute -left-1 top-5 h-6 w-6 text-accent-base/70 animate-ingredient-a ui-icon" aria-hidden />
-        <LeafyGreen className="absolute right-2 top-2 h-6 w-6 text-accent-base/70 animate-ingredient-b ui-icon" aria-hidden />
-        <Milk className="absolute left-4 bottom-2 h-5 w-5 text-accent-base/70 animate-ingredient-c ui-icon" aria-hidden />
-        <Carrot className="absolute right-1 bottom-5 h-6 w-6 text-accent-base/70 animate-ingredient-d ui-icon" aria-hidden />
+      <div className="relative mb-8 flex h-[155px] w-[155px] items-center justify-center rounded-full bg-paper-muted animate-chef">
+        <ShoppingCart className="h-14 w-14 text-accent-base ui-icon-strong" aria-hidden />
+        {(() => {
+          const items = [
+            { Icon: LeafyGreen, size: "h-7 w-7", tone: "text-accent-base/70", anim: "animate-ingredient-a" },
+            { Icon: Apple, size: "h-6 w-6", tone: "text-accent-base/70", anim: "animate-ingredient-b" },
+            { Icon: Wheat, size: "h-6 w-6", tone: "text-accent-base/70", anim: "animate-ingredient-c" },
+            { Icon: Carrot, size: "h-6 w-6", tone: "text-accent-base/70", anim: "animate-ingredient-d" },
+            { Icon: Milk, size: "h-6 w-6", tone: "text-accent-base/70", anim: "animate-ingredient-c" },
+          ];
+          const startAngle = -135;
+          const endAngle = 135;
+          const step = items.length > 1 ? (endAngle - startAngle) / (items.length - 1) : 0;
+          return items.map((item, index) => ({ ...item, angle: startAngle + step * index }));
+        })().map(({ Icon, size, tone, angle, anim }) => {
+          const radians = (angle * Math.PI) / 180;
+          const radius = 58;
+          return (
+            <span
+              key={angle}
+              className="absolute"
+              style={{
+                left: "50%",
+                top: "50%",
+                transform: `translate(-50%, -50%) translate(${Math.cos(radians) * radius}px, ${Math.sin(radians) * radius}px)`,
+              }}
+              aria-hidden
+            >
+              <Icon className={`${size} ${tone} ${anim} ui-icon`} aria-hidden />
+            </span>
+          );
+        })}
       </div>
       <div className="space-y-1">
         <h2 className="ui-title">Generating your shopping list...</h2>

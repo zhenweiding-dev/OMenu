@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { startOfWeek } from "date-fns";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { useMenuBook } from "@/hooks/useMenuBook";
 import { useAppStore } from "@/stores/useAppStore";
@@ -35,17 +35,17 @@ const STEP_LABELS: Record<number, string> = {
   5: "Schedule",
 };
 
-// Total steps for progress indicator (excluding welcome, loading, overview, shoppingLoading)
-const TOTAL_PROGRESS_STEPS = 4;
+// Total steps for progress indicator (welcome + steps 2-5)
+const TOTAL_PROGRESS_STEPS = 5;
 
 interface ProgressDotsProps {
   currentStep: number;
 }
 
 function ProgressDots({ currentStep }: ProgressDotsProps) {
-  // Only show progress dots for steps 2-5
-  if (currentStep < steps.preferences || currentStep > steps.schedule) return null;
-  const progressStep = currentStep - steps.preferences + 1;
+  // Show progress dots for welcome and steps 2-5
+  if (currentStep < steps.welcome || currentStep > steps.schedule) return null;
+  const progressStep = currentStep;
   
   return (
     <div className="flex gap-2 px-5 pt-14 pb-5">
@@ -73,6 +73,7 @@ function ProgressDots({ currentStep }: ProgressDotsProps) {
 export function CreatePlanPage() {
   const draft = useDraftStore();
   const location = useLocation();
+  const navigate = useNavigate();
   const { createMenu } = useMenuBook();
   const isGenerating = useAppStore((state) => state.isGenerating);
   const error = useAppStore((state) => state.error);
@@ -293,6 +294,7 @@ export function CreatePlanPage() {
           label={getRelativeWeekLabel(targetWeekStart ?? new Date().toISOString())}
           dateRange={getWeekDateRange(targetWeekStart ?? new Date().toISOString())}
           onNext={() => goToStep(steps.preferences)}
+          onBack={() => navigate("/")}
         />
       );
       break;
@@ -385,7 +387,7 @@ export function CreatePlanPage() {
       }
       break;
     default:
-      content = <StepWelcome onNext={() => goToStep(steps.preferences)} />;
+      content = <StepWelcome onNext={() => goToStep(steps.preferences)} onBack={() => navigate("/")} />;
   }
 
   // Show resume prompt if user has a saved draft
@@ -441,6 +443,9 @@ export function CreatePlanPage() {
   if (isFullScreenStep) {
     return (
       <div className="relative flex h-full flex-1 flex-col bg-paper-base">
+        {draft.currentStep === steps.welcome && (
+          <ProgressDots currentStep={draft.currentStep} />
+        )}
         {content}
         {shouldShowError && <p className="px-5 pb-4 text-center ui-caption text-error">{error}</p>}
       </div>

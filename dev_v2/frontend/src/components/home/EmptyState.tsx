@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import { startOfWeek } from "date-fns";
 import { BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function EmptyState() {
+  const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 }).toISOString();
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center px-5 py-20 text-center">
       {/* Icon */}
@@ -26,7 +28,12 @@ export function EmptyState() {
         size="lg"
         className="px-12"
       >
-        <Link to="/create">Create Menu</Link>
+        <Link
+          to="/create"
+          state={{ startStep: 1, skipResume: true, weekStart: currentWeekStart }}
+        >
+          Create Menu
+        </Link>
       </Button>
     </div>
   );

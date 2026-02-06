@@ -1,63 +1,71 @@
 {
   "preferences": {
-    "specificPreferences": [],
-    "specificDisliked": [],
+    "specificPreferences": [
+      "high-protein",
+      "Asian flavors",
+      "Minimal cleanup",
+      "No heavy sauces"
+    ],
+    "specificDisliked": [
+      "Not too sweet",
+      "no organ meat"
+    ],
     "numPeople": 2,
     "budget": 120,
     "difficulty": "medium",
     "cookSchedule": {
       "monday": {
-        "breakfast": false,
-        "lunch": false,
-        "dinner": false
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
       },
       "tuesday": {
-        "breakfast": false,
-        "lunch": false,
-        "dinner": false
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
       },
       "wednesday": {
-        "breakfast": false,
-        "lunch": false,
-        "dinner": false
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
       },
       "thursday": {
-        "breakfast": false,
-        "lunch": false,
-        "dinner": false
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
       },
       "friday": {
-        "breakfast": false,
-        "lunch": false,
-        "dinner": false
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
       },
       "saturday": {
-        "breakfast": false,
-        "lunch": false,
-        "dinner": false
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
       },
       "sunday": {
-        "breakfast": false,
-        "lunch": false,
-        "dinner": false
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
       }
     }
   },
   "menuBooks": [
     {
-      "id": "mb_20260202",
-      "createdAt": "2026-02-02T09:00:00Z",
+      "id": "mb_32660b550c6a",
+      "createdAt": "2026-02-09T08:00:00Z",
       "status": "ready",
       "preferences": {
         "specificPreferences": [
-          "Veggies with every meal",
-          "Budget-friendly",
+          "high-protein",
+          "Asian flavors",
           "Minimal cleanup",
           "No heavy sauces"
         ],
         "specificDisliked": [
-          "No cilantro",
-          "Not too sweet"
+          "Not too sweet",
+          "no organ meat"
         ],
         "numPeople": 2,
         "budget": 120,
@@ -69,487 +77,6 @@
             "dinner": true
           },
           "tuesday": {
-            "breakfast": false,
-            "lunch": true,
-            "dinner": true
-          },
-          "wednesday": {
-            "breakfast": false,
-            "lunch": true,
-            "dinner": true
-          },
-          "thursday": {
-            "breakfast": false,
-            "lunch": true,
-            "dinner": true
-          },
-          "friday": {
-            "breakfast": true,
-            "lunch": true,
-            "dinner": true
-          },
-          "saturday": {
-            "breakfast": true,
-            "lunch": true,
-            "dinner": true
-          },
-          "sunday": {
-            "breakfast": true,
-            "lunch": true,
-            "dinner": true
-          }
-        }
-      },
-      "menus": {
-        "monday": {
-          "breakfast": [
-            {
-              "id": "mon-breakfast-manual-01",
-              "name": "Avocado Toast with Egg",
-              "ingredients": [
-                {
-                  "name": "Bread",
-                  "quantity": 2.0,
-                  "unit": "slices",
-                  "category": "grains"
-                },
-                {
-                  "name": "Avocado",
-                  "quantity": 0.5,
-                  "unit": "count",
-                  "category": "fruits"
-                },
-                {
-                  "name": "Eggs",
-                  "quantity": 2.0,
-                  "unit": "count",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Salt",
-                  "quantity": 1.0,
-                  "unit": "pinch",
-                  "category": "seasonings"
-                }
-              ],
-              "instructions": "Toast bread. Smash avocado and top with a fried egg.",
-              "estimatedTime": 12,
-              "servings": 1,
-              "difficulty": "easy",
-              "totalCalories": 380,
-              "source": "manual",
-              "notes": "Add chili flakes if desired."
-            }
-          ],
-          "lunch": [
-            {
-              "id": "manual_lunch_monday_1770350673660",
-              "name": "干煸丁丁",
-              "ingredients": [],
-              "instructions": "",
-              "estimatedTime": 0,
-              "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 0,
-              "source": "manual",
-              "notes": ""
-            },
-            {
-              "id": "mon-lunch-ai-01",
-              "name": "Chicken Grain Bowl",
-              "ingredients": [
-                {
-                  "name": "Chicken",
-                  "quantity": 180.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Brown rice",
-                  "quantity": 120.0,
-                  "unit": "g",
-                  "category": "grains"
-                },
-                {
-                  "name": "Spinach",
-                  "quantity": 60.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Olive oil",
-                  "quantity": 10.0,
-                  "unit": "ml",
-                  "category": "pantry_staples"
-                }
-              ],
-              "instructions": "Cook rice. Sear chicken. Assemble with spinach and drizzle olive oil.",
-              "estimatedTime": 25,
-              "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 520,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "dinner": [
-            {
-              "id": "mon-dinner-ai-01",
-              "name": "Garlic Salmon & Broccoli",
-              "ingredients": [
-                {
-                  "name": "Salmon",
-                  "quantity": 200.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Broccoli",
-                  "quantity": 120.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Garlic",
-                  "quantity": 2.0,
-                  "unit": "cloves",
-                  "category": "seasonings"
-                }
-              ],
-              "instructions": "Roast salmon and broccoli with garlic until tender.",
-              "estimatedTime": 20,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 430,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        },
-        "tuesday": {
-          "breakfast": [],
-          "lunch": [
-            {
-              "id": "tue-lunch-manual-01",
-              "name": "Caprese Salad",
-              "ingredients": [
-                {
-                  "name": "Tomatoes",
-                  "quantity": 150.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Mozzarella",
-                  "quantity": 80.0,
-                  "unit": "g",
-                  "category": "dairy"
-                },
-                {
-                  "name": "Basil",
-                  "quantity": 5.0,
-                  "unit": "g",
-                  "category": "seasonings"
-                }
-              ],
-              "instructions": "Slice tomatoes and mozzarella. Layer with basil.",
-              "estimatedTime": 10,
-              "servings": 1,
-              "difficulty": "easy",
-              "totalCalories": 260,
-              "source": "manual",
-              "notes": null
-            }
-          ],
-          "dinner": []
-        },
-        "wednesday": {
-          "breakfast": [],
-          "lunch": [
-            {
-              "id": "wed-lunch-ai-01",
-              "name": "Veggie Stir-fry",
-              "ingredients": [
-                {
-                  "name": "Bell peppers",
-                  "quantity": 120.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Broccoli",
-                  "quantity": 80.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Soy sauce",
-                  "quantity": 15.0,
-                  "unit": "ml",
-                  "category": "seasonings"
-                }
-              ],
-              "instructions": "Stir-fry veggies. Finish with soy sauce.",
-              "estimatedTime": 15,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 240,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "dinner": [
-            {
-              "id": "wed-dinner-ai-01",
-              "name": "Lemon Herb Pasta",
-              "ingredients": [
-                {
-                  "name": "Pasta",
-                  "quantity": 120.0,
-                  "unit": "g",
-                  "category": "grains"
-                },
-                {
-                  "name": "Lemon",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "fruits"
-                },
-                {
-                  "name": "Parmesan",
-                  "quantity": 20.0,
-                  "unit": "g",
-                  "category": "dairy"
-                }
-              ],
-              "instructions": "Cook pasta. Toss with lemon zest and parmesan.",
-              "estimatedTime": 20,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 410,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        },
-        "thursday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        },
-        "friday": {
-          "breakfast": [
-            {
-              "id": "fri-breakfast-ai-01",
-              "name": "Greek Yogurt Parfait",
-              "ingredients": [
-                {
-                  "name": "Yogurt",
-                  "quantity": 150.0,
-                  "unit": "g",
-                  "category": "dairy"
-                },
-                {
-                  "name": "Berries",
-                  "quantity": 80.0,
-                  "unit": "g",
-                  "category": "fruits"
-                },
-                {
-                  "name": "Granola",
-                  "quantity": 30.0,
-                  "unit": "g",
-                  "category": "grains"
-                }
-              ],
-              "instructions": "Layer yogurt, berries, and granola.",
-              "estimatedTime": 5,
-              "servings": 1,
-              "difficulty": "easy",
-              "totalCalories": 280,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "lunch": [
-            {
-              "id": "fri-lunch-ai-01",
-              "name": "Turkey Wrap",
-              "ingredients": [
-                {
-                  "name": "Tortilla",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "grains"
-                },
-                {
-                  "name": "Turkey",
-                  "quantity": 90.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Lettuce",
-                  "quantity": 30.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                }
-              ],
-              "instructions": "Wrap turkey and lettuce in tortilla.",
-              "estimatedTime": 8,
-              "servings": 1,
-              "difficulty": "easy",
-              "totalCalories": 320,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "dinner": [
-            {
-              "id": "fri-dinner-ai-01",
-              "name": "Miso Glazed Cod",
-              "ingredients": [
-                {
-                  "name": "Cod",
-                  "quantity": 180.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Miso",
-                  "quantity": 15.0,
-                  "unit": "g",
-                  "category": "seasonings"
-                }
-              ],
-              "instructions": "Glaze cod with miso and bake until flaky.",
-              "estimatedTime": 18,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 360,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        },
-        "saturday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": [
-            {
-              "id": "sat-dinner-manual-01",
-              "name": "Homemade Veggie Pizza",
-              "ingredients": [
-                {
-                  "name": "Pizza dough",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "grains"
-                },
-                {
-                  "name": "Tomato sauce",
-                  "quantity": 80.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Cheese",
-                  "quantity": 60.0,
-                  "unit": "g",
-                  "category": "dairy"
-                }
-              ],
-              "instructions": "Assemble pizza and bake until golden.",
-              "estimatedTime": 30,
-              "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 560,
-              "source": "manual",
-              "notes": null
-            }
-          ]
-        },
-        "sunday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        }
-      },
-      "shoppingList": {
-        "id": "sl_20260202",
-        "menuBookId": "mb_20260202",
-        "createdAt": "2026-02-02T09:00:00Z",
-        "items": [
-          {
-            "id": "item-01",
-            "name": "Chicken",
-            "category": "proteins",
-            "totalQuantity": 180.0,
-            "unit": "g",
-            "purchased": false,
-            "isManuallyAdded": false
-          },
-          {
-            "id": "item-02",
-            "name": "Broccoli",
-            "category": "vegetables",
-            "totalQuantity": 120.0,
-            "unit": "g",
-            "purchased": true,
-            "isManuallyAdded": false
-          },
-          {
-            "id": "item-03",
-            "name": "Berries",
-            "category": "fruits",
-            "totalQuantity": 80.0,
-            "unit": "g",
-            "purchased": true,
-            "isManuallyAdded": false
-          },
-          {
-            "id": "item-04",
-            "name": "Granola",
-            "category": "grains",
-            "totalQuantity": 30.0,
-            "unit": "g",
-            "purchased": true,
-            "isManuallyAdded": false
-          },
-          {
-            "id": "item-05",
-            "name": "Olive oil",
-            "category": "pantry_staples",
-            "totalQuantity": 10.0,
-            "unit": "ml",
-            "purchased": false,
-            "isManuallyAdded": false
-          }
-        ]
-      }
-    },
-    {
-      "id": "mb_20260209",
-      "createdAt": "2026-02-09T09:00:00Z",
-      "status": "ready",
-      "preferences": {
-        "specificPreferences": [
-          "Fresh ingredients only",
-          "Extra fiber"
-        ],
-        "specificDisliked": [
-          "No spicy food"
-        ],
-        "numPeople": 3,
-        "budget": 150,
-        "difficulty": "easy",
-        "cookSchedule": {
-          "monday": {
-            "breakfast": true,
-            "lunch": true,
-            "dinner": true
-          },
-          "tuesday": {
             "breakfast": true,
             "lunch": true,
             "dinner": true
@@ -583,488 +110,10 @@
       },
       "menus": {
         "monday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        },
-        "tuesday": {
           "breakfast": [
             {
-              "id": "tue-breakfast-ai-02",
-              "name": "Banana Oatmeal",
-              "ingredients": [
-                {
-                  "name": "Oats",
-                  "quantity": 60.0,
-                  "unit": "g",
-                  "category": "grains"
-                },
-                {
-                  "name": "Banana",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "fruits"
-                }
-              ],
-              "instructions": "Cook oats and top with banana.",
-              "estimatedTime": 8,
-              "servings": 1,
-              "difficulty": "easy",
-              "totalCalories": 260,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "lunch": [],
-          "dinner": []
-        },
-        "wednesday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        },
-        "thursday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        },
-        "friday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        },
-        "saturday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        },
-        "sunday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        }
-      },
-      "shoppingList": {
-        "id": "sl_20260209",
-        "menuBookId": "mb_20260209",
-        "createdAt": "2026-02-09T09:00:00Z",
-        "items": []
-      }
-    },
-    {
-      "id": "mb_1a8bc17f134e",
-      "createdAt": "2026-02-02T08:00:00Z",
-      "status": "ready",
-      "preferences": {
-        "specificPreferences": [
-          "Veggies with every meal",
-          "Budget-friendly",
-          "Minimal cleanup",
-          "No heavy sauces"
-        ],
-        "specificDisliked": [
-          "No cilantro",
-          "Not too sweet"
-        ],
-        "numPeople": 2,
-        "budget": 120,
-        "difficulty": "medium",
-        "cookSchedule": {
-          "monday": {
-            "breakfast": false,
-            "lunch": false,
-            "dinner": false
-          },
-          "tuesday": {
-            "breakfast": false,
-            "lunch": false,
-            "dinner": false
-          },
-          "wednesday": {
-            "breakfast": false,
-            "lunch": false,
-            "dinner": false
-          },
-          "thursday": {
-            "breakfast": false,
-            "lunch": true,
-            "dinner": true
-          },
-          "friday": {
-            "breakfast": true,
-            "lunch": true,
-            "dinner": true
-          },
-          "saturday": {
-            "breakfast": true,
-            "lunch": true,
-            "dinner": true
-          },
-          "sunday": {
-            "breakfast": true,
-            "lunch": true,
-            "dinner": true
-          }
-        }
-      },
-      "menus": {
-        "monday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        },
-        "tuesday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        },
-        "wednesday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        },
-        "thursday": {
-          "breakfast": [],
-          "lunch": [
-            {
-              "id": "thu-lunch-001",
-              "name": "Chicken & Quinoa Power Bowl",
-              "ingredients": [
-                {
-                  "name": "rotisserie chicken",
-                  "quantity": 0.5,
-                  "unit": "count",
-                  "category": "proteins"
-                },
-                {
-                  "name": "spinach",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "carrots",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "quinoa",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
-                },
-                {
-                  "name": "lemon and olive oil",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
-                }
-              ],
-              "instructions": "Combine shredded chicken, spinach, grated carrots, and cooked quinoa. Drizzle with lemon-olive oil dressing.",
-              "estimatedTime": 10,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 450,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "dinner": [
-            {
-              "id": "thu-dinner-001",
-              "name": "One-Pan Turkey & Veggie Skillet",
-              "ingredients": [
-                {
-                  "name": "ground turkey",
-                  "quantity": 1.0,
-                  "unit": "lb",
-                  "category": "proteins"
-                },
-                {
-                  "name": "bell peppers",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "onion",
-                  "quantity": 0.5,
-                  "unit": "count",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "spinach",
-                  "quantity": 1.0,
-                  "unit": "handful",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "quinoa",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
-                }
-              ],
-              "instructions": "Sauté ground turkey with diced peppers, onions, and spinach in a skillet. Serve over remaining cooked quinoa.",
-              "estimatedTime": 20,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 520,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        },
-        "friday": {
-          "breakfast": [
-            {
-              "id": "fri-breakfast-001",
-              "name": "Savory Oatmeal",
-              "ingredients": [
-                {
-                  "name": "rolled oats",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
-                },
-                {
-                  "name": "eggs",
-                  "quantity": 2.0,
-                  "unit": "count",
-                  "category": "proteins"
-                },
-                {
-                  "name": "spinach",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "soy sauce",
-                  "quantity": 1.0,
-                  "unit": "tsp",
-                  "category": "pantry_staples"
-                }
-              ],
-              "instructions": "Cook oats in water/broth. Top with a fried egg, sautéed spinach, and a dash of soy sauce.",
-              "estimatedTime": 15,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 350,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "lunch": [
-            {
-              "id": "fri-lunch-001",
-              "name": "Turkey Leftover Wrap",
-              "ingredients": [
-                {
-                  "name": "leftover turkey skillet mix",
-                  "quantity": 1.0,
-                  "unit": "portion",
-                  "category": "others"
-                },
-                {
-                  "name": "lettuce or tortilla",
-                  "quantity": 2.0,
-                  "unit": "count",
-                  "category": "grains"
-                },
-                {
-                  "name": "carrots",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "vegetables"
-                }
-              ],
-              "instructions": "Wrap leftover turkey skillet mixture inside charred tortillas or lettuce leaves with sliced carrots.",
-              "estimatedTime": 5,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 380,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "dinner": [
-            {
-              "id": "fri-dinner-001",
-              "name": "Sheet Pan Lemon-Garlic Shrimp",
-              "ingredients": [
-                {
-                  "name": "frozen shrimp",
-                  "quantity": 1.0,
-                  "unit": "lb",
-                  "category": "proteins"
-                },
-                {
-                  "name": "broccoli",
-                  "quantity": 1.0,
-                  "unit": "head",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "sweet potatoes",
-                  "quantity": 2.0,
-                  "unit": "count",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "garlic",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
-                },
-                {
-                  "name": "olive oil",
-                  "quantity": 2.0,
-                  "unit": "tbsp",
-                  "category": "pantry_staples"
-                }
-              ],
-              "instructions": "Toss shrimp, broccoli, and cubed sweet potatoes with oil and garlic. Roast on a sheet pan until tender.",
-              "estimatedTime": 30,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 480,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        },
-        "saturday": {
-          "breakfast": [
-            {
-              "id": "sat-breakfast-001",
-              "name": "Sweet Potato Breakfast Hash",
-              "ingredients": [
-                {
-                  "name": "sweet potatoes",
-                  "quantity": 2.0,
-                  "unit": "count",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "onion",
-                  "quantity": 0.5,
-                  "unit": "count",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "bell peppers",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "eggs",
-                  "quantity": 4.0,
-                  "unit": "count",
-                  "category": "proteins"
-                }
-              ],
-              "instructions": "Sauté diced sweet potatoes, onions, and peppers until crisp. Top with poached eggs.",
-              "estimatedTime": 25,
-              "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 410,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "lunch": [
-            {
-              "id": "sat-lunch-001",
-              "name": "Shrimp & Veggie Salad",
-              "ingredients": [
-                {
-                  "name": "leftover shrimp",
-                  "quantity": 0.5,
-                  "unit": "lb",
-                  "category": "proteins"
-                },
-                {
-                  "name": "spinach",
-                  "quantity": 2.0,
-                  "unit": "cups",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "bell peppers",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "carrots",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "vegetables"
-                }
-              ],
-              "instructions": "Serve cold shrimp over spinach, peppers, and carrots. Dress with lemon vinaigrette.",
-              "estimatedTime": 10,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 320,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "dinner": [
-            {
-              "id": "sat-dinner-001",
-              "name": "Crispy Tofu Stir-Fry",
-              "ingredients": [
-                {
-                  "name": "firm tofu",
-                  "quantity": 1.0,
-                  "unit": "block",
-                  "category": "proteins"
-                },
-                {
-                  "name": "broccoli",
-                  "quantity": 0.5,
-                  "unit": "head",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "carrots",
-                  "quantity": 2.0,
-                  "unit": "count",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "soy sauce",
-                  "quantity": 2.0,
-                  "unit": "tbsp",
-                  "category": "pantry_staples"
-                },
-                {
-                  "name": "brown rice",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
-                }
-              ],
-              "instructions": "Sear cubed tofu with vegetables. Add soy sauce, ginger, and garlic. Serve over rice.",
-              "estimatedTime": 20,
-              "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 440,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        },
-        "sunday": {
-          "breakfast": [
-            {
-              "id": "sun-breakfast-001",
-              "name": "Veggie Scramble",
+              "id": "mon-breakfast-001",
+              "name": "Soft Scrambled Eggs with Chives & Chili Oil",
               "ingredients": [
                 {
                   "name": "eggs",
@@ -1073,323 +122,62 @@
                   "category": "proteins"
                 },
                 {
-                  "name": "mixed vegetables",
+                  "name": "green onions",
                   "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "rolled oats",
-                  "quantity": 0.5,
-                  "unit": "cup",
-                  "category": "grains"
-                }
-              ],
-              "instructions": "Scramble eggs with remaining peppers, onions, and spinach. Side of toasted oats or sweet potato.",
-              "estimatedTime": 15,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 380,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "lunch": [
-            {
-              "id": "sun-lunch-001",
-              "name": "Tofu Quinoa Salad",
-              "ingredients": [
-                {
-                  "name": "leftover tofu",
-                  "quantity": 0.5,
-                  "unit": "portion",
-                  "category": "proteins"
-                },
-                {
-                  "name": "quinoa",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
-                },
-                {
-                  "name": "parsley",
-                  "quantity": 0.25,
                   "unit": "bunch",
                   "category": "vegetables"
                 },
                 {
-                  "name": "carrots",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "vegetables"
-                }
-              ],
-              "instructions": "Mix leftover tofu with quinoa, chopped parsley, and shredded carrots.",
-              "estimatedTime": 5,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 400,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "dinner": [
-            {
-              "id": "sun-dinner-001",
-              "name": "Kitchen Sink Roasted Soup",
-              "ingredients": [
-                {
-                  "name": "remaining vegetables",
-                  "quantity": 1.0,
-                  "unit": "batch",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "black beans",
-                  "quantity": 1.0,
-                  "unit": "can",
-                  "category": "pantry_staples"
-                },
-                {
-                  "name": "water or broth",
-                  "quantity": 2.0,
-                  "unit": "cups",
-                  "category": "others"
-                }
-              ],
-              "instructions": "Roast remaining veggies and blend with broth, or simmer in a pot with black beans as a stew.",
-              "estimatedTime": 40,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 350,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        }
-      },
-      "shoppingList": {
-        "id": "sl_4fb60973dcc9",
-        "menuBookId": "mb_1a8bc17f134e",
-        "createdAt": "2026-02-06T00:05:26.877961Z",
-        "items": [
-          {
-            "id": "item_730a4ff1",
-            "name": "Chicken and Turkey",
-            "category": "proteins",
-            "totalQuantity": 1.5,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_98ff07ec",
-            "name": "Shrimp and Tofu",
-            "category": "proteins",
-            "totalQuantity": 2.5,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_b80641f6",
-            "name": "Eggs",
-            "category": "proteins",
-            "totalQuantity": 10.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_becd4258",
-            "name": "Spinach and Greens",
-            "category": "vegetables",
-            "totalQuantity": 1.0,
-            "unit": "bunch",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_9e832299",
-            "name": "Carrots",
-            "category": "vegetables",
-            "totalQuantity": 6.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_40b8cd4a",
-            "name": "Bell Peppers and Onions",
-            "category": "vegetables",
-            "totalQuantity": 4.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_87a5cf18",
-            "name": "Sweet Potatoes",
-            "category": "vegetables",
-            "totalQuantity": 4.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_8cb80806",
-            "name": "Broccoli",
-            "category": "vegetables",
-            "totalQuantity": 2.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_8753d6b6",
-            "name": "Quinoa and Rice",
-            "category": "grains",
-            "totalQuantity": 4.0,
-            "unit": "cup",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_e1c8dc1b",
-            "name": "Oats and Tortillas",
-            "category": "grains",
-            "totalQuantity": 4.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_d7e49567",
-            "name": "Pantry Staples",
-            "category": "pantry_staples",
-            "totalQuantity": 4.0,
-            "unit": "oz",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_b786476d",
-            "name": "Seasonings",
-            "category": "seasonings",
-            "totalQuantity": 0.0,
-            "unit": "",
-            "purchased": false,
-            "isManuallyAdded": null
-          }
-        ]
-      }
-    },
-    {
-      "id": "mb_575bfa9c9256",
-      "createdAt": "2026-02-16T08:00:00Z",
-      "status": "ready",
-      "preferences": {
-        "specificPreferences": [
-          "Not too oily",
-          "多一点汤",
-          "Asian flavors",
-          "有米饭",
-          "叉烧"
-        ],
-        "specificDisliked": [
-          "No heavy frying"
-        ],
-        "numPeople": 2,
-        "budget": 120,
-        "difficulty": "medium",
-        "cookSchedule": {
-          "monday": {
-            "breakfast": false,
-            "lunch": true,
-            "dinner": true
-          },
-          "tuesday": {
-            "breakfast": false,
-            "lunch": true,
-            "dinner": true
-          },
-          "wednesday": {
-            "breakfast": false,
-            "lunch": true,
-            "dinner": true
-          },
-          "thursday": {
-            "breakfast": false,
-            "lunch": true,
-            "dinner": true
-          },
-          "friday": {
-            "breakfast": true,
-            "lunch": true,
-            "dinner": true
-          },
-          "saturday": {
-            "breakfast": true,
-            "lunch": true,
-            "dinner": true
-          },
-          "sunday": {
-            "breakfast": true,
-            "lunch": false,
-            "dinner": false
-          }
-        }
-      },
-      "menus": {
-        "monday": {
-          "breakfast": [],
-          "lunch": [
-            {
-              "id": "manual_lunch_monday_1770351201176",
-              "name": "红烧鸡翅",
-              "ingredients": [],
-              "instructions": "",
-              "estimatedTime": 30,
-              "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 300,
-              "source": "manual",
-              "notes": ""
-            },
-            {
-              "id": "mon-lunch-001",
-              "name": "Classic Char Siu Rice",
-              "ingredients": [
-                {
-                  "name": "pork butt",
-                  "quantity": 300.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "jasmine rice",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
-                },
-                {
-                  "name": "bok choy",
-                  "quantity": 2.0,
-                  "unit": "heads",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "honey",
+                  "name": "chili oil",
                   "quantity": 0.0,
                   "unit": "",
                   "category": "seasonings"
                 }
               ],
-              "instructions": "1. Roast honey-glazed pork. 2. Steam rice. 3. Blanch bok choy. 4. Slice pork and serve over rice.",
-              "estimatedTime": 60,
+              "instructions": "1. Whisk eggs. 2. Scramble in a pan over low heat until soft. 3. Top with chopped scallions and chili oil.",
+              "estimatedTime": 10,
               "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 550,
+              "difficulty": "easy",
+              "totalCalories": 320,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "mon-lunch-001",
+              "name": "Sesame Ginger Tofu Salad with Cucumber",
+              "ingredients": [
+                {
+                  "name": "firm tofu",
+                  "quantity": 0.5,
+                  "unit": "block",
+                  "category": "proteins"
+                },
+                {
+                  "name": "cucumber",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "sesame oil",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "ginger",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Cube tofu and slice cucumber. 2. Whisk sesame oil, soy sauce, and grated ginger. 3. Toss together and serve cold.",
+              "estimatedTime": 10,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 280,
               "source": "ai",
               "notes": null
             }
@@ -1397,313 +185,64 @@
           "dinner": [
             {
               "id": "mon-dinner-001",
-              "name": "Wonton & Shrimp Noodle Soup",
+              "name": "Sheet Pan Ginger-Soy Chicken & Broccoli",
               "ingredients": [
                 {
-                  "name": "chicken broth",
-                  "quantity": 500.0,
-                  "unit": "ml",
-                  "category": "others"
-                },
-                {
-                  "name": "shrimp wontons",
-                  "quantity": 10.0,
-                  "unit": "count",
+                  "name": "chicken thighs",
+                  "quantity": 1.0,
+                  "unit": "lb",
                   "category": "proteins"
                 },
                 {
-                  "name": "wonton noodles",
-                  "quantity": 2.0,
-                  "unit": "servings",
-                  "category": "grains"
-                },
-                {
-                  "name": "leafy greens",
-                  "quantity": 100.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                }
-              ],
-              "instructions": "1. Boil broth. 2. Cook noodles, wontons, and greens. 3. Serve hot in soup.",
-              "estimatedTime": 20,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 420,
-              "source": "ai",
-              "notes": "Replaced Char Siu with Wontons to meet the request of only one Char Siu dish."
-            }
-          ]
-        },
-        "tuesday": {
-          "breakfast": [],
-          "lunch": [
-            {
-              "id": "tue-lunch-001",
-              "name": "Ginger-Soy Steamed Fish",
-              "ingredients": [
-                {
-                  "name": "white fish fillets",
-                  "quantity": 300.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "ginger",
-                  "quantity": 20.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "scallions",
-                  "quantity": 2.0,
-                  "unit": "stalks",
+                  "name": "broccoli",
+                  "quantity": 1.0,
+                  "unit": "head",
                   "category": "vegetables"
                 },
                 {
                   "name": "soy sauce",
-                  "quantity": 1.0,
+                  "quantity": 2.0,
                   "unit": "tbsp",
                   "category": "pantry_staples"
                 },
                 {
-                  "name": "rice",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
-                }
-              ],
-              "instructions": "1. Place fish on plate with ginger. 2. Steam for 8-10 mins. 3. Add soy sauce and scallions. 4. Serve with rice.",
-              "estimatedTime": 20,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 400,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "dinner": [
-            {
-              "id": "tue-dinner-001",
-              "name": "Tomato & Egg Drop Soup",
-              "ingredients": [
-                {
-                  "name": "tomatoes",
-                  "quantity": 2.0,
-                  "unit": "count",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "eggs",
-                  "quantity": 2.0,
-                  "unit": "count",
-                  "category": "proteins"
-                },
-                {
-                  "name": "soft tofu",
-                  "quantity": 200.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "rice",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
-                }
-              ],
-              "instructions": "1. Sauté tomatoes. 2. Add water and tofu; simmer. 3. Swirl in beaten eggs. 4. Serve with rice.",
-              "estimatedTime": 15,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 350,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        },
-        "wednesday": {
-          "breakfast": [],
-          "lunch": [
-            {
-              "id": "wed-lunch-001",
-              "name": "Stir-fry Shredded Pork & Vegetables",
-              "ingredients": [
-                {
-                  "name": "pork loin",
-                  "quantity": 150.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "napa cabbage",
-                  "quantity": 200.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "carrots",
-                  "quantity": 1.0,
-                  "unit": "count",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "rice",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
-                }
-              ],
-              "instructions": "1. Slice vegetables and pork into strips. 2. Stir-fry with minimal oil. 3. Serve with steamed rice.",
-              "estimatedTime": 15,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 380,
-              "source": "ai",
-              "notes": "Replaced Char Siu with fresh pork loin strips."
-            }
-          ],
-          "dinner": [
-            {
-              "id": "wed-dinner-001",
-              "name": "Daikon & Pork Rib Soup",
-              "ingredients": [
-                {
-                  "name": "daikon radish",
-                  "quantity": 300.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "pork ribs",
-                  "quantity": 250.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
                   "name": "ginger",
-                  "quantity": 10.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "rice",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
                 }
               ],
-              "instructions": "1. Blanch ribs. 2. Simmer ribs and daikon with ginger for 1 hour. 3. Season and serve with rice.",
-              "estimatedTime": 70,
+              "instructions": "1. Toss chicken and broccoli in soy sauce and ginger. 2. Spread on parchment-lined pan. 3. Roast at 400F for 20-25 mins.",
+              "estimatedTime": 30,
               "servings": 2,
-              "difficulty": "medium",
+              "difficulty": "easy",
               "totalCalories": 450,
               "source": "ai",
               "notes": null
             }
           ]
         },
-        "thursday": {
-          "breakfast": [],
-          "lunch": [
-            {
-              "id": "thu-lunch-001",
-              "name": "Oyster Sauce Tofu & Broccoli",
-              "ingredients": [
-                {
-                  "name": "silken tofu",
-                  "quantity": 1.0,
-                  "unit": "block",
-                  "category": "proteins"
-                },
-                {
-                  "name": "broccoli",
-                  "quantity": 200.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "oyster sauce",
-                  "quantity": 1.0,
-                  "unit": "tbsp",
-                  "category": "pantry_staples"
-                },
-                {
-                  "name": "rice",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
-                }
-              ],
-              "instructions": "1. Blanch broccoli. 2. Braise tofu lightly in oyster sauce and aromatics. 3. Serve with rice.",
-              "estimatedTime": 15,
-              "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 380,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "dinner": [
-            {
-              "id": "thu-dinner-001",
-              "name": "Napa Cabbage & Meatball Soup",
-              "ingredients": [
-                {
-                  "name": "ground pork",
-                  "quantity": 200.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "napa cabbage",
-                  "quantity": 300.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "ginger broth",
-                  "quantity": 500.0,
-                  "unit": "ml",
-                  "category": "others"
-                }
-              ],
-              "instructions": "1. Form pork meatballs. 2. Poach in ginger broth. 3. Add cabbage until tender. 4. Serve in large bowls.",
-              "estimatedTime": 25,
-              "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 400,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        },
-        "friday": {
+        "tuesday": {
           "breakfast": [
             {
-              "id": "fri-breakfast-001",
-              "name": "Congee with Salted Egg",
+              "id": "tue-breakfast-001",
+              "name": "Greek Yogurt with Toasted Sesame & Hemp Seeds",
               "ingredients": [
                 {
-                  "name": "rice",
-                  "quantity": 0.5,
-                  "unit": "cup",
-                  "category": "grains"
-                },
-                {
-                  "name": "salted egg",
-                  "quantity": 1.0,
-                  "unit": "count",
+                  "name": "greek yogurt",
+                  "quantity": 2.0,
+                  "unit": "cups",
                   "category": "dairy"
                 },
                 {
-                  "name": "scallions",
+                  "name": "black sesame seeds",
                   "quantity": 1.0,
-                  "unit": "stalk",
-                  "category": "vegetables"
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
                 }
               ],
-              "instructions": "1. Boil rice in excess water until broken down. 2. Top with chopped salted egg and scallions.",
-              "estimatedTime": 40,
+              "instructions": "1. Portion yogurt into bowls. 2. Toast sesame seeds briefly. 3. Top yogurt with seeds.",
+              "estimatedTime": 5,
               "servings": 2,
               "difficulty": "easy",
               "totalCalories": 250,
@@ -1713,52 +252,69 @@
           ],
           "lunch": [
             {
-              "id": "fri-lunch-001",
-              "name": "Shrimp Fried Rice",
+              "id": "tue-lunch-001",
+              "name": "Leftover Ginger-Soy Chicken & Broccoli",
               "ingredients": [
                 {
-                  "name": "leftover rice",
-                  "quantity": 2.0,
-                  "unit": "cups",
-                  "category": "grains"
-                },
-                {
-                  "name": "shrimp",
-                  "quantity": 150.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "peas",
-                  "quantity": 50.0,
-                  "unit": "g",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "egg",
+                  "name": "leftover chicken and broccoli",
                   "quantity": 1.0,
-                  "unit": "count",
-                  "category": "proteins"
+                  "unit": "portion",
+                  "category": "others"
                 }
               ],
-              "instructions": "1. Scramble egg. 2. Sauté shrimp. 3. Toss with rice and peas. 4. Use low oil and high heat.",
-              "estimatedTime": 15,
+              "instructions": "1. Reheat leftovers in microwave or skillet until warm.",
+              "estimatedTime": 5,
               "servings": 2,
               "difficulty": "easy",
-              "totalCalories": 430,
+              "totalCalories": 450,
               "source": "ai",
-              "notes": "Replaced Char Siu with shrimp."
+              "notes": null
             }
           ],
           "dinner": [
             {
-              "id": "fri-dinner-001",
-              "name": "Poached Chicken in Turmeric Broth",
+              "id": "tue-dinner-001",
+              "name": "One-Pot Turkey & Green Bean Stir-fry",
               "ingredients": [
                 {
-                  "name": "chicken thighs",
-                  "quantity": 300.0,
-                  "unit": "g",
+                  "name": "ground turkey",
+                  "quantity": 0.75,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "green beans",
+                  "quantity": 0.5,
+                  "unit": "lb",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "garlic",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Brown turkey in a pot. 2. Add garlic and green beans. 3. Stir fry until beans are tender-crisp.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 380,
+              "source": "ai",
+              "notes": null
+            }
+          ]
+        },
+        "wednesday": {
+          "breakfast": [
+            {
+              "id": "wed-breakfast-001",
+              "name": "Tofu Scramble with Turmeric & Scallions",
+              "ingredients": [
+                {
+                  "name": "firm tofu",
+                  "quantity": 0.5,
+                  "unit": "block",
                   "category": "proteins"
                 },
                 {
@@ -1768,436 +324,168 @@
                   "category": "seasonings"
                 },
                 {
-                  "name": "rice",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
+                  "name": "green onions",
+                  "quantity": 2.0,
+                  "unit": "stalks",
+                  "category": "vegetables"
                 }
               ],
-              "instructions": "1. Simmer chicken in turmeric-infused broth. 2. Serve chicken in the golden broth with rice.",
-              "estimatedTime": 30,
+              "instructions": "1. Crumble tofu into a pan. 2. Sauté with turmeric and salt. 3. Stir in sliced scallions.",
+              "estimatedTime": 15,
               "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 500,
+              "difficulty": "easy",
+              "totalCalories": 210,
               "source": "ai",
               "notes": null
             }
-          ]
-        },
-        "saturday": {
-          "breakfast": [
+          ],
+          "lunch": [
             {
-              "id": "sat-breakfast-001",
-              "name": "Soft Scrambled Egg Toast",
+              "id": "wed-lunch-001",
+              "name": "Leftover Turkey & Green Bean Stir-fry",
               "ingredients": [
                 {
-                  "name": "eggs",
-                  "quantity": 3.0,
-                  "unit": "count",
+                  "name": "leftover turkey stir-fry",
+                  "quantity": 1.0,
+                  "unit": "portion",
+                  "category": "others"
+                }
+              ],
+              "instructions": "1. Reheat turkey and green bean mix until piping hot.",
+              "estimatedTime": 5,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 380,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "wed-dinner-001",
+              "name": "Steamed White Fish with Ginger & Bok Choy",
+              "ingredients": [
+                {
+                  "name": "white fish",
+                  "quantity": 2.0,
+                  "unit": "fillets",
                   "category": "proteins"
                 },
                 {
-                  "name": "milk bread",
-                  "quantity": 2.0,
-                  "unit": "slices",
-                  "category": "grains"
+                  "name": "bok choy",
+                  "quantity": 1.0,
+                  "unit": "bunch",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "ginger",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
                 }
               ],
-              "instructions": "1. Softly scramble eggs. 2. Serve over toasted milk bread.",
-              "estimatedTime": 10,
+              "instructions": "1. Place fish and bok choy in a steamer basket. 2. Top with ginger matchsticks. 3. Steam for 8-10 mins.",
+              "estimatedTime": 15,
               "servings": 2,
-              "difficulty": "easy",
+              "difficulty": "medium",
               "totalCalories": 320,
               "source": "ai",
               "notes": null
             }
-          ],
-          "lunch": [
+          ]
+        },
+        "thursday": {
+          "breakfast": [
             {
-              "id": "sat-lunch-001",
-              "name": "Cold Sesame Noodles",
+              "id": "thu-breakfast-001",
+              "name": "Boiled Eggs & Avocado with Furikake",
               "ingredients": [
                 {
-                  "name": "noodles",
-                  "quantity": 2.0,
-                  "unit": "servings",
-                  "category": "grains"
-                },
-                {
-                  "name": "cucumber",
-                  "quantity": 1.0,
+                  "name": "eggs",
+                  "quantity": 4.0,
                   "unit": "count",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "chicken strips",
-                  "quantity": 100.0,
-                  "unit": "g",
                   "category": "proteins"
                 },
                 {
-                  "name": "sesame oil",
+                  "name": "avocado",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "fruits"
+                },
+                {
+                  "name": "furikake",
                   "quantity": 0.0,
                   "unit": "",
                   "category": "seasonings"
                 }
               ],
-              "instructions": "1. Cook and cool noodles. 2. Toss with sesame sauce, cucumber, and chicken.",
-              "estimatedTime": 15,
+              "instructions": "1. Boil eggs for 7 mins. 2. Slice avocado. 3. Plate together and sprinkle with furikake.",
+              "estimatedTime": 12,
               "servings": 2,
               "difficulty": "easy",
-              "totalCalories": 400,
+              "totalCalories": 350,
               "source": "ai",
               "notes": null
             }
           ],
-          "dinner": [
-            {
-              "id": "sat-dinner-001",
-              "name": "Korean-style Soft Tofu Stew",
-              "ingredients": [
-                {
-                  "name": "soft tofu",
-                  "quantity": 1.0,
-                  "unit": "tube",
-                  "category": "proteins"
-                },
-                {
-                  "name": "seafood mix",
-                  "quantity": 150.0,
-                  "unit": "g",
-                  "category": "proteins"
-                },
-                {
-                  "name": "rice",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
-                }
-              ],
-              "instructions": "1. Boil light broth with seafood. 2. Add soft tofu. 3. Season lightly. 4. Serve with rice.",
-              "estimatedTime": 20,
-              "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 450,
-              "source": "ai",
-              "notes": null
-            }
-          ]
-        },
-        "sunday": {
-          "breakfast": [
-            {
-              "id": "sun-breakfast-001",
-              "name": "Savory Rice Crepes",
-              "ingredients": [
-                {
-                  "name": "rice flour",
-                  "quantity": 100.0,
-                  "unit": "g",
-                  "category": "grains"
-                },
-                {
-                  "name": "scallions",
-                  "quantity": 1.0,
-                  "unit": "stalk",
-                  "category": "vegetables"
-                }
-              ],
-              "instructions": "1. Make thin batter. 2. Steam in sheets. 3. Roll with scallions and serve.",
-              "estimatedTime": 25,
-              "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 280,
-              "source": "ai",
-              "notes": null
-            }
-          ],
-          "lunch": [],
-          "dinner": []
-        }
-      },
-      "shoppingList": {
-        "id": "sl_2169bf018551",
-        "menuBookId": "mb_575bfa9c9256",
-        "createdAt": "2026-02-06T04:16:47.515427Z",
-        "items": [
-          {
-            "id": "item_827d862a",
-            "name": "Pork (butt, loin, rib, ground)",
-            "category": "proteins",
-            "totalQuantity": 2.0,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_df490448",
-            "name": "Chicken (thighs, strips)",
-            "category": "proteins",
-            "totalQuantity": 1.0,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_c0e6207a",
-            "name": "Seafood (shrimp, fish, mix)",
-            "category": "proteins",
-            "totalQuantity": 1.5,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_4e11e5f1",
-            "name": "Eggs",
-            "category": "proteins",
-            "totalQuantity": 7.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_da3b338d",
-            "name": "Tofu (soft, silken)",
-            "category": "proteins",
-            "totalQuantity": 3.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_a08841fa",
-            "name": "Jasmine Rice",
-            "category": "grains",
-            "totalQuantity": 8.5,
-            "unit": "cup",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_51397155",
-            "name": "Noodles (wonton, wheat)",
-            "category": "grains",
-            "totalQuantity": 4.0,
-            "unit": "servings",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_29a89b84",
-            "name": "Green Onions",
-            "category": "vegetables",
-            "totalQuantity": 4.0,
-            "unit": "bunch",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_10363bce",
-            "name": "Napa Cabbage",
-            "category": "vegetables",
-            "totalQuantity": 1.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_1b1c4989",
-            "name": "Mixed Vegetables (produce)",
-            "category": "vegetables",
-            "totalQuantity": 6.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_951b9919",
-            "name": "Ginger",
-            "category": "vegetables",
-            "totalQuantity": 1.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_3eb3e6d2",
-            "name": "Honey, Turmeric, Sesame Oil",
-            "category": "seasonings",
-            "totalQuantity": 0.0,
-            "unit": "",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "c7d633bb-a007-49ec-bf38-fdfff439b5fc",
-            "name": "ice cream",
-            "category": "others",
-            "totalQuantity": 0.0,
-            "unit": "",
-            "purchased": false,
-            "isManuallyAdded": true
-          }
-        ]
-      }
-    },
-    {
-      "id": "mb_2803083b16f4",
-      "createdAt": "2026-02-02T08:00:00Z",
-      "status": "ready",
-      "preferences": {
-        "specificPreferences": [
-          "Not too oily",
-          "多一点汤",
-          "Asian flavors",
-          "有米饭",
-          "叉烧"
-        ],
-        "specificDisliked": [
-          "No heavy frying"
-        ],
-        "numPeople": 2,
-        "budget": 120,
-        "difficulty": "medium",
-        "cookSchedule": {
-          "monday": {
-            "breakfast": false,
-            "lunch": false,
-            "dinner": false
-          },
-          "tuesday": {
-            "breakfast": false,
-            "lunch": false,
-            "dinner": false
-          },
-          "wednesday": {
-            "breakfast": false,
-            "lunch": false,
-            "dinner": false
-          },
-          "thursday": {
-            "breakfast": false,
-            "lunch": true,
-            "dinner": true
-          },
-          "friday": {
-            "breakfast": true,
-            "lunch": true,
-            "dinner": true
-          },
-          "saturday": {
-            "breakfast": true,
-            "lunch": true,
-            "dinner": true
-          },
-          "sunday": {
-            "breakfast": true,
-            "lunch": false,
-            "dinner": false
-          }
-        }
-      },
-      "menus": {
-        "monday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        },
-        "tuesday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        },
-        "wednesday": {
-          "breakfast": [],
-          "lunch": [],
-          "dinner": []
-        },
-        "thursday": {
-          "breakfast": [],
           "lunch": [
             {
               "id": "thu-lunch-001",
-              "name": "Char Siu Rice Bowl",
+              "name": "Cold Soba Noodles with Cabbage & Edamame",
               "ingredients": [
                 {
-                  "name": "Pork Butt",
-                  "quantity": 1.0,
-                  "unit": "lb",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Jasmine Rice",
-                  "quantity": 1.0,
-                  "unit": "cup",
-                  "category": "grains"
-                },
-                {
-                  "name": "Bok Choy",
-                  "quantity": 2.0,
-                  "unit": "heads",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Honey/Soy Marinade",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
-                }
-              ],
-              "instructions": "Roast marinated pork butt. Serve sliced over steamed jasmine rice with blanched bok choy.",
-              "estimatedTime": 60,
-              "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 750,
-              "source": "ai",
-              "notes": "Increased pork portion for more meat."
-            }
-          ],
-          "dinner": [
-            {
-              "id": "thu-dinner-001",
-              "name": "Cantonese Wonton-style Soup",
-              "ingredients": [
-                {
-                  "name": "Char Siu Pork",
-                  "quantity": 8.0,
-                  "unit": "oz",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Rice Noodles",
+                  "name": "soba noodles",
                   "quantity": 4.0,
                   "unit": "oz",
                   "category": "grains"
                 },
                 {
-                  "name": "Napa Cabbage",
+                  "name": "cabbage",
                   "quantity": 2.0,
-                  "unit": "leaves",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Ginger",
-                  "quantity": 1.0,
-                  "unit": "slice",
-                  "category": "pantry_staples"
-                },
-                {
-                  "name": "Scallions",
-                  "quantity": 1.0,
-                  "unit": "stalk",
+                  "unit": "cups",
                   "category": "vegetables"
                 }
               ],
-              "instructions": "Simmer ginger and scallions for broth. Add noodles, cabbage, and sliced pork until heated through.",
-              "estimatedTime": 20,
+              "instructions": "1. Cook soba and rinse cold. 2. Shred cabbage. 3. Toss with a splash of soy and sesame oil.",
+              "estimatedTime": 15,
               "servings": 2,
               "difficulty": "easy",
-              "totalCalories": 550,
+              "totalCalories": 310,
               "source": "ai",
-              "notes": "Increased meat portion."
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "thu-dinner-001",
+              "name": "Turkey Egg Roll in a Bowl",
+              "ingredients": [
+                {
+                  "name": "ground turkey",
+                  "quantity": 0.75,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "cabbage",
+                  "quantity": 4.0,
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "soy sauce",
+                  "quantity": 2.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Brown turkey in skillet. 2. Add shredded cabbage and soy sauce. 3. Sauté until cabbage wilts.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 340,
+              "source": "ai",
+              "notes": null
             }
           ]
         },
@@ -2205,118 +493,82 @@
           "breakfast": [
             {
               "id": "fri-breakfast-001",
-              "name": "Soft Scrambled Egg Congee",
+              "name": "Protein Smoothie",
               "ingredients": [
                 {
-                  "name": "Jasmine Rice",
-                  "quantity": 0.5,
-                  "unit": "cup",
-                  "category": "grains"
-                },
-                {
-                  "name": "Eggs",
+                  "name": "protein powder",
                   "quantity": 2.0,
-                  "unit": "count",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Minced Pork",
-                  "quantity": 4.0,
-                  "unit": "oz",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Ginger",
-                  "quantity": 1.0,
-                  "unit": "tsp",
+                  "unit": "scoops",
                   "category": "pantry_staples"
+                },
+                {
+                  "name": "spinach",
+                  "quantity": 1.0,
+                  "unit": "handful",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "ginger",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
                 }
               ],
-              "instructions": "Boil rice in excess water to make porridge. Add seasoned minced pork early, then whisked eggs at the end.",
-              "estimatedTime": 45,
+              "instructions": "1. Combine all ingredients in a blender. 2. Add water or ice. 3. Blend until smooth.",
+              "estimatedTime": 5,
               "servings": 2,
               "difficulty": "easy",
-              "totalCalories": 420,
+              "totalCalories": 220,
               "source": "ai",
-              "notes": "Added minced pork to congee."
+              "notes": null
             }
           ],
           "lunch": [
             {
               "id": "fri-lunch-001",
-              "name": "Leftover Char Siu Fried Rice",
+              "name": "Leftover Egg Roll in a Bowl",
               "ingredients": [
                 {
-                  "name": "Day-old Rice",
-                  "quantity": 2.0,
-                  "unit": "cups",
-                  "category": "grains"
-                },
-                {
-                  "name": "Char Siu Pork",
-                  "quantity": 8.0,
-                  "unit": "oz",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Carrots",
-                  "quantity": 0.5,
-                  "unit": "cup",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Sesame Oil",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
+                  "name": "leftover turkey and cabbage",
+                  "quantity": 1.0,
+                  "unit": "portion",
+                  "category": "others"
                 }
               ],
-              "instructions": "Toss rice, diced pork, and carrots in a pan with minimal oil. Finish with sesame oil for aroma.",
-              "estimatedTime": 15,
+              "instructions": "1. Reheat leftovers in a skillet until hot.",
+              "estimatedTime": 5,
               "servings": 2,
               "difficulty": "easy",
-              "totalCalories": 600,
+              "totalCalories": 340,
               "source": "ai",
-              "notes": "Doubled the meat content."
+              "notes": null
             }
           ],
           "dinner": [
             {
               "id": "fri-dinner-001",
-              "name": "Steamed Fish with Daikon Soup",
+              "name": "Sheet Pan Miso Salmon & Bell Peppers",
               "ingredients": [
                 {
-                  "name": "White Fish Fillets",
-                  "quantity": 1.5,
-                  "unit": "lb",
+                  "name": "salmon",
+                  "quantity": 2.0,
+                  "unit": "portions",
                   "category": "proteins"
                 },
                 {
-                  "name": "Daikon Radish",
-                  "quantity": 0.5,
-                  "unit": "lb",
+                  "name": "bell peppers",
+                  "quantity": 2.0,
+                  "unit": "count",
                   "category": "vegetables"
-                },
-                {
-                  "name": "Ginger/Scallions",
-                  "quantity": 1.0,
-                  "unit": "tbsp",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Soy Sauce",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
                 }
               ],
-              "instructions": "Steam fish with ginger. Boil daikon in water for soup. Serve together with a side of rice.",
-              "estimatedTime": 30,
+              "instructions": "1. Rub salmon with miso/soy. 2. Slice peppers. 3. Bake on parchment at 400F for 15 mins.",
+              "estimatedTime": 20,
               "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 450,
+              "difficulty": "easy",
+              "totalCalories": 420,
               "source": "ai",
-              "notes": "Increased fish portion."
+              "notes": null
             }
           ]
         },
@@ -2324,124 +576,94 @@
           "breakfast": [
             {
               "id": "sat-breakfast-001",
-              "name": "Savory Steamed Egg Custard",
+              "name": "Savory Oatmeal",
               "ingredients": [
                 {
-                  "name": "Eggs",
-                  "quantity": 4.0,
+                  "name": "oats",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "grains"
+                },
+                {
+                  "name": "egg",
+                  "quantity": 2.0,
                   "unit": "count",
                   "category": "proteins"
                 },
                 {
-                  "name": "Minced Pork Topping",
-                  "quantity": 2.0,
-                  "unit": "oz",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Soy Sauce",
+                  "name": "soy sauce",
                   "quantity": 0.0,
                   "unit": "",
                   "category": "seasonings"
-                },
-                {
-                  "name": "Cilantro",
-                  "quantity": 1.0,
-                  "unit": "sprig",
-                  "category": "vegetables"
                 }
               ],
-              "instructions": "Whisk eggs with water. Steam until set. Sauté minced pork and place on top with soy sauce.",
-              "estimatedTime": 20,
+              "instructions": "1. Cook oats with water. 2. Stir in soy sauce. 3. Top with a fried egg and green onions.",
+              "estimatedTime": 15,
               "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 280,
+              "difficulty": "easy",
+              "totalCalories": 310,
               "source": "ai",
-              "notes": "Added pork topping and extra egg."
+              "notes": null
             }
           ],
           "lunch": [
             {
               "id": "sat-lunch-001",
-              "name": "Poached Chicken with Ginger-Scallion Oil",
+              "name": "Leftover Miso Salmon Salad",
               "ingredients": [
                 {
-                  "name": "Chicken Breast",
-                  "quantity": 1.5,
-                  "unit": "lb",
-                  "category": "proteins"
+                  "name": "leftover salmon",
+                  "quantity": 1.0,
+                  "unit": "portion",
+                  "category": "others"
                 },
                 {
-                  "name": "Ginger",
-                  "quantity": 2.0,
-                  "unit": "tbsp",
-                  "category": "pantry_staples"
-                },
-                {
-                  "name": "Scallions",
-                  "quantity": 2.0,
-                  "unit": "tbsp",
-                  "category": "vegetables"
-                },
-                {
-                  "name": "Daikon Soup",
+                  "name": "spinach",
                   "quantity": 2.0,
                   "unit": "cups",
-                  "category": "others"
+                  "category": "vegetables"
                 }
               ],
-              "instructions": "Poach chicken in simmering water. Serve with a mash of ginger, scallion, and salt. Side of soup.",
-              "estimatedTime": 25,
+              "instructions": "1. Flake cold salmon over a bed of spinach. 2. Add leftover peppers. 3. Drizzle with sesame oil.",
+              "estimatedTime": 5,
               "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 550,
+              "difficulty": "easy",
+              "totalCalories": 380,
               "source": "ai",
-              "notes": "Increased chicken portion."
+              "notes": null
             }
           ],
           "dinner": [
             {
               "id": "sat-dinner-001",
-              "name": "Beef and Tofu Claypot Style",
+              "name": "Chicken & Mixed Pepper Stir-Fry",
               "ingredients": [
                 {
-                  "name": "Sliced Beef",
-                  "quantity": 0.75,
+                  "name": "chicken breast",
+                  "quantity": 0.5,
                   "unit": "lb",
                   "category": "proteins"
                 },
                 {
-                  "name": "Firm Tofu",
-                  "quantity": 0.5,
-                  "unit": "block",
-                  "category": "proteins"
-                },
-                {
-                  "name": "Mushrooms",
+                  "name": "bell peppers",
                   "quantity": 1.0,
-                  "unit": "pack",
+                  "unit": "count",
                   "category": "vegetables"
                 },
                 {
-                  "name": "Oyster Sauce",
-                  "quantity": 0.0,
-                  "unit": "",
-                  "category": "seasonings"
-                },
-                {
-                  "name": "Rice",
-                  "quantity": 1.0,
+                  "name": "cashews",
+                  "quantity": 0.25,
                   "unit": "cup",
-                  "category": "grains"
+                  "category": "pantry_staples"
                 }
               ],
-              "instructions": "Braise beef, tofu, and mushrooms in oyster sauce. Serve with steamed rice.",
-              "estimatedTime": 25,
+              "instructions": "1. Slice chicken and peppers. 2. Stir fry in a hot pan. 3. Toss with cashews and soy sauce.",
+              "estimatedTime": 20,
               "servings": 2,
-              "difficulty": "medium",
-              "totalCalories": 520,
+              "difficulty": "easy",
+              "totalCalories": 460,
               "source": "ai",
-              "notes": "Added beef to the claypot dish."
+              "notes": null
             }
           ]
         },
@@ -2449,102 +671,175 @@
           "breakfast": [
             {
               "id": "sun-breakfast-001",
-              "name": "Honey-Glazed Char Siu Toast",
+              "name": "Omelet with Peppers & Tofu",
               "ingredients": [
                 {
-                  "name": "Char Siu Pork",
+                  "name": "eggs",
                   "quantity": 4.0,
-                  "unit": "oz",
+                  "unit": "count",
                   "category": "proteins"
                 },
                 {
-                  "name": "Bread/Buns",
+                  "name": "bell peppers",
+                  "quantity": 0.25,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "firm tofu",
+                  "quantity": 0.25,
+                  "unit": "block",
+                  "category": "proteins"
+                }
+              ],
+              "instructions": "1. Sauté peppers and crumbled tofu. 2. Pour whisked eggs over. 3. Fold and serve.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 330,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "lunch": [
+            {
+              "id": "sun-lunch-001",
+              "name": "Chicken & Cabbage Clear Soup",
+              "ingredients": [
+                {
+                  "name": "chicken breast",
+                  "quantity": 0.25,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "cabbage",
                   "quantity": 2.0,
-                  "unit": "slices",
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "ginger",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Simmer ginger in water. 2. Add sliced chicken and cabbage. 3. Cook until chicken is done.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 240,
+              "source": "ai",
+              "notes": null
+            }
+          ],
+          "dinner": [
+            {
+              "id": "sun-dinner-001",
+              "name": "Ants Climbing a Tree",
+              "ingredients": [
+                {
+                  "name": "glass noodles",
+                  "quantity": 1.0,
+                  "unit": "pack",
                   "category": "grains"
                 },
                 {
-                  "name": "Fruit",
-                  "quantity": 1.0,
-                  "unit": "serving",
-                  "category": "fruits"
+                  "name": "ground turkey",
+                  "quantity": 0.5,
+                  "unit": "lb",
+                  "category": "proteins"
+                },
+                {
+                  "name": "garlic",
+                  "quantity": 0.0,
+                  "unit": "",
+                  "category": "seasonings"
                 }
               ],
-              "instructions": "Warm pork with honey and serve on toasted bread with fruit.",
-              "estimatedTime": 10,
+              "instructions": "1. Soak noodles. 2. Fry turkey with garlic and ginger. 3. Toss in noodles and soy sauce.",
+              "estimatedTime": 20,
               "servings": 2,
-              "difficulty": "easy",
-              "totalCalories": 440,
+              "difficulty": "medium",
+              "totalCalories": 410,
               "source": "ai",
-              "notes": "Increased meat portion."
+              "notes": null
             }
-          ],
-          "lunch": [],
-          "dinner": []
+          ]
         }
       },
       "shoppingList": {
-        "id": "sl_b5771232b3c2",
-        "menuBookId": "mb_2803083b16f4",
-        "createdAt": "2026-02-06T06:11:00.388418Z",
+        "id": "sl_6a3335271d4e",
+        "menuBookId": "mb_32660b550c6a",
+        "createdAt": "2026-02-06T10:07:07.961563Z",
         "items": [
           {
-            "id": "item_e599c794",
-            "name": "Pork (Butt/Minced/Char Siu)",
+            "id": "item_19e6685a",
+            "name": "eggs",
             "category": "proteins",
-            "totalQuantity": 2.37,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_416d4579",
-            "name": "White Fish Fillets",
-            "category": "proteins",
-            "totalQuantity": 1.5,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_bc59c798",
-            "name": "Chicken Breast",
-            "category": "proteins",
-            "totalQuantity": 1.5,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_666c7eee",
-            "name": "Beef (Sliced)",
-            "category": "proteins",
-            "totalQuantity": 0.75,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_70b86760",
-            "name": "Eggs",
-            "category": "proteins",
-            "totalQuantity": 6.0,
+            "totalQuantity": 14.0,
             "unit": "count",
             "purchased": false,
             "isManuallyAdded": null
           },
           {
-            "id": "item_3264ae8e",
-            "name": "Jasmine Rice",
-            "category": "grains",
-            "totalQuantity": 4.5,
-            "unit": "cups",
+            "id": "item_c3db468d",
+            "name": "chicken thighs",
+            "category": "proteins",
+            "totalQuantity": 1.0,
+            "unit": "lb",
             "purchased": false,
             "isManuallyAdded": null
           },
           {
-            "id": "item_eb3b435e",
-            "name": "Green Onions",
+            "id": "item_98076b52",
+            "name": "ground turkey",
+            "category": "proteins",
+            "totalQuantity": 2.0,
+            "unit": "lb",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_139017a3",
+            "name": "firm tofu",
+            "category": "proteins",
+            "totalQuantity": 1.3,
+            "unit": "block",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_5a6a61f2",
+            "name": "white fish",
+            "category": "proteins",
+            "totalQuantity": 2.0,
+            "unit": "fillets",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_9bac2f65",
+            "name": "salmon",
+            "category": "proteins",
+            "totalQuantity": 2.0,
+            "unit": "portions",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_7d58fec0",
+            "name": "chicken breast",
+            "category": "proteins",
+            "totalQuantity": 0.8,
+            "unit": "lb",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_7ede78c7",
+            "name": "green onions",
             "category": "vegetables",
             "totalQuantity": 2.0,
             "unit": "bunch",
@@ -2552,26 +847,8 @@
             "isManuallyAdded": null
           },
           {
-            "id": "item_d5db9b16",
-            "name": "Bok Choy",
-            "category": "vegetables",
-            "totalQuantity": 2.0,
-            "unit": "count",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_51456487",
-            "name": "Daikon Radish",
-            "category": "vegetables",
-            "totalQuantity": 0.5,
-            "unit": "lbs",
-            "purchased": false,
-            "isManuallyAdded": null
-          },
-          {
-            "id": "item_464dcd83",
-            "name": "Mushrooms",
+            "id": "item_8f1f5318",
+            "name": "cucumber",
             "category": "vegetables",
             "totalQuantity": 1.0,
             "unit": "count",
@@ -2579,20 +856,191 @@
             "isManuallyAdded": null
           },
           {
-            "id": "item_ba069aaf",
-            "name": "Ginger",
-            "category": "pantry_staples",
+            "id": "item_0ba99b01",
+            "name": "broccoli",
+            "category": "vegetables",
+            "totalQuantity": 1.0,
+            "unit": "head",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_d8de2db0",
+            "name": "green beans",
+            "category": "vegetables",
+            "totalQuantity": 0.5,
+            "unit": "lb",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_4f96c113",
+            "name": "bok choy",
+            "category": "vegetables",
+            "totalQuantity": 1.0,
+            "unit": "bunch",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_ff135e55",
+            "name": "cabbage",
+            "category": "vegetables",
+            "totalQuantity": 8.0,
+            "unit": "cups",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_c3515198",
+            "name": "spinach",
+            "category": "vegetables",
+            "totalQuantity": 2.0,
+            "unit": "bunch",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_cfec6346",
+            "name": "bell peppers",
+            "category": "vegetables",
+            "totalQuantity": 4.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_66417800",
+            "name": "avocado",
+            "category": "fruits",
+            "totalQuantity": 1.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_75fded79",
+            "name": "soba noodles",
+            "category": "grains",
             "totalQuantity": 4.0,
             "unit": "oz",
             "purchased": false,
             "isManuallyAdded": null
           },
           {
-            "id": "item_89e6c931",
-            "name": "Seasoning/Sauces",
+            "id": "item_4db0e4cd",
+            "name": "oats",
+            "category": "grains",
+            "totalQuantity": 1.0,
+            "unit": "cup",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_9eb1053d",
+            "name": "glass noodles",
+            "category": "grains",
+            "totalQuantity": 1.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_6e40d4aa",
+            "name": "greek yogurt",
+            "category": "dairy",
+            "totalQuantity": 2.0,
+            "unit": "cups",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_ddd42203",
+            "name": "chili oil",
             "category": "seasonings",
             "totalQuantity": 0.0,
             "unit": "",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_a1bacef0",
+            "name": "ginger",
+            "category": "seasonings",
+            "totalQuantity": 0.0,
+            "unit": "",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_731e3bf6",
+            "name": "turmeric",
+            "category": "seasonings",
+            "totalQuantity": 0.0,
+            "unit": "",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_51036017",
+            "name": "garlic",
+            "category": "seasonings",
+            "totalQuantity": 0.0,
+            "unit": "",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_b3d6f14a",
+            "name": "furikake",
+            "category": "seasonings",
+            "totalQuantity": 0.0,
+            "unit": "",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_b2fe689e",
+            "name": "sesame oil",
+            "category": "pantry_staples",
+            "totalQuantity": 1.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_1c0fe2b2",
+            "name": "soy sauce",
+            "category": "pantry_staples",
+            "totalQuantity": 4.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_3a5ef53c",
+            "name": "black sesame seeds",
+            "category": "pantry_staples",
+            "totalQuantity": 1.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_da1cf027",
+            "name": "protein powder",
+            "category": "pantry_staples",
+            "totalQuantity": 2.0,
+            "unit": "count",
+            "purchased": false,
+            "isManuallyAdded": null
+          },
+          {
+            "id": "item_4d68fe02",
+            "name": "cashews",
+            "category": "pantry_staples",
+            "totalQuantity": 0.3,
+            "unit": "cup",
             "purchased": false,
             "isManuallyAdded": null
           }
@@ -2600,7 +1048,7 @@
       }
     }
   ],
-  "currentWeekId": "mb_575bfa9c9256",
+  "currentWeekId": "mb_32660b550c6a",
   "currentDayIndex": 0,
   "isMenuOpen": true
 }

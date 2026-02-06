@@ -295,6 +295,11 @@ export function ShoppingPage() {
     })).filter((group) => group.items.length > 0);
   }, [currentBook]);
 
+  useEffect(() => {
+    setShowAddItemModal(false);
+    setEditingItem(null);
+  }, [currentBook?.id, setEditingItem, setShowAddItemModal]);
+
   const totalItems = currentBook?.shoppingList?.items?.length ?? 0;
   const defaultModalCategory = groupedItems[0]?.category ?? "proteins";
   const modalOpen = showAddItemModal || Boolean(editingItem);

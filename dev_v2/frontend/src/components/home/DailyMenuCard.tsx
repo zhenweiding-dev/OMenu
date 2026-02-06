@@ -64,7 +64,7 @@ function MealRow({
                   className="group flex w-full items-center justify-between gap-3 text-left transition-colors hover:text-text-primary"
                 >
                   <div className="min-w-0 flex-1">
-                    <span className="block max-w-[220px] truncate ui-heading-sm leading-tight">
+                    <span className="block ui-heading-sm leading-snug break-words">
                       {dish.name}
                     </span>
                     <span className="ui-caption">

@@ -53,6 +53,9 @@ function buildIconCover(book: MenuBook) {
   return selection.slice(0, 4);
 }
 
+const LONG_PRESS_DURATION = 550;
+const MOVE_THRESHOLD_PX = 10;
+
 export function MenuClosedCard({ book, onSelect, onLongPress, isActive, badgeLabel }: MenuClosedCardProps) {
   const surfaceClass = useMemo(() => pickSurface(book.id), [book.id]);
   const iconCover = buildIconCover(book);
@@ -64,6 +67,7 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, badgeLab
 
   const holdTimeoutRef = useRef<number | null>(null);
   const ignoreNextClickRef = useRef(false);
+  const pressStartRef = useRef<{ x: number; y: number; pointerId: number } | null>(null);
 
   const clearHoldTimer = () => {
     if (holdTimeoutRef.current) {
@@ -72,24 +76,47 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, badgeLab
     }
   };
 
-  const handlePointerDown = () => {
+  const handlePointerDown = (event: React.PointerEvent<HTMLButtonElement>) => {
     if (!onLongPress) return;
     clearHoldTimer();
     ignoreNextClickRef.current = false;
+    pressStartRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      pointerId: event.pointerId,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
     holdTimeoutRef.current = window.setTimeout(() => {
       ignoreNextClickRef.current = true;
       onLongPress(book);
     }, 550);
   };
 
-  const handlePointerUp = () => {
-    if (!onLongPress) return;
-    clearHoldTimer();
+  const handlePointerMove = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!pressStartRef.current || !holdTimeoutRef.current) return;
+    const dx = event.clientX - pressStartRef.current.x;
+    const dy = event.clientY - pressStartRef.current.y;
+    if (Math.hypot(dx, dy) > MOVE_THRESHOLD_PX) {
+      clearHoldTimer();
+    }
   };
 
-  const handlePointerLeave = () => {
+  const handlePointerUp = (event: React.PointerEvent<HTMLButtonElement>) => {
     if (!onLongPress) return;
     clearHoldTimer();
+    if (pressStartRef.current?.pointerId === event.pointerId) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+      pressStartRef.current = null;
+    }
+  };
+
+  const handlePointerCancel = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!onLongPress) return;
+    clearHoldTimer();
+    if (pressStartRef.current?.pointerId === event.pointerId) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+      pressStartRef.current = null;
+    }
   };
 
   const handleClick = () => {
@@ -105,9 +132,9 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, badgeLab
       type="button"
       onClick={handleClick}
       onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
-      onPointerLeave={handlePointerLeave}
-      onPointerCancel={handlePointerLeave}
+      onPointerCancel={handlePointerCancel}
       className="group relative block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-base focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base"
       aria-pressed={isActive}
     >

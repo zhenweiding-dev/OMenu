@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { addWeeks, startOfWeek } from "date-fns";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
-import { ChefHat, Salad, Soup } from "lucide-react";
+import { CookingPot, Salad, Sandwich } from "lucide-react";
 import { useAppStore } from "@/stores/useAppStore";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { PageContainer } from "@/components/layout/PageContainer";
@@ -186,7 +186,7 @@ export function HomePage() {
 
   const handlePlanWeek = (weekStart: Date) => {
     resetDraftProgress();
-    navigate("/create", { state: { startStep: 2, skipResume: true, weekStart: weekStart.toISOString() } });
+    navigate("/create", { state: { startStep: 1, skipResume: true, weekStart: weekStart.toISOString() } });
   };
 
   const handleViewNextWeek = () => {
@@ -287,9 +287,9 @@ export function HomePage() {
       <div className="flex flex-col items-center">
         <div className="mb-8 flex h-[200px] w-[200px] items-center justify-center rounded-full bg-gradient-to-br from-paper-muted to-border-subtle animate-float">
           <div className="flex items-center gap-4 text-accent-base/80" aria-hidden>
-            <ChefHat className="h-9 w-9 ui-icon-strong" />
             <Salad className="h-9 w-9 ui-icon-strong" />
-            <Soup className="h-9 w-9 ui-icon-strong" />
+            <CookingPot className="h-9 w-9 ui-icon-strong" />
+            <Sandwich className="h-9 w-9 ui-icon-strong" />
           </div>
         </div>
         <h1 className="mb-4 ui-title-lg">
@@ -399,7 +399,7 @@ export function HomePage() {
               <Link
                 key={item.weekStart.toISOString()}
                 to="/create"
-                state={{ startStep: 2, skipResume: true, weekStart: item.weekStart.toISOString() }}
+                state={{ startStep: 1, skipResume: true, weekStart: item.weekStart.toISOString() }}
                 onClick={() => setIsMenuPickerOpen(false)}
                 className="flex items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-border-subtle bg-transparent px-4 py-3 transition hover:border-accent-base hover:bg-[rgba(139,148,105,0.03)]"
               >

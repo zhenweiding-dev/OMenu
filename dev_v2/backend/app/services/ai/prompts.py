@@ -46,9 +46,11 @@ class PromptBuilder:
 
         return (
             "As a professional nutritionist and chef, create a weekly meal plan with user preferences and dislikes."
-            "The meal plan should be diverse, balanced, and consider making full use of ingredients throughout the week."
+            "The meal plan should be diverse, balanced, and consider making full use of ingredients throughout the week, but similar main ingredients should not be repeated more than twice in the week."
             "Avoid repeating the simiar dishes on different days."
-            "And ensure the meals align with the user's budget constraints and number of people to serve."
+            "Keep real-world shopping habits in mind: aim for variety, but avoid introducing too many unique ingredients."
+            "Reuse overlapping ingredients across meals when reasonable to reduce waste and keep the pantry practical."
+            "And ensure the meals are enough to serve the number of people specified, generate two or more dishes per meal if necessary."
             f"BudgetUSD: {budget_json}. "
             f"People: {people_json}. "
             f"Preferences: {preferences_json}. "
@@ -98,12 +100,11 @@ class PromptBuilder:
             "1) Days or meals without any selected meals may be omitted. "
             "2) Ingredient categories: proteins, vegetables, fruits, grains, dairy, "
             "seasonings, pantry_staples, others. "
-            "4) instructions <=200 characters. "
+            "4) instructions <=200 characters and with clear steps. "
         )
 
         return (
             "Convert the following meal plan into a structured JSON format according to the schema. "
-            "Important: Please skip long internal reasoning and output the JSON directly. "
             f"{requirements} RETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks)."
             f"MealPlanText: {meal_plan_text} "
             f"OutputSchema: {schema_block} "
@@ -131,6 +132,7 @@ class PromptBuilder:
             "Note: specificPreferences are items the user wants included at least once during the week, "
             "not in every meal. Avoid items in specificDisliked.\n"
             f"UserInput: {modification_text}\n"
+            "Previous Preferences and Constraints:\n"
             f"BudgetUSD: {budget_json}\n"
             f"People: {people_json}\n"
             f"Preferences: {preferences_json}\n"
@@ -158,18 +160,18 @@ class PromptBuilder:
         )
 
         return (
-            "Task: Generate a consolidated shopping list from the weekly meal plan (North American units).\n"
+            "Task: Generate a consolidated shopping list from the weekly meal plan.\n"
             "CRITICAL RULES:\n"
-            "1. **MERGE AGGRESSIVELY**: Combine interchangeable ingredients into broad categories "
-            "(e.g., \"Beef strips\" + \"Flank steak\" -> \"Beef (Stir-fry cut)\", "
-            "\"Scallions\" + \"Green onions\" -> \"Green Onions\").\n"
-            "2. **UNITS (North America)**: Meat/Bulk must use 'lbs' or 'oz'; produce must use 'count' or 'bunch'.\n"
-            "3. Valid categories: \"proteins\", \"vegetables\", \"fruits\", \"grains\", \"dairy\", "
-            "\"seasonings\", \"pantry_staples\", \"others\".\n"
-            "4. Seasonings set totalQuantity to 0 and unit to \"\".\n"
-            "5. Limit the list to at most 12 items and keep field values concise (ingredient names <=4 words).\n"
-            "6. Respond with compact JSON (no comments or prose) to stay within model token limits.\n"
+            "1) MERGE whenever possible: combine duplicates and close synonyms (e.g., bell pepper/peppers -> bell peppers). "
+            "But do not merge items that are clearly different (e.g., spinach and broccoli, ginger and garlic are different).\n"
+            "2) UNITS (North America): proteins -> lbs or oz; produce -> count or bunch; "
+            "grains/dairy/pantry -> oz/lbs/count as appropriate. Use a single unit per item.\n"
+            "3) Sum quantities across all dishes. For lbs/oz round to 1 decimal; for count/bunch use whole numbers.\n"
+            "4) Valid categories: proteins, vegetables, fruits, grains, dairy, seasonings, pantry_staples, others.\n"
+            "5) Keep names concise (<= 5 words). Avoid brands and extra adjectives.\n"
+            "6) If a unit is not applicable (e.g., seasonings), use totalQuantity 0 and unit \"\".\n"
+            "7) Respond with compact JSON only (no comments or prose).\n"
             f"MealPlan: {menus_json}\n"
             f"OutputSchema: {output_schema}\n"
-            "RETURN ONLY THE RAW JSON STRING. Do not use Markdown formatting (no ```json blocks)."
+            "RETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks)."
         )
