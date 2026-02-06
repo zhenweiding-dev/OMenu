@@ -1,0 +1,2154 @@
+{
+  "timestamp": "2026-02-06T21:35:11.944606+00:00",
+  "preferences": {
+    "specificPreferences": [
+      "quick",
+      "high protein",
+      "asian flavors"
+    ],
+    "specificDisliked": [
+      "tree nuts"
+    ],
+    "numPeople": 2,
+    "budget": 120,
+    "difficulty": "medium",
+    "cookSchedule": {
+      "monday": {
+        "breakfast": false,
+        "lunch": true,
+        "dinner": true
+      },
+      "tuesday": {
+        "breakfast": false,
+        "lunch": true,
+        "dinner": true
+      },
+      "wednesday": {
+        "breakfast": false,
+        "lunch": true,
+        "dinner": true
+      },
+      "thursday": {
+        "breakfast": false,
+        "lunch": true,
+        "dinner": true
+      },
+      "friday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      },
+      "saturday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      },
+      "sunday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      }
+    }
+  },
+  "steps": {
+    "step1_outline": {
+      "prompt": "You are a professional chef and dietitian tasked with creating a guideline for a weekly meal plan and shopping list based on user preferences and constraints.result: give a rough meal outline for the week (main dish names only, no recipes yet) along with a draft shopping list of  ~{ingredient_limit} unique non-pantry ingredients needed. Return ONLY JSON with two keys: mealOutline and draftShoppingList.\nRules:\n1) NO leftovers, NO repeat main dishes across the week.\n2) Balance variety with practicality: reuse overlapping ingredients across meals when reasonable. \n3) Seasonings (oils/sauces/spices) and Pantry staples (rice/pasta/flour/canned beans/oats/bread) do NOT count toward the limit and must be category=seasonings.\n4) Only include meals selected in CookSchedule; unselected meals should be [] or omitted.\n5) Meal outline: the amount of dishes per selected meal should be appropriate for the number of people and meal type.\n6) draftShoppingList must be derived from the outline and include unique items with name + category only (no quantities, no duplicates).\n7) Valid categories: proteins, vegetables, fruits, grains, dairy, seasonings, pantry_staples, others.\nBudgetUSD: 120\nPeople: 2\nPreferences: [\"quick\",\"high protein\",\"asian flavors\"]\nDislikes: [\"tree nuts\"]\nCookSchedule: {\"monday\":[\"lunch\",\"dinner\"],\"tuesday\":[\"lunch\",\"dinner\"],\"wednesday\":[\"lunch\",\"dinner\"],\"thursday\":[\"lunch\",\"dinner\"],\"friday\":[\"breakfast\",\"lunch\",\"dinner\"],\"saturday\":[\"breakfast\",\"lunch\",\"dinner\"],\"sunday\":[\"breakfast\",\"lunch\",\"dinner\"]}\nOutputSchema: {\"mealOutline\":{\"monday\":{\"breakfast\":[\"Avocado toast\"],\"lunch\":[\"Chicken salad\"],\"dinner\":[\"Stir-fry\"]},\"tuesday\":{\"breakfast\":[],\"lunch\":[\"Tuna sandwich\"],\"dinner\":[]},\"...\":\"...\"},\"draftShoppingList\":[{\"name\":\"chicken breast\",\"category\":\"proteins\"},{\"name\":\"rice\",\"category\":\"grains\"},{\"name\":\"olive oil\",\"category\":\"seasonings\"}]}\nRETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks).",
+      "raw_response": "{\n  \"mealOutline\": {\n    \"monday\": {\n      \"lunch\": [\n        \"Spicy Tuna and Cucumber Rice Bowls\"\n      ],\n      \"dinner\": [\n        \"Ginger Garlic Chicken Stir-fry\"\n      ]\n    },\n    \"tuesday\": {\n      \"lunch\": [\n        \"Asian-style Chicken Salad Wraps\"\n      ],\n      \"dinner\": [\n        \"Ground Beef and Green Bean Szechuan Skillet\"\n      ]\n    },\n    \"wednesday\": {\n      \"lunch\": [\n        \"Cold Sesame Beef Noodle Salad\"\n      ],\n      \"dinner\": [\n        \"Honey Soy Glazed Salmon\"\n      ]\n    },\n    \"thursday\": {\n      \"lunch\": [\n        \"Salmon and Avocado Sushi Bowls\"\n      ],\n      \"dinner\": [\n        \"Thai Basil Ground Pork Stir-fry\"\n      ]\n    },\n    \"friday\": {\n      \"breakfast\": [\n        \"Soft Scrambled Eggs with Chives and Toast\"\n      ],\n      \"lunch\": [\n        \"Pork and Cabbage Potsticker Bowls\"\n      ],\n      \"dinner\": [\n        \"Miso Butter Cod with Steamed Bok Choy\"\n      ]\n    },\n    \"saturday\": {\n      \"breakfast\": [\n        \"Smoked Salmon and Cream Cheese Bagels\"\n      ],\n      \"lunch\": [\n        \"Teriyaki Shrimp Skewers\"\n      ],\n      \"dinner\": [\n        \"Korean BBQ Beef Bulgogi Bowls\"\n      ]\n    },\n    \"sunday\": {\n      \"breakfast\": [\n        \"Savory Congee with Soft Boiled Eggs\"\n      ],\n      \"lunch\": [\n        \"Shrimp and Vegetable Tempura Rice\"\n      ],\n      \"dinner\": [\n        \"Lemon Lemongrass Chicken Thighs\"\n      ]\n    }\n  },\n  \"draftShoppingList\": [\n    {\n      \"name\": \"Chicken Breast\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Chicken Thighs\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Ground Beef\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Ground Pork\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Salmon Fillets\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Cod Fillets\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Shrimp\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Beef Flank Steak\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Eggs\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Smoked Salmon\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Canned Tuna\",\n      \"category\": \"pantry_staples\"\n    },\n    {\n      \"name\": \"Cucumber\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Green Beans\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Bok Choy\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Cabbage\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Avocado\",\n      \"category\": \"fruits\"\n    },\n    {\n      \"name\": \"Ginger\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Garlic\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Green Onions\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Thai Basil\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Lemongrass\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Cream Cheese\",\n      \"category\": \"dairy\"\n    },\n    {\n      \"name\": \"Soy Sauce\",\n      \"category\": \"seasonings\"\n    },\n    {\n      \"name\": \"Sesame Oil\",\n      \"category\": \"seasonings\"\n    },\n    {\n      \"name\": \"Sriracha\",\n      \"category\": \"seasonings\"\n    },\n    {\n      \"name\": \"Miso Paste\",\n      \"category\": \"seasonings\"\n    },\n    {\n      \"name\": \"Rice Vinegar\",\n      \"category\": \"seasonings\"\n    },\n    {\n      \"name\": \"Honey\",\n      \"category\": \"seasonings\"\n    },\n    {\n      \"name\": \"White Rice\",\n      \"category\": \"pantry_staples\"\n    },\n    {\n      \"name\": \"Pasta Noodles\",\n      \"category\": \"pantry_staples\"\n    }\n  ]\n}",
+      "parsed": {
+        "mealOutline": {
+          "monday": {
+            "lunch": [
+              "Spicy Tuna and Cucumber Rice Bowls"
+            ],
+            "dinner": [
+              "Ginger Garlic Chicken Stir-fry"
+            ]
+          },
+          "tuesday": {
+            "lunch": [
+              "Asian-style Chicken Salad Wraps"
+            ],
+            "dinner": [
+              "Ground Beef and Green Bean Szechuan Skillet"
+            ]
+          },
+          "wednesday": {
+            "lunch": [
+              "Cold Sesame Beef Noodle Salad"
+            ],
+            "dinner": [
+              "Honey Soy Glazed Salmon"
+            ]
+          },
+          "thursday": {
+            "lunch": [
+              "Salmon and Avocado Sushi Bowls"
+            ],
+            "dinner": [
+              "Thai Basil Ground Pork Stir-fry"
+            ]
+          },
+          "friday": {
+            "breakfast": [
+              "Soft Scrambled Eggs with Chives and Toast"
+            ],
+            "lunch": [
+              "Pork and Cabbage Potsticker Bowls"
+            ],
+            "dinner": [
+              "Miso Butter Cod with Steamed Bok Choy"
+            ]
+          },
+          "saturday": {
+            "breakfast": [
+              "Smoked Salmon and Cream Cheese Bagels"
+            ],
+            "lunch": [
+              "Teriyaki Shrimp Skewers"
+            ],
+            "dinner": [
+              "Korean BBQ Beef Bulgogi Bowls"
+            ]
+          },
+          "sunday": {
+            "breakfast": [
+              "Savory Congee with Soft Boiled Eggs"
+            ],
+            "lunch": [
+              "Shrimp and Vegetable Tempura Rice"
+            ],
+            "dinner": [
+              "Lemon Lemongrass Chicken Thighs"
+            ]
+          }
+        },
+        "draftShoppingList": [
+          {
+            "name": "Chicken Breast",
+            "category": "proteins"
+          },
+          {
+            "name": "Chicken Thighs",
+            "category": "proteins"
+          },
+          {
+            "name": "Ground Beef",
+            "category": "proteins"
+          },
+          {
+            "name": "Ground Pork",
+            "category": "proteins"
+          },
+          {
+            "name": "Salmon Fillets",
+            "category": "proteins"
+          },
+          {
+            "name": "Cod Fillets",
+            "category": "proteins"
+          },
+          {
+            "name": "Shrimp",
+            "category": "proteins"
+          },
+          {
+            "name": "Beef Flank Steak",
+            "category": "proteins"
+          },
+          {
+            "name": "Eggs",
+            "category": "proteins"
+          },
+          {
+            "name": "Smoked Salmon",
+            "category": "proteins"
+          },
+          {
+            "name": "Canned Tuna",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Cucumber",
+            "category": "vegetables"
+          },
+          {
+            "name": "Green Beans",
+            "category": "vegetables"
+          },
+          {
+            "name": "Bok Choy",
+            "category": "vegetables"
+          },
+          {
+            "name": "Cabbage",
+            "category": "vegetables"
+          },
+          {
+            "name": "Avocado",
+            "category": "fruits"
+          },
+          {
+            "name": "Ginger",
+            "category": "vegetables"
+          },
+          {
+            "name": "Garlic",
+            "category": "vegetables"
+          },
+          {
+            "name": "Green Onions",
+            "category": "vegetables"
+          },
+          {
+            "name": "Thai Basil",
+            "category": "vegetables"
+          },
+          {
+            "name": "Lemongrass",
+            "category": "vegetables"
+          },
+          {
+            "name": "Cream Cheese",
+            "category": "dairy"
+          },
+          {
+            "name": "Soy Sauce",
+            "category": "seasonings"
+          },
+          {
+            "name": "Sesame Oil",
+            "category": "seasonings"
+          },
+          {
+            "name": "Sriracha",
+            "category": "seasonings"
+          },
+          {
+            "name": "Miso Paste",
+            "category": "seasonings"
+          },
+          {
+            "name": "Rice Vinegar",
+            "category": "seasonings"
+          },
+          {
+            "name": "Honey",
+            "category": "seasonings"
+          },
+          {
+            "name": "White Rice",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Pasta Noodles",
+            "category": "pantry_staples"
+          }
+        ]
+      },
+      "normalized": {
+        "mealOutline": {
+          "monday": {
+            "lunch": [
+              "Spicy Tuna and Cucumber Rice Bowls"
+            ],
+            "dinner": [
+              "Ginger Garlic Chicken Stir-fry"
+            ]
+          },
+          "tuesday": {
+            "lunch": [
+              "Asian-style Chicken Salad Wraps"
+            ],
+            "dinner": [
+              "Ground Beef and Green Bean Szechuan Skillet"
+            ]
+          },
+          "wednesday": {
+            "lunch": [
+              "Cold Sesame Beef Noodle Salad"
+            ],
+            "dinner": [
+              "Honey Soy Glazed Salmon"
+            ]
+          },
+          "thursday": {
+            "lunch": [
+              "Salmon and Avocado Sushi Bowls"
+            ],
+            "dinner": [
+              "Thai Basil Ground Pork Stir-fry"
+            ]
+          },
+          "friday": {
+            "breakfast": [
+              "Soft Scrambled Eggs with Chives and Toast"
+            ],
+            "lunch": [
+              "Pork and Cabbage Potsticker Bowls"
+            ],
+            "dinner": [
+              "Miso Butter Cod with Steamed Bok Choy"
+            ]
+          },
+          "saturday": {
+            "breakfast": [
+              "Smoked Salmon and Cream Cheese Bagels"
+            ],
+            "lunch": [
+              "Teriyaki Shrimp Skewers"
+            ],
+            "dinner": [
+              "Korean BBQ Beef Bulgogi Bowls"
+            ]
+          },
+          "sunday": {
+            "breakfast": [
+              "Savory Congee with Soft Boiled Eggs"
+            ],
+            "lunch": [
+              "Shrimp and Vegetable Tempura Rice"
+            ],
+            "dinner": [
+              "Lemon Lemongrass Chicken Thighs"
+            ]
+          }
+        },
+        "draftShoppingList": [
+          {
+            "name": "Chicken Breast",
+            "category": "proteins"
+          },
+          {
+            "name": "Chicken Thighs",
+            "category": "proteins"
+          },
+          {
+            "name": "Ground Beef",
+            "category": "proteins"
+          },
+          {
+            "name": "Ground Pork",
+            "category": "proteins"
+          },
+          {
+            "name": "Salmon Fillets",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Cod Fillets",
+            "category": "proteins"
+          },
+          {
+            "name": "Shrimp",
+            "category": "proteins"
+          },
+          {
+            "name": "Beef Flank Steak",
+            "category": "proteins"
+          },
+          {
+            "name": "Eggs",
+            "category": "proteins"
+          },
+          {
+            "name": "Smoked Salmon",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Canned Tuna",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Cucumber",
+            "category": "vegetables"
+          },
+          {
+            "name": "Green Beans",
+            "category": "vegetables"
+          },
+          {
+            "name": "Bok Choy",
+            "category": "vegetables"
+          },
+          {
+            "name": "Cabbage",
+            "category": "vegetables"
+          },
+          {
+            "name": "Avocado",
+            "category": "fruits"
+          },
+          {
+            "name": "Ginger",
+            "category": "seasonings"
+          },
+          {
+            "name": "Garlic",
+            "category": "vegetables"
+          },
+          {
+            "name": "Green Onions",
+            "category": "vegetables"
+          },
+          {
+            "name": "Thai Basil",
+            "category": "seasonings"
+          },
+          {
+            "name": "Lemongrass",
+            "category": "vegetables"
+          },
+          {
+            "name": "Cream Cheese",
+            "category": "dairy"
+          },
+          {
+            "name": "Soy Sauce",
+            "category": "seasonings"
+          },
+          {
+            "name": "Sesame Oil",
+            "category": "seasonings"
+          },
+          {
+            "name": "Sriracha",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Miso Paste",
+            "category": "seasonings"
+          },
+          {
+            "name": "Rice Vinegar",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Honey",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "White Rice",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Pasta Noodles",
+            "category": "pantry_staples"
+          }
+        ]
+      },
+      "error": null
+    },
+    "step2_structured_menu": {
+      "prompt": "Step 2: Create a high-quality, nutritious, and structured weekly meal plan within the ingredient constraints. Requirements: 1) DraftShoppingList is the source of truth for NON-pantry items. Do NOT add new non-pantry items. You may add pantry_staples/seasonings only when needed (keep minimal). 2) MealOutline is guidance for dish ideas; feel free to improve dish names and recipes, but stay within the shopping list. 3) Focus on high-quality, nutritious, and varied meals that fit Preferences/Dislikes/Budget/People. Avoid repeating the exact same dish. 4) Only include meals selected in CookSchedule; unselected meals must be [] or omitted. 5) Servings MUST equal People for every dish. 6) Ingredient categories: proteins, vegetables, fruits, grains, dairy, seasonings, pantry_staples, others. 7) instructions <=200 characters and include clear steps.  RETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks).BudgetUSD: 120 People: 2 Difficulty: \"medium\" Preferences: [\"quick\",\"high protein\",\"asian flavors\"] Dislikes: [\"tree nuts\"] CookSchedule: {\"monday\":[\"lunch\",\"dinner\"],\"tuesday\":[\"lunch\",\"dinner\"],\"wednesday\":[\"lunch\",\"dinner\"],\"thursday\":[\"lunch\",\"dinner\"],\"friday\":[\"breakfast\",\"lunch\",\"dinner\"],\"saturday\":[\"breakfast\",\"lunch\",\"dinner\"],\"sunday\":[\"breakfast\",\"lunch\",\"dinner\"]} MealOutline: {\"monday\":{\"lunch\":[\"Spicy Tuna and Cucumber Rice Bowls\"],\"dinner\":[\"Ginger Garlic Chicken Stir-fry\"]},\"tuesday\":{\"lunch\":[\"Asian-style Chicken Salad Wraps\"],\"dinner\":[\"Ground Beef and Green Bean Szechuan Skillet\"]},\"wednesday\":{\"lunch\":[\"Cold Sesame Beef Noodle Salad\"],\"dinner\":[\"Honey Soy Glazed Salmon\"]},\"thursday\":{\"lunch\":[\"Salmon and Avocado Sushi Bowls\"],\"dinner\":[\"Thai Basil Ground Pork Stir-fry\"]},\"friday\":{\"breakfast\":[\"Soft Scrambled Eggs with Chives and Toast\"],\"lunch\":[\"Pork and Cabbage Potsticker Bowls\"],\"dinner\":[\"Miso Butter Cod with Steamed Bok Choy\"]},\"saturday\":{\"breakfast\":[\"Smoked Salmon and Cream Cheese Bagels\"],\"lunch\":[\"Teriyaki Shrimp Skewers\"],\"dinner\":[\"Korean BBQ Beef Bulgogi Bowls\"]},\"sunday\":{\"breakfast\":[\"Savory Congee with Soft Boiled Eggs\"],\"lunch\":[\"Shrimp and Vegetable Tempura Rice\"],\"dinner\":[\"Lemon Lemongrass Chicken Thighs\"]}} DraftShoppingList: [{\"name\":\"Chicken Breast\",\"category\":\"proteins\"},{\"name\":\"Chicken Thighs\",\"category\":\"proteins\"},{\"name\":\"Ground Beef\",\"category\":\"proteins\"},{\"name\":\"Ground Pork\",\"category\":\"proteins\"},{\"name\":\"Salmon Fillets\",\"category\":\"pantry_staples\"},{\"name\":\"Cod Fillets\",\"category\":\"proteins\"},{\"name\":\"Shrimp\",\"category\":\"proteins\"},{\"name\":\"Beef Flank Steak\",\"category\":\"proteins\"},{\"name\":\"Eggs\",\"category\":\"proteins\"},{\"name\":\"Smoked Salmon\",\"category\":\"pantry_staples\"},{\"name\":\"Canned Tuna\",\"category\":\"pantry_staples\"},{\"name\":\"Cucumber\",\"category\":\"vegetables\"},{\"name\":\"Green Beans\",\"category\":\"vegetables\"},{\"name\":\"Bok Choy\",\"category\":\"vegetables\"},{\"name\":\"Cabbage\",\"category\":\"vegetables\"},{\"name\":\"Avocado\",\"category\":\"fruits\"},{\"name\":\"Ginger\",\"category\":\"seasonings\"},{\"name\":\"Garlic\",\"category\":\"vegetables\"},{\"name\":\"Green Onions\",\"category\":\"vegetables\"},{\"name\":\"Thai Basil\",\"category\":\"seasonings\"},{\"name\":\"Lemongrass\",\"category\":\"vegetables\"},{\"name\":\"Cream Cheese\",\"category\":\"dairy\"},{\"name\":\"Soy Sauce\",\"category\":\"seasonings\"},{\"name\":\"Sesame Oil\",\"category\":\"seasonings\"},{\"name\":\"Sriracha\",\"category\":\"pantry_staples\"},{\"name\":\"Miso Paste\",\"category\":\"seasonings\"},{\"name\":\"Rice Vinegar\",\"category\":\"pantry_staples\"},{\"name\":\"Honey\",\"category\":\"pantry_staples\"},{\"name\":\"White Rice\",\"category\":\"pantry_staples\"},{\"name\":\"Pasta Noodles\",\"category\":\"pantry_staples\"}] OutputSchema: {\"monday\":{\"breakfast\":[{\"name\":\"Scrambled Eggs with Tomato\",\"ingredients\":[{\"name\":\"eggs\",\"quantity\":2,\"unit\":\"count\",\"category\":\"proteins\"},{\"name\":\"tomato\",\"quantity\":100,\"unit\":\"g\",\"category\":\"vegetables\"},{\"name\":\"oil\",\"quantity\":0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Beat eggs... 2. Stir fry tomato... 3. Mix together...\",\"estimatedTime\":15,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":180}]},\"tuesday\":\"{ ... }\",\"...\":\"...\"} ",
+      "raw_response": "{\n  \"monday\": {\n    \"breakfast\": [],\n    \"lunch\": [\n      {\n        \"name\": \"Spicy Tuna and Cucumber Rice Bowls\",\n        \"ingredients\": [\n          { \"name\": \"Canned Tuna\", \"quantity\": 2, \"unit\": \"cans\", \"category\": \"pantry_staples\" },\n          { \"name\": \"Cucumber\", \"quantity\": 1, \"unit\": \"medium\", \"category\": \"vegetables\" },\n          { \"name\": \"White Rice\", \"quantity\": 1, \"unit\": \"cup\", \"category\": \"pantry_staples\" },\n          { \"name\": \"Sriracha\", \"quantity\": 1, \"unit\": \"tbsp\", \"category\": \"pantry_staples\" },\n          { \"name\": \"Soy Sauce\", \"quantity\": 1, \"unit\": \"tsp\", \"category\": \"seasonings\" }\n        ],\n        \"instructions\": \"1. Cook rice. 2. Mix tuna with sriracha and soy sauce. 3. Slice cucumber. 4. Assemble bowls and top with green onions.\",\n        \"estimatedTime\": 20,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 420\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Ginger Garlic Chicken Stir-fry\",\n        \"ingredients\": [\n          { \"name\": \"Chicken Breast\", \"quantity\": 400, \"unit\": \"g\", \"category\": \"proteins\" },\n          { \"name\": \"Ginger\", \"quantity\": 1, \"unit\": \"inch\", \"category\": \"seasonings\" },\n          { \"name\": \"Garlic\", \"quantity\": 3, \"unit\": \"cloves\", \"category\": \"vegetables\" },\n          { \"name\": \"Green Beans\", \"quantity\": 200, \"unit\": \"g\", \"category\": \"vegetables\" },\n          { \"name\": \"Soy Sauce\", \"quantity\": 2, \"unit\": \"tbsp\", \"category\": \"seasonings\" }\n        ],\n        \"instructions\": \"1. Sauté sliced chicken until browned. 2. Add minced ginger, garlic, and beans. 3. Stir-fry with soy sauce until tender. Serve with rice.\",\n        \"estimatedTime\": 25,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 380\n      }\n    ]\n  },\n  \"tuesday\": {\n    \"breakfast\": [],\n    \"lunch\": [\n      {\n        \"name\": \"Asian-style Chicken Salad Wraps\",\n        \"ingredients\": [\n          { \"name\": \"Chicken Breast\", \"quantity\": 300, \"unit\": \"g\", \"category\": \"proteins\" },\n          { \"name\": \"Cabbage\", \"quantity\": 200, \"unit\": \"g\", \"category\": \"vegetables\" },\n          { \"name\": \"Sesame Oil\", \"quantity\": 1, \"unit\": \"tsp\", \"category\": \"seasonings\" },\n          { \"name\": \"Rice Vinegar\", \"quantity\": 1, \"unit\": \"tbsp\", \"category\": \"pantry_staples\" }\n        ],\n        \"instructions\": \"1. Poach and shred chicken. 2. Shred cabbage and toss with oil and vinegar. 3. Mix and serve in cabbage leaf wraps.\",\n        \"estimatedTime\": 20,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 310\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Szechuan Beef and Green Bean Skillet\",\n        \"ingredients\": [\n          { \"name\": \"Ground Beef\", \"quantity\": 400, \"unit\": \"g\", \"category\": \"proteins\" },\n          { \"name\": \"Green Beans\", \"quantity\": 200, \"unit\": \"g\", \"category\": \"vegetables\" },\n          { \"name\": \"Garlic\", \"quantity\": 2, \"unit\": \"cloves\", \"category\": \"vegetables\" },\n          { \"name\": \"Sriracha\", \"quantity\": 1, \"unit\": \"tbsp\", \"category\": \"pantry_staples\" }\n        ],\n        \"instructions\": \"1. Brown beef in a skillet. 2. Add garlic and green beans. 3. Season with sriracha and soy sauce. 4. Cook until beans are crisp-tender.\",\n        \"estimatedTime\": 20,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 450\n      }\n    ]\n  },\n  \"wednesday\": {\n    \"breakfast\": [],\n    \"lunch\": [\n      {\n        \"name\": \"Cold Sesame Beef Noodle Salad\",\n        \"ingredients\": [\n          { \"name\": \"Beef Flank Steak\", \"quantity\": 250, \"unit\": \"g\", \"category\": \"proteins\" },\n          { \"name\": \"Pasta Noodles\", \"quantity\": 150, \"unit\": \"g\", \"category\": \"pantry_staples\" },\n          { \"name\": \"Sesame Oil\", \"quantity\": 2, \"unit\": \"tbsp\", \"category\": \"seasonings\" },\n          { \"name\": \"Cucumber\", \"quantity\": 0.5, \"unit\": \"medium\", \"category\": \"vegetables\" }\n        ],\n        \"instructions\": \"1. Boil noodles and chill. 2. Sear thinly sliced beef. 3. Toss noodles with beef, cucumber, and sesame oil dressing.\",\n        \"estimatedTime\": 25,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 520\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Honey Soy Glazed Salmon\",\n        \"ingredients\": [\n          { \"name\": \"Salmon Fillets\", \"quantity\": 2, \"unit\": \"fillets\", \"category\": \"pantry_staples\" },\n          { \"name\": \"Honey\", \"quantity\": 1, \"unit\": \"tbsp\", \"category\": \"pantry_staples\" },\n          { \"name\": \"Soy Sauce\", \"quantity\": 1, \"unit\": \"tbsp\", \"category\": \"seasonings\" },\n          { \"name\": \"Bok Choy\", \"quantity\": 200, \"unit\": \"g\", \"category\": \"vegetables\" }\n        ],\n        \"instructions\": \"1. Mix honey and soy. 2. Sear salmon, brushing with glaze. 3. Steam bok choy alongside. Serve with rice.\",\n        \"estimatedTime\": 20,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 480\n      }\n    ]\n  },\n  \"thursday\": {\n    \"breakfast\": [],\n    \"lunch\": [\n      {\n        \"name\": \"Salmon and Avocado Sushi Bowls\",\n        \"ingredients\": [\n          { \"name\": \"Salmon Fillets\", \"quantity\": 1, \"unit\": \"fillet\", \"category\": \"pantry_staples\" },\n          { \"name\": \"Avocado\", \"quantity\": 1, \"unit\": \"count\", \"category\": \"fruits\" },\n          { \"name\": \"White Rice\", \"quantity\": 1, \"unit\": \"cup\", \"category\": \"pantry_staples\" },\n          { \"name\": \"Rice Vinegar\", \"quantity\": 1, \"unit\": \"tsp\", \"category\": \"pantry_staples\" }\n        ],\n        \"instructions\": \"1. Cook rice and season with vinegar. 2. Pan-sear salmon and flake. 3. Slice avocado. 4. Assemble with soy sauce.\",\n        \"estimatedTime\": 25,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 550\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Thai Basil Ground Pork Stir-fry\",\n        \"ingredients\": [\n          { \"name\": \"Ground Pork\", \"quantity\": 400, \"unit\": \"g\", \"category\": \"proteins\" },\n          { \"name\": \"Thai Basil\", \"quantity\": 0.5, \"unit\": \"cup\", \"category\": \"seasonings\" },\n          { \"name\": \"Garlic\", \"quantity\": 3, \"unit\": \"cloves\", \"category\": \"vegetables\" },\n          { \"name\": \"Soy Sauce\", \"quantity\": 1, \"unit\": \"tbsp\", \"category\": \"seasonings\" }\n        ],\n        \"instructions\": \"1. Fry garlic, then brown pork. 2. Add soy sauce and sriracha. 3. Fold in basil until wilted. Serve over rice.\",\n        \"estimatedTime\": 15,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 490\n      }\n    ]\n  },\n  \"friday\": {\n    \"breakfast\": [\n      {\n        \"name\": \"Soft Scrambled Eggs with Chives\",\n        \"ingredients\": [\n          { \"name\": \"Eggs\", \"quantity\": 4, \"unit\": \"count\", \"category\": \"proteins\" },\n          { \"name\": \"Green Onions\", \"quantity\": 2, \"unit\": \"stalks\", \"category\": \"vegetables\" }\n        ],\n        \"instructions\": \"1. Whisk eggs. 2. Cook on low heat, stirring constantly for soft curd. 3. Fold in chopped green onions.\",\n        \"estimatedTime\": 10,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 280\n      }\n    ],\n    \"lunch\": [\n      {\n        \"name\": \"Pork and Cabbage Potsticker Bowls\",\n        \"ingredients\": [\n          { \"name\": \"Ground Pork\", \"quantity\": 300, \"unit\": \"g\", \"category\": \"proteins\" },\n          { \"name\": \"Cabbage\", \"quantity\": 300, \"unit\": \"g\", \"category\": \"vegetables\" },\n          { \"name\": \"Ginger\", \"quantity\": 1, \"unit\": \"tsp\", \"category\": \"seasonings\" },\n          { \"name\": \"Soy Sauce\", \"quantity\": 1, \"unit\": \"tbsp\", \"category\": \"seasonings\" }\n        ],\n        \"instructions\": \"1. Brown pork with ginger. 2. Add shredded cabbage and cook until soft. 3. Season with soy and sesame oil.\",\n        \"estimatedTime\": 20,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 410\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Miso Butter Cod with Bok Choy\",\n        \"ingredients\": [\n          { \"name\": \"Cod Fillets\", \"quantity\": 2, \"unit\": \"fillets\", \"category\": \"proteins\" },\n          { \"name\": \"Miso Paste\", \"quantity\": 1, \"unit\": \"tbsp\", \"category\": \"seasonings\" },\n          { \"name\": \"Bok Choy\", \"quantity\": 2, \"unit\": \"heads\", \"category\": \"vegetables\" }\n        ],\n        \"instructions\": \"1. Rub cod with miso. 2. Pan-sear until flaky. 3. Steam bok choy in the same pan with a splash of water.\",\n        \"estimatedTime\": 20,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 320\n      }\n    ]\n  },\n  \"saturday\": {\n    \"breakfast\": [\n      {\n        \"name\": \"Smoked Salmon and Cream Cheese Bagels\",\n        \"ingredients\": [\n          { \"name\": \"Smoked Salmon\", \"quantity\": 100, \"unit\": \"g\", \"category\": \"pantry_staples\" },\n          { \"name\": \"Cream Cheese\", \"quantity\": 4, \"unit\": \"tbsp\", \"category\": \"dairy\" },\n          { \"name\": \"Cucumber\", \"quantity\": 0.25, \"unit\": \"medium\", \"category\": \"vegetables\" }\n        ],\n        \"instructions\": \"1. Toast bread/bagel. 2. Spread cream cheese. 3. Layer smoked salmon and thin cucumber slices.\",\n        \"estimatedTime\": 10,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 350\n      }\n    ],\n    \"lunch\": [\n      {\n        \"name\": \"Teriyaki Shrimp Skewers\",\n        \"ingredients\": [\n          { \"name\": \"Shrimp\", \"quantity\": 300, \"unit\": \"g\", \"category\": \"proteins\" },\n          { \"name\": \"Honey\", \"quantity\": 1, \"unit\": \"tbsp\", \"category\": \"pantry_staples\" },\n          { \"name\": \"Soy Sauce\", \"quantity\": 1, \"unit\": \"tbsp\", \"category\": \"seasonings\" },\n          { \"name\": \"Garlic\", \"quantity\": 1, \"unit\": \"clove\", \"category\": \"vegetables\" }\n        ],\n        \"instructions\": \"1. Marinate shrimp in honey, soy, and garlic. 2. Grill or pan-sear for 2 mins per side. Serve with rice.\",\n        \"estimatedTime\": 15,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 290\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Korean BBQ Beef Bulgogi Bowls\",\n        \"ingredients\": [\n          { \"name\": \"Beef Flank Steak\", \"quantity\": 400, \"unit\": \"g\", \"category\": \"proteins\" },\n          { \"name\": \"Soy Sauce\", \"quantity\": 2, \"unit\": \"tbsp\", \"category\": \"seasonings\" },\n          { \"name\": \"Honey\", \"quantity\": 1, \"unit\": \"tbsp\", \"category\": \"pantry_staples\" },\n          { \"name\": \"Green Onions\", \"quantity\": 2, \"unit\": \"stalks\", \"category\": \"vegetables\" }\n        ],\n        \"instructions\": \"1. Slice beef very thin. 2. Marinate in soy, honey, and sesame oil. 3. Sear on high heat. Serve over rice.\",\n        \"estimatedTime\": 30,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 580\n      }\n    ]\n  },\n  \"sunday\": {\n    \"breakfast\": [\n      {\n        \"name\": \"Savory Congee with Soft Boiled Eggs\",\n        \"ingredients\": [\n          { \"name\": \"White Rice\", \"quantity\": 0.5, \"unit\": \"cup\", \"category\": \"pantry_staples\" },\n          { \"name\": \"Eggs\", \"quantity\": 2, \"unit\": \"count\", \"category\": \"proteins\" },\n          { \"name\": \"Ginger\", \"quantity\": 1, \"unit\": \"tsp\", \"category\": \"seasonings\" },\n          { \"name\": \"Green Onions\", \"quantity\": 1, \"unit\": \"stalk\", \"category\": \"vegetables\" }\n        ],\n        \"instructions\": \"1. Boil rice in 4 cups water/broth until porridge-like. 2. Stir in ginger. 3. Top with 6-minute boiled eggs.\",\n        \"estimatedTime\": 45,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 310\n      }\n    ],\n    \"lunch\": [\n      {\n        \"name\": \"Shrimp and Vegetable Rice Bowl\",\n        \"ingredients\": [\n          { \"name\": \"Shrimp\", \"quantity\": 200, \"unit\": \"g\", \"category\": \"proteins\" },\n          { \"name\": \"Cabbage\", \"quantity\": 100, \"unit\": \"g\", \"category\": \"vegetables\" },\n          { \"name\": \"Green Beans\", \"quantity\": 100, \"unit\": \"g\", \"category\": \"vegetables\" },\n          { \"name\": \"Soy Sauce\", \"quantity\": 1, \"unit\": \"tbsp\", \"category\": \"seasonings\" }\n        ],\n        \"instructions\": \"1. Sauté shrimp and vegetables. 2. Season with soy and ginger. 3. Serve over a bed of steamed rice.\",\n        \"estimatedTime\": 20,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 340\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Lemon Lemongrass Chicken Thighs\",\n        \"ingredients\": [\n          { \"name\": \"Chicken Thighs\", \"quantity\": 400, \"unit\": \"g\", \"category\": \"proteins\" },\n          { \"name\": \"Lemongrass\", \"quantity\": 1, \"unit\": \"stalk\", \"category\": \"vegetables\" },\n          { \"name\": \"Garlic\", \"quantity\": 2, \"unit\": \"cloves\", \"category\": \"vegetables\" },\n          { \"name\": \"Honey\", \"quantity\": 1, \"unit\": \"tsp\", \"category\": \"pantry_staples\" }\n        ],\n        \"instructions\": \"1. Mince lemongrass and garlic. 2. Rub onto chicken with honey and soy. 3. Pan-roast until skin is crispy.\",\n        \"estimatedTime\": 35,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 460\n      }\n    ]\n  }\n}",
+      "parsed": {
+        "monday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Spicy Tuna and Cucumber Rice Bowls",
+              "ingredients": [
+                {
+                  "name": "Canned Tuna",
+                  "quantity": 2,
+                  "unit": "cans",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Cucumber",
+                  "quantity": 1,
+                  "unit": "medium",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "White Rice",
+                  "quantity": 1,
+                  "unit": "cup",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Sriracha",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 1,
+                  "unit": "tsp",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Cook rice. 2. Mix tuna with sriracha and soy sauce. 3. Slice cucumber. 4. Assemble bowls and top with green onions.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 420
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Ginger Garlic Chicken Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 400,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 1,
+                  "unit": "inch",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 3,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Green Beans",
+                  "quantity": 200,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 2,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Sauté sliced chicken until browned. 2. Add minced ginger, garlic, and beans. 3. Stir-fry with soy sauce until tender. Serve with rice.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 380
+            }
+          ]
+        },
+        "tuesday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Asian-style Chicken Salad Wraps",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 300,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Cabbage",
+                  "quantity": 200,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Sesame Oil",
+                  "quantity": 1,
+                  "unit": "tsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Rice Vinegar",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Poach and shred chicken. 2. Shred cabbage and toss with oil and vinegar. 3. Mix and serve in cabbage leaf wraps.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 310
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Szechuan Beef and Green Bean Skillet",
+              "ingredients": [
+                {
+                  "name": "Ground Beef",
+                  "quantity": 400,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Green Beans",
+                  "quantity": 200,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Sriracha",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Brown beef in a skillet. 2. Add garlic and green beans. 3. Season with sriracha and soy sauce. 4. Cook until beans are crisp-tender.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 450
+            }
+          ]
+        },
+        "wednesday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Cold Sesame Beef Noodle Salad",
+              "ingredients": [
+                {
+                  "name": "Beef Flank Steak",
+                  "quantity": 250,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Pasta Noodles",
+                  "quantity": 150,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Sesame Oil",
+                  "quantity": 2,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Cucumber",
+                  "quantity": 0.5,
+                  "unit": "medium",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Boil noodles and chill. 2. Sear thinly sliced beef. 3. Toss noodles with beef, cucumber, and sesame oil dressing.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 520
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Honey Soy Glazed Salmon",
+              "ingredients": [
+                {
+                  "name": "Salmon Fillets",
+                  "quantity": 2,
+                  "unit": "fillets",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Bok Choy",
+                  "quantity": 200,
+                  "unit": "g",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Mix honey and soy. 2. Sear salmon, brushing with glaze. 3. Steam bok choy alongside. Serve with rice.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 480
+            }
+          ]
+        },
+        "thursday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Salmon and Avocado Sushi Bowls",
+              "ingredients": [
+                {
+                  "name": "Salmon Fillets",
+                  "quantity": 1,
+                  "unit": "fillet",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 1,
+                  "unit": "count",
+                  "category": "fruits"
+                },
+                {
+                  "name": "White Rice",
+                  "quantity": 1,
+                  "unit": "cup",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Rice Vinegar",
+                  "quantity": 1,
+                  "unit": "tsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Cook rice and season with vinegar. 2. Pan-sear salmon and flake. 3. Slice avocado. 4. Assemble with soy sauce.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 550
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Thai Basil Ground Pork Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Ground Pork",
+                  "quantity": 400,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Thai Basil",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 3,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Fry garlic, then brown pork. 2. Add soy sauce and sriracha. 3. Fold in basil until wilted. Serve over rice.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 490
+            }
+          ]
+        },
+        "friday": {
+          "breakfast": [
+            {
+              "name": "Soft Scrambled Eggs with Chives",
+              "ingredients": [
+                {
+                  "name": "Eggs",
+                  "quantity": 4,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Green Onions",
+                  "quantity": 2,
+                  "unit": "stalks",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Whisk eggs. 2. Cook on low heat, stirring constantly for soft curd. 3. Fold in chopped green onions.",
+              "estimatedTime": 10,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 280
+            }
+          ],
+          "lunch": [
+            {
+              "name": "Pork and Cabbage Potsticker Bowls",
+              "ingredients": [
+                {
+                  "name": "Ground Pork",
+                  "quantity": 300,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Cabbage",
+                  "quantity": 300,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 1,
+                  "unit": "tsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Brown pork with ginger. 2. Add shredded cabbage and cook until soft. 3. Season with soy and sesame oil.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 410
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Miso Butter Cod with Bok Choy",
+              "ingredients": [
+                {
+                  "name": "Cod Fillets",
+                  "quantity": 2,
+                  "unit": "fillets",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Miso Paste",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Bok Choy",
+                  "quantity": 2,
+                  "unit": "heads",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Rub cod with miso. 2. Pan-sear until flaky. 3. Steam bok choy in the same pan with a splash of water.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 320
+            }
+          ]
+        },
+        "saturday": {
+          "breakfast": [
+            {
+              "name": "Smoked Salmon and Cream Cheese Bagels",
+              "ingredients": [
+                {
+                  "name": "Smoked Salmon",
+                  "quantity": 100,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Cream Cheese",
+                  "quantity": 4,
+                  "unit": "tbsp",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Cucumber",
+                  "quantity": 0.25,
+                  "unit": "medium",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Toast bread/bagel. 2. Spread cream cheese. 3. Layer smoked salmon and thin cucumber slices.",
+              "estimatedTime": 10,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 350
+            }
+          ],
+          "lunch": [
+            {
+              "name": "Teriyaki Shrimp Skewers",
+              "ingredients": [
+                {
+                  "name": "Shrimp",
+                  "quantity": 300,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 1,
+                  "unit": "clove",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Marinate shrimp in honey, soy, and garlic. 2. Grill or pan-sear for 2 mins per side. Serve with rice.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 290
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Korean BBQ Beef Bulgogi Bowls",
+              "ingredients": [
+                {
+                  "name": "Beef Flank Steak",
+                  "quantity": 400,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 2,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Green Onions",
+                  "quantity": 2,
+                  "unit": "stalks",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Slice beef very thin. 2. Marinate in soy, honey, and sesame oil. 3. Sear on high heat. Serve over rice.",
+              "estimatedTime": 30,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 580
+            }
+          ]
+        },
+        "sunday": {
+          "breakfast": [
+            {
+              "name": "Savory Congee with Soft Boiled Eggs",
+              "ingredients": [
+                {
+                  "name": "White Rice",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Eggs",
+                  "quantity": 2,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 1,
+                  "unit": "tsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Green Onions",
+                  "quantity": 1,
+                  "unit": "stalk",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Boil rice in 4 cups water/broth until porridge-like. 2. Stir in ginger. 3. Top with 6-minute boiled eggs.",
+              "estimatedTime": 45,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 310
+            }
+          ],
+          "lunch": [
+            {
+              "name": "Shrimp and Vegetable Rice Bowl",
+              "ingredients": [
+                {
+                  "name": "Shrimp",
+                  "quantity": 200,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Cabbage",
+                  "quantity": 100,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Green Beans",
+                  "quantity": 100,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Sauté shrimp and vegetables. 2. Season with soy and ginger. 3. Serve over a bed of steamed rice.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 340
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Lemon Lemongrass Chicken Thighs",
+              "ingredients": [
+                {
+                  "name": "Chicken Thighs",
+                  "quantity": 400,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Lemongrass",
+                  "quantity": 1,
+                  "unit": "stalk",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1,
+                  "unit": "tsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Mince lemongrass and garlic. 2. Rub onto chicken with honey and soy. 3. Pan-roast until skin is crispy.",
+              "estimatedTime": 35,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 460
+            }
+          ]
+        }
+      },
+      "normalized": {
+        "monday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Spicy Tuna and Cucumber Rice Bowls",
+              "ingredients": [
+                {
+                  "name": "Canned Tuna",
+                  "quantity": 2.0,
+                  "unit": "cans",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Cucumber",
+                  "quantity": 1.0,
+                  "unit": "medium",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "White Rice",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Sriracha",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Cook rice. 2. Mix tuna with sriracha and soy sauce. 3. Slice cucumber. 4. Assemble bowls and top with green onions.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 420,
+              "id": "mon-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Ginger Garlic Chicken Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 400.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 3.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Green Beans",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Sauté sliced chicken until browned. 2. Add minced ginger, garlic, and beans. 3. Stir-fry with soy sauce until tender. Serve with rice.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 380,
+              "id": "mon-dinner-001",
+              "source": "ai"
+            }
+          ]
+        },
+        "tuesday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Asian-style Chicken Salad Wraps",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 300.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Cabbage",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Sesame Oil",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Rice Vinegar",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Poach and shred chicken. 2. Shred cabbage and toss with oil and vinegar. 3. Mix and serve in cabbage leaf wraps.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 310,
+              "id": "tue-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Szechuan Beef and Green Bean Skillet",
+              "ingredients": [
+                {
+                  "name": "Ground Beef",
+                  "quantity": 400.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Green Beans",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Sriracha",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Brown beef in a skillet. 2. Add garlic and green beans. 3. Season with sriracha and soy sauce. 4. Cook until beans are crisp-tender.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 450,
+              "id": "tue-dinner-001",
+              "source": "ai"
+            }
+          ]
+        },
+        "wednesday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Cold Sesame Beef Noodle Salad",
+              "ingredients": [
+                {
+                  "name": "Beef Flank Steak",
+                  "quantity": 250.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Pasta Noodles",
+                  "quantity": 150.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Sesame Oil",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Cucumber",
+                  "quantity": 0.5,
+                  "unit": "medium",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Boil noodles and chill. 2. Sear thinly sliced beef. 3. Toss noodles with beef, cucumber, and sesame oil dressing.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 520,
+              "id": "wed-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Honey Soy Glazed Salmon",
+              "ingredients": [
+                {
+                  "name": "Salmon Fillets",
+                  "quantity": 2.0,
+                  "unit": "fillets",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Bok Choy",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Mix honey and soy. 2. Sear salmon, brushing with glaze. 3. Steam bok choy alongside. Serve with rice.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 480,
+              "id": "wed-dinner-001",
+              "source": "ai"
+            }
+          ]
+        },
+        "thursday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Salmon and Avocado Sushi Bowls",
+              "ingredients": [
+                {
+                  "name": "Salmon Fillets",
+                  "quantity": 1.0,
+                  "unit": "fillet",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "fruits"
+                },
+                {
+                  "name": "White Rice",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Rice Vinegar",
+                  "quantity": 1.0,
+                  "unit": "tsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Cook rice and season with vinegar. 2. Pan-sear salmon and flake. 3. Slice avocado. 4. Assemble with soy sauce.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 550,
+              "id": "thu-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Thai Basil Ground Pork Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Ground Pork",
+                  "quantity": 400.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Thai Basil",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 3.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Fry garlic, then brown pork. 2. Add soy sauce and sriracha. 3. Fold in basil until wilted. Serve over rice.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 490,
+              "id": "thu-dinner-001",
+              "source": "ai"
+            }
+          ]
+        },
+        "friday": {
+          "breakfast": [
+            {
+              "name": "Soft Scrambled Eggs with Chives",
+              "ingredients": [
+                {
+                  "name": "Eggs",
+                  "quantity": 4.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Green Onions",
+                  "quantity": 2.0,
+                  "unit": "stalks",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Whisk eggs. 2. Cook on low heat, stirring constantly for soft curd. 3. Fold in chopped green onions.",
+              "estimatedTime": 10,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 280,
+              "id": "fri-breakfast-001",
+              "source": "ai"
+            }
+          ],
+          "lunch": [
+            {
+              "name": "Pork and Cabbage Potsticker Bowls",
+              "ingredients": [
+                {
+                  "name": "Ground Pork",
+                  "quantity": 300.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Cabbage",
+                  "quantity": 300.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Brown pork with ginger. 2. Add shredded cabbage and cook until soft. 3. Season with soy and sesame oil.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 410,
+              "id": "fri-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Miso Butter Cod with Bok Choy",
+              "ingredients": [
+                {
+                  "name": "Cod Fillets",
+                  "quantity": 2.0,
+                  "unit": "fillets",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Miso Paste",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Bok Choy",
+                  "quantity": 2.0,
+                  "unit": "heads",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Rub cod with miso. 2. Pan-sear until flaky. 3. Steam bok choy in the same pan with a splash of water.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 320,
+              "id": "fri-dinner-001",
+              "source": "ai"
+            }
+          ]
+        },
+        "saturday": {
+          "breakfast": [
+            {
+              "name": "Smoked Salmon and Cream Cheese Bagels",
+              "ingredients": [
+                {
+                  "name": "Smoked Salmon",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Cream Cheese",
+                  "quantity": 4.0,
+                  "unit": "tbsp",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Cucumber",
+                  "quantity": 0.25,
+                  "unit": "medium",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Toast bread/bagel. 2. Spread cream cheese. 3. Layer smoked salmon and thin cucumber slices.",
+              "estimatedTime": 10,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 350,
+              "id": "sat-breakfast-001",
+              "source": "ai"
+            }
+          ],
+          "lunch": [
+            {
+              "name": "Teriyaki Shrimp Skewers",
+              "ingredients": [
+                {
+                  "name": "Shrimp",
+                  "quantity": 300.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 1.0,
+                  "unit": "clove",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Marinate shrimp in honey, soy, and garlic. 2. Grill or pan-sear for 2 mins per side. Serve with rice.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 290,
+              "id": "sat-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Korean BBQ Beef Bulgogi Bowls",
+              "ingredients": [
+                {
+                  "name": "Beef Flank Steak",
+                  "quantity": 400.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Green Onions",
+                  "quantity": 2.0,
+                  "unit": "stalks",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Slice beef very thin. 2. Marinate in soy, honey, and sesame oil. 3. Sear on high heat. Serve over rice.",
+              "estimatedTime": 30,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 580,
+              "id": "sat-dinner-001",
+              "source": "ai"
+            }
+          ]
+        },
+        "sunday": {
+          "breakfast": [
+            {
+              "name": "Savory Congee with Soft Boiled Eggs",
+              "ingredients": [
+                {
+                  "name": "White Rice",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Eggs",
+                  "quantity": 2.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Green Onions",
+                  "quantity": 1.0,
+                  "unit": "stalk",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Boil rice in 4 cups water/broth until porridge-like. 2. Stir in ginger. 3. Top with 6-minute boiled eggs.",
+              "estimatedTime": 45,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 310,
+              "id": "sun-breakfast-001",
+              "source": "ai"
+            }
+          ],
+          "lunch": [
+            {
+              "name": "Shrimp and Vegetable Rice Bowl",
+              "ingredients": [
+                {
+                  "name": "Shrimp",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Cabbage",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Green Beans",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Sauté shrimp and vegetables. 2. Season with soy and ginger. 3. Serve over a bed of steamed rice.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 340,
+              "id": "sun-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Lemon Lemongrass Chicken Thighs",
+              "ingredients": [
+                {
+                  "name": "Chicken Thighs",
+                  "quantity": 400.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Lemongrass",
+                  "quantity": 1.0,
+                  "unit": "stalk",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1.0,
+                  "unit": "tsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Mince lemongrass and garlic. 2. Rub onto chicken with honey and soy. 3. Pan-roast until skin is crispy.",
+              "estimatedTime": 35,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 460,
+              "id": "sun-dinner-001",
+              "source": "ai"
+            }
+          ]
+        }
+      },
+      "error": null
+    },
+    "step3_shopping_list": {
+      "prompt": "Step 3: Generate a consolidated shopping list from the structured weekly meal plan.\nCRITICAL RULES:\n1) MERGE only true duplicates or very close synonyms (e.g., bell pepper/peppers -> bell peppers). Do NOT merge clearly different items (spinach vs broccoli, ginger vs garlic, green onion vs onion).\n2) UNITS (North America): proteins -> lbs or oz; produce -> count or bunch; grains/dairy/pantry_staples/others -> oz/lbs/count as appropriate. Use a single unit per item.\n3) Sum quantities across all dishes. For lbs/oz round to 1 decimal; for count/bunch use whole numbers.\n4) Valid categories: proteins, vegetables, fruits, grains, dairy, seasonings, pantry_staples, others.\n5) Keep names concise (<= 5 words). Avoid brands and extra adjectives.\n6) For seasonings (oils/sauces/spices), use totalQuantity 0 and unit \"\".\n7) Respond with compact JSON only (no comments or prose).\nMealPlan: {\"monday\":{\"breakfast\":[],\"lunch\":[{\"id\":\"mon-lunch-001\",\"name\":\"Spicy Tuna and Cucumber Rice Bowls\",\"ingredients\":[{\"name\":\"Canned Tuna\",\"quantity\":2.0,\"unit\":\"cans\",\"category\":\"pantry_staples\"},{\"name\":\"Cucumber\",\"quantity\":1.0,\"unit\":\"medium\",\"category\":\"vegetables\"},{\"name\":\"White Rice\",\"quantity\":1.0,\"unit\":\"cup\",\"category\":\"pantry_staples\"},{\"name\":\"Sriracha\",\"quantity\":1.0,\"unit\":\"tbsp\",\"category\":\"pantry_staples\"},{\"name\":\"Soy Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Cook rice. 2. Mix tuna with sriracha and soy sauce. 3. Slice cucumber. 4. Assemble bowls and top with green onions.\",\"estimatedTime\":20,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":420,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"mon-dinner-001\",\"name\":\"Ginger Garlic Chicken Stir-fry\",\"ingredients\":[{\"name\":\"Chicken Breast\",\"quantity\":400.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Ginger\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Garlic\",\"quantity\":3.0,\"unit\":\"cloves\",\"category\":\"vegetables\"},{\"name\":\"Green Beans\",\"quantity\":200.0,\"unit\":\"g\",\"category\":\"vegetables\"},{\"name\":\"Soy Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Sauté sliced chicken until browned. 2. Add minced ginger, garlic, and beans. 3. Stir-fry with soy sauce until tender. Serve with rice.\",\"estimatedTime\":25,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":380,\"source\":\"ai\",\"notes\":null}]},\"tuesday\":{\"breakfast\":[],\"lunch\":[{\"id\":\"tue-lunch-001\",\"name\":\"Asian-style Chicken Salad Wraps\",\"ingredients\":[{\"name\":\"Chicken Breast\",\"quantity\":300.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Cabbage\",\"quantity\":200.0,\"unit\":\"g\",\"category\":\"vegetables\"},{\"name\":\"Sesame Oil\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Rice Vinegar\",\"quantity\":1.0,\"unit\":\"tbsp\",\"category\":\"pantry_staples\"}],\"instructions\":\"1. Poach and shred chicken. 2. Shred cabbage and toss with oil and vinegar. 3. Mix and serve in cabbage leaf wraps.\",\"estimatedTime\":20,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":310,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"tue-dinner-001\",\"name\":\"Szechuan Beef and Green Bean Skillet\",\"ingredients\":[{\"name\":\"Ground Beef\",\"quantity\":400.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Green Beans\",\"quantity\":200.0,\"unit\":\"g\",\"category\":\"vegetables\"},{\"name\":\"Garlic\",\"quantity\":2.0,\"unit\":\"cloves\",\"category\":\"vegetables\"},{\"name\":\"Sriracha\",\"quantity\":1.0,\"unit\":\"tbsp\",\"category\":\"pantry_staples\"}],\"instructions\":\"1. Brown beef in a skillet. 2. Add garlic and green beans. 3. Season with sriracha and soy sauce. 4. Cook until beans are crisp-tender.\",\"estimatedTime\":20,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":450,\"source\":\"ai\",\"notes\":null}]},\"wednesday\":{\"breakfast\":[],\"lunch\":[{\"id\":\"wed-lunch-001\",\"name\":\"Cold Sesame Beef Noodle Salad\",\"ingredients\":[{\"name\":\"Beef Flank Steak\",\"quantity\":250.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Pasta Noodles\",\"quantity\":150.0,\"unit\":\"g\",\"category\":\"pantry_staples\"},{\"name\":\"Sesame Oil\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Cucumber\",\"quantity\":0.5,\"unit\":\"medium\",\"category\":\"vegetables\"}],\"instructions\":\"1. Boil noodles and chill. 2. Sear thinly sliced beef. 3. Toss noodles with beef, cucumber, and sesame oil dressing.\",\"estimatedTime\":25,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":520,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"wed-dinner-001\",\"name\":\"Honey Soy Glazed Salmon\",\"ingredients\":[{\"name\":\"Salmon Fillets\",\"quantity\":2.0,\"unit\":\"fillets\",\"category\":\"pantry_staples\"},{\"name\":\"Honey\",\"quantity\":1.0,\"unit\":\"tbsp\",\"category\":\"pantry_staples\"},{\"name\":\"Soy Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Bok Choy\",\"quantity\":200.0,\"unit\":\"g\",\"category\":\"vegetables\"}],\"instructions\":\"1. Mix honey and soy. 2. Sear salmon, brushing with glaze. 3. Steam bok choy alongside. Serve with rice.\",\"estimatedTime\":20,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":480,\"source\":\"ai\",\"notes\":null}]},\"thursday\":{\"breakfast\":[],\"lunch\":[{\"id\":\"thu-lunch-001\",\"name\":\"Salmon and Avocado Sushi Bowls\",\"ingredients\":[{\"name\":\"Salmon Fillets\",\"quantity\":1.0,\"unit\":\"fillet\",\"category\":\"pantry_staples\"},{\"name\":\"Avocado\",\"quantity\":1.0,\"unit\":\"count\",\"category\":\"fruits\"},{\"name\":\"White Rice\",\"quantity\":1.0,\"unit\":\"cup\",\"category\":\"pantry_staples\"},{\"name\":\"Rice Vinegar\",\"quantity\":1.0,\"unit\":\"tsp\",\"category\":\"pantry_staples\"}],\"instructions\":\"1. Cook rice and season with vinegar. 2. Pan-sear salmon and flake. 3. Slice avocado. 4. Assemble with soy sauce.\",\"estimatedTime\":25,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":550,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"thu-dinner-001\",\"name\":\"Thai Basil Ground Pork Stir-fry\",\"ingredients\":[{\"name\":\"Ground Pork\",\"quantity\":400.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Thai Basil\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Garlic\",\"quantity\":3.0,\"unit\":\"cloves\",\"category\":\"vegetables\"},{\"name\":\"Soy Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Fry garlic, then brown pork. 2. Add soy sauce and sriracha. 3. Fold in basil until wilted. Serve over rice.\",\"estimatedTime\":15,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":490,\"source\":\"ai\",\"notes\":null}]},\"friday\":{\"breakfast\":[{\"id\":\"fri-breakfast-001\",\"name\":\"Soft Scrambled Eggs with Chives\",\"ingredients\":[{\"name\":\"Eggs\",\"quantity\":4.0,\"unit\":\"count\",\"category\":\"proteins\"},{\"name\":\"Green Onions\",\"quantity\":2.0,\"unit\":\"stalks\",\"category\":\"vegetables\"}],\"instructions\":\"1. Whisk eggs. 2. Cook on low heat, stirring constantly for soft curd. 3. Fold in chopped green onions.\",\"estimatedTime\":10,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":280,\"source\":\"ai\",\"notes\":null}],\"lunch\":[{\"id\":\"fri-lunch-001\",\"name\":\"Pork and Cabbage Potsticker Bowls\",\"ingredients\":[{\"name\":\"Ground Pork\",\"quantity\":300.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Cabbage\",\"quantity\":300.0,\"unit\":\"g\",\"category\":\"vegetables\"},{\"name\":\"Ginger\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Soy Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Brown pork with ginger. 2. Add shredded cabbage and cook until soft. 3. Season with soy and sesame oil.\",\"estimatedTime\":20,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":410,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"fri-dinner-001\",\"name\":\"Miso Butter Cod with Bok Choy\",\"ingredients\":[{\"name\":\"Cod Fillets\",\"quantity\":2.0,\"unit\":\"fillets\",\"category\":\"proteins\"},{\"name\":\"Miso Paste\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Bok Choy\",\"quantity\":2.0,\"unit\":\"heads\",\"category\":\"vegetables\"}],\"instructions\":\"1. Rub cod with miso. 2. Pan-sear until flaky. 3. Steam bok choy in the same pan with a splash of water.\",\"estimatedTime\":20,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":320,\"source\":\"ai\",\"notes\":null}]},\"saturday\":{\"breakfast\":[{\"id\":\"sat-breakfast-001\",\"name\":\"Smoked Salmon and Cream Cheese Bagels\",\"ingredients\":[{\"name\":\"Smoked Salmon\",\"quantity\":100.0,\"unit\":\"g\",\"category\":\"pantry_staples\"},{\"name\":\"Cream Cheese\",\"quantity\":4.0,\"unit\":\"tbsp\",\"category\":\"dairy\"},{\"name\":\"Cucumber\",\"quantity\":0.25,\"unit\":\"medium\",\"category\":\"vegetables\"}],\"instructions\":\"1. Toast bread/bagel. 2. Spread cream cheese. 3. Layer smoked salmon and thin cucumber slices.\",\"estimatedTime\":10,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":350,\"source\":\"ai\",\"notes\":null}],\"lunch\":[{\"id\":\"sat-lunch-001\",\"name\":\"Teriyaki Shrimp Skewers\",\"ingredients\":[{\"name\":\"Shrimp\",\"quantity\":300.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Honey\",\"quantity\":1.0,\"unit\":\"tbsp\",\"category\":\"pantry_staples\"},{\"name\":\"Soy Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Garlic\",\"quantity\":1.0,\"unit\":\"clove\",\"category\":\"vegetables\"}],\"instructions\":\"1. Marinate shrimp in honey, soy, and garlic. 2. Grill or pan-sear for 2 mins per side. Serve with rice.\",\"estimatedTime\":15,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":290,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"sat-dinner-001\",\"name\":\"Korean BBQ Beef Bulgogi Bowls\",\"ingredients\":[{\"name\":\"Beef Flank Steak\",\"quantity\":400.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Soy Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Honey\",\"quantity\":1.0,\"unit\":\"tbsp\",\"category\":\"pantry_staples\"},{\"name\":\"Green Onions\",\"quantity\":2.0,\"unit\":\"stalks\",\"category\":\"vegetables\"}],\"instructions\":\"1. Slice beef very thin. 2. Marinate in soy, honey, and sesame oil. 3. Sear on high heat. Serve over rice.\",\"estimatedTime\":30,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":580,\"source\":\"ai\",\"notes\":null}]},\"sunday\":{\"breakfast\":[{\"id\":\"sun-breakfast-001\",\"name\":\"Savory Congee with Soft Boiled Eggs\",\"ingredients\":[{\"name\":\"White Rice\",\"quantity\":0.5,\"unit\":\"cup\",\"category\":\"pantry_staples\"},{\"name\":\"Eggs\",\"quantity\":2.0,\"unit\":\"count\",\"category\":\"proteins\"},{\"name\":\"Ginger\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Green Onions\",\"quantity\":1.0,\"unit\":\"stalk\",\"category\":\"vegetables\"}],\"instructions\":\"1. Boil rice in 4 cups water/broth until porridge-like. 2. Stir in ginger. 3. Top with 6-minute boiled eggs.\",\"estimatedTime\":45,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":310,\"source\":\"ai\",\"notes\":null}],\"lunch\":[{\"id\":\"sun-lunch-001\",\"name\":\"Shrimp and Vegetable Rice Bowl\",\"ingredients\":[{\"name\":\"Shrimp\",\"quantity\":200.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Cabbage\",\"quantity\":100.0,\"unit\":\"g\",\"category\":\"vegetables\"},{\"name\":\"Green Beans\",\"quantity\":100.0,\"unit\":\"g\",\"category\":\"vegetables\"},{\"name\":\"Soy Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Sauté shrimp and vegetables. 2. Season with soy and ginger. 3. Serve over a bed of steamed rice.\",\"estimatedTime\":20,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":340,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"sun-dinner-001\",\"name\":\"Lemon Lemongrass Chicken Thighs\",\"ingredients\":[{\"name\":\"Chicken Thighs\",\"quantity\":400.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Lemongrass\",\"quantity\":1.0,\"unit\":\"stalk\",\"category\":\"vegetables\"},{\"name\":\"Garlic\",\"quantity\":2.0,\"unit\":\"cloves\",\"category\":\"vegetables\"},{\"name\":\"Honey\",\"quantity\":1.0,\"unit\":\"tsp\",\"category\":\"pantry_staples\"}],\"instructions\":\"1. Mince lemongrass and garlic. 2. Rub onto chicken with honey and soy. 3. Pan-roast until skin is crispy.\",\"estimatedTime\":35,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":460,\"source\":\"ai\",\"notes\":null}]}}\nOutputSchema: {\"items\":[{\"name\":\"ingredient_name\",\"category\":\"predefined_category\",\"totalQuantity\":0,\"unit\":\"unit\"}]}\nRETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks).",
+      "raw_response": "{\n  \"items\": [\n    {\n      \"name\": \"Chicken Breast\",\n      \"category\": \"proteins\",\n      \"totalQuantity\": 1.5,\n      \"unit\": \"lbs\"\n    },\n    {\n      \"name\": \"Ground Beef\",\n      \"category\": \"proteins\",\n      \"totalQuantity\": 0.9,\n      \"unit\": \"lbs\"\n    },\n    {\n      \"name\": \"Beef Flank Steak\",\n      \"category\": \"proteins\",\n      \"totalQuantity\": 1.4,\n      \"unit\": \"lbs\"\n    },\n    {\n      \"name\": \"Ground Pork\",\n      \"category\": \"proteins\",\n      \"totalQuantity\": 1.5,\n      \"unit\": \"lbs\"\n    },\n    {\n      \"name\": \"Chicken Thighs\",\n      \"category\": \"proteins\",\n      \"totalQuantity\": 0.9,\n      \"unit\": \"lbs\"\n    },\n    {\n      \"name\": \"Shrimp\",\n      \"category\": \"proteins\",\n      \"totalQuantity\": 1.1,\n      \"unit\": \"lbs\"\n    },\n    {\n      \"name\": \"Cod Fillets\",\n      \"category\": \"proteins\",\n      \"totalQuantity\": 2,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Eggs\",\n      \"category\": \"proteins\",\n      \"totalQuantity\": 6,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Cucumber\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 2,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Garlic\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 11,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Green Beans\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 1.1,\n      \"unit\": \"lbs\"\n    },\n    {\n      \"name\": \"Cabbage\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 1.3,\n      \"unit\": \"lbs\"\n    },\n    {\n      \"name\": \"Bok Choy\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 3,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Green Onions\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 5,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Lemongrass\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 1,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Avocado\",\n      \"category\": \"fruits\",\n      \"totalQuantity\": 1,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Cream Cheese\",\n      \"category\": \"dairy\",\n      \"totalQuantity\": 2.0,\n      \"unit\": \"oz\"\n    },\n    {\n      \"name\": \"Canned Tuna\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 2,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"White Rice\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 2.5,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Pasta Noodles\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 5.3,\n      \"unit\": \"oz\"\n    },\n    {\n      \"name\": \"Salmon Fillets\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 3,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Smoked Salmon\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 3.5,\n      \"unit\": \"oz\"\n    },\n    {\n      \"name\": \"Honey\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 4.3,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Sriracha\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 2.0,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Rice Vinegar\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 2.0,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Soy Sauce\",\n      \"category\": \"seasonings\",\n      \"totalQuantity\": 0,\n      \"unit\": \"\"\n    },\n    {\n      \"name\": \"Ginger\",\n      \"category\": \"seasonings\",\n      \"totalQuantity\": 0,\n      \"unit\": \"\"\n    },\n    {\n      \"name\": \"Sesame Oil\",\n      \"category\": \"seasonings\",\n      \"totalQuantity\": 0,\n      \"unit\": \"\"\n    },\n    {\n      \"name\": \"Thai Basil\",\n      \"category\": \"seasonings\",\n      \"totalQuantity\": 0,\n      \"unit\": \"\"\n    },\n    {\n      \"name\": \"Miso Paste\",\n      \"category\": \"seasonings\",\n      \"totalQuantity\": 0,\n      \"unit\": \"\"\n    }\n  ]\n}",
+      "parsed": {
+        "items": [
+          {
+            "name": "Chicken Breast",
+            "category": "proteins",
+            "totalQuantity": 1.5,
+            "unit": "lbs"
+          },
+          {
+            "name": "Ground Beef",
+            "category": "proteins",
+            "totalQuantity": 0.9,
+            "unit": "lbs"
+          },
+          {
+            "name": "Beef Flank Steak",
+            "category": "proteins",
+            "totalQuantity": 1.4,
+            "unit": "lbs"
+          },
+          {
+            "name": "Ground Pork",
+            "category": "proteins",
+            "totalQuantity": 1.5,
+            "unit": "lbs"
+          },
+          {
+            "name": "Chicken Thighs",
+            "category": "proteins",
+            "totalQuantity": 0.9,
+            "unit": "lbs"
+          },
+          {
+            "name": "Shrimp",
+            "category": "proteins",
+            "totalQuantity": 1.1,
+            "unit": "lbs"
+          },
+          {
+            "name": "Cod Fillets",
+            "category": "proteins",
+            "totalQuantity": 2,
+            "unit": "count"
+          },
+          {
+            "name": "Eggs",
+            "category": "proteins",
+            "totalQuantity": 6,
+            "unit": "count"
+          },
+          {
+            "name": "Cucumber",
+            "category": "vegetables",
+            "totalQuantity": 2,
+            "unit": "count"
+          },
+          {
+            "name": "Garlic",
+            "category": "vegetables",
+            "totalQuantity": 11,
+            "unit": "count"
+          },
+          {
+            "name": "Green Beans",
+            "category": "vegetables",
+            "totalQuantity": 1.1,
+            "unit": "lbs"
+          },
+          {
+            "name": "Cabbage",
+            "category": "vegetables",
+            "totalQuantity": 1.3,
+            "unit": "lbs"
+          },
+          {
+            "name": "Bok Choy",
+            "category": "vegetables",
+            "totalQuantity": 3,
+            "unit": "count"
+          },
+          {
+            "name": "Green Onions",
+            "category": "vegetables",
+            "totalQuantity": 5,
+            "unit": "count"
+          },
+          {
+            "name": "Lemongrass",
+            "category": "vegetables",
+            "totalQuantity": 1,
+            "unit": "count"
+          },
+          {
+            "name": "Avocado",
+            "category": "fruits",
+            "totalQuantity": 1,
+            "unit": "count"
+          },
+          {
+            "name": "Cream Cheese",
+            "category": "dairy",
+            "totalQuantity": 2.0,
+            "unit": "oz"
+          },
+          {
+            "name": "Canned Tuna",
+            "category": "pantry_staples",
+            "totalQuantity": 2,
+            "unit": "count"
+          },
+          {
+            "name": "White Rice",
+            "category": "pantry_staples",
+            "totalQuantity": 2.5,
+            "unit": "count"
+          },
+          {
+            "name": "Pasta Noodles",
+            "category": "pantry_staples",
+            "totalQuantity": 5.3,
+            "unit": "oz"
+          },
+          {
+            "name": "Salmon Fillets",
+            "category": "pantry_staples",
+            "totalQuantity": 3,
+            "unit": "count"
+          },
+          {
+            "name": "Smoked Salmon",
+            "category": "pantry_staples",
+            "totalQuantity": 3.5,
+            "unit": "oz"
+          },
+          {
+            "name": "Honey",
+            "category": "pantry_staples",
+            "totalQuantity": 4.3,
+            "unit": "count"
+          },
+          {
+            "name": "Sriracha",
+            "category": "pantry_staples",
+            "totalQuantity": 2.0,
+            "unit": "count"
+          },
+          {
+            "name": "Rice Vinegar",
+            "category": "pantry_staples",
+            "totalQuantity": 2.0,
+            "unit": "count"
+          },
+          {
+            "name": "Soy Sauce",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": ""
+          },
+          {
+            "name": "Ginger",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": ""
+          },
+          {
+            "name": "Sesame Oil",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": ""
+          },
+          {
+            "name": "Thai Basil",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": ""
+          },
+          {
+            "name": "Miso Paste",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": ""
+          }
+        ]
+      },
+      "normalized": {
+        "items": [
+          {
+            "id": "item_1362cff1",
+            "name": "Chicken Breast",
+            "category": "proteins",
+            "totalQuantity": 1.5,
+            "unit": "lbs",
+            "purchased": false
+          },
+          {
+            "id": "item_4e8d79c1",
+            "name": "Ground Beef",
+            "category": "proteins",
+            "totalQuantity": 0.9,
+            "unit": "lbs",
+            "purchased": false
+          },
+          {
+            "id": "item_0786ed4d",
+            "name": "Beef Flank Steak",
+            "category": "proteins",
+            "totalQuantity": 1.4,
+            "unit": "lbs",
+            "purchased": false
+          },
+          {
+            "id": "item_80d22781",
+            "name": "Ground Pork",
+            "category": "proteins",
+            "totalQuantity": 1.5,
+            "unit": "lbs",
+            "purchased": false
+          },
+          {
+            "id": "item_d9762ea7",
+            "name": "Chicken Thighs",
+            "category": "proteins",
+            "totalQuantity": 0.9,
+            "unit": "lbs",
+            "purchased": false
+          },
+          {
+            "id": "item_3950fccb",
+            "name": "Shrimp",
+            "category": "proteins",
+            "totalQuantity": 1.1,
+            "unit": "lbs",
+            "purchased": false
+          },
+          {
+            "id": "item_87f436ff",
+            "name": "Cod Fillets",
+            "category": "proteins",
+            "totalQuantity": 2.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_a2fc0fd7",
+            "name": "Eggs",
+            "category": "proteins",
+            "totalQuantity": 6.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_4bcaab67",
+            "name": "Cucumber",
+            "category": "vegetables",
+            "totalQuantity": 2.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_5dbe0db9",
+            "name": "Garlic",
+            "category": "vegetables",
+            "totalQuantity": 11.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_e44e3d30",
+            "name": "Green Beans",
+            "category": "vegetables",
+            "totalQuantity": 1.1,
+            "unit": "lbs",
+            "purchased": false
+          },
+          {
+            "id": "item_658d28cf",
+            "name": "Cabbage",
+            "category": "vegetables",
+            "totalQuantity": 1.3,
+            "unit": "lbs",
+            "purchased": false
+          },
+          {
+            "id": "item_b68853b9",
+            "name": "Bok Choy",
+            "category": "vegetables",
+            "totalQuantity": 3.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_653bc41e",
+            "name": "Green Onions",
+            "category": "vegetables",
+            "totalQuantity": 5.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_d342c570",
+            "name": "Lemongrass",
+            "category": "vegetables",
+            "totalQuantity": 1.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_aab1ca57",
+            "name": "Avocado",
+            "category": "fruits",
+            "totalQuantity": 1.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_2660b59b",
+            "name": "Cream Cheese",
+            "category": "dairy",
+            "totalQuantity": 2.0,
+            "unit": "oz",
+            "purchased": false
+          },
+          {
+            "id": "item_6808829a",
+            "name": "Canned Tuna",
+            "category": "pantry_staples",
+            "totalQuantity": 2.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_e74d4c35",
+            "name": "White Rice",
+            "category": "pantry_staples",
+            "totalQuantity": 2.5,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_b3853d1a",
+            "name": "Pasta Noodles",
+            "category": "pantry_staples",
+            "totalQuantity": 5.3,
+            "unit": "oz",
+            "purchased": false
+          },
+          {
+            "id": "item_47940483",
+            "name": "Salmon Fillets",
+            "category": "pantry_staples",
+            "totalQuantity": 3.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_23811d64",
+            "name": "Smoked Salmon",
+            "category": "pantry_staples",
+            "totalQuantity": 3.5,
+            "unit": "oz",
+            "purchased": false
+          },
+          {
+            "id": "item_208318fb",
+            "name": "Honey",
+            "category": "pantry_staples",
+            "totalQuantity": 4.3,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_ecaec416",
+            "name": "Sriracha",
+            "category": "pantry_staples",
+            "totalQuantity": 2.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_a992bcdc",
+            "name": "Rice Vinegar",
+            "category": "pantry_staples",
+            "totalQuantity": 2.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_346d9f42",
+            "name": "Soy Sauce",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": "",
+            "purchased": false
+          },
+          {
+            "id": "item_50e88ef8",
+            "name": "Ginger",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": "",
+            "purchased": false
+          },
+          {
+            "id": "item_6a182880",
+            "name": "Sesame Oil",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": "",
+            "purchased": false
+          },
+          {
+            "id": "item_59b87d6e",
+            "name": "Thai Basil",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": "",
+            "purchased": false
+          },
+          {
+            "id": "item_f5f58a5d",
+            "name": "Miso Paste",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": "",
+            "purchased": false
+          }
+        ]
+      },
+      "error": null
+    }
+  }
+}

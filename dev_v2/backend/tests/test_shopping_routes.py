@@ -1,9 +1,7 @@
-import json
-from datetime import datetime, timezone
-
 import pytest
 
-from app.services.gemini import GeminiTimeoutError, gemini_service
+from app.core.exceptions import GeminiTimeoutError, ParseError
+from app.api.v1 import shopping as shopping_router
 
 
 @pytest.fixture
@@ -27,21 +25,27 @@ async def test_generate_shopping_list_success(async_client, monkeypatch, sample_
         "menus": sample_menus,
     }
 
-    async def fake_generate(prompt: str, timeout_seconds: float | None = None) -> str:
-        return json.dumps(
+    result = {
+        "id": "sl_test",
+        "menuBookId": "mb_existing",
+        "createdAt": "2025-01-01T00:00:00Z",
+        "items": [
             {
-                "items": [
-                    {
-                        "name": "chicken breast",
-                        "category": "proteins",
-                        "totalQuantity": 4,
-                        "unit": "pieces",
-                    }
-                ]
+                "id": "item_test",
+                "name": "chicken breast",
+                "category": "proteins",
+                "totalQuantity": 4,
+                "unit": "pieces",
+                "purchased": False,
             }
-        )
+        ],
+    }
 
-    monkeypatch.setattr(gemini_service, "generate", fake_generate)
+    class FakeShoppingService:
+        async def generate(self, menu_book_id, menus):  # noqa: D401
+            return result
+
+    monkeypatch.setattr(shopping_router, "get_shopping_service", lambda: FakeShoppingService())
 
     response = await async_client.post(
         "/api/shopping-lists/generate",
@@ -62,23 +66,11 @@ async def test_generate_shopping_list_invalid_category(async_client, monkeypatch
         "menus": sample_menus,
     }
 
-    async def fake_generate(prompt: str, timeout_seconds: float | None = None) -> str:
-        return "{}"
+    class FakeShoppingService:
+        async def generate(self, menu_book_id, menus):  # noqa: D401
+            raise ParseError("bad data")
 
-    def fake_parse(_: str) -> dict:
-        return {
-            "items": [
-                {
-                    "name": "mystery ingredient",
-                    "category": "invalid",
-                    "totalQuantity": 1,
-                    "unit": "bag",
-                }
-            ]
-        }
-
-    monkeypatch.setattr(gemini_service, "generate", fake_generate)
-    monkeypatch.setattr(gemini_service, "parse_json_response", fake_parse)
+    monkeypatch.setattr(shopping_router, "get_shopping_service", lambda: FakeShoppingService())
 
     response = await async_client.post(
         "/api/shopping-lists/generate",
@@ -97,10 +89,11 @@ async def test_generate_shopping_list_timeout(async_client, monkeypatch, sample_
         "menus": sample_menus,
     }
 
-    async def fake_generate(prompt: str, timeout_seconds: float | None = None) -> str:
-        raise GeminiTimeoutError("timeout")
+    class FakeShoppingService:
+        async def generate(self, menu_book_id, menus):  # noqa: D401
+            raise GeminiTimeoutError("timeout")
 
-    monkeypatch.setattr(gemini_service, "generate", fake_generate)
+    monkeypatch.setattr(shopping_router, "get_shopping_service", lambda: FakeShoppingService())
 
     response = await async_client.post(
         "/api/shopping-lists/generate",

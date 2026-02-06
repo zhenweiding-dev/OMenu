@@ -1,9 +1,9 @@
-import json
 from datetime import datetime, timezone
 
 import pytest
 
-from app.services.gemini import GeminiTimeoutError, ParseError, gemini_service
+from app.core.exceptions import GeminiTimeoutError, ParseError
+from app.api.v1 import menu_books as menu_books_router
 
 
 @pytest.fixture
@@ -42,15 +42,26 @@ def _empty_week() -> dict:
 
 @pytest.mark.asyncio
 async def test_generate_menu_book_success(async_client, monkeypatch, sample_preferences):
-    responses = [
-        "Here is a draft menu",
-        json.dumps({"menus": _empty_week()}),
-    ]
+    created_at = datetime.now(timezone.utc).isoformat()
+    menu_book = {
+        "id": "mb_test",
+        "createdAt": created_at,
+        "status": "ready",
+        "preferences": sample_preferences,
+        "menus": _empty_week(),
+        "shoppingList": {
+            "id": "sl_test",
+            "menuBookId": "mb_test",
+            "createdAt": created_at,
+            "items": [],
+        },
+    }
 
-    async def fake_generate(prompt: str, timeout_seconds: float | None = None) -> str:
-        return responses.pop(0)
+    class FakeMenuService:
+        async def generate(self, preferences):  # noqa: D401
+            return menu_book
 
-    monkeypatch.setattr(gemini_service, "generate", fake_generate)
+    monkeypatch.setattr(menu_books_router, "get_menu_service", lambda: FakeMenuService())
 
     response = await async_client.post(
         "/api/menu-books/generate",
@@ -66,14 +77,11 @@ async def test_generate_menu_book_success(async_client, monkeypatch, sample_pref
 
 @pytest.mark.asyncio
 async def test_generate_menu_book_invalid_ai_payload(async_client, monkeypatch, sample_preferences):
-    async def fake_generate(prompt: str, timeout_seconds: float | None = None) -> str:
-        return "{}"
+    class FakeMenuService:
+        async def generate(self, preferences):  # noqa: D401
+            raise ParseError("bad data")
 
-    def fake_parse(_: str) -> dict:
-        raise ParseError("bad data")
-
-    monkeypatch.setattr(gemini_service, "generate", fake_generate)
-    monkeypatch.setattr(gemini_service, "parse_json_response", fake_parse)
+    monkeypatch.setattr(menu_books_router, "get_menu_service", lambda: FakeMenuService())
 
     response = await async_client.post(
         "/api/menu-books/generate",
@@ -87,10 +95,11 @@ async def test_generate_menu_book_invalid_ai_payload(async_client, monkeypatch, 
 
 @pytest.mark.asyncio
 async def test_generate_menu_book_timeout(async_client, monkeypatch, sample_preferences):
-    async def fake_generate(prompt: str, timeout_seconds: float | None = None) -> str:
-        raise GeminiTimeoutError("timeout")
+    class FakeMenuService:
+        async def generate(self, preferences):  # noqa: D401
+            raise GeminiTimeoutError("timeout")
 
-    monkeypatch.setattr(gemini_service, "generate", fake_generate)
+    monkeypatch.setattr(menu_books_router, "get_menu_service", lambda: FakeMenuService())
 
     response = await async_client.post(
         "/api/menu-books/generate",
@@ -122,10 +131,11 @@ def sample_menu_book(sample_preferences: dict) -> dict:
 
 @pytest.mark.asyncio
 async def test_modify_menu_book_success(async_client, monkeypatch, sample_menu_book):
-    async def fake_generate(prompt: str, timeout_seconds: float | None = None) -> str:
-        return json.dumps({"menus": _empty_week()})
+    class FakeMenuService:
+        async def modify(self, book_id, modification, current_book):  # noqa: D401
+            return sample_menu_book
 
-    monkeypatch.setattr(gemini_service, "generate", fake_generate)
+    monkeypatch.setattr(menu_books_router, "get_menu_service", lambda: FakeMenuService())
 
     response = await async_client.post(
         "/api/menu-books/mb_existing/modify",
@@ -143,14 +153,11 @@ async def test_modify_menu_book_success(async_client, monkeypatch, sample_menu_b
 
 @pytest.mark.asyncio
 async def test_modify_menu_book_parse_error(async_client, monkeypatch, sample_menu_book):
-    async def fake_generate(prompt: str, timeout_seconds: float | None = None) -> str:
-        return json.dumps({"menus": _empty_week()})
+    class FakeMenuService:
+        async def modify(self, book_id, modification, current_book):  # noqa: D401
+            raise ParseError("bad data")
 
-    def fake_parse(_: str) -> dict:
-        raise ParseError("bad data")
-
-    monkeypatch.setattr(gemini_service, "generate", fake_generate)
-    monkeypatch.setattr(gemini_service, "parse_json_response", fake_parse)
+    monkeypatch.setattr(menu_books_router, "get_menu_service", lambda: FakeMenuService())
 
     response = await async_client.post(
         "/api/menu-books/mb_existing/modify",

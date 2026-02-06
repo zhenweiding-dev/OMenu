@@ -110,6 +110,15 @@ API：
 
 **交互：Generate Menu**
 - 调用：`useMenuBook.createMenu(preferences)` → `POST /menu-books/generate`。
+- 后端采用 **2.5 步 AI**（稳定性优先）：
+  1. **Step 1：AI 输出 `mealOutline + draftShoppingList`**  
+     - 目标：先锁定本周“买什么”，控制食材种类。  
+     - **动态上限**：基于餐次数 + 人数计算，**范围 12–36**。  
+     - **pantry_staples / seasonings 不计入上限**，但必须分类正确。  
+  2. **Step 2：AI 输出结构化菜谱**  
+     - 必须遵循 Step 1 的清单；允许 pantry_staples / seasonings。  
+  3. **Step 3：Shopping List**  
+     - 仍由 AI 生成，但 **后端做强纠偏**（分类映射 + 单位修正）。  
 - 结果：写入 `pendingResult`（MenuBook + 空 shoppingList），进入 Review。
 - `pendingResult.createdAt` 会对齐到 `targetWeekStart`（周一）以锁定所属周。
 
@@ -173,3 +182,4 @@ API：
 2. **手动 Dish 不触发 AI**，也不自动影响 Shopping List。
 3. **Shopping List 仅在 Create / Modify 时生成**，且仅基于 `source === "ai"` dishes。
 4. **pendingResult** 仅用于 create 流程恢复，不是通用草稿系统。
+5. **pantry_staples / seasonings 强纠偏**：后端在菜单与购物清单阶段均做分类映射，避免 AI 混淆。

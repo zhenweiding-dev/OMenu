@@ -1,0 +1,2064 @@
+{
+  "timestamp": "2026-02-06T20:29:25.375018+00:00",
+  "preferences": {
+    "specificPreferences": [
+      "quick",
+      "high protein",
+      "asian flavors"
+    ],
+    "specificDisliked": [
+      "tree nuts"
+    ],
+    "numPeople": 2,
+    "budget": 120,
+    "difficulty": "medium",
+    "cookSchedule": {
+      "monday": {
+        "breakfast": false,
+        "lunch": true,
+        "dinner": true
+      },
+      "tuesday": {
+        "breakfast": false,
+        "lunch": true,
+        "dinner": true
+      },
+      "wednesday": {
+        "breakfast": false,
+        "lunch": true,
+        "dinner": true
+      },
+      "thursday": {
+        "breakfast": false,
+        "lunch": true,
+        "dinner": true
+      },
+      "friday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      },
+      "saturday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      },
+      "sunday": {
+        "breakfast": true,
+        "lunch": true,
+        "dinner": true
+      }
+    }
+  },
+  "steps": {
+    "step1_outline": {
+      "prompt": "Step 1: Plan a rough weekly meal outline, then derive a draft shopping list.\nReturn ONLY JSON with two keys: mealOutline and draftShoppingList.\nRules:\n1) Target ~27 unique NON-pantry items (computed from meal count + people; min 12, max 36). Avoid adding extras.\n2) Balance variety with practicality: reuse overlapping ingredients across meals when reasonable; avoid repeating the exact same dish.\n3) Seasonings (oils/sauces/spices) do NOT count toward the limit and must be category=seasonings. Pantry staples (rice/pasta/flour/canned beans/oats/bread) do NOT count and must be category=pantry_staples.\n4) Only include meals selected in CookSchedule; unselected meals should be [] or omitted.\n5) Meal outline: the amount of dishes per selected meal should be appropriate for the number of people and meal type.\n6) draftShoppingList must be derived from the outline and include unique items with name + category only (no quantities, no duplicates).\n7) Valid categories: proteins, vegetables, fruits, grains, dairy, seasonings, pantry_staples, others.\nBudgetUSD: 120\nPeople: 2\nPreferences: [\"quick\",\"high protein\",\"asian flavors\"]\nDislikes: [\"tree nuts\"]\nCookSchedule: {\"monday\":[\"lunch\",\"dinner\"],\"tuesday\":[\"lunch\",\"dinner\"],\"wednesday\":[\"lunch\",\"dinner\"],\"thursday\":[\"lunch\",\"dinner\"],\"friday\":[\"breakfast\",\"lunch\",\"dinner\"],\"saturday\":[\"breakfast\",\"lunch\",\"dinner\"],\"sunday\":[\"breakfast\",\"lunch\",\"dinner\"]}\nOutputSchema: {\"mealOutline\":{\"monday\":{\"breakfast\":[\"Avocado toast\"],\"lunch\":[\"Chicken salad\"],\"dinner\":[\"Stir-fry\"]},\"tuesday\":{\"breakfast\":[],\"lunch\":[\"Tuna sandwich\"],\"dinner\":[]},\"...\":\"...\"},\"draftShoppingList\":[{\"name\":\"chicken breast\",\"category\":\"proteins\"},{\"name\":\"rice\",\"category\":\"grains\"},{\"name\":\"olive oil\",\"category\":\"seasonings\"}]}\nRETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks).",
+      "raw_response": "{\n  \"mealOutline\": {\n    \"monday\": {\n      \"lunch\": [\n        \"Teriyaki Chicken Bowls\"\n      ],\n      \"dinner\": [\n        \"Spicy Beef Stir-fry with Broccoli\"\n      ]\n    },\n    \"tuesday\": {\n      \"lunch\": [\n        \"Leftover Spicy Beef Stir-fry\"\n      ],\n      \"dinner\": [\n        \"Honey Garlic Salmon and Asparagus\"\n      ]\n    },\n    \"wednesday\": {\n      \"lunch\": [\n        \"Salmon Salad Wraps\"\n      ],\n      \"dinner\": [\n        \"Ground Turkey Thai Basil Stir-fry\"\n      ]\n    },\n    \"thursday\": {\n      \"lunch\": [\n        \"Leftover Thai Basil Stir-fry\"\n      ],\n      \"dinner\": [\n        \"Chicken and Vegetable Fried Rice\"\n      ]\n    },\n    \"friday\": {\n      \"breakfast\": [\n        \"Greek Yogurt with Berries\"\n      ],\n      \"lunch\": [\n        \"Chicken and Vegetable Fried Rice\"\n      ],\n      \"dinner\": [\n        \"Beef and Snap Pea Noodle Stir-fry\"\n      ]\n    },\n    \"saturday\": {\n      \"breakfast\": [\n        \"Scrambled Eggs with Spinach\"\n      ],\n      \"lunch\": [\n        \"Turkey and Avocado Salad\"\n      ],\n      \"dinner\": [\n        \"Steamed Salmon with Bok Choy\"\n      ]\n    },\n    \"sunday\": {\n      \"breakfast\": [\n        \"Omelet with Bell Peppers\"\n      ],\n      \"lunch\": [\n        \"Beef and Snap Pea Noodle Stir-fry\"\n      ],\n      \"dinner\": [\n        \"Ground Turkey Lettuce Wraps\"\n      ]\n    }\n  },\n  \"draftShoppingList\": [\n    {\n      \"name\": \"Chicken Breast\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Flank Steak\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Salmon Fillets\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Ground Turkey\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Eggs\",\n      \"category\": \"proteins\"\n    },\n    {\n      \"name\": \"Broccoli\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Asparagus\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Bok Choy\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Snap Peas\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Bell Peppers\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Spinach\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Green Onions\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Garlic\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Ginger\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Carrots\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Thai Basil\",\n      \"category\": \"vegetables\"\n    },\n    {\n      \"name\": \"Avocado\",\n      \"category\": \"fruits\"\n    },\n    {\n      \"name\": \"Blueberries\",\n      \"category\": \"fruits\"\n    },\n    {\n      \"name\": \"Greek Yogurt\",\n      \"category\": \"dairy\"\n    },\n    {\n      \"name\": \"Butter\",\n      \"category\": \"dairy\"\n    },\n    {\n      \"name\": \"Soy Sauce\",\n      \"category\": \"seasonings\"\n    },\n    {\n      \"name\": \"Sesame Oil\",\n      \"category\": \"seasonings\"\n    },\n    {\n      \"name\": \"Sriracha\",\n      \"category\": \"seasonings\"\n    },\n    {\n      \"name\": \"Fish Sauce\",\n      \"category\": \"seasonings\"\n    },\n    {\n      \"name\": \"Rice\",\n      \"category\": \"pantry_staples\"\n    },\n    {\n      \"name\": \"Rice Noodles\",\n      \"category\": \"pantry_staples\"\n    },\n    {\n      \"name\": \"Honey\",\n      \"category\": \"seasonings\"\n    }\n  ]\n}",
+      "parsed": {
+        "mealOutline": {
+          "monday": {
+            "lunch": [
+              "Teriyaki Chicken Bowls"
+            ],
+            "dinner": [
+              "Spicy Beef Stir-fry with Broccoli"
+            ]
+          },
+          "tuesday": {
+            "lunch": [
+              "Leftover Spicy Beef Stir-fry"
+            ],
+            "dinner": [
+              "Honey Garlic Salmon and Asparagus"
+            ]
+          },
+          "wednesday": {
+            "lunch": [
+              "Salmon Salad Wraps"
+            ],
+            "dinner": [
+              "Ground Turkey Thai Basil Stir-fry"
+            ]
+          },
+          "thursday": {
+            "lunch": [
+              "Leftover Thai Basil Stir-fry"
+            ],
+            "dinner": [
+              "Chicken and Vegetable Fried Rice"
+            ]
+          },
+          "friday": {
+            "breakfast": [
+              "Greek Yogurt with Berries"
+            ],
+            "lunch": [
+              "Chicken and Vegetable Fried Rice"
+            ],
+            "dinner": [
+              "Beef and Snap Pea Noodle Stir-fry"
+            ]
+          },
+          "saturday": {
+            "breakfast": [
+              "Scrambled Eggs with Spinach"
+            ],
+            "lunch": [
+              "Turkey and Avocado Salad"
+            ],
+            "dinner": [
+              "Steamed Salmon with Bok Choy"
+            ]
+          },
+          "sunday": {
+            "breakfast": [
+              "Omelet with Bell Peppers"
+            ],
+            "lunch": [
+              "Beef and Snap Pea Noodle Stir-fry"
+            ],
+            "dinner": [
+              "Ground Turkey Lettuce Wraps"
+            ]
+          }
+        },
+        "draftShoppingList": [
+          {
+            "name": "Chicken Breast",
+            "category": "proteins"
+          },
+          {
+            "name": "Flank Steak",
+            "category": "proteins"
+          },
+          {
+            "name": "Salmon Fillets",
+            "category": "proteins"
+          },
+          {
+            "name": "Ground Turkey",
+            "category": "proteins"
+          },
+          {
+            "name": "Eggs",
+            "category": "proteins"
+          },
+          {
+            "name": "Broccoli",
+            "category": "vegetables"
+          },
+          {
+            "name": "Asparagus",
+            "category": "vegetables"
+          },
+          {
+            "name": "Bok Choy",
+            "category": "vegetables"
+          },
+          {
+            "name": "Snap Peas",
+            "category": "vegetables"
+          },
+          {
+            "name": "Bell Peppers",
+            "category": "vegetables"
+          },
+          {
+            "name": "Spinach",
+            "category": "vegetables"
+          },
+          {
+            "name": "Green Onions",
+            "category": "vegetables"
+          },
+          {
+            "name": "Garlic",
+            "category": "vegetables"
+          },
+          {
+            "name": "Ginger",
+            "category": "vegetables"
+          },
+          {
+            "name": "Carrots",
+            "category": "vegetables"
+          },
+          {
+            "name": "Thai Basil",
+            "category": "vegetables"
+          },
+          {
+            "name": "Avocado",
+            "category": "fruits"
+          },
+          {
+            "name": "Blueberries",
+            "category": "fruits"
+          },
+          {
+            "name": "Greek Yogurt",
+            "category": "dairy"
+          },
+          {
+            "name": "Butter",
+            "category": "dairy"
+          },
+          {
+            "name": "Soy Sauce",
+            "category": "seasonings"
+          },
+          {
+            "name": "Sesame Oil",
+            "category": "seasonings"
+          },
+          {
+            "name": "Sriracha",
+            "category": "seasonings"
+          },
+          {
+            "name": "Fish Sauce",
+            "category": "seasonings"
+          },
+          {
+            "name": "Rice",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Rice Noodles",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Honey",
+            "category": "seasonings"
+          }
+        ]
+      },
+      "normalized": {
+        "mealOutline": {
+          "monday": {
+            "lunch": [
+              "Teriyaki Chicken Bowls"
+            ],
+            "dinner": [
+              "Spicy Beef Stir-fry with Broccoli"
+            ]
+          },
+          "tuesday": {
+            "lunch": [
+              "Leftover Spicy Beef Stir-fry"
+            ],
+            "dinner": [
+              "Honey Garlic Salmon and Asparagus"
+            ]
+          },
+          "wednesday": {
+            "lunch": [
+              "Salmon Salad Wraps"
+            ],
+            "dinner": [
+              "Ground Turkey Thai Basil Stir-fry"
+            ]
+          },
+          "thursday": {
+            "lunch": [
+              "Leftover Thai Basil Stir-fry"
+            ],
+            "dinner": [
+              "Chicken and Vegetable Fried Rice"
+            ]
+          },
+          "friday": {
+            "breakfast": [
+              "Greek Yogurt with Berries"
+            ],
+            "lunch": [
+              "Chicken and Vegetable Fried Rice"
+            ],
+            "dinner": [
+              "Beef and Snap Pea Noodle Stir-fry"
+            ]
+          },
+          "saturday": {
+            "breakfast": [
+              "Scrambled Eggs with Spinach"
+            ],
+            "lunch": [
+              "Turkey and Avocado Salad"
+            ],
+            "dinner": [
+              "Steamed Salmon with Bok Choy"
+            ]
+          },
+          "sunday": {
+            "breakfast": [
+              "Omelet with Bell Peppers"
+            ],
+            "lunch": [
+              "Beef and Snap Pea Noodle Stir-fry"
+            ],
+            "dinner": [
+              "Ground Turkey Lettuce Wraps"
+            ]
+          }
+        },
+        "draftShoppingList": [
+          {
+            "name": "Chicken Breast",
+            "category": "proteins"
+          },
+          {
+            "name": "Flank Steak",
+            "category": "proteins"
+          },
+          {
+            "name": "Salmon Fillets",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Ground Turkey",
+            "category": "proteins"
+          },
+          {
+            "name": "Eggs",
+            "category": "proteins"
+          },
+          {
+            "name": "Broccoli",
+            "category": "vegetables"
+          },
+          {
+            "name": "Asparagus",
+            "category": "vegetables"
+          },
+          {
+            "name": "Bok Choy",
+            "category": "vegetables"
+          },
+          {
+            "name": "Snap Peas",
+            "category": "vegetables"
+          },
+          {
+            "name": "Bell Peppers",
+            "category": "seasonings"
+          },
+          {
+            "name": "Spinach",
+            "category": "vegetables"
+          },
+          {
+            "name": "Green Onions",
+            "category": "vegetables"
+          },
+          {
+            "name": "Garlic",
+            "category": "vegetables"
+          },
+          {
+            "name": "Ginger",
+            "category": "seasonings"
+          },
+          {
+            "name": "Carrots",
+            "category": "vegetables"
+          },
+          {
+            "name": "Thai Basil",
+            "category": "seasonings"
+          },
+          {
+            "name": "Avocado",
+            "category": "fruits"
+          },
+          {
+            "name": "Blueberries",
+            "category": "fruits"
+          },
+          {
+            "name": "Greek Yogurt",
+            "category": "dairy"
+          },
+          {
+            "name": "Butter",
+            "category": "seasonings"
+          },
+          {
+            "name": "Soy Sauce",
+            "category": "seasonings"
+          },
+          {
+            "name": "Sesame Oil",
+            "category": "seasonings"
+          },
+          {
+            "name": "Sriracha",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Fish Sauce",
+            "category": "seasonings"
+          },
+          {
+            "name": "Rice",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Rice Noodles",
+            "category": "pantry_staples"
+          },
+          {
+            "name": "Honey",
+            "category": "pantry_staples"
+          }
+        ]
+      },
+      "error": null
+    },
+    "step2_structured_menu": {
+      "prompt": "Step 2: Create a high-quality, nutritious, and structured weekly meal plan within the ingredient constraints. Requirements: 1) DraftShoppingList is the source of truth for NON-pantry items. Do NOT add new non-pantry items. You may add pantry_staples/seasonings only when needed (keep minimal). 2) MealOutline is guidance for dish ideas; feel free to improve dish names and recipes, but stay within the shopping list. 3) Focus on high-quality, nutritious, and varied meals that fit Preferences/Dislikes/Budget/People. Avoid repeating the exact same dish. 4) Only include meals selected in CookSchedule; unselected meals must be [] or omitted. 5) Servings MUST equal People for every dish. 6) Ingredient categories: proteins, vegetables, fruits, grains, dairy, seasonings, pantry_staples, others. 7) instructions <=200 characters and include clear steps.  RETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks).BudgetUSD: 120 People: 2 Difficulty: \"medium\" Preferences: [\"quick\",\"high protein\",\"asian flavors\"] Dislikes: [\"tree nuts\"] CookSchedule: {\"monday\":[\"lunch\",\"dinner\"],\"tuesday\":[\"lunch\",\"dinner\"],\"wednesday\":[\"lunch\",\"dinner\"],\"thursday\":[\"lunch\",\"dinner\"],\"friday\":[\"breakfast\",\"lunch\",\"dinner\"],\"saturday\":[\"breakfast\",\"lunch\",\"dinner\"],\"sunday\":[\"breakfast\",\"lunch\",\"dinner\"]} MealOutline: {\"monday\":{\"lunch\":[\"Teriyaki Chicken Bowls\"],\"dinner\":[\"Spicy Beef Stir-fry with Broccoli\"]},\"tuesday\":{\"lunch\":[\"Leftover Spicy Beef Stir-fry\"],\"dinner\":[\"Honey Garlic Salmon and Asparagus\"]},\"wednesday\":{\"lunch\":[\"Salmon Salad Wraps\"],\"dinner\":[\"Ground Turkey Thai Basil Stir-fry\"]},\"thursday\":{\"lunch\":[\"Leftover Thai Basil Stir-fry\"],\"dinner\":[\"Chicken and Vegetable Fried Rice\"]},\"friday\":{\"breakfast\":[\"Greek Yogurt with Berries\"],\"lunch\":[\"Chicken and Vegetable Fried Rice\"],\"dinner\":[\"Beef and Snap Pea Noodle Stir-fry\"]},\"saturday\":{\"breakfast\":[\"Scrambled Eggs with Spinach\"],\"lunch\":[\"Turkey and Avocado Salad\"],\"dinner\":[\"Steamed Salmon with Bok Choy\"]},\"sunday\":{\"breakfast\":[\"Omelet with Bell Peppers\"],\"lunch\":[\"Beef and Snap Pea Noodle Stir-fry\"],\"dinner\":[\"Ground Turkey Lettuce Wraps\"]}} DraftShoppingList: [{\"name\":\"Chicken Breast\",\"category\":\"proteins\"},{\"name\":\"Flank Steak\",\"category\":\"proteins\"},{\"name\":\"Salmon Fillets\",\"category\":\"pantry_staples\"},{\"name\":\"Ground Turkey\",\"category\":\"proteins\"},{\"name\":\"Eggs\",\"category\":\"proteins\"},{\"name\":\"Broccoli\",\"category\":\"vegetables\"},{\"name\":\"Asparagus\",\"category\":\"vegetables\"},{\"name\":\"Bok Choy\",\"category\":\"vegetables\"},{\"name\":\"Snap Peas\",\"category\":\"vegetables\"},{\"name\":\"Bell Peppers\",\"category\":\"seasonings\"},{\"name\":\"Spinach\",\"category\":\"vegetables\"},{\"name\":\"Green Onions\",\"category\":\"vegetables\"},{\"name\":\"Garlic\",\"category\":\"vegetables\"},{\"name\":\"Ginger\",\"category\":\"seasonings\"},{\"name\":\"Carrots\",\"category\":\"vegetables\"},{\"name\":\"Thai Basil\",\"category\":\"seasonings\"},{\"name\":\"Avocado\",\"category\":\"fruits\"},{\"name\":\"Blueberries\",\"category\":\"fruits\"},{\"name\":\"Greek Yogurt\",\"category\":\"dairy\"},{\"name\":\"Butter\",\"category\":\"seasonings\"},{\"name\":\"Soy Sauce\",\"category\":\"seasonings\"},{\"name\":\"Sesame Oil\",\"category\":\"seasonings\"},{\"name\":\"Sriracha\",\"category\":\"pantry_staples\"},{\"name\":\"Fish Sauce\",\"category\":\"seasonings\"},{\"name\":\"Rice\",\"category\":\"pantry_staples\"},{\"name\":\"Rice Noodles\",\"category\":\"pantry_staples\"},{\"name\":\"Honey\",\"category\":\"pantry_staples\"}] OutputSchema: {\"monday\":{\"breakfast\":[{\"name\":\"Scrambled Eggs with Tomato\",\"ingredients\":[{\"name\":\"eggs\",\"quantity\":2,\"unit\":\"count\",\"category\":\"proteins\"},{\"name\":\"tomato\",\"quantity\":100,\"unit\":\"g\",\"category\":\"vegetables\"},{\"name\":\"oil\",\"quantity\":0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Beat eggs... 2. Stir fry tomato... 3. Mix together...\",\"estimatedTime\":15,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":180}]},\"tuesday\":\"{ ... }\",\"...\":\"...\"} ",
+      "raw_response": "{\n  \"monday\": {\n    \"breakfast\": [],\n    \"lunch\": [\n      {\n        \"name\": \"Teriyaki Chicken Bowls\",\n        \"ingredients\": [\n          {\n            \"name\": \"Chicken Breast\",\n            \"quantity\": 300,\n            \"unit\": \"g\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Rice\",\n            \"quantity\": 1,\n            \"unit\": \"cup\",\n            \"category\": \"grains\"\n          },\n          {\n            \"name\": \"Broccoli\",\n            \"quantity\": 1,\n            \"unit\": \"head\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Soy Sauce\",\n            \"quantity\": 2,\n            \"unit\": \"tbsp\",\n            \"category\": \"seasonings\"\n          },\n          {\n            \"name\": \"Honey\",\n            \"quantity\": 1,\n            \"unit\": \"tbsp\",\n            \"category\": \"pantry_staples\"\n          }\n        ],\n        \"instructions\": \"1. Cook rice. 2. Sauté chicken with honey and soy sauce. 3. Steam broccoli. 4. Serve chicken and broccoli over rice.\",\n        \"estimatedTime\": 25,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 450\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Spicy Beef Stir-fry with Broccoli\",\n        \"ingredients\": [\n          {\n            \"name\": \"Flank Steak\",\n            \"quantity\": 400,\n            \"unit\": \"g\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Broccoli\",\n            \"quantity\": 1,\n            \"unit\": \"head\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Sriracha\",\n            \"quantity\": 1,\n            \"unit\": \"tbsp\",\n            \"category\": \"pantry_staples\"\n          },\n          {\n            \"name\": \"Garlic\",\n            \"quantity\": 2,\n            \"unit\": \"cloves\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Soy Sauce\",\n            \"quantity\": 1,\n            \"unit\": \"tbsp\",\n            \"category\": \"seasonings\"\n          }\n        ],\n        \"instructions\": \"1. Slice beef thinly. 2. Stir-fry beef with garlic and sriracha. 3. Add broccoli and soy sauce. 4. Cook until tender-crisp.\",\n        \"estimatedTime\": 20,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 380\n      }\n    ]\n  },\n  \"tuesday\": {\n    \"breakfast\": [],\n    \"lunch\": [\n      {\n        \"name\": \"Leftover Spicy Beef Stir-fry\",\n        \"ingredients\": [\n          {\n            \"name\": \"Flank Steak\",\n            \"quantity\": 200,\n            \"unit\": \"g\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Broccoli\",\n            \"quantity\": 0.5,\n            \"unit\": \"head\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Rice\",\n            \"quantity\": 0.5,\n            \"unit\": \"cup\",\n            \"category\": \"grains\"\n          }\n        ],\n        \"instructions\": \"1. Reheat leftover beef and broccoli. 2. Serve with a side of steamed rice.\",\n        \"estimatedTime\": 10,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 420\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Honey Garlic Salmon and Asparagus\",\n        \"ingredients\": [\n          {\n            \"name\": \"Salmon Fillets\",\n            \"quantity\": 2,\n            \"unit\": \"count\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Asparagus\",\n            \"quantity\": 1,\n            \"unit\": \"bunch\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Honey\",\n            \"quantity\": 1,\n            \"unit\": \"tbsp\",\n            \"category\": \"pantry_staples\"\n          },\n          {\n            \"name\": \"Garlic\",\n            \"quantity\": 2,\n            \"unit\": \"cloves\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Butter\",\n            \"quantity\": 1,\n            \"unit\": \"tbsp\",\n            \"category\": \"seasonings\"\n          }\n        ],\n        \"instructions\": \"1. Season salmon. 2. Pan-sear salmon and asparagus in butter and honey-garlic sauce. 3. Cook until salmon is flaky.\",\n        \"estimatedTime\": 20,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 410\n      }\n    ]\n  },\n  \"wednesday\": {\n    \"breakfast\": [],\n    \"lunch\": [\n      {\n        \"name\": \"Salmon Salad Wraps\",\n        \"ingredients\": [\n          {\n            \"name\": \"Salmon Fillets\",\n            \"quantity\": 1,\n            \"unit\": \"count\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Spinach\",\n            \"quantity\": 2,\n            \"unit\": \"cups\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Green Onions\",\n            \"quantity\": 2,\n            \"unit\": \"count\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Avocado\",\n            \"quantity\": 1,\n            \"unit\": \"count\",\n            \"category\": \"fruits\"\n          }\n        ],\n        \"instructions\": \"1. Flake cooked salmon. 2. Mix with avocado and onions. 3. Wrap in large spinach leaves or serve as a salad bowl.\",\n        \"estimatedTime\": 15,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 320\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Ground Turkey Thai Basil Stir-fry\",\n        \"ingredients\": [\n          {\n            \"name\": \"Ground Turkey\",\n            \"quantity\": 400,\n            \"unit\": \"g\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Thai Basil\",\n            \"quantity\": 1,\n            \"unit\": \"bunch\",\n            \"category\": \"seasonings\"\n          },\n          {\n            \"name\": \"Bell Peppers\",\n            \"quantity\": 2,\n            \"unit\": \"count\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Fish Sauce\",\n            \"quantity\": 1,\n            \"unit\": \"tbsp\",\n            \"category\": \"seasonings\"\n          },\n          {\n            \"name\": \"Rice\",\n            \"quantity\": 1,\n            \"unit\": \"cup\",\n            \"category\": \"grains\"\n          }\n        ],\n        \"instructions\": \"1. Brown turkey. 2. Add sliced peppers and garlic. 3. Stir in fish sauce and fresh Thai basil. 4. Serve over rice.\",\n        \"estimatedTime\": 20,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 480\n      }\n    ]\n  },\n  \"thursday\": {\n    \"breakfast\": [],\n    \"lunch\": [\n      {\n        \"name\": \"Leftover Thai Basil Stir-fry\",\n        \"ingredients\": [\n          {\n            \"name\": \"Ground Turkey\",\n            \"quantity\": 200,\n            \"unit\": \"g\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Rice\",\n            \"quantity\": 1,\n            \"unit\": \"cup\",\n            \"category\": \"grains\"\n          }\n        ],\n        \"instructions\": \"1. Reheat leftover turkey stir-fry and rice. 2. Garnish with fresh green onions if available.\",\n        \"estimatedTime\": 5,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 480\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Chicken and Vegetable Fried Rice\",\n        \"ingredients\": [\n          {\n            \"name\": \"Chicken Breast\",\n            \"quantity\": 200,\n            \"unit\": \"g\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Rice\",\n            \"quantity\": 2,\n            \"unit\": \"cups\",\n            \"category\": \"grains\"\n          },\n          {\n            \"name\": \"Carrots\",\n            \"quantity\": 2,\n            \"unit\": \"count\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Eggs\",\n            \"quantity\": 2,\n            \"unit\": \"count\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Soy Sauce\",\n            \"quantity\": 2,\n            \"unit\": \"tbsp\",\n            \"category\": \"seasonings\"\n          }\n        ],\n        \"instructions\": \"1. Sauté chicken and diced carrots. 2. Add cooked rice and soy sauce. 3. Scramble eggs into the mixture. 4. Mix well.\",\n        \"estimatedTime\": 20,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 520\n      }\n    ]\n  },\n  \"friday\": {\n    \"breakfast\": [\n      {\n        \"name\": \"Greek Yogurt with Berries\",\n        \"ingredients\": [\n          {\n            \"name\": \"Greek Yogurt\",\n            \"quantity\": 2,\n            \"unit\": \"cups\",\n            \"category\": \"dairy\"\n          },\n          {\n            \"name\": \"Blueberries\",\n            \"quantity\": 1,\n            \"unit\": \"cup\",\n            \"category\": \"fruits\"\n          },\n          {\n            \"name\": \"Honey\",\n            \"quantity\": 1,\n            \"unit\": \"tsp\",\n            \"category\": \"pantry_staples\"\n          }\n        ],\n        \"instructions\": \"1. Scoop yogurt into bowls. 2. Top with fresh blueberries and a drizzle of honey.\",\n        \"estimatedTime\": 5,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 250\n      }\n    ],\n    \"lunch\": [\n      {\n        \"name\": \"Chicken and Vegetable Fried Rice\",\n        \"ingredients\": [\n          {\n            \"name\": \"Chicken Breast\",\n            \"quantity\": 100,\n            \"unit\": \"g\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Rice\",\n            \"quantity\": 1,\n            \"unit\": \"cup\",\n            \"category\": \"grains\"\n          }\n        ],\n        \"instructions\": \"1. Reheat leftovers from Thursday dinner.\",\n        \"estimatedTime\": 5,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 520\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Beef and Snap Pea Noodle Stir-fry\",\n        \"ingredients\": [\n          {\n            \"name\": \"Flank Steak\",\n            \"quantity\": 300,\n            \"unit\": \"g\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Rice Noodles\",\n            \"quantity\": 200,\n            \"unit\": \"g\",\n            \"category\": \"grains\"\n          },\n          {\n            \"name\": \"Snap Peas\",\n            \"quantity\": 1,\n            \"unit\": \"cup\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Sesame Oil\",\n            \"quantity\": 1,\n            \"unit\": \"tbsp\",\n            \"category\": \"seasonings\"\n          },\n          {\n            \"name\": \"Ginger\",\n            \"quantity\": 1,\n            \"unit\": \"tsp\",\n            \"category\": \"seasonings\"\n          }\n        ],\n        \"instructions\": \"1. Cook noodles. 2. Stir-fry beef with ginger and snap peas in sesame oil. 3. Toss with noodles and soy sauce.\",\n        \"estimatedTime\": 25,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 550\n      }\n    ]\n  },\n  \"saturday\": {\n    \"breakfast\": [\n      {\n        \"name\": \"Scrambled Eggs with Spinach\",\n        \"ingredients\": [\n          {\n            \"name\": \"Eggs\",\n            \"quantity\": 4,\n            \"unit\": \"count\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Spinach\",\n            \"quantity\": 1,\n            \"unit\": \"cup\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Butter\",\n            \"quantity\": 1,\n            \"unit\": \"tbsp\",\n            \"category\": \"seasonings\"\n          }\n        ],\n        \"instructions\": \"1. Whisk eggs. 2. Sauté spinach in butter until wilted. 3. Add eggs and scramble until set.\",\n        \"estimatedTime\": 10,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 210\n      }\n    ],\n    \"lunch\": [\n      {\n        \"name\": \"Turkey and Avocado Salad\",\n        \"ingredients\": [\n          {\n            \"name\": \"Ground Turkey\",\n            \"quantity\": 200,\n            \"unit\": \"g\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Avocado\",\n            \"quantity\": 1,\n            \"unit\": \"count\",\n            \"category\": \"fruits\"\n          },\n          {\n            \"name\": \"Spinach\",\n            \"quantity\": 2,\n            \"unit\": \"cups\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Bell Peppers\",\n            \"quantity\": 1,\n            \"unit\": \"count\",\n            \"category\": \"vegetables\"\n          }\n        ],\n        \"instructions\": \"1. Brown turkey and let cool. 2. Toss spinach, sliced peppers, and avocado. 3. Top with turkey.\",\n        \"estimatedTime\": 15,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 340\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Steamed Salmon with Bok Choy\",\n        \"ingredients\": [\n          {\n            \"name\": \"Salmon Fillets\",\n            \"quantity\": 2,\n            \"unit\": \"count\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Bok Choy\",\n            \"quantity\": 2,\n            \"unit\": \"heads\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Ginger\",\n            \"quantity\": 1,\n            \"unit\": \"tsp\",\n            \"category\": \"seasonings\"\n          },\n          {\n            \"name\": \"Soy Sauce\",\n            \"quantity\": 1,\n            \"unit\": \"tbsp\",\n            \"category\": \"seasonings\"\n          }\n        ],\n        \"instructions\": \"1. Place salmon and bok choy in a steamer. 2. Top with ginger and soy sauce. 3. Steam for 10-12 minutes.\",\n        \"estimatedTime\": 20,\n        \"servings\": 2,\n        \"difficulty\": \"medium\",\n        \"totalCalories\": 360\n      }\n    ]\n  },\n  \"sunday\": {\n    \"breakfast\": [\n      {\n        \"name\": \"Omelet with Bell Peppers\",\n        \"ingredients\": [\n          {\n            \"name\": \"Eggs\",\n            \"quantity\": 4,\n            \"unit\": \"count\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Bell Peppers\",\n            \"quantity\": 1,\n            \"unit\": \"count\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Green Onions\",\n            \"quantity\": 2,\n            \"unit\": \"count\",\n            \"category\": \"vegetables\"\n          }\n        ],\n        \"instructions\": \"1. Sauté diced peppers and onions. 2. Pour beaten eggs over. 3. Fold and cook until set.\",\n        \"estimatedTime\": 15,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 230\n      }\n    ],\n    \"lunch\": [\n      {\n        \"name\": \"Beef and Snap Pea Noodle Stir-fry\",\n        \"ingredients\": [\n          {\n            \"name\": \"Flank Steak\",\n            \"quantity\": 100,\n            \"unit\": \"g\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Rice Noodles\",\n            \"quantity\": 100,\n            \"unit\": \"g\",\n            \"category\": \"grains\"\n          }\n        ],\n        \"instructions\": \"1. Reheat leftovers from Friday dinner.\",\n        \"estimatedTime\": 5,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 550\n      }\n    ],\n    \"dinner\": [\n      {\n        \"name\": \"Ground Turkey Lettuce Wraps\",\n        \"ingredients\": [\n          {\n            \"name\": \"Ground Turkey\",\n            \"quantity\": 400,\n            \"unit\": \"g\",\n            \"category\": \"proteins\"\n          },\n          {\n            \"name\": \"Bok Choy\",\n            \"quantity\": 1,\n            \"unit\": \"head\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Garlic\",\n            \"quantity\": 2,\n            \"unit\": \"cloves\",\n            \"category\": \"vegetables\"\n          },\n          {\n            \"name\": \"Sesame Oil\",\n            \"quantity\": 1,\n            \"unit\": \"tbsp\",\n            \"category\": \"seasonings\"\n          }\n        ],\n        \"instructions\": \"1. Cook turkey with garlic and sesame oil. 2. Separate bok choy leaves. 3. Spoon turkey into leaves and serve.\",\n        \"estimatedTime\": 15,\n        \"servings\": 2,\n        \"difficulty\": \"easy\",\n        \"totalCalories\": 310\n      }\n    ]\n  }\n}",
+      "parsed": {
+        "monday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Teriyaki Chicken Bowls",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 300,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 1,
+                  "unit": "cup",
+                  "category": "grains"
+                },
+                {
+                  "name": "Broccoli",
+                  "quantity": 1,
+                  "unit": "head",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 2,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Cook rice. 2. Sauté chicken with honey and soy sauce. 3. Steam broccoli. 4. Serve chicken and broccoli over rice.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 450
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Spicy Beef Stir-fry with Broccoli",
+              "ingredients": [
+                {
+                  "name": "Flank Steak",
+                  "quantity": 400,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Broccoli",
+                  "quantity": 1,
+                  "unit": "head",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Sriracha",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Slice beef thinly. 2. Stir-fry beef with garlic and sriracha. 3. Add broccoli and soy sauce. 4. Cook until tender-crisp.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 380
+            }
+          ]
+        },
+        "tuesday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Leftover Spicy Beef Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Flank Steak",
+                  "quantity": 200,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Broccoli",
+                  "quantity": 0.5,
+                  "unit": "head",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "grains"
+                }
+              ],
+              "instructions": "1. Reheat leftover beef and broccoli. 2. Serve with a side of steamed rice.",
+              "estimatedTime": 10,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 420
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Honey Garlic Salmon and Asparagus",
+              "ingredients": [
+                {
+                  "name": "Salmon Fillets",
+                  "quantity": 2,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Asparagus",
+                  "quantity": 1,
+                  "unit": "bunch",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Butter",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Season salmon. 2. Pan-sear salmon and asparagus in butter and honey-garlic sauce. 3. Cook until salmon is flaky.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 410
+            }
+          ]
+        },
+        "wednesday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Salmon Salad Wraps",
+              "ingredients": [
+                {
+                  "name": "Salmon Fillets",
+                  "quantity": 1,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Spinach",
+                  "quantity": 2,
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Green Onions",
+                  "quantity": 2,
+                  "unit": "count",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 1,
+                  "unit": "count",
+                  "category": "fruits"
+                }
+              ],
+              "instructions": "1. Flake cooked salmon. 2. Mix with avocado and onions. 3. Wrap in large spinach leaves or serve as a salad bowl.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 320
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Ground Turkey Thai Basil Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Ground Turkey",
+                  "quantity": 400,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Thai Basil",
+                  "quantity": 1,
+                  "unit": "bunch",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Bell Peppers",
+                  "quantity": 2,
+                  "unit": "count",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Fish Sauce",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 1,
+                  "unit": "cup",
+                  "category": "grains"
+                }
+              ],
+              "instructions": "1. Brown turkey. 2. Add sliced peppers and garlic. 3. Stir in fish sauce and fresh Thai basil. 4. Serve over rice.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 480
+            }
+          ]
+        },
+        "thursday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Leftover Thai Basil Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Ground Turkey",
+                  "quantity": 200,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 1,
+                  "unit": "cup",
+                  "category": "grains"
+                }
+              ],
+              "instructions": "1. Reheat leftover turkey stir-fry and rice. 2. Garnish with fresh green onions if available.",
+              "estimatedTime": 5,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 480
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Chicken and Vegetable Fried Rice",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 200,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 2,
+                  "unit": "cups",
+                  "category": "grains"
+                },
+                {
+                  "name": "Carrots",
+                  "quantity": 2,
+                  "unit": "count",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Eggs",
+                  "quantity": 2,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 2,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Sauté chicken and diced carrots. 2. Add cooked rice and soy sauce. 3. Scramble eggs into the mixture. 4. Mix well.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 520
+            }
+          ]
+        },
+        "friday": {
+          "breakfast": [
+            {
+              "name": "Greek Yogurt with Berries",
+              "ingredients": [
+                {
+                  "name": "Greek Yogurt",
+                  "quantity": 2,
+                  "unit": "cups",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Blueberries",
+                  "quantity": 1,
+                  "unit": "cup",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1,
+                  "unit": "tsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Scoop yogurt into bowls. 2. Top with fresh blueberries and a drizzle of honey.",
+              "estimatedTime": 5,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 250
+            }
+          ],
+          "lunch": [
+            {
+              "name": "Chicken and Vegetable Fried Rice",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 100,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 1,
+                  "unit": "cup",
+                  "category": "grains"
+                }
+              ],
+              "instructions": "1. Reheat leftovers from Thursday dinner.",
+              "estimatedTime": 5,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 520
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Beef and Snap Pea Noodle Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Flank Steak",
+                  "quantity": 300,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice Noodles",
+                  "quantity": 200,
+                  "unit": "g",
+                  "category": "grains"
+                },
+                {
+                  "name": "Snap Peas",
+                  "quantity": 1,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Sesame Oil",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 1,
+                  "unit": "tsp",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Cook noodles. 2. Stir-fry beef with ginger and snap peas in sesame oil. 3. Toss with noodles and soy sauce.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 550
+            }
+          ]
+        },
+        "saturday": {
+          "breakfast": [
+            {
+              "name": "Scrambled Eggs with Spinach",
+              "ingredients": [
+                {
+                  "name": "Eggs",
+                  "quantity": 4,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Spinach",
+                  "quantity": 1,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Butter",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Whisk eggs. 2. Sauté spinach in butter until wilted. 3. Add eggs and scramble until set.",
+              "estimatedTime": 10,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 210
+            }
+          ],
+          "lunch": [
+            {
+              "name": "Turkey and Avocado Salad",
+              "ingredients": [
+                {
+                  "name": "Ground Turkey",
+                  "quantity": 200,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 1,
+                  "unit": "count",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Spinach",
+                  "quantity": 2,
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Bell Peppers",
+                  "quantity": 1,
+                  "unit": "count",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Brown turkey and let cool. 2. Toss spinach, sliced peppers, and avocado. 3. Top with turkey.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 340
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Steamed Salmon with Bok Choy",
+              "ingredients": [
+                {
+                  "name": "Salmon Fillets",
+                  "quantity": 2,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Bok Choy",
+                  "quantity": 2,
+                  "unit": "heads",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 1,
+                  "unit": "tsp",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Place salmon and bok choy in a steamer. 2. Top with ginger and soy sauce. 3. Steam for 10-12 minutes.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 360
+            }
+          ]
+        },
+        "sunday": {
+          "breakfast": [
+            {
+              "name": "Omelet with Bell Peppers",
+              "ingredients": [
+                {
+                  "name": "Eggs",
+                  "quantity": 4,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Bell Peppers",
+                  "quantity": 1,
+                  "unit": "count",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Green Onions",
+                  "quantity": 2,
+                  "unit": "count",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Sauté diced peppers and onions. 2. Pour beaten eggs over. 3. Fold and cook until set.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 230
+            }
+          ],
+          "lunch": [
+            {
+              "name": "Beef and Snap Pea Noodle Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Flank Steak",
+                  "quantity": 100,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice Noodles",
+                  "quantity": 100,
+                  "unit": "g",
+                  "category": "grains"
+                }
+              ],
+              "instructions": "1. Reheat leftovers from Friday dinner.",
+              "estimatedTime": 5,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 550
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Ground Turkey Lettuce Wraps",
+              "ingredients": [
+                {
+                  "name": "Ground Turkey",
+                  "quantity": 400,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Bok Choy",
+                  "quantity": 1,
+                  "unit": "head",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Sesame Oil",
+                  "quantity": 1,
+                  "unit": "tbsp",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Cook turkey with garlic and sesame oil. 2. Separate bok choy leaves. 3. Spoon turkey into leaves and serve.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 310
+            }
+          ]
+        }
+      },
+      "normalized": {
+        "monday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Teriyaki Chicken Bowls",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 300.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Broccoli",
+                  "quantity": 1.0,
+                  "unit": "head",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Cook rice. 2. Sauté chicken with honey and soy sauce. 3. Steam broccoli. 4. Serve chicken and broccoli over rice.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 450,
+              "id": "mon-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Spicy Beef Stir-fry with Broccoli",
+              "ingredients": [
+                {
+                  "name": "Flank Steak",
+                  "quantity": 400.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Broccoli",
+                  "quantity": 1.0,
+                  "unit": "head",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Sriracha",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Slice beef thinly. 2. Stir-fry beef with garlic and sriracha. 3. Add broccoli and soy sauce. 4. Cook until tender-crisp.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 380,
+              "id": "mon-dinner-001",
+              "source": "ai"
+            }
+          ]
+        },
+        "tuesday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Leftover Spicy Beef Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Flank Steak",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Broccoli",
+                  "quantity": 0.5,
+                  "unit": "head",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 0.5,
+                  "unit": "cup",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Reheat leftover beef and broccoli. 2. Serve with a side of steamed rice.",
+              "estimatedTime": 10,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 420,
+              "id": "tue-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Honey Garlic Salmon and Asparagus",
+              "ingredients": [
+                {
+                  "name": "Salmon Fillets",
+                  "quantity": 2.0,
+                  "unit": "count",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Asparagus",
+                  "quantity": 1.0,
+                  "unit": "bunch",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1.0,
+                  "unit": "tbsp",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Butter",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Season salmon. 2. Pan-sear salmon and asparagus in butter and honey-garlic sauce. 3. Cook until salmon is flaky.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 410,
+              "id": "tue-dinner-001",
+              "source": "ai"
+            }
+          ]
+        },
+        "wednesday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Salmon Salad Wraps",
+              "ingredients": [
+                {
+                  "name": "Salmon Fillets",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Spinach",
+                  "quantity": 2.0,
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Green Onions",
+                  "quantity": 2.0,
+                  "unit": "count",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "fruits"
+                }
+              ],
+              "instructions": "1. Flake cooked salmon. 2. Mix with avocado and onions. 3. Wrap in large spinach leaves or serve as a salad bowl.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 320,
+              "id": "wed-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Ground Turkey Thai Basil Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Ground Turkey",
+                  "quantity": 400.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Thai Basil",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Bell Peppers",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Fish Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Brown turkey. 2. Add sliced peppers and garlic. 3. Stir in fish sauce and fresh Thai basil. 4. Serve over rice.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 480,
+              "id": "wed-dinner-001",
+              "source": "ai"
+            }
+          ]
+        },
+        "thursday": {
+          "breakfast": [],
+          "lunch": [
+            {
+              "name": "Leftover Thai Basil Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Ground Turkey",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Reheat leftover turkey stir-fry and rice. 2. Garnish with fresh green onions if available.",
+              "estimatedTime": 5,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 480,
+              "id": "thu-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Chicken and Vegetable Fried Rice",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 2.0,
+                  "unit": "cups",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Carrots",
+                  "quantity": 2.0,
+                  "unit": "count",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Eggs",
+                  "quantity": 2.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Sauté chicken and diced carrots. 2. Add cooked rice and soy sauce. 3. Scramble eggs into the mixture. 4. Mix well.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 520,
+              "id": "thu-dinner-001",
+              "source": "ai"
+            }
+          ]
+        },
+        "friday": {
+          "breakfast": [
+            {
+              "name": "Greek Yogurt with Berries",
+              "ingredients": [
+                {
+                  "name": "Greek Yogurt",
+                  "quantity": 2.0,
+                  "unit": "cups",
+                  "category": "dairy"
+                },
+                {
+                  "name": "Blueberries",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Honey",
+                  "quantity": 1.0,
+                  "unit": "tsp",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Scoop yogurt into bowls. 2. Top with fresh blueberries and a drizzle of honey.",
+              "estimatedTime": 5,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 250,
+              "id": "fri-breakfast-001",
+              "source": "ai"
+            }
+          ],
+          "lunch": [
+            {
+              "name": "Chicken and Vegetable Fried Rice",
+              "ingredients": [
+                {
+                  "name": "Chicken Breast",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Reheat leftovers from Thursday dinner.",
+              "estimatedTime": 5,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 520,
+              "id": "fri-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Beef and Snap Pea Noodle Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Flank Steak",
+                  "quantity": 300.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice Noodles",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Snap Peas",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Sesame Oil",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Cook noodles. 2. Stir-fry beef with ginger and snap peas in sesame oil. 3. Toss with noodles and soy sauce.",
+              "estimatedTime": 25,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 550,
+              "id": "fri-dinner-001",
+              "source": "ai"
+            }
+          ]
+        },
+        "saturday": {
+          "breakfast": [
+            {
+              "name": "Scrambled Eggs with Spinach",
+              "ingredients": [
+                {
+                  "name": "Eggs",
+                  "quantity": 4.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Spinach",
+                  "quantity": 1.0,
+                  "unit": "cup",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Butter",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Whisk eggs. 2. Sauté spinach in butter until wilted. 3. Add eggs and scramble until set.",
+              "estimatedTime": 10,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 210,
+              "id": "sat-breakfast-001",
+              "source": "ai"
+            }
+          ],
+          "lunch": [
+            {
+              "name": "Turkey and Avocado Salad",
+              "ingredients": [
+                {
+                  "name": "Ground Turkey",
+                  "quantity": 200.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Avocado",
+                  "quantity": 1.0,
+                  "unit": "count",
+                  "category": "fruits"
+                },
+                {
+                  "name": "Spinach",
+                  "quantity": 2.0,
+                  "unit": "cups",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Bell Peppers",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Brown turkey and let cool. 2. Toss spinach, sliced peppers, and avocado. 3. Top with turkey.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 340,
+              "id": "sat-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Steamed Salmon with Bok Choy",
+              "ingredients": [
+                {
+                  "name": "Salmon Fillets",
+                  "quantity": 2.0,
+                  "unit": "count",
+                  "category": "pantry_staples"
+                },
+                {
+                  "name": "Bok Choy",
+                  "quantity": 2.0,
+                  "unit": "heads",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Ginger",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Soy Sauce",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Place salmon and bok choy in a steamer. 2. Top with ginger and soy sauce. 3. Steam for 10-12 minutes.",
+              "estimatedTime": 20,
+              "servings": 2,
+              "difficulty": "medium",
+              "totalCalories": 360,
+              "id": "sat-dinner-001",
+              "source": "ai"
+            }
+          ]
+        },
+        "sunday": {
+          "breakfast": [
+            {
+              "name": "Omelet with Bell Peppers",
+              "ingredients": [
+                {
+                  "name": "Eggs",
+                  "quantity": 4.0,
+                  "unit": "count",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Bell Peppers",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                },
+                {
+                  "name": "Green Onions",
+                  "quantity": 2.0,
+                  "unit": "count",
+                  "category": "vegetables"
+                }
+              ],
+              "instructions": "1. Sauté diced peppers and onions. 2. Pour beaten eggs over. 3. Fold and cook until set.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 230,
+              "id": "sun-breakfast-001",
+              "source": "ai"
+            }
+          ],
+          "lunch": [
+            {
+              "name": "Beef and Snap Pea Noodle Stir-fry",
+              "ingredients": [
+                {
+                  "name": "Flank Steak",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Rice Noodles",
+                  "quantity": 100.0,
+                  "unit": "g",
+                  "category": "pantry_staples"
+                }
+              ],
+              "instructions": "1. Reheat leftovers from Friday dinner.",
+              "estimatedTime": 5,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 550,
+              "id": "sun-lunch-001",
+              "source": "ai"
+            }
+          ],
+          "dinner": [
+            {
+              "name": "Ground Turkey Lettuce Wraps",
+              "ingredients": [
+                {
+                  "name": "Ground Turkey",
+                  "quantity": 400.0,
+                  "unit": "g",
+                  "category": "proteins"
+                },
+                {
+                  "name": "Bok Choy",
+                  "quantity": 1.0,
+                  "unit": "head",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Garlic",
+                  "quantity": 2.0,
+                  "unit": "cloves",
+                  "category": "vegetables"
+                },
+                {
+                  "name": "Sesame Oil",
+                  "quantity": 0,
+                  "unit": "",
+                  "category": "seasonings"
+                }
+              ],
+              "instructions": "1. Cook turkey with garlic and sesame oil. 2. Separate bok choy leaves. 3. Spoon turkey into leaves and serve.",
+              "estimatedTime": 15,
+              "servings": 2,
+              "difficulty": "easy",
+              "totalCalories": 310,
+              "id": "sun-dinner-001",
+              "source": "ai"
+            }
+          ]
+        }
+      },
+      "error": null
+    },
+    "step3_shopping_list": {
+      "prompt": "Step 3: Generate a consolidated shopping list from the structured weekly meal plan.\nCRITICAL RULES:\n1) MERGE only true duplicates or very close synonyms (e.g., bell pepper/peppers -> bell peppers). Do NOT merge clearly different items (spinach vs broccoli, ginger vs garlic, green onion vs onion).\n2) UNITS (North America): proteins -> lbs or oz; produce -> count or bunch; grains/dairy/pantry_staples/others -> oz/lbs/count as appropriate. Use a single unit per item.\n3) Sum quantities across all dishes. For lbs/oz round to 1 decimal; for count/bunch use whole numbers.\n4) Valid categories: proteins, vegetables, fruits, grains, dairy, seasonings, pantry_staples, others.\n5) Keep names concise (<= 5 words). Avoid brands and extra adjectives.\n6) For seasonings (oils/sauces/spices), use totalQuantity 0 and unit \"\".\n7) Respond with compact JSON only (no comments or prose).\nMealPlan: {\"monday\":{\"breakfast\":[],\"lunch\":[{\"id\":\"mon-lunch-001\",\"name\":\"Teriyaki Chicken Bowls\",\"ingredients\":[{\"name\":\"Chicken Breast\",\"quantity\":300.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Rice\",\"quantity\":1.0,\"unit\":\"cup\",\"category\":\"pantry_staples\"},{\"name\":\"Broccoli\",\"quantity\":1.0,\"unit\":\"head\",\"category\":\"vegetables\"},{\"name\":\"Soy Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Honey\",\"quantity\":1.0,\"unit\":\"tbsp\",\"category\":\"pantry_staples\"}],\"instructions\":\"1. Cook rice. 2. Sauté chicken with honey and soy sauce. 3. Steam broccoli. 4. Serve chicken and broccoli over rice.\",\"estimatedTime\":25,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":450,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"mon-dinner-001\",\"name\":\"Spicy Beef Stir-fry with Broccoli\",\"ingredients\":[{\"name\":\"Flank Steak\",\"quantity\":400.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Broccoli\",\"quantity\":1.0,\"unit\":\"head\",\"category\":\"vegetables\"},{\"name\":\"Sriracha\",\"quantity\":1.0,\"unit\":\"tbsp\",\"category\":\"pantry_staples\"},{\"name\":\"Garlic\",\"quantity\":2.0,\"unit\":\"cloves\",\"category\":\"vegetables\"},{\"name\":\"Soy Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Slice beef thinly. 2. Stir-fry beef with garlic and sriracha. 3. Add broccoli and soy sauce. 4. Cook until tender-crisp.\",\"estimatedTime\":20,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":380,\"source\":\"ai\",\"notes\":null}]},\"tuesday\":{\"breakfast\":[],\"lunch\":[{\"id\":\"tue-lunch-001\",\"name\":\"Leftover Spicy Beef Stir-fry\",\"ingredients\":[{\"name\":\"Flank Steak\",\"quantity\":200.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Broccoli\",\"quantity\":0.5,\"unit\":\"head\",\"category\":\"vegetables\"},{\"name\":\"Rice\",\"quantity\":0.5,\"unit\":\"cup\",\"category\":\"pantry_staples\"}],\"instructions\":\"1. Reheat leftover beef and broccoli. 2. Serve with a side of steamed rice.\",\"estimatedTime\":10,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":420,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"tue-dinner-001\",\"name\":\"Honey Garlic Salmon and Asparagus\",\"ingredients\":[{\"name\":\"Salmon Fillets\",\"quantity\":2.0,\"unit\":\"count\",\"category\":\"pantry_staples\"},{\"name\":\"Asparagus\",\"quantity\":1.0,\"unit\":\"bunch\",\"category\":\"vegetables\"},{\"name\":\"Honey\",\"quantity\":1.0,\"unit\":\"tbsp\",\"category\":\"pantry_staples\"},{\"name\":\"Garlic\",\"quantity\":2.0,\"unit\":\"cloves\",\"category\":\"vegetables\"},{\"name\":\"Butter\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Season salmon. 2. Pan-sear salmon and asparagus in butter and honey-garlic sauce. 3. Cook until salmon is flaky.\",\"estimatedTime\":20,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":410,\"source\":\"ai\",\"notes\":null}]},\"wednesday\":{\"breakfast\":[],\"lunch\":[{\"id\":\"wed-lunch-001\",\"name\":\"Salmon Salad Wraps\",\"ingredients\":[{\"name\":\"Salmon Fillets\",\"quantity\":1.0,\"unit\":\"count\",\"category\":\"pantry_staples\"},{\"name\":\"Spinach\",\"quantity\":2.0,\"unit\":\"cups\",\"category\":\"vegetables\"},{\"name\":\"Green Onions\",\"quantity\":2.0,\"unit\":\"count\",\"category\":\"vegetables\"},{\"name\":\"Avocado\",\"quantity\":1.0,\"unit\":\"count\",\"category\":\"fruits\"}],\"instructions\":\"1. Flake cooked salmon. 2. Mix with avocado and onions. 3. Wrap in large spinach leaves or serve as a salad bowl.\",\"estimatedTime\":15,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":320,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"wed-dinner-001\",\"name\":\"Ground Turkey Thai Basil Stir-fry\",\"ingredients\":[{\"name\":\"Ground Turkey\",\"quantity\":400.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Thai Basil\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Bell Peppers\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Fish Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Rice\",\"quantity\":1.0,\"unit\":\"cup\",\"category\":\"pantry_staples\"}],\"instructions\":\"1. Brown turkey. 2. Add sliced peppers and garlic. 3. Stir in fish sauce and fresh Thai basil. 4. Serve over rice.\",\"estimatedTime\":20,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":480,\"source\":\"ai\",\"notes\":null}]},\"thursday\":{\"breakfast\":[],\"lunch\":[{\"id\":\"thu-lunch-001\",\"name\":\"Leftover Thai Basil Stir-fry\",\"ingredients\":[{\"name\":\"Ground Turkey\",\"quantity\":200.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Rice\",\"quantity\":1.0,\"unit\":\"cup\",\"category\":\"pantry_staples\"}],\"instructions\":\"1. Reheat leftover turkey stir-fry and rice. 2. Garnish with fresh green onions if available.\",\"estimatedTime\":5,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":480,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"thu-dinner-001\",\"name\":\"Chicken and Vegetable Fried Rice\",\"ingredients\":[{\"name\":\"Chicken Breast\",\"quantity\":200.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Rice\",\"quantity\":2.0,\"unit\":\"cups\",\"category\":\"pantry_staples\"},{\"name\":\"Carrots\",\"quantity\":2.0,\"unit\":\"count\",\"category\":\"vegetables\"},{\"name\":\"Eggs\",\"quantity\":2.0,\"unit\":\"count\",\"category\":\"proteins\"},{\"name\":\"Soy Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Sauté chicken and diced carrots. 2. Add cooked rice and soy sauce. 3. Scramble eggs into the mixture. 4. Mix well.\",\"estimatedTime\":20,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":520,\"source\":\"ai\",\"notes\":null}]},\"friday\":{\"breakfast\":[{\"id\":\"fri-breakfast-001\",\"name\":\"Greek Yogurt with Berries\",\"ingredients\":[{\"name\":\"Greek Yogurt\",\"quantity\":2.0,\"unit\":\"cups\",\"category\":\"dairy\"},{\"name\":\"Blueberries\",\"quantity\":1.0,\"unit\":\"cup\",\"category\":\"fruits\"},{\"name\":\"Honey\",\"quantity\":1.0,\"unit\":\"tsp\",\"category\":\"pantry_staples\"}],\"instructions\":\"1. Scoop yogurt into bowls. 2. Top with fresh blueberries and a drizzle of honey.\",\"estimatedTime\":5,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":250,\"source\":\"ai\",\"notes\":null}],\"lunch\":[{\"id\":\"fri-lunch-001\",\"name\":\"Chicken and Vegetable Fried Rice\",\"ingredients\":[{\"name\":\"Chicken Breast\",\"quantity\":100.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Rice\",\"quantity\":1.0,\"unit\":\"cup\",\"category\":\"pantry_staples\"}],\"instructions\":\"1. Reheat leftovers from Thursday dinner.\",\"estimatedTime\":5,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":520,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"fri-dinner-001\",\"name\":\"Beef and Snap Pea Noodle Stir-fry\",\"ingredients\":[{\"name\":\"Flank Steak\",\"quantity\":300.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Rice Noodles\",\"quantity\":200.0,\"unit\":\"g\",\"category\":\"pantry_staples\"},{\"name\":\"Snap Peas\",\"quantity\":1.0,\"unit\":\"cup\",\"category\":\"vegetables\"},{\"name\":\"Sesame Oil\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Ginger\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Cook noodles. 2. Stir-fry beef with ginger and snap peas in sesame oil. 3. Toss with noodles and soy sauce.\",\"estimatedTime\":25,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":550,\"source\":\"ai\",\"notes\":null}]},\"saturday\":{\"breakfast\":[{\"id\":\"sat-breakfast-001\",\"name\":\"Scrambled Eggs with Spinach\",\"ingredients\":[{\"name\":\"Eggs\",\"quantity\":4.0,\"unit\":\"count\",\"category\":\"proteins\"},{\"name\":\"Spinach\",\"quantity\":1.0,\"unit\":\"cup\",\"category\":\"vegetables\"},{\"name\":\"Butter\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Whisk eggs. 2. Sauté spinach in butter until wilted. 3. Add eggs and scramble until set.\",\"estimatedTime\":10,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":210,\"source\":\"ai\",\"notes\":null}],\"lunch\":[{\"id\":\"sat-lunch-001\",\"name\":\"Turkey and Avocado Salad\",\"ingredients\":[{\"name\":\"Ground Turkey\",\"quantity\":200.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Avocado\",\"quantity\":1.0,\"unit\":\"count\",\"category\":\"fruits\"},{\"name\":\"Spinach\",\"quantity\":2.0,\"unit\":\"cups\",\"category\":\"vegetables\"},{\"name\":\"Bell Peppers\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Brown turkey and let cool. 2. Toss spinach, sliced peppers, and avocado. 3. Top with turkey.\",\"estimatedTime\":15,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":340,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"sat-dinner-001\",\"name\":\"Steamed Salmon with Bok Choy\",\"ingredients\":[{\"name\":\"Salmon Fillets\",\"quantity\":2.0,\"unit\":\"count\",\"category\":\"pantry_staples\"},{\"name\":\"Bok Choy\",\"quantity\":2.0,\"unit\":\"heads\",\"category\":\"vegetables\"},{\"name\":\"Ginger\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Soy Sauce\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Place salmon and bok choy in a steamer. 2. Top with ginger and soy sauce. 3. Steam for 10-12 minutes.\",\"estimatedTime\":20,\"servings\":2,\"difficulty\":\"medium\",\"totalCalories\":360,\"source\":\"ai\",\"notes\":null}]},\"sunday\":{\"breakfast\":[{\"id\":\"sun-breakfast-001\",\"name\":\"Omelet with Bell Peppers\",\"ingredients\":[{\"name\":\"Eggs\",\"quantity\":4.0,\"unit\":\"count\",\"category\":\"proteins\"},{\"name\":\"Bell Peppers\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"},{\"name\":\"Green Onions\",\"quantity\":2.0,\"unit\":\"count\",\"category\":\"vegetables\"}],\"instructions\":\"1. Sauté diced peppers and onions. 2. Pour beaten eggs over. 3. Fold and cook until set.\",\"estimatedTime\":15,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":230,\"source\":\"ai\",\"notes\":null}],\"lunch\":[{\"id\":\"sun-lunch-001\",\"name\":\"Beef and Snap Pea Noodle Stir-fry\",\"ingredients\":[{\"name\":\"Flank Steak\",\"quantity\":100.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Rice Noodles\",\"quantity\":100.0,\"unit\":\"g\",\"category\":\"pantry_staples\"}],\"instructions\":\"1. Reheat leftovers from Friday dinner.\",\"estimatedTime\":5,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":550,\"source\":\"ai\",\"notes\":null}],\"dinner\":[{\"id\":\"sun-dinner-001\",\"name\":\"Ground Turkey Lettuce Wraps\",\"ingredients\":[{\"name\":\"Ground Turkey\",\"quantity\":400.0,\"unit\":\"g\",\"category\":\"proteins\"},{\"name\":\"Bok Choy\",\"quantity\":1.0,\"unit\":\"head\",\"category\":\"vegetables\"},{\"name\":\"Garlic\",\"quantity\":2.0,\"unit\":\"cloves\",\"category\":\"vegetables\"},{\"name\":\"Sesame Oil\",\"quantity\":0.0,\"unit\":\"\",\"category\":\"seasonings\"}],\"instructions\":\"1. Cook turkey with garlic and sesame oil. 2. Separate bok choy leaves. 3. Spoon turkey into leaves and serve.\",\"estimatedTime\":15,\"servings\":2,\"difficulty\":\"easy\",\"totalCalories\":310,\"source\":\"ai\",\"notes\":null}]}}\nOutputSchema: {\"items\":[{\"name\":\"ingredient_name\",\"category\":\"predefined_category\",\"totalQuantity\":0,\"unit\":\"unit\"}]}\nRETURN ONLY THE RAW JSON OBJECT. Do not use Markdown formatting (no ```json blocks).",
+      "raw_response": "{\n  \"items\": [\n    {\n      \"name\": \"Chicken Breast\",\n      \"category\": \"proteins\",\n      \"totalQuantity\": 1.3,\n      \"unit\": \"lbs\"\n    },\n    {\n      \"name\": \"Flank Steak\",\n      \"category\": \"proteins\",\n      \"totalQuantity\": 2.2,\n      \"unit\": \"lbs\"\n    },\n    {\n      \"name\": \"Ground Turkey\",\n      \"category\": \"proteins\",\n      \"totalQuantity\": 2.6,\n      \"unit\": \"lbs\"\n    },\n    {\n      \"name\": \"Eggs\",\n      \"category\": \"proteins\",\n      \"totalQuantity\": 10,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Broccoli\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 3,\n      \"unit\": \"head\"\n    },\n    {\n      \"name\": \"Garlic\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 6,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Asparagus\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 1,\n      \"unit\": \"bunch\"\n    },\n    {\n      \"name\": \"Spinach\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 5,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Green Onions\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 4,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Carrots\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 2,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Snap Peas\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 1,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Bok Choy\",\n      \"category\": \"vegetables\",\n      \"totalQuantity\": 3,\n      \"unit\": \"head\"\n    },\n    {\n      \"name\": \"Avocado\",\n      \"category\": \"fruits\",\n      \"totalQuantity\": 2,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Blueberries\",\n      \"category\": \"fruits\",\n      \"totalQuantity\": 1,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Greek Yogurt\",\n      \"category\": \"dairy\",\n      \"totalQuantity\": 16.0,\n      \"unit\": \"oz\"\n    },\n    {\n      \"name\": \"Rice\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 7.0,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Salmon Fillets\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 5,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Rice Noodles\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 10.6,\n      \"unit\": \"oz\"\n    },\n    {\n      \"name\": \"Honey\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 3.1,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Sriracha\",\n      \"category\": \"pantry_staples\",\n      \"totalQuantity\": 1.0,\n      \"unit\": \"count\"\n    },\n    {\n      \"name\": \"Soy Sauce\",\n      \"category\": \"seasonings\",\n      \"totalQuantity\": 0,\n      \"unit\": \"\"\n    },\n    {\n      \"name\": \"Butter\",\n      \"category\": \"seasonings\",\n      \"totalQuantity\": 0,\n      \"unit\": \"\"\n    },\n    {\n      \"name\": \"Thai Basil\",\n      \"category\": \"seasonings\",\n      \"totalQuantity\": 0,\n      \"unit\": \"\"\n    },\n    {\n      \"name\": \"Bell Peppers\",\n      \"category\": \"seasonings\",\n      \"totalQuantity\": 0,\n      \"unit\": \"\"\n    },\n    {\n      \"name\": \"Fish Sauce\",\n      \"category\": \"seasonings\",\n      \"totalQuantity\": 0,\n      \"unit\": \"\"\n    },\n    {\n      \"name\": \"Sesame Oil\",\n      \"category\": \"seasonings\",\n      \"totalQuantity\": 0,\n      \"unit\": \"\"\n    },\n    {\n      \"name\": \"Ginger\",\n      \"category\": \"seasonings\",\n      \"totalQuantity\": 0,\n      \"unit\": \"\"\n    }\n  ]\n}",
+      "parsed": {
+        "items": [
+          {
+            "name": "Chicken Breast",
+            "category": "proteins",
+            "totalQuantity": 1.3,
+            "unit": "lbs"
+          },
+          {
+            "name": "Flank Steak",
+            "category": "proteins",
+            "totalQuantity": 2.2,
+            "unit": "lbs"
+          },
+          {
+            "name": "Ground Turkey",
+            "category": "proteins",
+            "totalQuantity": 2.6,
+            "unit": "lbs"
+          },
+          {
+            "name": "Eggs",
+            "category": "proteins",
+            "totalQuantity": 10,
+            "unit": "count"
+          },
+          {
+            "name": "Broccoli",
+            "category": "vegetables",
+            "totalQuantity": 3,
+            "unit": "head"
+          },
+          {
+            "name": "Garlic",
+            "category": "vegetables",
+            "totalQuantity": 6,
+            "unit": "count"
+          },
+          {
+            "name": "Asparagus",
+            "category": "vegetables",
+            "totalQuantity": 1,
+            "unit": "bunch"
+          },
+          {
+            "name": "Spinach",
+            "category": "vegetables",
+            "totalQuantity": 5,
+            "unit": "count"
+          },
+          {
+            "name": "Green Onions",
+            "category": "vegetables",
+            "totalQuantity": 4,
+            "unit": "count"
+          },
+          {
+            "name": "Carrots",
+            "category": "vegetables",
+            "totalQuantity": 2,
+            "unit": "count"
+          },
+          {
+            "name": "Snap Peas",
+            "category": "vegetables",
+            "totalQuantity": 1,
+            "unit": "count"
+          },
+          {
+            "name": "Bok Choy",
+            "category": "vegetables",
+            "totalQuantity": 3,
+            "unit": "head"
+          },
+          {
+            "name": "Avocado",
+            "category": "fruits",
+            "totalQuantity": 2,
+            "unit": "count"
+          },
+          {
+            "name": "Blueberries",
+            "category": "fruits",
+            "totalQuantity": 1,
+            "unit": "count"
+          },
+          {
+            "name": "Greek Yogurt",
+            "category": "dairy",
+            "totalQuantity": 16.0,
+            "unit": "oz"
+          },
+          {
+            "name": "Rice",
+            "category": "pantry_staples",
+            "totalQuantity": 7.0,
+            "unit": "count"
+          },
+          {
+            "name": "Salmon Fillets",
+            "category": "pantry_staples",
+            "totalQuantity": 5,
+            "unit": "count"
+          },
+          {
+            "name": "Rice Noodles",
+            "category": "pantry_staples",
+            "totalQuantity": 10.6,
+            "unit": "oz"
+          },
+          {
+            "name": "Honey",
+            "category": "pantry_staples",
+            "totalQuantity": 3.1,
+            "unit": "count"
+          },
+          {
+            "name": "Sriracha",
+            "category": "pantry_staples",
+            "totalQuantity": 1.0,
+            "unit": "count"
+          },
+          {
+            "name": "Soy Sauce",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": ""
+          },
+          {
+            "name": "Butter",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": ""
+          },
+          {
+            "name": "Thai Basil",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": ""
+          },
+          {
+            "name": "Bell Peppers",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": ""
+          },
+          {
+            "name": "Fish Sauce",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": ""
+          },
+          {
+            "name": "Sesame Oil",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": ""
+          },
+          {
+            "name": "Ginger",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": ""
+          }
+        ]
+      },
+      "normalized": {
+        "items": [
+          {
+            "id": "item_2cb7e8dd",
+            "name": "Chicken Breast",
+            "category": "proteins",
+            "totalQuantity": 1.3,
+            "unit": "lbs",
+            "purchased": false
+          },
+          {
+            "id": "item_c63bb997",
+            "name": "Flank Steak",
+            "category": "proteins",
+            "totalQuantity": 2.2,
+            "unit": "lbs",
+            "purchased": false
+          },
+          {
+            "id": "item_aba794af",
+            "name": "Ground Turkey",
+            "category": "proteins",
+            "totalQuantity": 2.6,
+            "unit": "lbs",
+            "purchased": false
+          },
+          {
+            "id": "item_40362e1c",
+            "name": "Eggs",
+            "category": "proteins",
+            "totalQuantity": 10.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_12697fe5",
+            "name": "Broccoli",
+            "category": "vegetables",
+            "totalQuantity": 3.0,
+            "unit": "head",
+            "purchased": false
+          },
+          {
+            "id": "item_9a12ccef",
+            "name": "Garlic",
+            "category": "vegetables",
+            "totalQuantity": 6.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_a3b90650",
+            "name": "Asparagus",
+            "category": "vegetables",
+            "totalQuantity": 1.0,
+            "unit": "bunch",
+            "purchased": false
+          },
+          {
+            "id": "item_79ad8a83",
+            "name": "Spinach",
+            "category": "vegetables",
+            "totalQuantity": 5.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_d91be2a3",
+            "name": "Green Onions",
+            "category": "vegetables",
+            "totalQuantity": 4.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_7fa185a0",
+            "name": "Carrots",
+            "category": "vegetables",
+            "totalQuantity": 2.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_e5f011e6",
+            "name": "Snap Peas",
+            "category": "vegetables",
+            "totalQuantity": 1.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_afb2425d",
+            "name": "Bok Choy",
+            "category": "vegetables",
+            "totalQuantity": 3.0,
+            "unit": "head",
+            "purchased": false
+          },
+          {
+            "id": "item_61b284c4",
+            "name": "Avocado",
+            "category": "fruits",
+            "totalQuantity": 2.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_b96ad57a",
+            "name": "Blueberries",
+            "category": "fruits",
+            "totalQuantity": 1.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_f048d55d",
+            "name": "Greek Yogurt",
+            "category": "dairy",
+            "totalQuantity": 16.0,
+            "unit": "oz",
+            "purchased": false
+          },
+          {
+            "id": "item_25d67cc0",
+            "name": "Rice",
+            "category": "pantry_staples",
+            "totalQuantity": 7.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_bbe8dcac",
+            "name": "Salmon Fillets",
+            "category": "pantry_staples",
+            "totalQuantity": 5.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_3fb6504b",
+            "name": "Rice Noodles",
+            "category": "pantry_staples",
+            "totalQuantity": 10.6,
+            "unit": "oz",
+            "purchased": false
+          },
+          {
+            "id": "item_c355c9af",
+            "name": "Honey",
+            "category": "pantry_staples",
+            "totalQuantity": 3.1,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_e84222b7",
+            "name": "Sriracha",
+            "category": "pantry_staples",
+            "totalQuantity": 1.0,
+            "unit": "count",
+            "purchased": false
+          },
+          {
+            "id": "item_d5f56b78",
+            "name": "Soy Sauce",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": "",
+            "purchased": false
+          },
+          {
+            "id": "item_e96913ee",
+            "name": "Butter",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": "",
+            "purchased": false
+          },
+          {
+            "id": "item_65ae4576",
+            "name": "Thai Basil",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": "",
+            "purchased": false
+          },
+          {
+            "id": "item_e8f017c1",
+            "name": "Bell Peppers",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": "",
+            "purchased": false
+          },
+          {
+            "id": "item_f9cc3092",
+            "name": "Fish Sauce",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": "",
+            "purchased": false
+          },
+          {
+            "id": "item_0a2b3a9b",
+            "name": "Sesame Oil",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": "",
+            "purchased": false
+          },
+          {
+            "id": "item_2b9a65c9",
+            "name": "Ginger",
+            "category": "seasonings",
+            "totalQuantity": 0,
+            "unit": "",
+            "purchased": false
+          }
+        ]
+      },
+      "error": null
+    }
+  }
+}

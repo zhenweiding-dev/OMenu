@@ -1,25 +1,11 @@
 from datetime import datetime, timezone
 
-from app.models.schemas import (
-    CookSchedule,
-    Difficulty,
-    Dish,
-    DishSource,
-    Ingredient,
-    MealSelection,
-    Menu,
-    MenuBook,
-    MenuBookStatus,
-    ShoppingList,
-    UserPreferences,
-    WeekMenus,
-)
-from app.services.prompts import (
-    menu_book_prompt,
-    modification_prompt,
-    shopping_list_prompt,
-    structured_menu_prompt,
-)
+from app.models.dish import Dish, Ingredient
+from app.models.enums import Difficulty, DishSource, MenuBookStatus
+from app.models.menu import Menu, MenuBook, WeekMenus
+from app.models.shopping import ShoppingList
+from app.models.user import CookSchedule, MealSelection, UserPreferences
+from app.services.ai.prompts import PromptBuilder
 
 
 def _sample_schedule() -> CookSchedule:
@@ -88,28 +74,34 @@ def _sample_menu_book() -> MenuBook:
     )
 
 
-def test_menu_book_prompt_mentions_budget() -> None:
-    prompt = menu_book_prompt(_sample_preferences())
-    assert "$120" in prompt
-    assert "Grilled" not in prompt  # ensures prompt is template, not actual meals
+def test_meal_outline_prompt_mentions_budget() -> None:
+    prompt = PromptBuilder().meal_outline(_sample_preferences(), ingredient_limit=20)
+    assert "mealOutline" in prompt
+    assert "draftShoppingList" in prompt
+    assert "BudgetUSD" in prompt
 
 
 def test_structured_menu_prompt_mentions_servings() -> None:
     preferences = _sample_preferences()
-    prompt = structured_menu_prompt("Sample menu text", preferences)
+    prompt = PromptBuilder().structured_menu_from_outline(
+        meal_outline={"monday": {"lunch": ["Sample Dish"]}},
+        draft_shopping_list=[{"name": "chicken", "category": "proteins"}],
+        preferences=preferences,
+    )
+    assert "DraftShoppingList" in prompt
     assert str(preferences.numPeople) in prompt
     assert "RETURN ONLY THE RAW JSON OBJECT" in prompt
 
 
 def test_modification_prompt_includes_request() -> None:
     book = _sample_menu_book()
-    prompt = modification_prompt("Add more veggies", book.menus.model_dump_json(indent=2), book.preferences)
+    prompt = PromptBuilder().modification("Add more veggies", book.menus.model_dump(), book.preferences)
     assert "Add more veggies" in prompt
     assert "RETURN ONLY THE MODIFIED JSON OBJECT" in prompt
 
 
 def test_shopping_list_prompt_contains_rules() -> None:
     menus = _sample_menu_book().menus
-    prompt = shopping_list_prompt(menus)
+    prompt = PromptBuilder().shopping_list(menus)
     assert "Generate a consolidated shopping list" in prompt
     assert "Valid categories" in prompt
