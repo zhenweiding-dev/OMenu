@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Sparkles } from "lucide-react";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { formatCurrency } from "@/utils/helpers";
@@ -14,7 +15,7 @@ import {
 
 type EditModalType = "preferred" | "disliked" | "settings" | null;
 const TAG_ICON_MAP = new Map([...PREFERENCE_TAGS, ...DISLIKE_TAGS].map(({ label, icon }) => [label, icon]));
-const getTagIcon = (label: string) => TAG_ICON_MAP.get(label) ?? "✨";
+const getTagIcon = (label: string) => TAG_ICON_MAP.get(label) ?? Sparkles;
 
 export function MyPage() {
   const [activeModal, setActiveModal] = useState<EditModalType>(null);
@@ -60,17 +61,20 @@ export function MyPage() {
 
   const renderTags = (items: string[], placeholder: string) => {
     if (items.length === 0) {
-      return <p className="text-[13px] text-text-secondary">{placeholder}</p>;
+      return <p className="ui-body">{placeholder}</p>;
     }
     return (
       <div className="flex flex-wrap gap-2">
         {items.map((item) => (
           <span
             key={item}
-            className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
+            className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 ui-label-soft normal-case text-accent-base"
           >
             <span className="inline-flex items-center gap-1">
-              <span aria-hidden="true">{getTagIcon(item)}</span>
+              {(() => {
+                const Icon = getTagIcon(item);
+                return <Icon className="h-3.5 w-3.5 ui-icon" aria-hidden />;
+              })()}
               <span>{item}</span>
             </span>
           </span>
@@ -80,11 +84,11 @@ export function MyPage() {
   };
 
   return (
-    <PageContainer className="space-y-4">
+    <PageContainer className="ui-stack">
       {/* Preferences Section */}
       <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
         <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
-          <h3 className="text-[14px] font-semibold text-text-primary">Preferences</h3>
+          <h3 className="ui-heading-sm">Preferences</h3>
           <Button
             type="button"
             variant="ghost"
@@ -95,15 +99,13 @@ export function MyPage() {
             Edit
           </Button>
         </div>
-        <div className="px-4 py-4">
-              {renderTags(preferences.specificPreferences, "No preferences added yet.")}
-            </div>
+        <div className="px-4 py-4">{renderTags(preferences.specificPreferences, "No preferences added yet.")}</div>
       </section>
 
       {/* Dislikes Section */}
       <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
         <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
-          <h3 className="text-[14px] font-semibold text-text-primary">Dislikes</h3>
+          <h3 className="ui-heading-sm">Dislikes</h3>
           <Button
             type="button"
             variant="ghost"
@@ -114,15 +116,13 @@ export function MyPage() {
             Edit
           </Button>
         </div>
-        <div className="px-4 py-4">
-              {renderTags(preferences.specificDisliked, "No dislikes added yet.")}
-            </div>
+        <div className="px-4 py-4">{renderTags(preferences.specificDisliked, "No dislikes added yet.")}</div>
       </section>
 
       {/* Default Settings Section */}
       <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
         <div className="flex items-center justify-between border-b border-border-subtle px-4 py-4">
-          <h3 className="text-[14px] font-semibold text-text-primary">Default Settings</h3>
+          <h3 className="ui-heading-sm">Default Settings</h3>
           <Button
             type="button"
             variant="ghost"
@@ -132,23 +132,23 @@ export function MyPage() {
           >
             Edit
           </Button>
-            </div>
+        </div>
         <div className="flex flex-col gap-3 px-4 py-4">
           <div className="flex items-center justify-between">
-            <span className="text-[14px] text-text-secondary">People</span>
-            <span className="text-[15px] font-medium text-text-primary">{preferences.numPeople}</span>
+            <span className="ui-body">People</span>
+            <span className="ui-body-strong">{preferences.numPeople}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-[14px] text-text-secondary">Budget</span>
-            <span className="text-[15px] font-medium text-text-primary">{formatCurrency(preferences.budget)}</span>
-            </div>
+            <span className="ui-body">Budget</span>
+            <span className="ui-body-strong">{formatCurrency(preferences.budget)}</span>
+          </div>
           <div className="flex items-center justify-between">
-            <span className="text-[14px] text-text-secondary">Difficulty</span>
-            <span className="text-[15px] font-medium text-text-primary">
+            <span className="ui-body">Difficulty</span>
+            <span className="ui-body-strong">
               {preferences.difficulty.charAt(0).toUpperCase() + preferences.difficulty.slice(1)}
             </span>
-            </div>
-            </div>
+          </div>
+        </div>
       </section>
 
       {/* Edit Modals */}

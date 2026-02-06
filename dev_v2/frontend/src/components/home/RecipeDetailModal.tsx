@@ -29,7 +29,7 @@ export interface ModalContentProps {
 
 function CloseIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+    <svg viewBox="0 0 24 24" className="h-5 w-5 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
       <path d="M18 6L6 18M6 6l12 12" />
     </svg>
   );
@@ -37,7 +37,7 @@ function CloseIcon() {
 
 function EditIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8}>
+    <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8}>
       <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
       <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
     </svg>
@@ -46,7 +46,7 @@ function EditIcon() {
 
 function DeleteIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8}>
+    <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8}>
       <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
     </svg>
   );
@@ -54,7 +54,7 @@ function DeleteIcon() {
 
 function ClockIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon" fill="none" stroke="currentColor" strokeWidth={1.8}>
       <circle cx="12" cy="12" r="10" />
       <path d="M12 6v6l4 2" />
     </svg>
@@ -63,7 +63,7 @@ function ClockIcon() {
 
 function UsersIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon" fill="none" stroke="currentColor" strokeWidth={1.8}>
       <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
       <circle cx="9" cy="7" r="4" />
       <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
@@ -73,7 +73,7 @@ function UsersIcon() {
 
 function ChartIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon" fill="none" stroke="currentColor" strokeWidth={1.8}>
       <path d="M12 20V10M18 20V4M6 20v-4" />
     </svg>
   );
@@ -81,7 +81,7 @@ function ChartIcon() {
 
 function FlameIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon" fill="none" stroke="currentColor" strokeWidth={1.8}>
       <path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z" />
     </svg>
   );
@@ -184,34 +184,34 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
         </div>
 
         <div className="flex-1 overflow-y-auto px-5 py-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base">
+          <p className="ui-label-soft text-accent-base">
             {startCaseDay(day).toUpperCase()} · {formatMealType(mealType)}
           </p>
-          <h2 className="mt-2 text-[22px] font-semibold leading-tight text-text-primary">
+          <h2 className="mt-2 ui-title">
             {dish.name}
           </h2>
 
           <div className="mt-4 flex flex-wrap gap-4">
-            <div className="flex items-center gap-1.5 text-[13px] text-text-secondary">
+            <div className="flex items-center gap-1.5 ui-body">
               <ClockIcon />
               <span>{dish.estimatedTime} min</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[13px] text-text-secondary">
+            <div className="flex items-center gap-1.5 ui-body">
               <UsersIcon />
               <span>{dish.servings} servings</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[13px] text-text-secondary">
+            <div className="flex items-center gap-1.5 ui-body">
               <ChartIcon />
               <span>{formatDifficulty(dish.difficulty)}</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[13px] text-text-secondary">
+            <div className="flex items-center gap-1.5 ui-body">
               <FlameIcon />
               <span>{dish.totalCalories} cal</span>
             </div>
           </div>
 
           <section className="mt-6">
-            <h3 className="text-[14px] font-semibold text-text-primary">Ingredients</h3>
+            <h3 className="ui-heading-sm">Ingredients</h3>
             <div className="mt-3 space-y-3">
               {groupedIngredients.map((group) => {
                 const itemsText = group.items
@@ -225,10 +225,10 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
                   .join(" · ");
                 return (
                   <div key={group.category} className="flex flex-wrap items-baseline gap-2">
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-text-tertiary">
+                    <span className="ui-label-soft text-text-tertiary">
                       {group.category.replace(/_/g, " ")}
                     </span>
-                    <span className="text-[13px] text-text-secondary">{itemsText}</span>
+                    <span className="ui-caption text-text-secondary">{itemsText}</span>
                   </div>
                 );
               })}
@@ -236,29 +236,29 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
           </section>
 
           <section className="mt-6">
-            <h3 className="text-[14px] font-semibold text-text-primary">Instructions</h3>
+            <h3 className="ui-heading-sm">Instructions</h3>
             <ol className="mt-3">
               {instructionSteps.length > 0 ? (
                 instructionSteps.map((step, index) => (
                   <li
                     key={index}
-                    className="relative border-b border-border-subtle py-3 pl-7 text-[14px] leading-relaxed text-text-primary last:border-b-0"
+                    className="relative border-b border-border-subtle py-3 pl-7 ui-body text-text-primary last:border-b-0"
                   >
-                    <span className="absolute left-0 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-paper-muted text-[11px] font-semibold text-accent-base">
+                    <span className="absolute left-0 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-paper-muted ui-label-soft text-accent-base">
                       {index + 1}
                     </span>
                     {step}
                   </li>
                 ))
               ) : (
-                <p className="text-[13px] italic text-text-tertiary">No instructions available.</p>
+                <p className="ui-body italic text-text-tertiary">No instructions available.</p>
               )}
             </ol>
           </section>
 
           <section className="mt-6" ref={notesSectionRef}>
             <div className="flex items-center justify-between">
-              <h3 className="text-[14px] font-semibold text-text-primary">Notes</h3>
+              <h3 className="ui-heading-sm">Notes</h3>
               {isEditingNotes && (
                 <Button size="sm" onClick={handleSaveNotes}>
                   Save
@@ -274,11 +274,11 @@ export function RecipeDetailSheet({ active, onClose, onSaveNotes, onDelete }: Mo
                 className="mt-3 min-h-[80px]"
               />
             ) : hasNotes ? (
-              <p className="mt-3 whitespace-pre-wrap text-[14px] leading-relaxed text-text-secondary">
+              <p className="mt-3 whitespace-pre-wrap ui-body leading-relaxed">
                 {dish.notes}
               </p>
             ) : (
-              <p className="mt-3 text-[14px] italic text-text-tertiary">
+              <p className="mt-3 ui-body italic text-text-tertiary">
                 Add a pinch of sugar for better taste.
               </p>
             )}

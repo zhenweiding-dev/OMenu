@@ -20,7 +20,7 @@ import type { Dish, Menu, MenuBook } from "@/types";
 
 function PlusIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round">
+    <svg viewBox="0 0 24 24" className="h-7 w-7 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
       <path d="M12 5v14M5 12h14" />
     </svg>
   );
@@ -287,15 +287,15 @@ export function HomePage() {
       <div className="flex flex-col items-center">
         <div className="mb-8 flex h-[200px] w-[200px] items-center justify-center rounded-full bg-gradient-to-br from-paper-muted to-border-subtle animate-float">
           <div className="flex items-center gap-4 text-accent-base/80" aria-hidden>
-            <ChefHat className="h-9 w-9" strokeWidth={1.7} />
-            <Salad className="h-9 w-9" strokeWidth={1.7} />
-            <Soup className="h-9 w-9" strokeWidth={1.7} />
+            <ChefHat className="h-9 w-9 ui-icon-strong" />
+            <Salad className="h-9 w-9 ui-icon-strong" />
+            <Soup className="h-9 w-9 ui-icon-strong" />
           </div>
         </div>
-        <h1 className="mb-3 text-[24px] font-semibold leading-snug text-text-primary">
+        <h1 className="mb-4 ui-title-lg">
           Let&apos;s design a menu together!
         </h1>
-        <p className="mb-6 text-[15px] leading-relaxed text-text-secondary">
+        <p className="mb-6 ui-subtitle">
           Tell us your preferences and let magic happen.
         </p>
         <div className="flex w-full max-w-[260px] flex-col gap-3">
@@ -326,7 +326,7 @@ export function HomePage() {
           </Button>
         </div>
         {nextWeekBook && (
-          <p className="mt-3 text-[11px] text-text-tertiary">
+          <p className="mt-3 ui-caption-soft">
             Next week already has a menu.
           </p>
         )}
@@ -358,9 +358,9 @@ export function HomePage() {
         showCloseButton={false}
       >
         <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-[16px] font-semibold text-text-primary">Menu Book</h2>
-            <p className="mt-1 text-[12px] text-text-secondary">Long press a menu book to delete.</p>
+          <div className="space-y-1">
+            <h2 className="ui-heading">Menu Book</h2>
+            <p className="ui-caption">Long press a menu book to delete.</p>
           </div>
           <Button
             type="button"
@@ -370,7 +370,7 @@ export function HomePage() {
             className="h-9 w-9 rounded-full bg-paper-muted text-text-primary hover:bg-paper-dark"
             aria-label="Close menu picker"
           >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+            <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </Button>
@@ -408,12 +408,12 @@ export function HomePage() {
                     <PlusIcon />
                   </span>
                   <div>
-                    <p className="text-[13px] font-semibold text-text-primary">Add Menu</p>
-                    <p className="mt-1 text-[11px] text-text-secondary">{weekRange}</p>
+                    <p className="ui-body-strong">Add Menu</p>
+                    <p className="ui-caption">{weekRange}</p>
                   </div>
                 </div>
                 {badgeLabel && (
-                  <span className="rounded-full border border-accent-base/30 bg-accent-soft px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-base">
+                  <span className="rounded-full border border-accent-base/30 bg-accent-soft px-2.5 py-1 ui-label-soft text-accent-base">
                     {badgeLabel}
                   </span>
                 )}
@@ -435,7 +435,7 @@ export function HomePage() {
         className="max-w-sm"
         showCloseButton={false}
       >
-        <p className="text-sm text-text-secondary">This action cannot be undone.</p>
+        <p className="ui-caption">This action cannot be undone.</p>
         <div className="flex items-center justify-end gap-2">
           <Button variant="ghost" onClick={handleCancelDelete}>
             Cancel

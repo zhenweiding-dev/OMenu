@@ -1,3 +1,4 @@
+import { ChefHat, Salad, Soup } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface StepWelcomeProps {
@@ -7,8 +8,6 @@ interface StepWelcomeProps {
   compact?: boolean;
   inline?: boolean;
 }
-
-const FOOD_EMOJIS = ["🍳", "🥗", "🍜"];
 
 export function StepWelcome({
   onNext,
@@ -29,24 +28,26 @@ export function StepWelcome({
     >
       {dateRange && (
         <div className="mb-6">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.2em] text-accent-base">{label}</p>
-          <p className="mt-1 text-[12px] text-text-secondary">{dateRange}</p>
+          <p className="ui-label-soft text-accent-base">{label}</p>
+          <p className="mt-1 ui-caption">{dateRange}</p>
         </div>
       )}
       {/* Animated food circle */}
       <div className="mb-10 flex h-[200px] w-[200px] items-center justify-center rounded-full bg-gradient-to-br from-paper-muted to-border-subtle animate-float">
-        <span className="text-5xl tracking-wider">
-          {FOOD_EMOJIS.join(" ")}
-        </span>
+        <div className="flex items-center gap-4 text-accent-base/80" aria-hidden>
+          <ChefHat className="h-9 w-9 ui-icon-strong" />
+          <Salad className="h-9 w-9 ui-icon-strong" />
+          <Soup className="h-9 w-9 ui-icon-strong" />
+        </div>
       </div>
 
       {/* Title */}
-      <h1 className="mb-4 text-[24px] font-semibold leading-snug text-text-primary">
+      <h1 className="mb-4 ui-title-lg">
         Let&apos;s design a menu together!
       </h1>
 
       {/* Subtitle */}
-      <p className="mb-12 text-[15px] leading-relaxed text-text-secondary">
+      <p className="mb-12 ui-subtitle">
         Tell us your preferences and let magic happen.
       </p>
 

@@ -26,18 +26,31 @@ const DAY_LABELS: Record<string, string> = {
 };
 
 export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDeselectAll, weekStart, onNext, onBack }: StepScheduleProps) {
-  const baseDate = weekStart ? new Date(weekStart) : new Date();
-  const weekStartDate = startOfWeek(baseDate, { weekStartsOn: 1 });
-  const todayStart = startOfDay(new Date());
-  const isCurrentWeek = isSameWeek(weekStartDate, todayStart, { weekStartsOn: 1 });
-  const disabledDays = isCurrentWeek
-    ? WEEK_DAYS.filter((_, index) => isBefore(addDays(weekStartDate, index), todayStart))
-    : [];
+  const weekStartDate = useMemo(
+    () => startOfWeek(weekStart ? new Date(weekStart) : new Date(), { weekStartsOn: 1 }),
+    [weekStart],
+  );
+  const todayStart = useMemo(() => startOfDay(new Date()), []);
+  const isCurrentWeek = useMemo(
+    () => isSameWeek(weekStartDate, todayStart, { weekStartsOn: 1 }),
+    [todayStart, weekStartDate],
+  );
+  const disabledDays = useMemo(
+    () =>
+      isCurrentWeek
+        ? WEEK_DAYS.filter((_, index) => isBefore(addDays(weekStartDate, index), todayStart))
+        : [],
+    [isCurrentWeek, todayStart, weekStartDate],
+  );
 
-  const dayDates = WEEK_DAYS.reduce((acc, day, index) => {
-    acc[day] = format(addDays(weekStartDate, index), "MMM d");
-    return acc;
-  }, {} as Record<string, string>);
+  const dayDates = useMemo(
+    () =>
+      WEEK_DAYS.reduce((acc, day, index) => {
+        acc[day] = format(addDays(weekStartDate, index), "MMM d");
+        return acc;
+      }, {} as Record<string, string>),
+    [weekStartDate],
+  );
 
   useEffect(() => {
     if (!isCurrentWeek || disabledDays.length === 0) return;
@@ -86,11 +99,11 @@ export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDesele
           variant="ghost"
           size="sm"
           onClick={onBack}
-          className="mb-4 h-auto px-0 py-0 text-[12px] uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary"
+          className="mb-4 h-auto px-0 py-0 ui-label-soft text-text-secondary hover:text-text-primary"
         >
           ← Back
         </Button>
-        <h2 className="text-[22px] font-semibold leading-tight text-text-primary">
+        <h2 className="ui-title">
           Choose meals to include
         </h2>
       </div>
@@ -120,11 +133,11 @@ export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDesele
       {/* Schedule grid */}
       <div className="flex-1 px-5 pb-2">
         <div className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
-          <div className="grid grid-cols-[95px_repeat(3,1fr)] items-center border-b border-border-subtle bg-paper-muted px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-text-secondary">
+          <div className="grid grid-cols-[95px_repeat(3,1fr)] items-center border-b border-border-subtle bg-paper-muted px-3 py-2 ui-label-soft text-text-secondary">
             <span></span>
-            <span className="text-center text-[10px]">Breakfast</span>
-            <span className="text-center text-[10px]">Lunch</span>
-            <span className="text-center text-[10px]">Dinner</span>
+            <span className="text-center">Breakfast</span>
+            <span className="text-center">Lunch</span>
+            <span className="text-center">Dinner</span>
           </div>
           <div className="divide-y divide-border-subtle">
             {WEEK_DAYS.map((day) => (
@@ -133,10 +146,20 @@ export function StepSchedule({ cookSchedule, onToggleMeal, onSelectAll, onDesele
                 className="grid grid-cols-[95px_repeat(3,1fr)] items-center px-3 py-2.5"
               >
                 <div className="flex flex-col">
-                  <span className={cn("text-[13px] font-semibold", disabledDays.includes(day) ? "text-text-tertiary" : "text-text-primary")}>
+                  <span
+                    className={cn(
+                      "ui-body-strong",
+                      disabledDays.includes(day) ? "text-text-tertiary" : "text-text-primary",
+                    )}
+                  >
                     {DAY_LABELS[day]}
                   </span>
-                  <span className={cn("text-[10px]", disabledDays.includes(day) ? "text-text-tertiary" : "text-text-secondary")}>
+                  <span
+                    className={cn(
+                      "ui-caption",
+                      disabledDays.includes(day) ? "text-text-tertiary" : "text-text-secondary",
+                    )}
+                  >
                     {dayDates[day]}
                   </span>
                 </div>

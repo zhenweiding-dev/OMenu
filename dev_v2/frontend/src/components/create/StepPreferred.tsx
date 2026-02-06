@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/utils/cn";
+import { Sparkles } from "lucide-react";
 import { PREFERENCE_TAGS } from "@/utils/constants";
 
 interface StepPreferredProps {
@@ -13,7 +14,7 @@ interface StepPreferredProps {
 }
 
 const PREFERENCE_ICON_MAP = new Map(PREFERENCE_TAGS.map(({ label, icon }) => [label, icon]));
-const getPreferenceIcon = (label: string) => PREFERENCE_ICON_MAP.get(label) ?? "✨";
+const getPreferenceIcon = (label: string) => PREFERENCE_ICON_MAP.get(label) ?? Sparkles;
 
 export function StepPreferred({ specificPreferences, onAddItem, onRemoveItem, onNext, onBack }: StepPreferredProps) {
   const [customInput, setCustomInput] = useState("");
@@ -43,14 +44,14 @@ export function StepPreferred({ specificPreferences, onAddItem, onRemoveItem, on
           variant="ghost"
           size="sm"
           onClick={onBack}
-          className="mb-4 h-auto px-0 py-0 text-[12px] uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary"
+          className="mb-4 h-auto px-0 py-0 ui-label-soft text-text-secondary hover:text-text-primary"
         >
           ← Back
         </Button>
-        <h2 className="text-[22px] font-semibold leading-tight text-text-primary">
+        <h2 className="ui-title">
           I want my meals to be:
         </h2>
-        <p className="mt-2 text-[13px] text-text-secondary">
+        <p className="mt-2 ui-body">
           Type anything! We&apos;ll handle the rest.
         </p>
       </div>
@@ -73,10 +74,10 @@ export function StepPreferred({ specificPreferences, onAddItem, onRemoveItem, on
       </div>
 
       {/* Tags */}
-      <div className="flex-1 space-y-4 px-5 pb-2">
+      <div className="flex-1 ui-stack px-5 pb-2">
         {specificPreferences.length > 0 && (
           <div>
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-base">
+            <p className="mb-2 ui-label-soft text-accent-base">
               Your Preferences
             </p>
             <div className="flex flex-wrap gap-2">
@@ -85,10 +86,13 @@ export function StepPreferred({ specificPreferences, onAddItem, onRemoveItem, on
                   key={`selected-${tag}`}
                   type="button"
                   onClick={() => toggleItem(tag)}
-                  className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
+                  className="rounded-full border border-accent-base/40 bg-accent-soft px-2.5 py-1 ui-caption font-medium normal-case text-accent-base"
                 >
                   <span className="inline-flex items-center gap-1">
-                    <span aria-hidden="true">{getPreferenceIcon(tag)}</span>
+                    {(() => {
+                      const Icon = getPreferenceIcon(tag);
+                      return <Icon className="h-3.5 w-3.5 ui-icon" aria-hidden />;
+                    })()}
                     <span>{tag}</span>
                   </span>
                 </button>
@@ -98,18 +102,18 @@ export function StepPreferred({ specificPreferences, onAddItem, onRemoveItem, on
         )}
         <div>
           <div className="flex flex-wrap gap-2">
-            {PREFERENCE_TAGS.filter((tag) => !specificPreferences.includes(tag.label)).map(({ label, icon }) => (
+            {PREFERENCE_TAGS.filter((tag) => !specificPreferences.includes(tag.label)).map(({ label, icon: Icon }) => (
               <button
                 key={label}
                 type="button"
                 onClick={() => toggleItem(label)}
                 className={cn(
-                  "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
+                  "rounded-full border border-border-tag bg-transparent px-2.5 py-1 ui-caption normal-case text-text-secondary transition-all",
                   "hover:border-accent-light hover:text-text-primary"
                 )}
               >
                 <span className="inline-flex items-center gap-1">
-                  <span aria-hidden="true">{icon}</span>
+                  <Icon className="h-3.5 w-3.5 ui-icon" aria-hidden />
                   <span>{label}</span>
                 </span>
               </button>

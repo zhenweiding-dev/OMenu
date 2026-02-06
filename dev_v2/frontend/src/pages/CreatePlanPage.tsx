@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { startOfWeek } from "date-fns";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useDraftStore } from "@/stores/useDraftStore";
 import { useMenuBook } from "@/hooks/useMenuBook";
 import { useAppStore } from "@/stores/useAppStore";
@@ -91,8 +91,6 @@ export function CreatePlanPage() {
   const clearGenerationStartTime = useDraftStore((state) => state.clearGenerationStartTime);
   const targetWeekStart = useDraftStore((state) => state.targetWeekStart);
   const setTargetWeekStart = useDraftStore((state) => state.setTargetWeekStart);
-  const navigate = useNavigate();
-
   const [result, setResult] = useState<MenuBook | null>(pendingResult ?? null);
   const [showResumePrompt, setShowResumePrompt] = useState(false);
   const [hasCheckedResume, setHasCheckedResume] = useState(false);
@@ -286,10 +284,6 @@ export function CreatePlanPage() {
     [clearPendingResult, resetDraftProgress],
   );
 
-  const handleShoppingError = useCallback(() => {
-    goToStep(steps.overview);
-  }, [goToStep]);
-
   let content: ReactNode;
 
   switch (draft.currentStep) {
@@ -384,7 +378,6 @@ export function CreatePlanPage() {
           <StepShoppingLoading
             menuBook={result}
             onGenerated={handleShoppingGenerated}
-            onError={handleShoppingError}
           />
         );
       } else {
@@ -401,10 +394,10 @@ export function CreatePlanPage() {
     return (
       <div className="relative flex h-full flex-1 flex-col bg-paper-base">
         <div className="px-5 pt-14 pb-6">
-          <h1 className="text-[22px] font-semibold leading-tight text-text-primary">
+          <h1 className="ui-title">
             Continue where you left off?
           </h1>
-          <p className="mt-2 text-[14px] text-text-secondary">
+          <p className="mt-2 ui-subtitle">
             You have an unfinished menu draft at <strong>{savedStepLabel}</strong>.
           </p>
         </div>
@@ -412,8 +405,8 @@ export function CreatePlanPage() {
         <div className="mx-4 rounded-2xl border border-border-subtle bg-card-base p-5 shadow-soft">
           <div className="space-y-4">
             <div className="space-y-2">
-              <h3 className="text-[15px] font-semibold text-text-primary">Your saved progress:</h3>
-              <ul className="space-y-1 text-[13px] text-text-secondary">
+              <h3 className="ui-heading-sm">Your saved progress:</h3>
+              <ul className="space-y-1 ui-body">
                 {draft.specificPreferences.length > 0 && (
                   <li>• {draft.specificPreferences.length} preference(s) added</li>
                 )}
@@ -449,7 +442,7 @@ export function CreatePlanPage() {
     return (
       <div className="relative flex h-full flex-1 flex-col bg-paper-base">
         {content}
-        {shouldShowError && <p className="px-5 pb-4 text-center text-sm text-error">{error}</p>}
+        {shouldShowError && <p className="px-5 pb-4 text-center ui-caption text-error">{error}</p>}
       </div>
     );
   }
@@ -458,7 +451,7 @@ export function CreatePlanPage() {
     <div className="relative flex h-full flex-1 flex-col bg-paper-base">
       <ProgressDots currentStep={draft.currentStep} />
       {content}
-      {shouldShowError && <p className="px-5 pb-4 text-center text-sm text-error">{error}</p>}
+      {shouldShowError && <p className="px-5 pb-4 text-center ui-caption text-error">{error}</p>}
     </div>
   );
 }

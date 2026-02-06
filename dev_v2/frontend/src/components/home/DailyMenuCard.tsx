@@ -1,5 +1,6 @@
 import type { Dish, Menu } from "@/types";
-import { ChevronRight, Plus } from "lucide-react";
+import { ChevronRight, Flame, Moon, Plus, Sunrise, Sun, UtensilsCrossed } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface DailyMenuCardProps {
@@ -10,10 +11,10 @@ interface DailyMenuCardProps {
   onAddMeal: () => void;
 }
 
-const MEAL_META: Record<keyof Menu, { label: string; icon: string; bgColor: string }> = {
-  breakfast: { label: "Breakfast", icon: "🌅", bgColor: "bg-meal-breakfast" },
-  lunch: { label: "Lunch", icon: "☀️", bgColor: "bg-meal-lunch" },
-  dinner: { label: "Dinner", icon: "🌙", bgColor: "bg-meal-dinner" },
+const MEAL_META: Record<keyof Menu, { label: string; Icon: LucideIcon; bgColor: string }> = {
+  breakfast: { label: "Breakfast", Icon: Sunrise, bgColor: "bg-meal-breakfast" },
+  lunch: { label: "Lunch", Icon: Sun, bgColor: "bg-meal-lunch" },
+  dinner: { label: "Dinner", Icon: Moon, bgColor: "bg-meal-dinner" },
 };
 
 function sortDishes(dishes: Dish[]) {
@@ -36,19 +37,20 @@ function MealRow({
   const ordered = sortDishes(dishes);
   const totalCalories = ordered.reduce((sum, item) => sum + (item?.totalCalories ?? 0), 0);
   const hasDishes = ordered.length > 0;
+  const Icon = meta.Icon;
 
   return (
     <div className="flex w-full items-start gap-3.5 border-b border-border-subtle px-5 py-3.5 text-left last:border-b-0">
-      <div className={`flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-xl text-lg ${meta.bgColor}`}>
-        {meta.icon}
+      <div className={`flex h-[42px] w-[42px] flex-shrink-0 items-center justify-center rounded-xl ${meta.bgColor}`}>
+        <Icon className="h-5 w-5 text-text-primary/80 ui-icon" aria-hidden />
       </div>
 
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.03em] text-text-secondary">
+          <p className="ui-label-soft text-text-secondary">
             {meta.label}
           </p>
-          <span className="text-[11px] text-text-tertiary">
+          <span className="ui-caption-soft">
             {ordered.length} {ordered.length === 1 ? "dish" : "dishes"} · {totalCalories.toLocaleString()} cal
           </span>
         </div>
@@ -62,10 +64,10 @@ function MealRow({
                   className="group flex w-full items-center justify-between gap-3 text-left transition-colors hover:text-text-primary"
                 >
                   <div className="min-w-0 flex-1">
-                    <span className="block max-w-[220px] truncate text-[15px] font-semibold leading-tight text-text-primary">
+                    <span className="block max-w-[220px] truncate ui-heading-sm leading-tight">
                       {dish.name}
                     </span>
-                    <span className="text-[11px] text-text-secondary">
+                    <span className="ui-caption">
                       {dish.estimatedTime > 0 ? `${dish.estimatedTime} min` : "—"} · {dish.servings || "—"} servings · {dish.totalCalories} cal
                     </span>
                   </div>
@@ -77,7 +79,7 @@ function MealRow({
               </div>
             ))
           ) : (
-            <div className="rounded-lg border border-dashed border-border-subtle bg-paper-base/70 px-3 py-2 text-[12px] text-text-tertiary">
+            <div className="rounded-lg border border-dashed border-border-subtle bg-paper-base/70 px-3 py-2 ui-caption-soft">
               No planned
             </div>
           )}
@@ -98,12 +100,18 @@ export function DailyMenuCard({ day, dateLabel, menu, onOpenDish, onAddMeal }: D
       <div className="relative border-b border-border-subtle bg-card-header px-5 py-5">
         <div className="pr-12">
           <div className="flex items-end gap-2">
-            <p className="text-[24px] font-bold tracking-[-0.02em] text-text-primary">{day}</p>
-            <p className="text-[13px] text-text-secondary">{dateLabel}</p>
+            <p className="ui-title-lg tracking-[-0.02em]">{day}</p>
+            <p className="ui-body">{dateLabel}</p>
           </div>
-          <div className="mt-2.5 flex items-center gap-3.5 text-[12px] text-text-secondary">
-            <span>🍽️ {totalDishes} {totalDishes === 1 ? "dish" : "dishes"}</span>
-            <span>🔥 {totalCalories.toLocaleString()} cal</span>
+          <div className="mt-2.5 flex items-center gap-3.5 ui-caption">
+            <span className="inline-flex items-center gap-1">
+              <UtensilsCrossed className="h-3.5 w-3.5 ui-icon" aria-hidden />
+              {totalDishes} {totalDishes === 1 ? "dish" : "dishes"}
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <Flame className="h-3.5 w-3.5 ui-icon" aria-hidden />
+              {totalCalories.toLocaleString()} cal
+            </span>
           </div>
         </div>
 
@@ -115,7 +123,7 @@ export function DailyMenuCard({ day, dateLabel, menu, onOpenDish, onAddMeal }: D
           aria-label="Add meal"
           className="absolute right-4 top-4 h-9 w-9 rounded-xl border-dashed border-border-tag bg-white text-text-tertiary hover:border-accent-base"
         >
-          <Plus className="h-[15px] w-[15px] text-text-disabled" strokeWidth={2} />
+          <Plus className="h-[15px] w-[15px] text-text-disabled ui-icon-strong" />
         </Button>
       </div>
 

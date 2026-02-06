@@ -92,7 +92,21 @@
 - **手动编辑**：点击字段进入编辑态
 - **加载页面**：Go to Home 按钮使用统一按钮样式
 
-## 6. 迭代计划（当前阶段）
+## 6. Icon 系统与放置清单
+> 统一使用 `lucide-react`，避免混用 emoji。
+
+- **全局背景图标**：`dev_v2/frontend/src/components/layout/BackgroundFoodIcons.tsx`（在 `dev_v2/frontend/src/App.tsx` 的 `#phone-screen` 内全局启用）。
+- **欢迎页圆形图案**：`dev_v2/frontend/src/pages/HomePage.tsx`、`dev_v2/frontend/src/components/create/StepWelcome.tsx`（ChefHat / Salad / Soup）。
+- **生成 Loading**：
+  - `dev_v2/frontend/src/components/create/StepLoading.tsx`（ChefHat + Pizza / Soup / CookingPot / Salad / Apple）。
+  - `dev_v2/frontend/src/components/create/StepShoppingLoading.tsx`（ShoppingCart + Apple / LeafyGreen / Milk / Carrot）。
+- **MenuBook 封面**：`dev_v2/frontend/src/components/home/MenuClosedCard.tsx`（按食材分类映射图标，fallback 在 `dev_v2/frontend/src/utils/constants.ts`）。
+- **偏好/不喜欢标签**：`dev_v2/frontend/src/utils/constants.ts`（`PREFERENCE_TAGS` / `DISLIKE_TAGS`）。
+- **Daily Menu**：`dev_v2/frontend/src/components/home/DailyMenuCard.tsx`（Sunrise / Sun / Moon + UtensilsCrossed / Flame）。
+- **空态**：`dev_v2/frontend/src/components/home/EmptyState.tsx`（BookOpen），`dev_v2/frontend/src/pages/ShoppingPage.tsx`（ShoppingCart）。
+- **Shopping 分类**：`dev_v2/frontend/src/pages/ShoppingPage.tsx` 使用 `INGREDIENT_CATEGORY_DETAILS`。
+
+## 7. 迭代计划（当前阶段）
 1. **统一样式基线**（按钮/标签/弹窗/标题层级）
 2. **统一页面组件**（Menu/Review/Shopping/Profile）
 3. **统一空态与加载**（Loading + Empty State）
@@ -100,7 +114,6 @@
 
 ---
 
-## 7. HTML 视觉样例
+## 8. HTML 视觉样例
 - 预览文件：`dev_v2/docs/UI_DESIGN_SYSTEM_PLAN.html`
 - 用途：快速对照按钮、标签、卡片、列表、弹窗
-

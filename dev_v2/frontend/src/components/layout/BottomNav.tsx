@@ -9,10 +9,10 @@ function PlanIcon({ isActive }: { isActive: boolean }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      className="h-[22px] w-[22px]"
+      className="h-[22px] w-[22px] ui-icon-strong"
       fill="none"
       stroke="currentColor"
-      strokeWidth={isActive ? 2.2 : 2}
+      data-active={isActive}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
@@ -26,10 +26,10 @@ function ListIcon({ isActive }: { isActive: boolean }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      className="h-[22px] w-[22px]"
+      className="h-[22px] w-[22px] ui-icon-strong"
       fill="none"
       stroke="currentColor"
-      strokeWidth={isActive ? 2 : 1.8}
+      data-active={isActive}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
@@ -46,10 +46,10 @@ function MeIcon({ isActive }: { isActive: boolean }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      className="h-[22px] w-[22px]"
+      className="h-[22px] w-[22px] ui-icon-strong"
       fill="none"
       stroke="currentColor"
-      strokeWidth={isActive ? 2 : 1.8}
+      data-active={isActive}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
@@ -96,7 +96,7 @@ export function BottomNav({ withinFrame = false }: BottomNavProps) {
               {({ isActive }) => (
                 <>
                   <Icon isActive={isActive} />
-                  <span className="text-[10px] font-medium">{label}</span>
+                  <span className="ui-label-soft">{label}</span>
                 </>
               )}
             </NavLink>

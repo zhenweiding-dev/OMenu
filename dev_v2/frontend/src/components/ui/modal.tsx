@@ -46,9 +46,9 @@ export function Modal({ open, title, description, onClose, children, className, 
         )}
         onPointerDown={(event) => event.stopPropagation()}
       >
-        {title && <h2 className="text-lg font-semibold text-text-primary">{title}</h2>}
-        {description && <p className="mt-1 text-sm text-text-secondary">{description}</p>}
-        <div className="mt-4 space-y-4">{children}</div>
+        {title && <h2 className="ui-heading">{title}</h2>}
+        {description && <p className="mt-1 ui-caption">{description}</p>}
+        <div className="mt-4 ui-stack">{children}</div>
         {onClose && showCloseButton && (
           <Button type="button" variant="outline" className="mt-6 w-full" onClick={onClose}>
             Close

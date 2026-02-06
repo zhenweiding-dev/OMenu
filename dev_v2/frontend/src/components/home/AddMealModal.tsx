@@ -3,6 +3,8 @@ import { createPortal } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
+import { cn } from "@/utils/cn";
 import type { Dish, Difficulty, Ingredient, Menu } from "@/types";
 
 const MEAL_TYPE_OPTIONS: Array<{ value: keyof Menu; label: string }> = [
@@ -10,6 +12,7 @@ const MEAL_TYPE_OPTIONS: Array<{ value: keyof Menu; label: string }> = [
   { value: "lunch", label: "Lunch" },
   { value: "dinner", label: "Dinner" },
 ];
+const DIFFICULTY_OPTIONS: Difficulty[] = ["easy", "medium", "hard"];
 
 interface AddMealModalProps {
   open: boolean;
@@ -25,7 +28,7 @@ const DEFAULT_DIFFICULTY: Difficulty = "easy";
 
 function CloseIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+    <svg viewBox="0 0 24 24" className="h-5 w-5 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
       <path d="M18 6L6 18M6 6l12 12" />
     </svg>
   );
@@ -33,7 +36,7 @@ function CloseIcon() {
 
 function ClockIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon" fill="none" stroke="currentColor" strokeWidth={1.8}>
       <circle cx="12" cy="12" r="10" />
       <path d="M12 6v6l4 2" />
     </svg>
@@ -42,7 +45,7 @@ function ClockIcon() {
 
 function UsersIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon" fill="none" stroke="currentColor" strokeWidth={1.8}>
       <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
       <circle cx="9" cy="7" r="4" />
       <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
@@ -52,7 +55,7 @@ function UsersIcon() {
 
 function ChartIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon" fill="none" stroke="currentColor" strokeWidth={1.8}>
       <path d="M12 20V10M18 20V4M6 20v-4" />
     </svg>
   );
@@ -60,7 +63,7 @@ function ChartIcon() {
 
 function FlameIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon" fill="none" stroke="currentColor" strokeWidth={1.8}>
       <path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z" />
     </svg>
   );
@@ -104,10 +107,12 @@ export function AddMealModal({
   const [notes, setNotes] = useState("");
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingMeta, setIsEditingMeta] = useState(false);
+  const [isDifficultyOpen, setIsDifficultyOpen] = useState(false);
   const [isEditingIngredients, setIsEditingIngredients] = useState(false);
   const [isEditingInstructions, setIsEditingInstructions] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const difficultyDropdownRef = useRef<HTMLDivElement>(null);
 
   const recommendedMealType = useMemo(() => {
     if (existingMenu.breakfast.length === 0) return "breakfast";
@@ -133,6 +138,24 @@ export function AddMealModal({
     setIsEditingInstructions(true);
     setIsEditingNotes(false);
   }, [defaultDifficulty, defaultServings, open, recommendedMealType]);
+
+  useEffect(() => {
+    if (!isEditingMeta) {
+      setIsDifficultyOpen(false);
+    }
+  }, [isEditingMeta]);
+
+  useEffect(() => {
+    if (!isDifficultyOpen) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!difficultyDropdownRef.current) return;
+      if (!difficultyDropdownRef.current.contains(event.target as Node)) {
+        setIsDifficultyOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isDifficultyOpen]);
 
   useEffect(() => {
     if (!open) return;
@@ -203,7 +226,7 @@ export function AddMealModal({
         </div>
 
         <div className="flex-1 overflow-y-auto px-5 py-5">
-          <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base">
+          <div className="flex items-center gap-2 ui-label-soft text-accent-base">
             <span>{dayLabel.toUpperCase()}</span>
             <span>·</span>
             <div className="flex items-center gap-2">
@@ -214,7 +237,7 @@ export function AddMealModal({
                     key={option.value}
                     type="button"
                     onClick={() => setMealType(option.value)}
-                    className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] transition-colors ${
+                    className={`rounded-full px-2.5 py-1 ui-label-soft transition-colors ${
                       isActive
                         ? "bg-accent-base text-white"
                         : "bg-paper-muted text-text-tertiary hover:text-text-secondary"
@@ -237,15 +260,15 @@ export function AddMealModal({
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   onBlur={() => setIsEditingName(false)}
-                  className="h-auto rounded-xl border border-border-subtle bg-transparent px-3 py-2 text-[18px] font-semibold leading-tight text-text-primary focus-visible:ring-0"
+                  className="h-auto rounded-xl border border-border-subtle bg-transparent px-3 py-2 ui-heading focus-visible:ring-0"
                 />
-                {nameError && <p className="mt-1 text-xs text-[#C67B7B]">Name is required.</p>}
+                {nameError && <p className="mt-1 ui-caption text-[#C67B7B]">Name is required.</p>}
               </>
             ) : (
               <button
                 type="button"
                 onClick={() => setIsEditingName(true)}
-                className="text-left text-[18px] font-semibold leading-tight text-text-primary"
+                className="text-left ui-heading"
               >
                 {name ? (
                   name
@@ -258,21 +281,21 @@ export function AddMealModal({
 
           <div className="mt-5 rounded-2xl border border-border-subtle bg-paper-muted/30 p-4">
             <div className="flex items-center justify-between">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary">
+              <p className="ui-label-soft text-text-secondary">
                 Meal details
               </p>
               <button
                 type="button"
                 onClick={() => setIsEditingMeta((prev) => !prev)}
-                className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base"
+                className="ui-label-soft text-accent-base"
               >
                 {isEditingMeta ? "Done" : "Edit"}
               </button>
             </div>
 
             {isEditingMeta ? (
-              <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-                <label className="flex flex-col gap-1 text-[12px] text-text-tertiary">
+              <div className="mt-4 grid grid-cols-2 gap-4 ui-caption">
+                <label className="flex flex-col gap-1 ui-caption-soft">
                   Time (min)
                   <Input
                     value={estimatedTime}
@@ -280,7 +303,7 @@ export function AddMealModal({
                     className="h-9 rounded-xl"
                   />
                 </label>
-                <label className="flex flex-col gap-1 text-[12px] text-text-tertiary">
+                <label className="flex flex-col gap-1 ui-caption-soft">
                   Servings
                   <Input
                     value={servings}
@@ -288,15 +311,42 @@ export function AddMealModal({
                     className="h-9 rounded-xl"
                   />
                 </label>
-                <label className="flex flex-col gap-1 text-[12px] text-text-tertiary">
+                <label className="flex flex-col gap-1 ui-caption-soft">
                   Difficulty
-                  <Input
-                    value={difficulty}
-                    onChange={(event) => setDifficulty(event.target.value as Difficulty)}
-                    className="h-9 rounded-xl"
-                  />
+                  <div className="relative" ref={difficultyDropdownRef}>
+                    <button
+                      type="button"
+                      onClick={() => setIsDifficultyOpen((prev) => !prev)}
+                      className="flex h-9 w-full items-center justify-between rounded-xl border border-border-subtle bg-paper-base px-3 ui-body text-text-primary hover:bg-paper-muted/50"
+                    >
+                      <span className="capitalize">{difficulty || "Select difficulty"}</span>
+                      <ChevronDown className="h-4 w-4 text-text-tertiary ui-icon" aria-hidden />
+                    </button>
+                    {isDifficultyOpen && (
+                      <div className="absolute left-1/2 top-full z-20 mt-2 w-full max-h-40 -translate-x-1/2 overflow-y-auto rounded-2xl border border-border-subtle bg-card-base py-2 shadow-soft">
+                        {DIFFICULTY_OPTIONS.map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => {
+                              setDifficulty(option);
+                              setIsDifficultyOpen(false);
+                            }}
+                            className={cn(
+                              "block w-full px-6 py-2 text-center ui-body capitalize hover:bg-paper-muted",
+                              option === difficulty
+                                ? "bg-accent-soft font-semibold text-accent-base"
+                                : "text-text-primary",
+                            )}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </label>
-                <label className="flex flex-col gap-1 text-[12px] text-text-tertiary">
+                <label className="flex flex-col gap-1 ui-caption-soft">
                   Calories
                   <Input
                     value={calories}
@@ -306,7 +356,7 @@ export function AddMealModal({
                 </label>
               </div>
             ) : (
-              <div className="mt-4 grid grid-cols-2 gap-4 text-[12px] text-text-secondary">
+              <div className="mt-4 grid grid-cols-2 gap-4 ui-caption">
                 <div className="flex items-center gap-2">
                   <ClockIcon />
                   <span>{estimatedTime || "—"} min</span>
@@ -329,11 +379,11 @@ export function AddMealModal({
 
           <div className="mt-5 rounded-2xl border border-border-subtle bg-paper-muted/30 p-4">
             <div className="flex items-center justify-between">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary">Ingredients</p>
+              <p className="ui-label-soft text-text-secondary">Ingredients</p>
               <button
                 type="button"
                 onClick={() => setIsEditingIngredients((prev) => !prev)}
-                className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base"
+                className="ui-label-soft text-accent-base"
               >
                 {isEditingIngredients ? "Done" : "Edit"}
               </button>
@@ -347,7 +397,7 @@ export function AddMealModal({
                 className="mt-3 min-h-[80px]"
               />
             ) : (
-              <p className="mt-3 text-[13px] text-text-secondary">
+              <p className="mt-3 ui-body">
                 {ingredientsInput ? ingredientsInput : "Tap edit to add ingredients."}
               </p>
             )}
@@ -355,11 +405,11 @@ export function AddMealModal({
 
           <div className="mt-5 rounded-2xl border border-border-subtle bg-paper-muted/30 p-4">
             <div className="flex items-center justify-between">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary">Instructions</p>
+              <p className="ui-label-soft text-text-secondary">Instructions</p>
               <button
                 type="button"
                 onClick={() => setIsEditingInstructions((prev) => !prev)}
-                className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base"
+                className="ui-label-soft text-accent-base"
               >
                 {isEditingInstructions ? "Done" : "Edit"}
               </button>
@@ -373,7 +423,7 @@ export function AddMealModal({
                 className="mt-3 min-h-[100px]"
               />
             ) : (
-              <p className="mt-3 text-[13px] text-text-secondary">
+              <p className="mt-3 ui-body">
                 {instructions ? instructions : "Tap edit to add instructions."}
               </p>
             )}
@@ -381,11 +431,11 @@ export function AddMealModal({
 
           <div className="mt-5 rounded-2xl border border-border-subtle bg-paper-muted/30 p-4">
             <div className="flex items-center justify-between">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-secondary">Notes</p>
+              <p className="ui-label-soft text-text-secondary">Notes</p>
               <button
                 type="button"
                 onClick={() => setIsEditingNotes((prev) => !prev)}
-                className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base"
+                className="ui-label-soft text-accent-base"
               >
                 {isEditingNotes ? "Done" : "Edit"}
               </button>
@@ -399,7 +449,7 @@ export function AddMealModal({
                 className="mt-3 min-h-[60px]"
               />
             ) : (
-              <p className="mt-3 text-[13px] text-text-secondary">
+              <p className="mt-3 ui-body">
                 {notes ? notes : "Tap edit to add notes."}
               </p>
             )}

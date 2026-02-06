@@ -19,7 +19,7 @@ const BUDGET_OPTIONS = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 175, 2
 
 function MinusIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
       <path d="M5 12h14" />
     </svg>
   );
@@ -27,7 +27,7 @@ function MinusIcon() {
 
 function PlusIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
       <path d="M12 5v14M5 12h14" />
     </svg>
   );
@@ -35,7 +35,7 @@ function PlusIcon() {
 
 function ChevronDownIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
       <path d="M6 9l6 6 6-6" />
     </svg>
   );
@@ -89,7 +89,7 @@ export function StepPeopleBudget({
             event.stopPropagation();
             onBack();
           }}
-          className="mb-4 h-auto px-0 py-0 text-[12px] uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary"
+          className="mb-4 h-auto px-0 py-0 ui-label-soft text-text-secondary hover:text-text-primary"
         >
           ← Back
         </Button>
@@ -97,7 +97,7 @@ export function StepPeopleBudget({
 
       {/* Sentence style input */}
       <div className="flex-1 px-5 py-10 flex items-center">
-        <p className="text-[24px] font-semibold leading-[1.5] text-text-primary">
+        <p className="ui-title-sm leading-relaxed">
           The menu is for{" "}
           <span className="relative inline-block">
             <span className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-paper-muted px-2 py-1 align-middle">
@@ -109,11 +109,11 @@ export function StepPeopleBudget({
                   event.stopPropagation();
                   onUpdatePeople(Math.max(1, numPeople - 1));
                 }}
-                className="h-7 w-7 rounded-full bg-white"
+                className="h-8 w-8 rounded-full bg-white"
               >
                 <MinusIcon />
               </Button>
-              <span className="min-w-[22px] text-center text-[20px] font-semibold text-accent-base">
+              <span className="min-w-[22px] text-center ui-title-sm text-accent-base">
                 {numPeople}
               </span>
               <Button
@@ -124,7 +124,7 @@ export function StepPeopleBudget({
                   event.stopPropagation();
                   onUpdatePeople(Math.min(10, numPeople + 1));
                 }}
-                className="h-7 w-7 rounded-full bg-white"
+                className="h-8 w-8 rounded-full bg-white"
               >
                 <PlusIcon />
               </Button>
@@ -138,7 +138,7 @@ export function StepPeopleBudget({
                 event.stopPropagation();
                 setEditingField(editingField === "budget" ? null : "budget");
               }}
-              className="rounded-full border border-border-subtle bg-paper-muted px-3 py-0.5 font-semibold text-accent-base hover:bg-paper-muted/70"
+              className="rounded-full border border-border-subtle bg-paper-muted px-2.5 py-0.5 ui-title-sm text-accent-base hover:bg-paper-muted/70"
             >
               ${budget}
             </button>
@@ -156,7 +156,7 @@ export function StepPeopleBudget({
                       setEditingField(null);
                     }}
                     className={cn(
-                      "block w-full px-6 py-2 text-center text-[13px] hover:bg-paper-muted",
+                      "block w-full px-6 py-2 text-center ui-body hover:bg-paper-muted",
                       opt === budget ? "bg-accent-soft font-semibold text-accent-base" : "text-text-primary"
                     )}
                     ref={opt === budget ? activeBudgetRef : null}
@@ -175,7 +175,7 @@ export function StepPeopleBudget({
                 event.stopPropagation();
                 setEditingField(editingField === "difficulty" ? null : "difficulty");
               }}
-              className="inline-flex items-center gap-1 rounded-full border border-border-subtle bg-paper-muted px-3 py-0.5 font-semibold text-accent-base hover:bg-paper-muted/70"
+              className="inline-flex items-center gap-1 rounded-full border border-border-subtle bg-paper-muted px-2.5 py-0.5 ui-title-sm text-accent-base hover:bg-paper-muted/70"
             >
               {difficulty}
               <ChevronDownIcon />
@@ -194,7 +194,7 @@ export function StepPeopleBudget({
                       setEditingField(null);
                     }}
                     className={cn(
-                      "block w-full px-6 py-2 text-center text-[13px] capitalize hover:bg-paper-muted",
+                      "block w-full px-6 py-2 text-center ui-body capitalize hover:bg-paper-muted",
                       level === difficulty ? "bg-accent-soft font-semibold text-accent-base" : "text-text-primary"
                     )}
                   >
@@ -204,7 +204,7 @@ export function StepPeopleBudget({
               </span>
             )}
           </span>{" "}
-          to cook.
+          difficulty to cook.
         </p>
       </div>
 

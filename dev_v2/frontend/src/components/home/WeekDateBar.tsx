@@ -38,10 +38,10 @@ export function WeekDateBar({ createdAt, activeIndex, onSelect }: WeekDateBarPro
                 : "bg-paper-muted/70 text-text-secondary hover:bg-paper-muted",
             )}
           >
-            <span className="text-[11px] font-semibold">{DAY_LABELS[day]}</span>
+            <span className="ui-label-soft normal-case">{DAY_LABELS[day]}</span>
             <span
               className={cn(
-                "whitespace-nowrap text-[10px]",
+                "whitespace-nowrap ui-caption-soft",
                 isActive ? "text-accent-base/80" : "text-text-tertiary",
               )}
             >

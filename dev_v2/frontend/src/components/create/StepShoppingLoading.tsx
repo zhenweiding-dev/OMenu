@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShoppingCart } from "lucide-react";
+import { Apple, Carrot, LeafyGreen, Milk, ShoppingCart, Clock3 } from "lucide-react";
 import { useMenuBook } from "@/hooks/useMenuBook";
 import { useAppStore } from "@/stores/useAppStore";
 import { Button } from "@/components/ui/button";
@@ -9,10 +9,9 @@ import type { MenuBook, ShoppingList } from "@/types";
 interface StepShoppingLoadingProps {
   menuBook: MenuBook;
   onGenerated: (list: ShoppingList) => void;
-  onError: () => void;
 }
 
-export function StepShoppingLoading({ menuBook, onGenerated, onError }: StepShoppingLoadingProps) {
+export function StepShoppingLoading({ menuBook, onGenerated }: StepShoppingLoadingProps) {
   const navigate = useNavigate();
   const { generateList } = useMenuBook();
   const clearError = useAppStore((state) => state.clearError);
@@ -105,25 +104,26 @@ export function StepShoppingLoading({ menuBook, onGenerated, onError }: StepShop
     <div className="flex min-h-[70vh] flex-col items-center justify-center px-5 py-20 text-center">
       <div className="relative h-36 w-36">
         <div className="absolute inset-0 flex items-center justify-center rounded-full bg-paper-muted/80 animate-pulse-subtle">
-          <ShoppingCart className="h-10 w-10 text-accent-base" strokeWidth={1.8} />
+          <ShoppingCart className="h-10 w-10 text-accent-base ui-icon-strong" />
         </div>
-        <span className="absolute -left-1 top-5 text-[26px] animate-ingredient-a" aria-hidden>🍅</span>
-        <span className="absolute right-2 top-2 text-[24px] animate-ingredient-b" aria-hidden>🥬</span>
-        <span className="absolute left-4 bottom-2 text-[22px] animate-ingredient-c" aria-hidden>🧀</span>
-        <span className="absolute right-1 bottom-5 text-[24px] animate-ingredient-d" aria-hidden>🥕</span>
+        <Apple className="absolute -left-1 top-5 h-6 w-6 text-accent-base/70 animate-ingredient-a ui-icon" aria-hidden />
+        <LeafyGreen className="absolute right-2 top-2 h-6 w-6 text-accent-base/70 animate-ingredient-b ui-icon" aria-hidden />
+        <Milk className="absolute left-4 bottom-2 h-5 w-5 text-accent-base/70 animate-ingredient-c ui-icon" aria-hidden />
+        <Carrot className="absolute right-1 bottom-5 h-6 w-6 text-accent-base/70 animate-ingredient-d ui-icon" aria-hidden />
       </div>
       <div className="space-y-1">
-        <h2 className="text-[20px] font-semibold text-text-primary">Generating your shopping list...</h2>
-        <p className="text-[14px] text-text-secondary">
+        <h2 className="ui-title">Generating your shopping list...</h2>
+        <p className="ui-subtitle">
           We&apos;re gathering ingredients across your week.
         </p>
       </div>
-      <div className="mb-6 text-[24px] font-semibold text-accent-base">
-        ⏱️ {formatTime(elapsedSeconds)}
+      <div className="mb-6 flex items-center gap-2 ui-title-lg text-accent-base">
+        <Clock3 className="h-5 w-5 ui-icon-strong" aria-hidden />
+        {formatTime(elapsedSeconds)}
       </div>
 
       {statusMessage && (
-        <p className={status === "failed" ? "mb-4 text-[13px] text-error" : "mb-4 text-[13px] text-text-secondary"}>
+        <p className={status === "failed" ? "mb-4 ui-body text-error" : "mb-4 ui-body"}>
           {statusMessage}
         </p>
       )}
@@ -138,7 +138,7 @@ export function StepShoppingLoading({ menuBook, onGenerated, onError }: StepShop
         >
           Go to Home
         </Button>
-        <p className="text-[12px] text-text-secondary">
+        <p className="ui-caption">
           We&apos;ll keep working in the background
         </p>
       </div>

@@ -80,16 +80,14 @@ export function MenuBookCard({ book, onSelect, isActive, onLongPress }: MenuBook
         }
       >
         <CardHeader className="gap-1">
-          <CardTitle className="text-[15px] font-semibold text-text-primary">
-            {weekRange}
-          </CardTitle>
-          <CardDescription className="flex items-center gap-2 text-[12px] text-text-secondary">
+          <CardTitle>{weekRange}</CardTitle>
+          <CardDescription className="flex items-center gap-2 ui-caption">
             <span>{scheduledMeals} meals</span>
             <span aria-hidden>•</span>
             <span>{shoppingCount} list items</span>
           </CardDescription>
         </CardHeader>
-        <CardContent className="text-[12px] text-text-secondary">
+        <CardContent className="ui-caption">
           Tap to open this menu book and view details.
         </CardContent>
       </Card>

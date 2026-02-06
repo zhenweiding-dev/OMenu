@@ -13,7 +13,7 @@ const ROUTE_TITLES: Record<string, string> = {
 
 function PlusIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
       <path d="M12 5v14M5 12h14" />
     </svg>
   );
@@ -56,10 +56,10 @@ export function Header() {
         <div className="px-5 pb-4 pt-14">
           <div className="flex items-start justify-between gap-6">
             <div>
-              <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">
+              <p className="ui-label-soft text-accent-base">
                 {relativeWeekLabel}
               </p>
-              {currentWeekRange && <p className="mt-1 text-[11px] text-text-secondary">{currentWeekRange}</p>}
+              {currentWeekRange && <p className="mt-1 ui-caption">{currentWeekRange}</p>}
             </div>
             <Button
               type="button"
@@ -67,9 +67,9 @@ export function Header() {
               aria-label="Open menu book picker"
               variant="outline"
               size="sm"
-              className="h-10 gap-2 rounded-full px-4 text-[11px] uppercase tracking-[0.12em] shadow-btn"
+              className="h-10 gap-2 rounded-full px-4 ui-label-soft shadow-btn"
             >
-              <LayoutGrid className="h-5 w-5 text-accent-base" strokeWidth={1.8} aria-hidden />
+              <LayoutGrid className="h-5 w-5 text-accent-base ui-icon-strong" aria-hidden />
               MENUBOOK
             </Button>
           </div>
@@ -90,8 +90,8 @@ export function Header() {
         <div className="px-5 pb-4 pt-14">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">{title}</p>
-              {subtitle && <p className="mt-1 text-[11px] text-text-secondary">{subtitle}</p>}
+              <p className="ui-label-soft text-accent-base">{title}</p>
+              {subtitle && <p className="mt-1 ui-caption">{subtitle}</p>}
             </div>
             {/* Add button per spec */}
             <Button
@@ -115,7 +115,7 @@ export function Header() {
       <div className="px-5 pb-4 pt-14">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">{title}</p>
+            <p className="ui-label-soft text-accent-base">{title}</p>
           </div>
         </div>
       </div>

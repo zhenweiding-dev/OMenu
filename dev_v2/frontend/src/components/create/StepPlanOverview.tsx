@@ -60,7 +60,11 @@ export function StepPlanOverview({ menuBook, onMenuBookUpdated, onViewShopping }
     const endX = event.changedTouches[0]?.clientX ?? startX;
     const deltaX = endX - startX;
     if (Math.abs(deltaX) > 60) {
-      deltaX < 0 ? handleNextDay() : handlePrevDay();
+      if (deltaX < 0) {
+        handleNextDay();
+      } else {
+        handlePrevDay();
+      }
     }
     touchStartXRef.current = null;
   };
@@ -124,12 +128,12 @@ export function StepPlanOverview({ menuBook, onMenuBookUpdated, onViewShopping }
   return (
     <div className="flex flex-1 flex-col">
       <div className="px-5 pb-4 pt-10">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.15em] text-accent-base">
+        <p className="ui-label-soft text-accent-base">
           REVIEW
         </p>
-        <p className="mt-1 text-[11px] text-text-secondary">{getWeekDateRange(menuBook.createdAt)}</p>
+        <p className="mt-1 ui-caption">{getWeekDateRange(menuBook.createdAt)}</p>
         {successMessage && (
-          <p className="mt-1 text-[11px] text-success">{successMessage}</p>
+          <p className="mt-1 ui-caption text-success">{successMessage}</p>
         )}
       </div>
 
@@ -158,7 +162,7 @@ export function StepPlanOverview({ menuBook, onMenuBookUpdated, onViewShopping }
         />
       </div>
 
-      {globalError && <p className="px-5 pb-4 text-center text-[12px] text-error">{globalError}</p>}
+      {globalError && <p className="px-5 pb-4 text-center ui-caption text-error">{globalError}</p>}
 
       <div className="sticky bottom-0 border-t border-border-subtle bg-paper-base px-5 pb-6 pt-4">
         <div className="flex gap-3">
@@ -194,13 +198,13 @@ export function StepPlanOverview({ menuBook, onMenuBookUpdated, onViewShopping }
                 onPointerDown={(event) => event.stopPropagation()}
               >
                 <div className="border-b border-border-subtle px-5 py-4">
-                  <h2 className="text-[16px] font-semibold text-text-primary">Modify Your Menu</h2>
-                  <p className="mt-1 text-[12px] text-text-secondary">
+                  <h2 className="ui-heading">Modify Your Menu</h2>
+                  <p className="mt-1 ui-caption">
                     Describe what you'd like to change and we'll regenerate the menu for the week.
                   </p>
                 </div>
                 <div className="flex-1 overflow-y-auto px-5 py-5">
-                  <div className="space-y-4">
+                  <div className="ui-stack">
                     <Textarea
                       value={modification}
                       onChange={(event) => setModification(event.target.value.slice(0, 200))}
@@ -210,7 +214,7 @@ export function StepPlanOverview({ menuBook, onMenuBookUpdated, onViewShopping }
                       disabled={isGenerating}
                     />
                     <div className="flex items-center justify-between">
-                      <p className="text-[11px] text-text-tertiary">{modification.length}/200</p>
+                      <p className="ui-caption-soft">{modification.length}/200</p>
                       <div className="flex gap-2">
                         <Button variant="ghost" size="sm" onClick={() => setShowModifyModal(false)}>
                           Cancel

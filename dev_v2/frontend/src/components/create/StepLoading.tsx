@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Apple, ChefHat, CookingPot, Pizza, Salad, Soup, Clock3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface StepLoadingProps {
@@ -71,31 +72,32 @@ export function StepLoading({
     <div className="flex min-h-[70vh] flex-col items-center justify-center px-5 py-20 text-center">
       {/* Animated chef icon */}
       <div className="relative mb-8 flex h-[155px] w-[155px] items-center justify-center rounded-full bg-paper-muted animate-chef">
-        <span className="text-[66px]" aria-hidden>👨‍🍳</span>
-        <span className="absolute -left-4 top-6 text-[26px] animate-ingredient-a" aria-hidden>🌮</span>
-        <span className="absolute left-1 bottom-6 text-[24px] animate-ingredient-b" aria-hidden>🍲</span>
-        <span className="absolute -right-3 top-10 text-[25px] animate-ingredient-c" aria-hidden>🥘</span>
-        <span className="absolute right-3 bottom-7 text-[22px] animate-ingredient-d" aria-hidden>🍣</span>
-        <span className="absolute right-14 top-0 text-[23px] animate-ingredient-c" aria-hidden>🥧</span>
+        <ChefHat className="h-14 w-14 text-accent-base ui-icon-strong" aria-hidden />
+        <Pizza className="absolute -left-4 top-6 h-7 w-7 text-accent-base/70 animate-ingredient-a ui-icon" aria-hidden />
+        <Soup className="absolute left-1 bottom-6 h-6 w-6 text-accent-base/70 animate-ingredient-b ui-icon" aria-hidden />
+        <CookingPot className="absolute -right-3 top-10 h-6 w-6 text-accent-base/70 animate-ingredient-c ui-icon" aria-hidden />
+        <Salad className="absolute right-3 bottom-7 h-6 w-6 text-accent-base/70 animate-ingredient-d ui-icon" aria-hidden />
+        <Apple className="absolute right-14 top-0 h-6 w-6 text-accent-base/70 animate-ingredient-c ui-icon" aria-hidden />
       </div>
 
       {/* Title */}
-      <h2 className="mb-2 text-[20px] font-semibold text-text-primary">
+      <h2 className="mb-3 ui-title">
         Designing your menu...
       </h2>
 
       {/* Subtitle */}
-      <p className="mb-6 text-[14px] text-text-secondary">
+      <p className="mb-6 ui-subtitle">
         Our chef is sketching a fresh menu for you
       </p>
 
       {/* Timer */}
-      <div className="mb-6 text-[24px] font-semibold text-accent-base">
-        ⏱️ {formatTime(elapsedSeconds)}
+      <div className="mb-6 flex items-center gap-2 ui-title-lg text-accent-base">
+        <Clock3 className="h-5 w-5 ui-icon-strong" aria-hidden />
+        {formatTime(elapsedSeconds)}
       </div>
 
       {statusMessage && (
-        <p className={status === "failed" ? "mb-4 text-[13px] text-error" : "mb-4 text-[13px] text-text-secondary"}>
+        <p className={status === "failed" ? "mb-4 ui-body text-error" : "mb-4 ui-body"}>
           {statusMessage}
         </p>
       )}
@@ -112,7 +114,7 @@ export function StepLoading({
           >
             Go to Home
           </Button>
-          <p className="text-[12px] text-text-secondary">
+          <p className="ui-caption">
             We&apos;ll keep working in the background
           </p>
         </div>

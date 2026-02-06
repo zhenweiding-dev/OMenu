@@ -3,7 +3,8 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "@/stores/useAppStore";
 import { useShoppingStore } from "@/stores/useShoppingStore";
-import { INGREDIENT_CATEGORIES } from "@/utils/constants";
+import { INGREDIENT_CATEGORIES, INGREDIENT_CATEGORY_DETAILS } from "@/utils/constants";
+import { ChevronDown, ShoppingCart } from "lucide-react";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
@@ -11,24 +12,13 @@ import { Input } from "@/components/ui/input";
 import type { IngredientCategory, ShoppingItem } from "@/types";
 import { cn } from "@/utils/cn";
 
-const CATEGORY_DETAILS: Record<IngredientCategory, { icon: string; label: string }> = {
-  proteins: { icon: "🥩", label: "Proteins" },
-  vegetables: { icon: "🥬", label: "Vegetables" },
-  fruits: { icon: "🍎", label: "Fruits" },
-  grains: { icon: "🍞", label: "Grains" },
-  dairy: { icon: "🧀", label: "Dairy" },
-  seasonings: { icon: "🧂", label: "Seasonings" },
-  pantry_staples: { icon: "🥫", label: "Pantry Staples" },
-  others: { icon: "🧺", label: "Others" },
-};
-
 function formatCategoryLabel(category: IngredientCategory) {
-  return CATEGORY_DETAILS[category]?.label ?? category.replace("_", " ");
+  return INGREDIENT_CATEGORY_DETAILS[category]?.label ?? category.replace("_", " ");
 }
 
 function PlusIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
       <path d="M12 5v14M5 12h14" />
     </svg>
   );
@@ -36,7 +26,7 @@ function PlusIcon() {
 
 function CloseIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+    <svg viewBox="0 0 24 24" className="h-5 w-5 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
       <path d="M18 6L6 18M6 6l12 12" />
     </svg>
   );
@@ -44,7 +34,7 @@ function CloseIcon() {
 
 function MinusIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
       <path d="M5 12h14" />
     </svg>
   );
@@ -52,7 +42,7 @@ function MinusIcon() {
 
 function CheckIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 6L9 17l-5-5" />
     </svg>
   );
@@ -82,6 +72,7 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
   const [isEditingQuantity, setIsEditingQuantity] = useState(false);
   const [isEditingCategory, setIsEditingCategory] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const categoryDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -91,7 +82,7 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
     setCategory(initialItem?.category ?? defaultCategory);
     setIsEditingName(true);
     setIsEditingQuantity(true);
-    setIsEditingCategory(true);
+    setIsEditingCategory(false);
   }, [defaultCategory, initialItem, mode, open]);
 
   useEffect(() => {
@@ -101,6 +92,18 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
     }, 0);
     return () => window.clearTimeout(id);
   }, [mode, open]);
+
+  useEffect(() => {
+    if (!isEditingCategory) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!categoryDropdownRef.current) return;
+      if (!categoryDropdownRef.current.contains(event.target as Node)) {
+        setIsEditingCategory(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isEditingCategory]);
 
   if (!open) return null;
   const container = document.getElementById("phone-screen") ?? document.body;
@@ -161,7 +164,7 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
         </div>
 
         <div className="max-h-[70vh] overflow-y-auto px-4 py-4">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-base">SHOPPING ITEM</p>
+          <p className="ui-label-soft text-accent-base">SHOPPING ITEM</p>
 
           <div className="mt-2">
             {isEditingName ? (
@@ -172,22 +175,22 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 onBlur={() => setIsEditingName(false)}
-                className="h-auto rounded-xl border border-border-subtle bg-transparent px-3 py-2 text-[18px] font-semibold leading-tight text-text-primary focus-visible:ring-0"
+                className="h-auto rounded-xl border border-border-subtle bg-transparent px-3 py-2 ui-heading focus-visible:ring-0"
               />
             ) : (
               <button
                 type="button"
                 onClick={() => setIsEditingName(true)}
-                className="text-left text-[18px] font-semibold leading-tight text-text-primary"
+                className="text-left ui-heading"
               >
                 {name ? name : <span className="text-text-tertiary">Tap to add item name</span>}
               </button>
             )}
-            {saveDisabled && <p className="mt-2 text-xs text-[#C67B7B]">Name is required.</p>}
+            {saveDisabled && <p className="mt-2 ui-caption text-[#C67B7B]">Name is required.</p>}
           </div>
 
           <section className="mt-5">
-            <h3 className="text-[14px] font-semibold text-text-primary">Quantity</h3>
+            <h3 className="ui-heading-sm">Quantity</h3>
             {isEditingQuantity ? (
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <Input
@@ -209,7 +212,7 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
               <button
                 type="button"
                 onClick={() => setIsEditingQuantity(true)}
-                className="mt-3 text-[14px] text-text-tertiary"
+                className="mt-3 ui-body text-text-tertiary"
               >
                 {isSeasoning
                   ? "No quantity required for seasonings"
@@ -221,28 +224,49 @@ function ShoppingItemSheet({ open, mode, initialItem, defaultCategory, onClose, 
           </section>
 
           <section className="mt-6">
-            <h3 className="text-[14px] font-semibold text-text-primary">Category</h3>
-            {isEditingCategory ? (
-              <select
-                className="mt-3 h-10 w-full rounded-xl border border-border-subtle bg-white px-3.5 text-[13px] text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-base focus:ring-offset-2 focus:ring-offset-paper-base"
-                value={category}
-                onChange={(event) => setCategory(event.target.value as IngredientCategory)}
-              >
-                {INGREDIENT_CATEGORIES.map((option) => (
-                  <option key={option} value={option}>
-                    {formatCategoryLabel(option)}
-                  </option>
-                ))}
-              </select>
-            ) : (
+            <h3 className="ui-heading-sm">Category</h3>
+            <div className="relative mt-3" ref={categoryDropdownRef}>
               <button
                 type="button"
-                onClick={() => setIsEditingCategory(true)}
-                className="mt-3 text-[14px] text-text-secondary"
+                onClick={() => setIsEditingCategory((prev) => !prev)}
+                className="flex h-10 w-full items-center justify-between rounded-xl border border-border-subtle bg-paper-base px-3.5 ui-body text-text-primary hover:bg-paper-muted/50"
               >
-                {formatCategoryLabel(category)}
+                <span className="flex items-center gap-2">
+                  {(() => {
+                    const Icon = INGREDIENT_CATEGORY_DETAILS[category]?.icon;
+                    return Icon ? <Icon className="h-4 w-4 text-accent-base/80 ui-icon" aria-hidden /> : null;
+                  })()}
+                  <span>{formatCategoryLabel(category)}</span>
+                </span>
+                <ChevronDown className="h-4 w-4 text-text-tertiary ui-icon" aria-hidden />
               </button>
-            )}
+              {isEditingCategory && (
+                <div className="absolute left-1/2 bottom-full z-20 mb-2 w-full max-h-40 -translate-x-1/2 overflow-y-auto rounded-2xl border border-border-subtle bg-card-base py-2 shadow-soft">
+                  {INGREDIENT_CATEGORIES.map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => {
+                        setCategory(option);
+                        setIsEditingCategory(false);
+                      }}
+                      className={cn(
+                        "flex w-full items-center gap-2 px-6 py-2 ui-body hover:bg-paper-muted",
+                        option === category
+                          ? "bg-accent-soft font-semibold text-accent-base"
+                          : "text-text-primary",
+                      )}
+                    >
+                      {(() => {
+                        const Icon = INGREDIENT_CATEGORY_DETAILS[option]?.icon;
+                        return Icon ? <Icon className="h-4 w-4 text-accent-base/80 ui-icon" aria-hidden /> : null;
+                      })()}
+                      <span>{formatCategoryLabel(option)}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </section>
         </div>
       </div>
@@ -348,10 +372,10 @@ export function ShoppingPage() {
     return (
       <PageContainer className="flex flex-col items-center justify-center px-5 py-20 text-center">
         <div className="mb-6 flex h-[100px] w-[100px] items-center justify-center rounded-3xl border border-border-subtle bg-paper-muted">
-          <span className="text-[44px]" aria-hidden>🛒</span>
+          <ShoppingCart className="h-10 w-10 text-accent-base ui-icon-strong" aria-hidden />
         </div>
-        <h2 className="mb-2 text-[20px] font-semibold text-text-primary">No shopping list yet</h2>
-        <p className="text-[14px] text-text-secondary">Generate a shopping list from your menu</p>
+        <h2 className="mb-2 ui-title-sm">No shopping list yet</h2>
+        <p className="ui-body">Generate a shopping list from your menu</p>
       </PageContainer>
     );
   }
@@ -361,10 +385,10 @@ export function ShoppingPage() {
     return (
       <PageContainer className="flex flex-col items-center justify-center px-5 py-20 text-center">
         <div className="mb-6 flex h-[100px] w-[100px] items-center justify-center rounded-3xl border border-border-subtle bg-paper-muted">
-          <span className="text-[44px]" aria-hidden>🛒</span>
+          <ShoppingCart className="h-10 w-10 text-accent-base ui-icon-strong" aria-hidden />
         </div>
-        <h2 className="mb-2 text-[20px] font-semibold text-text-primary">No shopping list yet</h2>
-        <p className="mb-8 text-[14px] text-text-secondary">
+        <h2 className="mb-2 ui-title-sm">No shopping list yet</h2>
+        <p className="mb-8 ui-body">
           Shopping lists are generated when you create or modify your menu.
         </p>
         <Button onClick={handleBackToMenu} size="lg" className="px-8">
@@ -375,12 +399,13 @@ export function ShoppingPage() {
   }
 
   return (
-    <PageContainer className="space-y-3">
+    <PageContainer className="ui-stack">
       {/* Category sections */}
       {groupedItems.map(({ category, items }) => {
-        const details = CATEGORY_DETAILS[category];
+        const details = INGREDIENT_CATEGORY_DETAILS[category];
         const isCollapsed = collapsedCategories[category];
         const itemCount = items.length;
+        const Icon = details?.icon;
         
         return (
           <section key={category} className="overflow-hidden rounded-2xl border border-border-subtle bg-card-base">
@@ -390,11 +415,11 @@ export function ShoppingPage() {
               onClick={() => toggleCategoryCollapse(category)}
               className="flex w-full items-center justify-between px-4 py-2.5"
             >
-              <span className="flex items-center gap-2 text-[13px] font-semibold text-text-primary">
-                <span className="text-base">{details?.icon}</span>
+              <span className="flex items-center gap-2 ui-body-strong">
+                {Icon && <Icon className="h-4 w-4 text-accent-base/80 ui-icon" aria-hidden />}
                 {details?.label}
               </span>
-              <span className="flex items-center gap-2 text-[11px] text-text-secondary">
+              <span className="flex items-center gap-2 ui-caption">
                 <span>{itemCount} items</span>
                 {isCollapsed ? <PlusIcon /> : <MinusIcon />}
               </span>
@@ -441,14 +466,14 @@ export function ShoppingPage() {
                       <div className="flex-1">
                         <span
                           className={cn(
-                            "block text-[14px] font-medium",
+                            "block ui-body-strong",
                             purchased ? "text-text-secondary line-through" : "text-text-primary"
                           )}
                         >
                           {item.name}
                         </span>
                         {quantityText && (
-                          <span className="mt-0.5 block text-[11px] text-text-tertiary">
+                          <span className="mt-0.5 block ui-caption-soft">
                             {quantityText}
                           </span>
                         )}
@@ -462,7 +487,7 @@ export function ShoppingPage() {
                           setEditingItem(item);
                         }}
                         aria-label={`Edit ${item.name}`}
-                        className="text-[10px] font-semibold uppercase tracking-[0.2em] text-text-secondary hover:text-text-primary"
+                        className="ui-label-soft text-text-secondary hover:text-text-primary"
                       >
                         EDIT
                       </button>

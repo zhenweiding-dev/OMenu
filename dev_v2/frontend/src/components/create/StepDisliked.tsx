@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/utils/cn";
+import { Sparkles } from "lucide-react";
 import { DISLIKE_TAGS } from "@/utils/constants";
 
 interface StepDislikedProps {
@@ -13,7 +14,7 @@ interface StepDislikedProps {
 }
 
 const DISLIKE_ICON_MAP = new Map(DISLIKE_TAGS.map(({ label, icon }) => [label, icon]));
-const getDislikeIcon = (label: string) => DISLIKE_ICON_MAP.get(label) ?? "✨";
+const getDislikeIcon = (label: string) => DISLIKE_ICON_MAP.get(label) ?? Sparkles;
 
 export function StepDisliked({ specificDisliked, onAddItem, onRemoveItem, onNext, onBack }: StepDislikedProps) {
   const [customInput, setCustomInput] = useState("");
@@ -43,14 +44,14 @@ export function StepDisliked({ specificDisliked, onAddItem, onRemoveItem, onNext
           variant="ghost"
           size="sm"
           onClick={onBack}
-          className="mb-4 h-auto px-0 py-0 text-[12px] uppercase tracking-[0.18em] text-text-secondary hover:text-text-primary"
+          className="mb-4 h-auto px-0 py-0 ui-label-soft text-text-secondary hover:text-text-primary"
         >
           ← Back
         </Button>
-        <h2 className="text-[22px] font-semibold leading-tight text-text-primary">
+        <h2 className="ui-title">
           Don&apos;t include
         </h2>
-        <p className="mt-2 text-[13px] text-text-secondary">
+        <p className="mt-2 ui-body">
           Ingredients, flavors, or anything you&apos;re just not a fan of.
         </p>
       </div>
@@ -73,10 +74,10 @@ export function StepDisliked({ specificDisliked, onAddItem, onRemoveItem, onNext
       </div>
 
       {/* Tags */}
-      <div className="flex-1 space-y-4 px-5 pb-2">
+      <div className="flex-1 ui-stack px-5 pb-2">
         {specificDisliked.length > 0 && (
           <div>
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-base">
+            <p className="mb-2 ui-label-soft text-accent-base">
               Your Dislikes
             </p>
             <div className="flex flex-wrap gap-2">
@@ -85,10 +86,13 @@ export function StepDisliked({ specificDisliked, onAddItem, onRemoveItem, onNext
                   key={`selected-${tag}`}
                   type="button"
                   onClick={() => toggleItem(tag)}
-                  className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
+                  className="rounded-full border border-accent-base/40 bg-accent-soft px-2.5 py-1 ui-caption font-medium normal-case text-accent-base"
                 >
                   <span className="inline-flex items-center gap-1">
-                    <span aria-hidden="true">{getDislikeIcon(tag)}</span>
+                    {(() => {
+                      const Icon = getDislikeIcon(tag);
+                      return <Icon className="h-3.5 w-3.5 ui-icon" aria-hidden />;
+                    })()}
                     <span>{tag}</span>
                   </span>
                 </button>
@@ -98,18 +102,18 @@ export function StepDisliked({ specificDisliked, onAddItem, onRemoveItem, onNext
         )}
         <div>
           <div className="flex flex-wrap gap-2">
-            {DISLIKE_TAGS.filter((tag) => !specificDisliked.includes(tag.label)).map(({ label, icon }) => (
+            {DISLIKE_TAGS.filter((tag) => !specificDisliked.includes(tag.label)).map(({ label, icon: Icon }) => (
               <button
                 key={label}
                 type="button"
                 onClick={() => toggleItem(label)}
                 className={cn(
-                  "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
+                  "rounded-full border border-border-tag bg-transparent px-2.5 py-1 ui-caption normal-case text-text-secondary transition-all",
                   "hover:border-accent-light hover:text-text-primary"
                 )}
               >
                 <span className="inline-flex items-center gap-1">
-                  <span aria-hidden="true">{icon}</span>
+                  <Icon className="h-3.5 w-3.5 ui-icon" aria-hidden />
                   <span>{label}</span>
                 </span>
               </button>
@@ -118,7 +122,7 @@ export function StepDisliked({ specificDisliked, onAddItem, onRemoveItem, onNext
         </div>
       </div>
 
-      <p className="px-5 pb-4 text-[12px] leading-relaxed text-text-secondary">
+      <p className="px-5 pb-4 ui-caption">
         Have a severe allergy? Please make sure to double-check every recipe&apos;s ingredient list.
       </p>
 

@@ -8,6 +8,84 @@
   background-color: theme("colors.paper.base");
 }
 
+@layer base {
+  .ui-title-lg {
+    @apply text-[24px] font-semibold leading-snug text-text-primary;
+  }
+
+  .ui-title {
+    @apply text-[22px] font-semibold leading-tight text-text-primary;
+  }
+
+  .ui-title-sm {
+    @apply text-[20px] font-semibold leading-snug text-text-primary;
+  }
+
+  .ui-heading {
+    @apply text-[16px] font-semibold leading-tight text-text-primary;
+  }
+
+  .ui-heading-sm {
+    @apply text-[14px] font-semibold leading-snug text-text-primary;
+  }
+
+  .ui-subtitle {
+    @apply text-[13px] leading-relaxed text-text-secondary;
+  }
+
+  .ui-body {
+    @apply text-[13px] text-text-secondary;
+  }
+
+  .ui-body-strong {
+    @apply text-[13px] font-medium text-text-primary;
+  }
+
+  .ui-caption {
+    @apply text-[12px] text-text-secondary;
+  }
+
+  .ui-caption-soft {
+    @apply text-[12px] text-text-tertiary;
+  }
+
+  .ui-label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.2em];
+  }
+
+  .ui-label-soft {
+    @apply text-[11px] font-semibold uppercase tracking-[0.12em];
+  }
+}
+
+@layer utilities {
+  .ui-stack {
+    @apply space-y-4;
+  }
+
+  .ui-stack-lg {
+    @apply space-y-5;
+  }
+
+  .ui-icon {
+    stroke-width: 1.6 !important;
+  }
+
+  .ui-icon-strong {
+    stroke-width: 1.8 !important;
+  }
+
+  .ui-icon-subtle {
+    stroke-width: 1.4 !important;
+  }
+}
+
+@layer base {
+  .lucide {
+    stroke-width: 1.6 !important;
+  }
+}
+
 body {
   min-height: 100vh;
   margin: 0;

@@ -6,5 +6,5 @@ interface PageContainerProps extends PropsWithChildren {
 }
 
 export function PageContainer({ children, className }: PageContainerProps) {
-  return <main className={cn("px-5 pb-4 pt-3", className)}>{children}</main>;
+  return <main className={cn("px-5 pb-4 pt-4", className)}>{children}</main>;
 }

@@ -21,7 +21,7 @@ function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElem
   return (
     <h3
       className={cn(
-        "text-[16px] font-semibold leading-[1.2] tracking-[-0.01em] text-text-primary",
+        "ui-heading",
         className,
       )}
       {...props}
@@ -30,7 +30,7 @@ function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElem
 }
 
 function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("text-[13px] text-text-secondary", className)} {...props} />;
+  return <p className={cn("ui-body", className)} {...props} />;
 }
 
 function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

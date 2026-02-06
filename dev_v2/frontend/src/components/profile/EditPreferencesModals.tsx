@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/utils/cn";
@@ -9,7 +10,7 @@ import type { Difficulty } from "@/types";
 // ===== Icons =====
 function CloseIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+    <svg viewBox="0 0 24 24" className="h-5 w-5 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
       <path d="M18 6L6 18M6 6l12 12" />
     </svg>
   );
@@ -17,7 +18,7 @@ function CloseIcon() {
 
 function PlusIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
       <path d="M12 5v14M5 12h14" />
     </svg>
   );
@@ -25,7 +26,7 @@ function PlusIcon() {
 
 function MinusIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+    <svg viewBox="0 0 24 24" className="h-4 w-4 ui-icon-strong" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
       <path d="M5 12h14" />
     </svg>
   );
@@ -83,7 +84,7 @@ function ModalWrapper({ isOpen, onClose, title, children, onSave, showSaveButton
           >
             <CloseIcon />
           </Button>
-          <h2 className="text-[16px] font-semibold text-text-primary">{title}</h2>
+          <h2 className="ui-heading">{title}</h2>
           {showSaveButton && (
             <Button type="button" variant="ghost" size="sm" onClick={onSave} className="h-8 px-2 text-accent-base hover:text-accent-base/80">
               Save
@@ -91,7 +92,7 @@ function ModalWrapper({ isOpen, onClose, title, children, onSave, showSaveButton
           )}
         </div>
         {/* Body */}
-        <div className="flex-1 overflow-y-auto px-5 py-5 pb-10">
+        <div className="flex-1 overflow-y-auto px-5 py-5 pb-6">
           {children}
         </div>
       </div>
@@ -104,8 +105,8 @@ function ModalWrapper({ isOpen, onClose, title, children, onSave, showSaveButton
 // ===== Preferred Items Modal =====
 const PREFERENCE_ICON_MAP = new Map(PREFERENCE_TAGS.map(({ label, icon }) => [label, icon]));
 const DISLIKE_ICON_MAP = new Map(DISLIKE_TAGS.map(({ label, icon }) => [label, icon]));
-const getPreferenceIcon = (label: string) => PREFERENCE_ICON_MAP.get(label) ?? "✨";
-const getDislikeIcon = (label: string) => DISLIKE_ICON_MAP.get(label) ?? "✨";
+const getPreferenceIcon = (label: string) => PREFERENCE_ICON_MAP.get(label) ?? Sparkles;
+const getDislikeIcon = (label: string) => DISLIKE_ICON_MAP.get(label) ?? Sparkles;
 
 interface EditPreferredModalProps {
   isOpen: boolean;
@@ -146,11 +147,11 @@ export function EditPreferredModal({ isOpen, onClose, items, onSave }: EditPrefe
 
   return (
     <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Preferences" onSave={handleSave} showSaveButton={false}>
-      <div className="flex min-h-[60vh] flex-col">
-        <div className="flex-1 space-y-4 pb-2">
+      <div className="flex flex-col">
+        <div className="ui-stack pb-3">
           {selected.length > 0 && (
             <div>
-              <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-base">
+              <p className="mb-2 ui-label-soft text-accent-base">
                 Your Preferences
               </p>
               <div className="flex flex-wrap gap-2">
@@ -159,10 +160,13 @@ export function EditPreferredModal({ isOpen, onClose, items, onSave }: EditPrefe
                     key={`selected-${tag}`}
                     type="button"
                     onClick={() => toggleItem(tag)}
-                    className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
+                    className="rounded-full border border-accent-base/40 bg-accent-soft px-2.5 py-1 ui-caption font-medium normal-case text-accent-base"
                   >
                     <span className="inline-flex items-center gap-1">
-                      <span aria-hidden="true">{getPreferenceIcon(tag)}</span>
+                      {(() => {
+                        const Icon = getPreferenceIcon(tag);
+                        return <Icon className="h-3.5 w-3.5 ui-icon" aria-hidden />;
+                      })()}
                       <span>{tag}</span>
                     </span>
                   </button>
@@ -171,18 +175,18 @@ export function EditPreferredModal({ isOpen, onClose, items, onSave }: EditPrefe
             </div>
           )}
           <div className="flex flex-wrap gap-2">
-            {PREFERENCE_TAGS.filter((tag) => !selected.includes(tag.label)).map(({ label, icon }) => (
+            {PREFERENCE_TAGS.filter((tag) => !selected.includes(tag.label)).map(({ label, icon: Icon }) => (
               <button
                 key={label}
                 type="button"
                 onClick={() => toggleItem(label)}
                 className={cn(
-                  "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
+                  "rounded-full border border-border-tag bg-transparent px-2.5 py-1 ui-caption normal-case text-text-secondary transition-all",
                   "hover:border-accent-light hover:text-text-primary",
                 )}
               >
                 <span className="inline-flex items-center gap-1">
-                  <span aria-hidden="true">{icon}</span>
+                  <Icon className="h-3.5 w-3.5 ui-icon" aria-hidden />
                   <span>{label}</span>
                 </span>
               </button>
@@ -283,11 +287,11 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
 
   return (
     <ModalWrapper isOpen={isOpen} onClose={onClose} title="Edit Dislikes" onSave={handleSave} showSaveButton={false}>
-      <div className="flex min-h-[60vh] flex-col">
-        <div className="flex-1 space-y-4 pb-2">
+      <div className="flex flex-col">
+        <div className="ui-stack pb-3">
           {selected.length > 0 && (
             <div>
-              <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-base">
+              <p className="mb-2 ui-label-soft text-accent-base">
                 Your Dislikes
               </p>
               <div className="flex flex-wrap gap-2">
@@ -296,10 +300,13 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
                     key={`selected-${tag}`}
                     type="button"
                     onClick={() => toggleItem(tag)}
-                    className="rounded-full border border-accent-base/40 bg-accent-soft px-3 py-1.5 text-[12px] font-semibold text-accent-base"
+                    className="rounded-full border border-accent-base/40 bg-accent-soft px-2.5 py-1 ui-caption font-medium normal-case text-accent-base"
                   >
                     <span className="inline-flex items-center gap-1">
-                      <span aria-hidden="true">{getDislikeIcon(tag)}</span>
+                      {(() => {
+                        const Icon = getDislikeIcon(tag);
+                        return <Icon className="h-3.5 w-3.5 ui-icon" aria-hidden />;
+                      })()}
                       <span>{tag}</span>
                     </span>
                   </button>
@@ -308,18 +315,18 @@ export function EditDislikedModal({ isOpen, onClose, items, onSave }: EditDislik
             </div>
           )}
           <div className="flex flex-wrap gap-2">
-            {DISLIKE_TAGS.filter((tag) => !selected.includes(tag.label)).map(({ label, icon }) => (
+            {DISLIKE_TAGS.filter((tag) => !selected.includes(tag.label)).map(({ label, icon: Icon }) => (
               <button
                 key={label}
                 type="button"
                 onClick={() => toggleItem(label)}
                 className={cn(
-                  "rounded-full border border-border-tag bg-transparent px-3 py-1.5 text-[12px] text-text-secondary transition-all",
+                  "rounded-full border border-border-tag bg-transparent px-2.5 py-1 ui-caption normal-case text-text-secondary transition-all",
                   "hover:border-accent-light hover:text-text-primary",
                 )}
               >
                 <span className="inline-flex items-center gap-1">
-                  <span aria-hidden="true">{icon}</span>
+                  <Icon className="h-3.5 w-3.5 ui-icon" aria-hidden />
                   <span>{label}</span>
                 </span>
               </button>
@@ -418,11 +425,11 @@ export function EditSettingsModal({ isOpen, onClose, numPeople, budget, difficul
       onSave={handleSave}
       showSaveButton={false}
     >
-      <div className="flex min-h-[60vh] flex-col">
-        <div className="flex-1 space-y-6 pb-2">
+      <div className="flex flex-col">
+        <div className="ui-stack-lg pb-3">
           {/* People */}
           <div>
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+            <p className="mb-3 ui-label-soft text-text-secondary">
               Number of People
             </p>
             <div className="flex items-center gap-4">
@@ -435,7 +442,7 @@ export function EditSettingsModal({ isOpen, onClose, numPeople, budget, difficul
               >
                 <MinusIcon />
               </Button>
-              <span className="min-w-[40px] text-center text-[20px] font-semibold text-text-primary">{localPeople}</span>
+              <span className="min-w-[40px] text-center ui-title-sm">{localPeople}</span>
               <Button
                 type="button"
                 size="icon"
@@ -450,7 +457,7 @@ export function EditSettingsModal({ isOpen, onClose, numPeople, budget, difficul
 
           {/* Budget */}
           <div>
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+            <p className="mb-3 ui-label-soft text-text-secondary">
               Weekly Budget
             </p>
             <div className="flex flex-wrap gap-2">
@@ -474,7 +481,7 @@ export function EditSettingsModal({ isOpen, onClose, numPeople, budget, difficul
 
           {/* Difficulty */}
           <div>
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+            <p className="mb-3 ui-label-soft text-text-secondary">
               Cooking Difficulty
             </p>
             <div className="flex gap-3">

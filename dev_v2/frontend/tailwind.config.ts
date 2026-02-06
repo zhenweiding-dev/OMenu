@@ -18,9 +18,9 @@ const config: Config = {
       },
       colors: {
         paper: {
-          base: "#FAF9F7",
-          muted: "#F5F4F1",
-          dark: "#F0EDE8",
+          base: "#FBFAF7",
+          muted: "#F6F4F1",
+          dark: "#F1EEE8",
         },
         card: {
           base: "#FFFFFF",
@@ -42,7 +42,7 @@ const config: Config = {
         success: "#6B9B76",
         error: "#C67B7B",
         border: {
-          subtle: "#EEEBE6",
+          subtle: "#EFEAE3",
           tag: "#D4D0C8",
           tagSelected: "#A68A64",
         },
@@ -66,9 +66,9 @@ const config: Config = {
         "3xl": "1.5rem",
       },
       boxShadow: {
-        card: "0 4px 20px rgba(0,0,0,0.06)",
-        soft: "0 2px 12px rgba(0,0,0,0.06)",
-        btn: "0 2px 8px rgba(0,0,0,0.06)",
+        card: "0 10px 28px rgba(0,0,0,0.045)",
+        soft: "0 6px 18px rgba(0,0,0,0.05)",
+        btn: "0 4px 14px rgba(0,0,0,0.05)",
       },
       spacing: {
         "18": "4.5rem",
