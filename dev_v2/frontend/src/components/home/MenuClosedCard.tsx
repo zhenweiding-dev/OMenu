@@ -19,15 +19,15 @@ function pickSurface(id: string) {
 
 function collectIngredientCategories(book: MenuBook) {
   const categories = new Set<IngredientCategory>();
-  Object.values(book.menus).forEach((day) => {
-    Object.values(day).forEach((meal) => {
-      meal.forEach((dish) => {
-        dish.ingredients.forEach((ingredient) => {
+  for (const day of Object.values(book.menus)) {
+    for (const meal of Object.values(day)) {
+      for (const dish of meal) {
+        for (const ingredient of dish.ingredients) {
           categories.add(ingredient.category);
-        });
-      });
-    });
-  });
+        }
+      }
+    }
+  }
   return categories;
 }
 
@@ -89,7 +89,7 @@ export function MenuClosedCard({ book, onSelect, onLongPress, isActive, badgeLab
     holdTimeoutRef.current = window.setTimeout(() => {
       ignoreNextClickRef.current = true;
       onLongPress(book);
-    }, 550);
+    }, LONG_PRESS_DURATION);
   };
 
   const handlePointerMove = (event: React.PointerEvent<HTMLButtonElement>) => {

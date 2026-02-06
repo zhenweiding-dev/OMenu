@@ -14,6 +14,21 @@
 
 ---
 
+## 2026-02-06 — v2.4 (AI 2.5-Step Stabilization)
+### Core Changes
+- 2.5 步 AI 生成策略稳定化（Outline → Structured Menu → Shopping List）
+- Step1 强化：无剩饭、主菜不重复、菜名唯一
+- Step2 强化：高质量/营养均衡/符合难度约束
+- pantry_staples / seasonings 后端纠偏增强
+- JSON 解析兜底（夹带文本可截取 JSON）
+- 生成流程字段纠偏（servings/difficulty/ingredients）
+
+### Dev & QA
+- 新增 AI 生成全链路日志脚本（`scripts/run_generation_trace.py`）
+- 后端 pytest 全绿；前端 lint/build 全绿
+
+---
+
 ## 2026-02-05 — v2.2 (Menu Book + UI System Cleanup)
 ### Core Changes
 - 统一术语：Menu Book / Menu / Meal / Dish

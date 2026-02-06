@@ -1,4 +1,4 @@
-import { ChefHat, CookingPot, Salad, Sandwich} from "lucide-react";
+import { CookingPot, Salad, Sandwich } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface StepWelcomeProps {

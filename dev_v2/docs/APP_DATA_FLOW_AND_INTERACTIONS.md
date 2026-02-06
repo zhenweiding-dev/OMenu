@@ -112,11 +112,13 @@ API：
 - 调用：`useMenuBook.createMenu(preferences)` → `POST /menu-books/generate`。
 - 后端采用 **2.5 步 AI**（稳定性优先）：
   1. **Step 1：AI 输出 `mealOutline + draftShoppingList`**  
-     - 目标：先锁定本周“买什么”，控制食材种类。  
+     - 目标：先锁定本周“买什么”，输出高质量 Outline 并控制食材种类。  
      - **动态上限**：基于餐次数 + 人数计算，**范围 12–36**。  
      - **pantry_staples / seasonings 不计入上限**，但必须分类正确。  
+     - **No leftovers**：不使用剩饭逻辑，主菜不重复，菜名唯一。  
   2. **Step 2：AI 输出结构化菜谱**  
      - 必须遵循 Step 1 的清单；允许 pantry_staples / seasonings。  
+     - 重点：高质量、营养均衡、风味多样，符合用户 **difficulty** 约束。  
   3. **Step 3：Shopping List**  
      - 仍由 AI 生成，但 **后端做强纠偏**（分类映射 + 单位修正）。  
 - 结果：写入 `pendingResult`（MenuBook + 空 shoppingList），进入 Review。

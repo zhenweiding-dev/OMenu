@@ -132,7 +132,7 @@
 - `Menu` 按早餐/午餐/晚餐分组
 - `Dish` 包含 `source: "ai" | "manual"`
 
-来源：`dev_v2/backend/app/models/schemas.py`
+来源：`dev_v2/backend/app/models/menu.py` / `dev_v2/backend/app/models/dish.py` / `dev_v2/backend/app/models/user.py`
 
 ## 3. 前后端字段映射（关键字段）
 
@@ -155,6 +155,8 @@
    - **仅在创建和修改（AI 交互）时触发**。
    - 手动增删改菜不触发清单重算。
    - 生成清单时仅使用 `source === "ai"` 的菜。
+4. **分类纠偏**：
+   - `pantry_staples` / `seasonings` 由后端基于关键词表强制纠偏，避免 AI 误判。
 
 ## 5. 当前字段一览（精简版）
 

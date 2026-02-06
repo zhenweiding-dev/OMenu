@@ -28,7 +28,7 @@
 
 ## 运行环境
 - **Node**: 18+
-- **Python**: 3.10+
+- **Python**: 3.10+（本地测试 3.13）
 
 ## 环境变量
 **Backend (`dev_v2/backend/.env`)**

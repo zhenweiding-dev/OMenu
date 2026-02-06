@@ -1,5 +1,7 @@
 # OMenu UI 设计系统规范与迭代计划（v2）
 
+**Last Updated**: 2026-02-06
+
 > 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
 
 > 本文整合了「设计现状」「规范化方案」「组件样例」与「迭代计划」。HTML 视觉样例请查看 `UI_DESIGN_SYSTEM_PLAN.html`。
