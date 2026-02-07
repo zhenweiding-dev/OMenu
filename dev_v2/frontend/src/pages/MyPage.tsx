@@ -175,7 +175,7 @@ export function MyPage() {
             variant="ghost"
             size="sm"
             onClick={handleSignOut}
-            className="h-9 w-full justify-start gap-2 text-error hover:bg-error/5 hover:text-error"
+            className="h-9 w-full justify-start gap-2 text-ink-light hover:bg-accent-base/5 hover:text-accent-base"
           >
             <LogOut className="h-4 w-4" />
             Sign out
