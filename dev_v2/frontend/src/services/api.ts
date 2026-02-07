@@ -1,6 +1,6 @@
-import type { MenuBook, ShoppingList, UserPreferences, UserState, WeekMenus } from "@/types";
+import { supabase } from "@/lib/supabase";
+import type { MenuBook, ShoppingList, UserPreferences, WeekMenus } from "@/types";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 const GENERATION_TIMEOUT = 180_000;
 
 function toErrorMessage(payload: unknown, fallback: string) {
@@ -35,6 +35,15 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+async function getAuthHeaders(): Promise<Record<string, string>> {
+  const { data: { session } } = await supabase.auth.getSession();
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (session?.access_token) {
+    headers["Authorization"] = `Bearer ${session.access_token}`;
+  }
+  return headers;
+}
+
 async function fetchWithTimeout(url: string, options: RequestInit, timeout: number) {
   const controller = new AbortController();
   const timeoutId = window.setTimeout(() => controller.abort(), timeout);
@@ -50,7 +59,7 @@ async function fetchWithTimeout(url: string, options: RequestInit, timeout: numb
       throw new ApiTimeoutError();
     }
     if (error instanceof TypeError) {
-      throw new Error(`Unable to reach backend at ${API_BASE_URL}. Check that the server is running and VITE_API_BASE_URL is correct.`);
+      throw new Error("Unable to reach the server. Please check your connection.");
     }
     throw error;
   } finally {
@@ -58,17 +67,13 @@ async function fetchWithTimeout(url: string, options: RequestInit, timeout: numb
   }
 }
 
-export async function healthCheck() {
-  const response = await fetch(`${API_BASE_URL}/api/health`);
-  return handleResponse<{ status: string; version: string }>(response);
-}
-
 export async function generateMenuBook(preferences: UserPreferences) {
+  const headers = await getAuthHeaders();
   const response = await fetchWithTimeout(
-    `${API_BASE_URL}/api/menu-books/generate`,
+    "/api/generate-menu",
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify(preferences),
     },
     GENERATION_TIMEOUT,
@@ -77,12 +82,13 @@ export async function generateMenuBook(preferences: UserPreferences) {
 }
 
 export async function modifyMenuBook(bookId: string, modification: string, currentMenuBook: MenuBook) {
+  const headers = await getAuthHeaders();
   const response = await fetchWithTimeout(
-    `${API_BASE_URL}/api/menu-books/${bookId}/modify`,
+    "/api/modify-menu",
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ modification, currentMenuBook }),
+      headers,
+      body: JSON.stringify({ bookId, modification, currentMenuBook }),
     },
     GENERATION_TIMEOUT,
   );
@@ -90,28 +96,15 @@ export async function modifyMenuBook(bookId: string, modification: string, curre
 }
 
 export async function generateShoppingList(menuBookId: string, menus: WeekMenus) {
+  const headers = await getAuthHeaders();
   const response = await fetchWithTimeout(
-    `${API_BASE_URL}/api/shopping-lists/generate`,
+    "/api/generate-shopping-list",
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ menuBookId, menus }),
     },
     GENERATION_TIMEOUT,
   );
   return handleResponse<ShoppingList>(response);
-}
-
-export async function fetchUserState() {
-  const response = await fetch(`${API_BASE_URL}/api/user-state`);
-  return handleResponse<UserState>(response);
-}
-
-export async function saveUserState(state: UserState) {
-  const response = await fetch(`${API_BASE_URL}/api/user-state`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(state),
-  });
-  return handleResponse<UserState>(response);
 }

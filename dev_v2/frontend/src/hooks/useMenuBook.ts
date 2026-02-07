@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { generateMenuBook, generateShoppingList, modifyMenuBook } from "@/services/api";
+import { upsertMenuBook, updateMenuBookField } from "@/services/supabase-data";
 import { useAppStore } from "@/stores/useAppStore";
 import type { MenuBook, UserPreferences, WeekMenus } from "@/types";
 
@@ -54,6 +55,8 @@ export function useMenuBook() {
       clearError();
       try {
         const menuBook = await generateMenuBook(preferences);
+        // Persist to Supabase immediately
+        upsertMenuBook(menuBook).catch(() => {});
         return menuBook;
       } catch (error) {
         setError(error instanceof Error ? error.message : "Failed to generate menu");
@@ -81,6 +84,8 @@ export function useMenuBook() {
         if (hasBook) {
           updateMenuBook(menuBook.id, merged);
         }
+        // Persist to Supabase immediately
+        upsertMenuBook(merged).catch(() => {});
         return merged;
       } catch (error) {
         setError(error instanceof Error ? error.message : "Failed to modify menu");
@@ -103,6 +108,8 @@ export function useMenuBook() {
         if (hasBook) {
           updateMenuBook(menuBook.id, { shoppingList: list });
         }
+        // Persist shopping list to Supabase immediately
+        updateMenuBookField(menuBook.id, { shopping_list: list }).catch(() => {});
         return list;
       } catch (error) {
         setError(error instanceof Error ? error.message : "Failed to generate shopping list");

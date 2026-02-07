@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Sparkles } from "lucide-react";
+import { LogOut, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { PageContainer } from "@/components/layout/PageContainer";
 import { useDraftStore } from "@/stores/useDraftStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { formatCurrency } from "@/utils/helpers";
 import { DISLIKE_TAGS, PREFERENCE_TAGS } from "@/utils/constants";
 import type { UserPreferences, Difficulty } from "@/types";
@@ -19,6 +21,14 @@ const getTagIcon = (label: string) => TAG_ICON_MAP.get(label) ?? Sparkles;
 
 export function MyPage() {
   const [activeModal, setActiveModal] = useState<EditModalType>(null);
+  const user = useAuthStore((s) => s.user);
+  const signOut = useAuthStore((s) => s.signOut);
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/login", { replace: true });
+  };
 
   const draftPreferences = useDraftStore((state) => {
     const { specificPreferences, specificDisliked, numPeople, budget, difficulty, cookSchedule } = state;
@@ -148,6 +158,28 @@ export function MyPage() {
               {preferences.difficulty.charAt(0).toUpperCase() + preferences.difficulty.slice(1)}
             </span>
           </div>
+        </div>
+      </section>
+
+      {/* Account Section */}
+      <section className="overflow-hidden rounded-xl border border-border-subtle bg-card-base">
+        <div className="flex flex-col gap-3 px-4 py-4">
+          {user?.email && (
+            <div className="flex items-center justify-between">
+              <span className="ui-body">Account</span>
+              <span className="ui-caption text-text-tertiary">{user.email}</span>
+            </div>
+          )}
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handleSignOut}
+            className="h-9 w-full justify-start gap-2 text-error hover:bg-error/5 hover:text-error"
+          >
+            <LogOut className="h-4 w-4" />
+            Sign out
+          </Button>
         </div>
       </section>
 

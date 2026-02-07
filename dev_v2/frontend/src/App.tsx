@@ -9,12 +9,18 @@ import { CreatePlanPage } from "@/pages/CreatePlanPage";
 import { ShoppingPage } from "@/pages/ShoppingPage";
 import { MyPage } from "@/pages/MyPage";
 import { RecipeDetailModal } from "@/components/home/RecipeDetailModal";
+import { AuthGuard } from "@/components/auth/AuthGuard";
+import { LoginPage } from "@/components/auth/LoginPage";
+import { SignUpPage } from "@/components/auth/SignUpPage";
+import { AuthCallback } from "@/components/auth/AuthCallback";
+import { ForgotPasswordPage } from "@/components/auth/ForgotPasswordPage";
 import { useAppStore } from "@/stores/useAppStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useDraftStore } from "@/stores/useDraftStore";
-import { fetchUserState, saveUserState } from "@/services/api";
+import { fetchProfile, fetchMenuBooks, updateProfile, upsertMenuBook, deleteMenuBook as deleteMenuBookRemote } from "@/services/supabase-data";
 import { useShallow } from "zustand/react/shallow";
 
-function App() {
+function AppShell() {
   const menuBooks = useAppStore((state) => state.menuBooks);
   const setMenuBooks = useAppStore((state) => state.setMenuBooks);
   const currentWeekId = useAppStore((state) => state.currentWeekId);
@@ -27,9 +33,10 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const syncTimeoutRef = useRef<number | null>(null);
+  const profileSyncRef = useRef<number | null>(null);
   const [remoteStateReady, setRemoteStateReady] = useState(false);
   const [hasVisitedShopping, setHasVisitedShopping] = useState(false);
+  const prevMenuBooksRef = useRef<string>("");
 
   const setDraftPreferences = useDraftStore((state) => state.setPreferences);
   const pendingResult = useDraftStore((state) => state.pendingResult);
@@ -181,27 +188,33 @@ function App() {
     return { ...step, status };
   });
 
+  // Load profile + menu books from Supabase on mount
   useEffect(() => {
     let isMounted = true;
-    const loadRemoteState = async () => {
+    const loadData = async () => {
       try {
-        const remoteState = await fetchUserState();
+        const [profile, books] = await Promise.all([
+          fetchProfile(),
+          fetchMenuBooks(),
+        ]);
         if (!isMounted) return;
-        const hasMenuBooks = (remoteState.menuBooks ?? []).length > 0;
-        if (hasMenuBooks) {
-          setMenuBooks(remoteState.menuBooks, remoteState.currentWeekId ?? null);
+
+        if (books.length > 0) {
+          setMenuBooks(books, profile?.current_week_id ?? null);
         }
-        if (typeof remoteState.currentDayIndex === "number") {
-          setCurrentDayIndex(remoteState.currentDayIndex);
-        }
-        if (typeof remoteState.isMenuOpen === "boolean") {
-          setIsMenuOpen(remoteState.isMenuOpen);
-        }
-        if (remoteState.preferences) {
-          setDraftPreferences(remoteState.preferences);
+        if (profile) {
+          if (typeof profile.current_day_index === "number") {
+            setCurrentDayIndex(profile.current_day_index);
+          }
+          if (typeof profile.is_menu_open === "boolean") {
+            setIsMenuOpen(profile.is_menu_open);
+          }
+          if (profile.preferences) {
+            setDraftPreferences(profile.preferences);
+          }
         }
       } catch {
-        // Backend unavailable - app will work with empty state
+        // Supabase unavailable — app works with empty state
       } finally {
         if (isMounted) {
           setRemoteStateReady(true);
@@ -209,7 +222,7 @@ function App() {
       }
     };
 
-    loadRemoteState();
+    loadData();
     return () => {
       isMounted = false;
     };
@@ -221,28 +234,50 @@ function App() {
     }
   }, [isOnShopping]);
 
+  // Debounced profile sync to Supabase
   useEffect(() => {
     if (!remoteStateReady) return;
-    if (syncTimeoutRef.current) {
-      window.clearTimeout(syncTimeoutRef.current);
+    if (profileSyncRef.current) {
+      window.clearTimeout(profileSyncRef.current);
     }
-    syncTimeoutRef.current = window.setTimeout(() => {
-      saveUserState({
-        preferences: draftPreferences,
-        menuBooks,
-        currentWeekId,
-        currentDayIndex,
-        isMenuOpen,
+    profileSyncRef.current = window.setTimeout(() => {
+      updateProfile({
+        preferences: draftPreferences as never,
+        current_week_id: currentWeekId,
+        current_day_index: currentDayIndex,
+        is_menu_open: isMenuOpen,
       }).catch(() => {});
     }, 600);
 
     return () => {
-      if (syncTimeoutRef.current) {
-        window.clearTimeout(syncTimeoutRef.current);
+      if (profileSyncRef.current) {
+        window.clearTimeout(profileSyncRef.current);
       }
     };
-  }, [currentDayIndex, currentWeekId, draftPreferences, isMenuOpen, menuBooks, remoteStateReady]);
+  }, [currentDayIndex, currentWeekId, draftPreferences, isMenuOpen, remoteStateReady]);
 
+  // Sync menu book changes to Supabase
+  useEffect(() => {
+    if (!remoteStateReady) return;
+    const currentSnapshot = JSON.stringify(menuBooks.map((b) => ({ id: b.id, s: b.status, sl: b.shoppingList?.items?.length ?? 0, m: Object.keys(b.menus).length })));
+    if (prevMenuBooksRef.current === currentSnapshot) return;
+    const prevIds = new Set(
+      prevMenuBooksRef.current ? JSON.parse(prevMenuBooksRef.current).map((b: { id: string }) => b.id) : [],
+    );
+    prevMenuBooksRef.current = currentSnapshot;
+
+    // Upsert new/changed books
+    for (const book of menuBooks) {
+      upsertMenuBook(book).catch(() => {});
+    }
+    // Delete removed books
+    const currentIds = new Set(menuBooks.map((b) => b.id));
+    for (const prevId of prevIds) {
+      if (!currentIds.has(prevId)) {
+        deleteMenuBookRemote(prevId).catch(() => {});
+      }
+    }
+  }, [menuBooks, remoteStateReady]);
 
   useEffect(() => {
     if (scrollContainerRef.current) {
@@ -338,6 +373,31 @@ function App() {
       </div>
       <RecipeDetailModal />
     </div>
+  );
+}
+
+function App() {
+  const initialize = useAuthStore((s) => s.initialize);
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
+
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route
+        path="/*"
+        element={
+          <AuthGuard>
+            <AppShell />
+          </AuthGuard>
+        }
+      />
+    </Routes>
   );
 }
 
