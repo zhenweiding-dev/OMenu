@@ -261,7 +261,7 @@ function AppShell() {
     if (!remoteStateReady) return;
     const currentSnapshot = JSON.stringify(menuBooks.map((b) => ({ id: b.id, s: b.status, sl: b.shoppingList?.items?.length ?? 0, m: Object.keys(b.menus).length })));
     if (prevMenuBooksRef.current === currentSnapshot) return;
-    const prevIds = new Set(
+    const prevIds = new Set<string>(
       prevMenuBooksRef.current ? JSON.parse(prevMenuBooksRef.current).map((b: { id: string }) => b.id) : [],
     );
     prevMenuBooksRef.current = currentSnapshot;
