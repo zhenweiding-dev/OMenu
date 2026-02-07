@@ -1,7 +1,11 @@
 """POST /api/generate-shopping-list — Generate a shopping list from menus."""
 
 import json
+import os
+import sys
 from http.server import BaseHTTPRequestHandler
+
+sys.path.insert(0, os.path.dirname(__file__))
 
 from _shared.auth import verify_token
 from _shared.exceptions import AppException
