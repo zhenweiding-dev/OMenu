@@ -101,8 +101,8 @@ export function StepShoppingLoading({ menuBook, onGenerated }: StepShoppingLoadi
   };
 
   return (
-    <div className="flex min-h-[70vh] flex-col items-center justify-center px-5 py-20 text-center">
-      <div className="relative mb-8 flex h-[155px] w-[155px] items-center justify-center rounded-full bg-paper-muted animate-chef">
+    <div className="flex min-h-full flex-col items-center justify-center px-5 py-12 text-center">
+      <div className="relative mb-8 flex h-[155px] w-[155px] shrink-0 items-center justify-center rounded-full bg-paper-muted animate-chef">
         <ShoppingCart className="h-14 w-14 text-accent-base ui-icon-strong" aria-hidden />
         {(() => {
           const items = [
