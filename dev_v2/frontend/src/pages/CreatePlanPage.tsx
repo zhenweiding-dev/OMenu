@@ -394,7 +394,7 @@ export function CreatePlanPage() {
   if (showResumePrompt) {
     const savedStepLabel = STEP_LABELS[draft.currentStep] ?? `Step ${draft.currentStep}`;
     return (
-      <div className="relative flex h-full flex-1 flex-col bg-paper-base">
+      <div className="relative flex min-h-full flex-1 flex-col bg-paper-base">
         <div className="px-5 pt-14 pb-6">
           <h1 className="ui-title">
             Continue where you left off?
@@ -442,7 +442,7 @@ export function CreatePlanPage() {
 
   if (isFullScreenStep) {
     return (
-      <div className="relative flex h-full flex-1 flex-col bg-paper-base">
+      <div className="relative flex min-h-full flex-1 flex-col bg-paper-base">
         {draft.currentStep === steps.welcome && (
           <ProgressDots currentStep={draft.currentStep} />
         )}
@@ -453,7 +453,7 @@ export function CreatePlanPage() {
   }
 
   return (
-    <div className="relative flex h-full flex-1 flex-col bg-paper-base">
+    <div className="relative flex min-h-full flex-1 flex-col bg-paper-base">
       <ProgressDots currentStep={draft.currentStep} />
       {content}
       {shouldShowError && <p className="px-5 pb-4 text-center ui-caption text-error">{error}</p>}

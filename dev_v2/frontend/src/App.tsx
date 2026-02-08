@@ -289,7 +289,7 @@ function AppShell() {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen w-full bg-paper-base lg:justify-center lg:bg-[#E8E4DF] lg:px-4 lg:py-10">
+    <div className="flex min-h-[var(--app-vh)] w-full bg-paper-base lg:justify-center lg:bg-[#E8E4DF] lg:px-4 lg:py-10">
       <div className="flex w-full max-w-none flex-col items-stretch gap-0 overflow-hidden lg:max-w-6xl lg:flex-row lg:items-start lg:gap-10">
         <aside className="hidden h-fit w-full max-w-xs rounded-[2rem] border border-border-subtle/80 bg-white/70 p-6 text-text-secondary shadow-[0_12px_30px_-12px_rgba(0,0,0,0.18)] backdrop-blur lg:block">
           <p className="ui-label-soft text-accent-base">Recommended Path</p>
@@ -356,19 +356,23 @@ function AppShell() {
 
         <div className="relative w-full lg:max-w-[380px]">
           <div className="flex w-full flex-1 flex-col overflow-hidden bg-paper-base lg:mx-auto lg:aspect-[375/812] lg:max-h-[calc(100vh-80px)] lg:rounded-[2.5rem] lg:border-[8px] lg:border-[#1A1A1A] lg:bg-[#1A1A1A] lg:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]">
-            <div id="phone-screen" className="relative flex h-[100dvh] flex-col overflow-hidden bg-paper-base lg:h-full lg:rounded-[2rem]">
+            <div id="phone-screen" className="relative flex h-[var(--app-vh)] flex-col overflow-hidden bg-paper-base lg:h-full lg:rounded-[2rem]">
               <BackgroundFoodIcons />
               <div
                 ref={scrollContainerRef}
-                className="relative z-10 flex-1 min-h-0 overflow-y-auto pb-24 touch-pan-y overscroll-y-contain scroll-touch lg:pb-0"
+                className="relative z-10 flex flex-1 min-h-0 flex-col overflow-y-auto pb-0 touch-pan-y overscroll-y-contain scroll-touch"
               >
-                <Header />
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/create" element={<CreatePlanPage />} />
-                  <Route path="/shopping" element={<ShoppingPage />} />
-                  <Route path="/me" element={<MyPage />} />
-                </Routes>
+                <div className="flex min-h-full flex-col">
+                  <Header />
+                  <div className="flex-1 min-h-0">
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/create" element={<CreatePlanPage />} />
+                      <Route path="/shopping" element={<ShoppingPage />} />
+                      <Route path="/me" element={<MyPage />} />
+                    </Routes>
+                  </div>
+                </div>
               </div>
               <div className="relative z-10">
                 <BottomNav withinFrame />
@@ -388,6 +392,28 @@ function App() {
   useEffect(() => {
     initialize();
   }, [initialize]);
+
+  useEffect(() => {
+    const setAppHeight = () => {
+      const height = window.visualViewport?.height ?? window.innerHeight;
+      document.documentElement.style.setProperty("--app-vh", `${height}px`);
+    };
+
+    setAppHeight();
+    window.addEventListener("resize", setAppHeight);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", setAppHeight);
+      window.visualViewport.addEventListener("scroll", setAppHeight);
+    }
+
+    return () => {
+      window.removeEventListener("resize", setAppHeight);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", setAppHeight);
+        window.visualViewport.removeEventListener("scroll", setAppHeight);
+      }
+    };
+  }, []);
 
   return (
     <Routes>

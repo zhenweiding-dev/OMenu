@@ -69,9 +69,9 @@ export function StepLoading({
   }, [attempt, maxRetries, status]);
 
   return (
-    <div className="flex min-h-[70vh] flex-col items-center justify-center px-5 py-20 text-center">
+    <div className="flex min-h-full flex-col items-center justify-center px-5 py-12 text-center">
       {/* Animated chef icon */}
-      <div className="relative mb-8 flex h-[155px] w-[155px] items-center justify-center rounded-full bg-paper-muted animate-chef">
+      <div className="relative mb-8 flex h-[155px] w-[155px] shrink-0 items-center justify-center rounded-full bg-paper-muted animate-chef">
         <ChefHat className="h-14 w-14 text-accent-base ui-icon-strong" aria-hidden />
         <Pizza className="absolute -left-1 top-6 h-7 w-7 text-accent-base/70 animate-ingredient-a ui-icon-strong" aria-hidden />
         <Soup className="absolute left-1 bottom-6 h-6 w-6 text-accent-base/70 animate-ingredient-b ui-icon-strong" aria-hidden />
