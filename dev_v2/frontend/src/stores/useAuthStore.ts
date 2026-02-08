@@ -10,6 +10,7 @@ interface AuthState {
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signUpWithEmail: (email: string, password: string, displayName?: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInAnonymously: () => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
 }
@@ -47,6 +48,11 @@ export const useAuthStore = create<AuthState>()((set) => ({
       provider: "google",
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
+    if (error) throw error;
+  },
+
+  signInAnonymously: async () => {
+    const { error } = await supabase.auth.signInAnonymously();
     if (error) throw error;
   },
 
