@@ -29,7 +29,7 @@ export function MyPage() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/login", { replace: true });
+    navigate("/welcome", { replace: true });
   };
 
   const draftPreferences = useDraftStore((state) => {
