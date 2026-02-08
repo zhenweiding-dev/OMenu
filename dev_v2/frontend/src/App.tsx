@@ -14,6 +14,7 @@ import { LoginPage } from "@/components/auth/LoginPage";
 import { SignUpPage } from "@/components/auth/SignUpPage";
 import { AuthCallback } from "@/components/auth/AuthCallback";
 import { ForgotPasswordPage } from "@/components/auth/ForgotPasswordPage";
+import { WelcomePage } from "@/components/auth/WelcomePage";
 import { useAppStore } from "@/stores/useAppStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useDraftStore } from "@/stores/useDraftStore";
@@ -417,6 +418,7 @@ function App() {
 
   return (
     <Routes>
+      <Route path="/welcome" element={<WelcomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
