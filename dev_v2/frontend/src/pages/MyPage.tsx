@@ -9,6 +9,7 @@ import { DISLIKE_TAGS, PREFERENCE_TAGS } from "@/utils/constants";
 import type { UserPreferences, Difficulty } from "@/types";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import {
   EditPreferredModal,
   EditDislikedModal,
@@ -21,6 +22,7 @@ const getTagIcon = (label: string) => TAG_ICON_MAP.get(label) ?? Sparkles;
 
 export function MyPage() {
   const [activeModal, setActiveModal] = useState<EditModalType>(null);
+  const [isCreditsOpen, setIsCreditsOpen] = useState(false);
   const user = useAuthStore((s) => s.user);
   const signOut = useAuthStore((s) => s.signOut);
   const navigate = useNavigate();
@@ -210,6 +212,46 @@ export function MyPage() {
           onSave={handleSaveSettings}
         />
       )}
+
+      <div className="pt-2 text-center">
+        <button
+          type="button"
+          onClick={() => setIsCreditsOpen(true)}
+          className="ui-caption text-text-tertiary hover:text-text-secondary"
+        >
+          © OMenu
+        </button>
+        <p className="mt-1 ui-caption text-text-tertiary">
+          Gemini 3 · Lucide
+        </p>
+      </div>
+
+      <Modal
+        open={isCreditsOpen}
+        title="Credits"
+        description="Attribution for third-party services."
+        onClose={() => setIsCreditsOpen(false)}
+        className="max-w-sm"
+      >
+        <div className="space-y-4">
+          <div className="rounded-2xl border border-border-subtle bg-paper-muted/60 px-4 py-3">
+            <p className="ui-body-strong">Gemini 3 API</p>
+            <p className="ui-caption">
+              Menu planning and shopping list generation are powered by Gemini 3.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-border-subtle bg-paper-muted/60 px-4 py-3">
+            <p className="ui-body-strong">Lucide</p>
+            <p className="ui-caption">
+              Interface icons are provided by the Lucide open-source icon set.
+            </p>
+          </div>
+          <p className="ui-caption text-text-tertiary">
+            © {new Date().getFullYear()} OMenu. All rights reserved. Third-party trademarks
+            are owned by their respective owners.
+          </p>
+        </div>
+      </Modal>
     </PageContainer>
   );
 }

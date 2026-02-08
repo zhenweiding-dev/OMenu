@@ -78,6 +78,10 @@
   .ui-icon-subtle {
     stroke-width: 1.4 !important;
   }
+
+  .scroll-touch {
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 @layer base {

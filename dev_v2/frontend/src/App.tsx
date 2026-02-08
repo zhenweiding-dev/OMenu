@@ -85,9 +85,12 @@ function AppShell() {
   let activeIndex = 0;
   if (!hasNextWeekBook && !hasPendingNextWeek) {
     activeIndex = 0;
+  } else if (isShoppingLoadingStep) {
+    // Prioritize shopping list generation state over pending review.
+    activeIndex = 2;
   } else if (hasPendingNextWeek || isReviewStep) {
     activeIndex = 1;
-  } else if (isShoppingLoadingStep || (!hasShoppingList && hasNextWeekBook)) {
+  } else if (!hasShoppingList && hasNextWeekBook) {
     activeIndex = 2;
   } else if (hasShoppingList && isOnShopping) {
     activeIndex = 3;
@@ -286,9 +289,9 @@ function AppShell() {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen w-full justify-center bg-[#E8E4DF] px-4 py-10">
-      <div className="flex w-full max-w-6xl flex-col items-center gap-10 overflow-hidden lg:flex-row lg:items-start">
-        <aside className="h-fit w-full max-w-xs rounded-[2rem] border border-border-subtle/80 bg-white/70 p-6 text-text-secondary shadow-[0_12px_30px_-12px_rgba(0,0,0,0.18)] backdrop-blur">
+    <div className="flex min-h-screen w-full bg-paper-base lg:justify-center lg:bg-[#E8E4DF] lg:px-4 lg:py-10">
+      <div className="flex w-full max-w-none flex-col items-stretch gap-0 overflow-hidden lg:max-w-6xl lg:flex-row lg:items-start lg:gap-10">
+        <aside className="hidden h-fit w-full max-w-xs rounded-[2rem] border border-border-subtle/80 bg-white/70 p-6 text-text-secondary shadow-[0_12px_30px_-12px_rgba(0,0,0,0.18)] backdrop-blur lg:block">
           <p className="ui-label-soft text-accent-base">Recommended Path</p>
           <p className="mt-2 ui-caption text-text-tertiary">
             Follow the steps below to finish a weekly menu and shopping list.
@@ -309,7 +312,7 @@ function AppShell() {
                   <div className="flex items-start gap-3">
                     <span
                       className={[
-                        "mt-1 inline-flex h-2.5 w-2.5 rounded-full",
+                        "mt-1 inline-flex h-3.5 w-1.5 flex-shrink-0 rounded-full",
                         step.status === "done"
                           ? "bg-accent-base"
                           : step.status === "active"
@@ -351,11 +354,14 @@ function AppShell() {
           </ol>
         </aside>
 
-        <div className="relative w-full max-w-[380px]">
-          <div className="mx-auto flex aspect-[375/812] w-full max-h-[calc(100vh-80px)] flex-col overflow-hidden rounded-[2.5rem] border-[8px] border-[#1A1A1A] bg-[#1A1A1A] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]">
-            <div id="phone-screen" className="relative flex h-full flex-col overflow-hidden rounded-[2rem] bg-paper-base">
+        <div className="relative w-full lg:max-w-[380px]">
+          <div className="flex w-full flex-1 flex-col overflow-hidden bg-paper-base lg:mx-auto lg:aspect-[375/812] lg:max-h-[calc(100vh-80px)] lg:rounded-[2.5rem] lg:border-[8px] lg:border-[#1A1A1A] lg:bg-[#1A1A1A] lg:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]">
+            <div id="phone-screen" className="relative flex h-[100dvh] flex-col overflow-hidden bg-paper-base lg:h-full lg:rounded-[2rem]">
               <BackgroundFoodIcons />
-              <div ref={scrollContainerRef} className="relative z-10 flex-1 overflow-y-auto">
+              <div
+                ref={scrollContainerRef}
+                className="relative z-10 flex-1 min-h-0 overflow-y-auto pb-24 touch-pan-y overscroll-y-contain scroll-touch lg:pb-0"
+              >
                 <Header />
                 <Routes>
                   <Route path="/" element={<HomePage />} />

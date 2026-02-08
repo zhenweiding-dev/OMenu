@@ -1,6 +1,6 @@
 # OMenu UI 设计系统规范与迭代计划（v2）
 
-**Last Updated**: 2026-02-06
+**Last Updated**: 2026-02-08
 
 > 备注：本文术语已统一为 Menu Book（原 Meal Plan），字段细节以 `dev_v2/docs/FIELD_SCHEMA_OVERVIEW.md` 与现有代码为准。
 
@@ -88,6 +88,13 @@
 ### Profile
 - 与 Create 选项风格一致
 - 选中 tag 样式保持一致
+- 底部 Credits 入口使用轻量文案 + 弹窗说明
+
+### Mobile Layout（全屏模式）
+- **推荐路径**：移动端不显示，仅在桌面端展示
+- **手机壳**：移动端取消边框/圆角/黑色外壳
+- **BottomNav**：移动端固定在底部，内容区预留底部空间
+- **WeekDateBar**：日期条采用竖向胶囊卡片（上下圆角）
 
 ## 5. 交互规范
 - **点击空白关闭**：所有弹窗

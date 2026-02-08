@@ -29,6 +29,25 @@
 
 ---
 
+## 2026-02-08 — v2.5 (Mobile Fullscreen + UI Polish)
+### Core Changes
+- 移动端全屏渲染：隐藏推荐路径与手机壳，内容占满视口
+- BottomNav 移动端固定，内容区增加底部留白
+- Menu 空态按钮改为横排双按钮，默认强调 Next week
+- WeekDateBar 调整为竖向胶囊卡片
+- 推荐路径进度修复（Shopping Loading 高亮）+ 指示点统一为竖向胶囊
+
+### UX & Content
+- Shopping 标题区新增 AI 提示语
+- 菜谱指令无序号时按句号拆分步骤
+- Loading 页面小图标加粗，匹配主图标视觉权重
+- Profile 新增 Credits 弹窗（纯英文）
+
+### Docs Updates
+- 更新设计系统文档：移动端布局、导航与日期条样式
+
+---
+
 ## 2026-02-05 — v2.2 (Menu Book + UI System Cleanup)
 ### Core Changes
 - 统一术语：Menu Book / Menu / Meal / Dish

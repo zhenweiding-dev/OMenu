@@ -88,10 +88,17 @@ export function Header() {
     return (
       <header ref={headerRef} className="sticky top-0 z-40 bg-paper-base">
         <div className="px-5 pb-4 pt-14">
-          <div className="flex items-start justify-between">
-            <div>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
               <p className="ui-label-soft text-accent-base">{title}</p>
-              {subtitle && <p className="mt-1 ui-caption">{subtitle}</p>}
+              {subtitle && (
+                <>
+                  <p className="mt-1 ui-caption">{subtitle}</p>
+                  <p className="mt-1 ui-caption text-text-tertiary">
+                    AI lists may be inaccurate or incomplete.
+                  </p>
+                </>
+              )}
             </div>
             {/* Add button per spec */}
             <Button

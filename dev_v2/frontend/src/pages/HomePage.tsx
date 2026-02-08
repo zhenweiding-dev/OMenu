@@ -298,31 +298,25 @@ export function HomePage() {
         <p className="mb-6 ui-subtitle">
           Tell us your preferences and let magic happen.
         </p>
-        <div className="flex w-full max-w-[260px] flex-col gap-3">
-          <Button
-            onClick={() => {
-              if (nextWeekBook) {
-                handleViewNextWeek();
-              } else {
-                handlePlanWeek(currentWeekStart);
-              }
-            }}
-            size="lg"
-            className="w-full"
-          >
-            {nextWeekBook ? "View next week" : "Plan this week"}
-          </Button>
+        <div className="flex w-full max-w-[320px] flex-row gap-3">
           <Button
             variant="outline"
+            onClick={() => handlePlanWeek(currentWeekStart)}
+            size="lg"
+            className="flex-1"
+          >
+            Plan this week
+          </Button>
+          <Button
             onClick={() =>
               nextWeekBook
-                ? handlePlanWeek(currentWeekStart)
+                ? handleViewNextWeek()
                 : handlePlanWeek(nextWeekStart)
             }
             size="lg"
-            className="w-full"
+            className="flex-1"
           >
-            {nextWeekBook ? "Plan this week" : "Plan next week"}
+            Plan next week
           </Button>
         </div>
         {nextWeekBook && (

@@ -94,11 +94,21 @@ function parseInstructionSteps(raw: string) {
   const stripLeadingMarker = (text: string) =>
     text.replace(/^\s*(?:step\s*)?\d{1,2}[).:-]?\s*/i, "").trim();
 
+  const splitBySentences = (text: string) => {
+    const pattern = /[^.!?。！？]+[.!?。！？]+|[^.!?。！？]+$/g;
+    const matches = text.match(pattern);
+    if (!matches) return [];
+    return matches.map((segment) => segment.trim()).filter(Boolean);
+  };
+
   const splitByNumberedMarkers = (text: string) => {
     const pattern = /(?:^|\s)(?:step\s*)?\d{1,2}[).:-]\s*/gi;
     const matches = [...text.matchAll(pattern)];
     if (matches.length === 0) {
-      return [stripLeadingMarker(text)];
+      const stripped = stripLeadingMarker(text);
+      if (!stripped) return [];
+      const sentenceSteps = splitBySentences(stripped);
+      return sentenceSteps.length > 0 ? sentenceSteps : [stripped];
     }
     const segments: string[] = [];
     matches.forEach((match, index) => {

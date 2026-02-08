@@ -71,14 +71,14 @@ export function BottomNav({ withinFrame = false }: BottomNavProps) {
       className={cn(
         "border-t border-border-subtle bg-card-base",
         withinFrame
-          ? "relative z-10 rounded-b-[1.75rem]"
+          ? "fixed inset-x-0 bottom-0 z-50 lg:relative lg:z-10 lg:rounded-b-[1.75rem]"
           : "fixed inset-x-0 bottom-0 z-50",
       )}
     >
       <ul
         className={cn(
           "flex items-center justify-around",
-          withinFrame ? "px-5 pb-7 pt-2" : "px-6 pb-7 pt-2",
+          withinFrame ? "px-6 pb-7 pt-2 lg:px-5" : "px-6 pb-7 pt-2",
         )}
       >
         {navItems.map(({ to, label, Icon }) => (

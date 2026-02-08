@@ -1,7 +1,7 @@
 # OMenu 实施清单（当前阶段）
 
 **Version**: 4.0 (Menu Book 统一版)
-**Last Updated**: 2026-02-06
+**Last Updated**: 2026-02-08
 
 > 目标：记录当前完成度与下一步任务，避免旧 checklist 误导。
 
@@ -19,6 +19,9 @@
 - [x] pantry_staples / seasonings 分类纠偏（后端映射表）
 - [x] 生成流程健壮性修复（JSON 解析兜底 + 字段纠偏）
 - [x] 后端测试 + 前端 lint/build 通过
+- [x] 移动端全屏布局（隐藏推荐路径/手机壳）+ 底部导航固定
+- [x] WeekDateBar 竖向胶囊样式 + Shopping 标题区 AI 提示
+- [x] 菜谱指令无序号拆分 + Profile Credits 弹窗
 
 ## 待完成（短期）
 - [ ] 全量 UI 走查（Create / Menu / Shopping / Profile）

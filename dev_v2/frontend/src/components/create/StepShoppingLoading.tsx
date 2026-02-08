@@ -130,7 +130,7 @@ export function StepShoppingLoading({ menuBook, onGenerated }: StepShoppingLoadi
               }}
               aria-hidden
             >
-              <Icon className={`${size} ${tone} ${anim} ui-icon`} aria-hidden />
+              <Icon className={`${size} ${tone} ${anim} ui-icon-strong`} aria-hidden />
             </span>
           );
         })}

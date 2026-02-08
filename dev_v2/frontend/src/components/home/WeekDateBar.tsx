@@ -22,7 +22,7 @@ export function WeekDateBar({ createdAt, activeIndex, onSelect }: WeekDateBarPro
   const weekStart = startOfWeek(new Date(createdAt), { weekStartsOn: 1 });
 
   return (
-    <div className="flex items-end justify-between gap-1 px-1">
+    <div className="flex items-end justify-between gap-2 px-2">
       {WEEK_DAYS.map((day, index) => {
         const isActive = index === activeIndex;
         const dateLabel = format(addDays(weekStart, index), "MMM d");
@@ -31,28 +31,32 @@ export function WeekDateBar({ createdAt, activeIndex, onSelect }: WeekDateBarPro
             key={day}
             type="button"
             onClick={() => onSelect(index)}
-            className={cn(
-              "group flex flex-1 flex-col items-center gap-1 rounded-full px-1 pt-2 pb-3 transition-colors",
-              isActive
-                ? "bg-accent-soft text-accent-base"
-                : "bg-paper-muted/70 text-text-secondary hover:bg-paper-muted",
-            )}
+            className="flex flex-1 justify-center"
           >
-            <span className="ui-label-soft normal-case">{DAY_LABELS[day]}</span>
             <span
               className={cn(
-                "whitespace-nowrap ui-caption-soft text-[10px] leading-tight",
-                isActive ? "text-accent-base/80" : "text-text-tertiary",
+                "group flex w-12 flex-col items-center gap-1 rounded-full px-1 pt-2 pb-3 transition-colors",
+                isActive
+                  ? "bg-accent-soft text-accent-base"
+                  : "bg-paper-muted/70 text-text-secondary hover:bg-paper-muted",
               )}
             >
-              {dateLabel}
+              <span className="ui-label-soft normal-case">{DAY_LABELS[day]}</span>
+              <span
+                className={cn(
+                  "whitespace-nowrap ui-caption-soft text-[10px] leading-tight",
+                  isActive ? "text-accent-base/80" : "text-text-tertiary",
+                )}
+              >
+                {dateLabel}
+              </span>
+              <span
+                className={cn(
+                  "mt-1 h-[3px] w-5 rounded-full transition-colors",
+                  isActive ? "bg-accent-base" : "bg-transparent",
+                )}
+              />
             </span>
-            <span
-              className={cn(
-                "mt-1 h-[3px] w-6 rounded-full transition-colors",
-                isActive ? "bg-accent-base" : "bg-transparent",
-              )}
-            />
           </button>
         );
       })}
