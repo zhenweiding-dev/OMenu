@@ -1,0 +1,27 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1024" height="1024" fill="#E8E4DF" />
+  <rect x="96" y="96" width="832" height="832" rx="200" fill="url(#panel)" stroke="#EFEAE3" stroke-width="6" />
+  <g
+    transform="translate(232 232) scale(23.3333)"
+    stroke="#8B9469"
+    stroke-width="1.9"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  >
+    <g transform="translate(24 0) scale(-1 1)">
+      <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
+      <path d="M8.5 8.5v.01" />
+      <path d="M16 15.5v.01" />
+      <path d="M12 12v.01" />
+      <path d="M11 17v.01" />
+      <path d="M7 14v.01" />
+    </g>
+  </g>
+  <defs>
+    <linearGradient id="panel" x1="96" y1="96" x2="928" y2="928" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FBFAF7" />
+      <stop offset="1" stop-color="#F1EEE8" />
+    </linearGradient>
+  </defs>
+</svg>
