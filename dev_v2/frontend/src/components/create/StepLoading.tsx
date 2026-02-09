@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Apple, ChefHat, CookingPot, Pizza, Salad, Soup, Clock3 } from "lucide-react";
+import { ChefHat, Clock3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface StepLoadingProps {
@@ -69,15 +69,10 @@ export function StepLoading({
   }, [attempt, maxRetries, status]);
 
   return (
-    <div className="flex min-h-full flex-col items-center justify-center px-5 py-12 text-center">
+    <div className="flex flex-1 min-h-0 flex-col items-center justify-center px-5 py-12 text-center">
       {/* Animated chef icon */}
       <div className="relative mb-8 flex h-[155px] w-[155px] shrink-0 items-center justify-center rounded-full bg-paper-muted animate-chef">
         <ChefHat className="h-14 w-14 text-accent-base ui-icon-strong" aria-hidden />
-        <Pizza className="absolute -left-1 top-6 h-7 w-7 text-accent-base/70 animate-ingredient-a ui-icon-strong" aria-hidden />
-        <Soup className="absolute left-1 bottom-6 h-6 w-6 text-accent-base/70 animate-ingredient-b ui-icon-strong" aria-hidden />
-        <CookingPot className="absolute -right-3 top-10 h-6 w-6 text-accent-base/70 animate-ingredient-c ui-icon-strong" aria-hidden />
-        <Salad className="absolute right-3 bottom-7 h-6 w-6 text-accent-base/70 animate-ingredient-d ui-icon-strong" aria-hidden />
-        <Apple className="absolute right-14 top-0 h-6 w-6 text-accent-base/70 animate-ingredient-c ui-icon-strong" aria-hidden />
       </div>
 
       {/* Title */}
