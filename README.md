@@ -16,10 +16,10 @@
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/welcome.png" width="200" alt="Welcome" />
-  <img src="docs/screenshots/menu.png" width="200" alt="Weekly Menu" />
-  <img src="docs/screenshots/recipe.png" width="200" alt="Recipe Detail" />
-  <img src="docs/screenshots/shopping.png" width="200" alt="Shopping List" />
+  <img src="dev_v2/6_start_welcome.png" width="200" alt="Welcome" />
+  <img src="dev_v2/2_menu_saturday.png" width="200" alt="Weekly Menu" />
+  <img src="dev_v2/1_recipe_detail.png" width="200" alt="Recipe Detail" />
+  <img src="dev_v2/3_shopping_list.png" width="200" alt="Shopping List" />
 </p>
 
 ---
