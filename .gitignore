@@ -36,5 +36,9 @@ wheels/
 *~
 .DS_Store
 
-# Documentation
-#docs/
+# Dev artifacts
+*.pid
+*.log
+
+# Claude Code
+.claude/
