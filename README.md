@@ -160,52 +160,9 @@ All endpoints require a valid Supabase JWT in the `Authorization` header.
 
 ---
 
-## Getting Started
+## Try It
 
-### Prerequisites
-
-- Node.js (v18+)
-- A [Supabase](https://supabase.com) project
-- A [Google Gemini API](https://ai.google.dev/) key
-
-### Setup
-
-```bash
-cd dev_v2/frontend
-
-# Install dependencies
-npm install
-
-# Copy environment template
-cp .env.example .env
-```
-
-Fill in your `.env`:
-
-```env
-# Client
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
-
-# Server (Vercel serverless)
-GEMINI_API_KEY=your-gemini-api-key
-GEMINI_MODEL=gemini-3-flash-preview
-SUPABASE_JWT_SECRET=your-jwt-secret
-```
-
-### Development
-
-```bash
-npm run dev       # Start dev server at http://localhost:5173
-npm run build     # Production build
-npm run preview   # Preview production build
-npm run test      # Run tests
-npm run lint      # Lint check
-```
-
-### Deploy
-
-The project is configured for [Vercel](https://vercel.com). Push to your connected branch and it deploys automatically — frontend as static files, `api/` directory as Python serverless functions.
+👉 **[https://o-menu.vercel.app](https://o-menu.vercel.app/)** — tap "Continue as Guest" to start instantly, no login required.
 
 ---
 
