@@ -1,0 +1,78 @@
+import { create } from "zustand";
+import type { User, Session } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
+import { useAppStore } from "@/stores/useAppStore";
+import { useDraftStore } from "@/stores/useDraftStore";
+
+interface AuthState {
+  user: User | null;
+  session: Session | null;
+  loading: boolean;
+  initialize: () => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<void>;
+  signUpWithEmail: (email: string, password: string, displayName?: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  signInAnonymously: () => Promise<void>;
+  signOut: () => Promise<void>;
+}
+
+// The next account on this device must not see or inherit the previous one's data.
+function resetUserData() {
+  useAppStore.setState(useAppStore.getInitialState(), true);
+  useDraftStore.setState(useDraftStore.getInitialState(), true);
+}
+
+export const useAuthStore = create<AuthState>()((set, get) => ({
+  user: null,
+  session: null,
+  loading: true,
+
+  initialize: async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    set({ session, user: session?.user ?? null, loading: false });
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      // Also covers signing out in another tab or the session ending.
+      const previousUserId = get().user?.id;
+      const nextUserId = session?.user?.id;
+      if (event === "SIGNED_OUT" || (previousUserId && nextUserId && previousUserId !== nextUserId)) {
+        resetUserData();
+      }
+      set({ session, user: session?.user ?? null });
+    });
+  },
+
+  signInWithEmail: async (email, password) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+  },
+
+  signUpWithEmail: async (email, password, displayName) => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: displayName ? { data: { full_name: displayName } } : undefined,
+    });
+    if (error) throw error;
+  },
+
+  signInWithGoogle: async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+    if (error) throw error;
+  },
+
+  signInAnonymously: async () => {
+    const { error } = await supabase.auth.signInAnonymously();
+    if (error) throw error;
+  },
+
+  signOut: async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    resetUserData();
+    set({ user: null, session: null });
+  },
+}));
