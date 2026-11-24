@@ -473,6 +473,8 @@ export function HomePage() {
               onClose={() => setActiveDish(null)}
               onSaveNotes={(notes) => {
                 updateDishNotes(activeDish.book.id, activeDish.day, activeDish.mealType, activeDish.dish.id, notes);
+                // The open sheet shows the dish captured when it was opened; keep it in step.
+                setActiveDish((prev) => (prev ? { ...prev, dish: { ...prev.dish, notes } } : prev));
               }}
               onDelete={() => {
                 removeDish(activeDish.book.id, activeDish.day, activeDish.mealType, activeDish.dish.id);
