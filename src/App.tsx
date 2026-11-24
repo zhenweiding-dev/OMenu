@@ -11,7 +11,6 @@ import { MyPage } from "@/pages/MyPage";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { LoginPage } from "@/components/auth/LoginPage";
 import { SignUpPage } from "@/components/auth/SignUpPage";
-import { AuthCallback } from "@/components/auth/AuthCallback";
 import { WelcomePage } from "@/components/auth/WelcomePage";
 import { useAppStore } from "@/stores/useAppStore";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -410,7 +409,6 @@ function App() {
       <Route path="/welcome" element={<WelcomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/auth/callback" element={<AuthCallback />} />
       <Route
         path="/*"
         element={

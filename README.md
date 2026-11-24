@@ -165,7 +165,7 @@ All endpoints require a valid Supabase JWT in the `Authorization` header. Reques
 
 Prerequisites: Node 20.19 or newer, Python 3.12, a Supabase project and a Gemini API key.
 
-1. In the Supabase SQL editor, run `supabase/schema.sql`. Under Authentication, enable anonymous sign-ins (used by "Continue as Guest") and add `http://localhost:5173/auth/callback` to the redirect URLs (needed for Google sign-in).
+1. In the Supabase SQL editor, run `supabase/schema.sql`. Under Authentication, enable anonymous sign-ins (used by "Continue as Guest").
 2. Set up the app:
 
    ```bash
