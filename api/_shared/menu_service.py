@@ -1,5 +1,6 @@
 """Menu generation service (synchronous for Vercel)."""
 
+import math
 import uuid
 from datetime import datetime, timezone
 
@@ -168,16 +169,14 @@ class MenuService:
         return normalized
 
     def _estimate_ingredient_limit(self, preferences: dict) -> int:
+        """Most fresh (non-pantry, non-seasoning) ingredients for the week: 1.5 per planned
+        meal, between 8 and 15. More people means larger amounts, not more kinds."""
         schedule = preferences.get("cookSchedule", {})
         planned_meals = sum(
             1 for day in schedule.values() if isinstance(day, dict)
             for enabled in day.values() if enabled
         )
-        base = 24
-        meal_factor = 1 + (planned_meals - 10) * 0.02
-        people_factor = 1 + (preferences.get("numPeople", 2) - 2) * 0.05
-        limit = round(base * meal_factor * people_factor)
-        return max(12, min(36, limit))
+        return max(8, min(15, math.ceil(1.5 * planned_meals)))
 
     def _normalize_draft_list(self, draft_list: list) -> list:
         seen = set()

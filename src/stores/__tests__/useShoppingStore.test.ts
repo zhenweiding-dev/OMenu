@@ -8,6 +8,14 @@ describe("useShoppingStore", () => {
     useShoppingStore.setState(initialState, true);
   });
 
+  it("starts with seasonings and pantry staples folded, everything else open", () => {
+    const collapsed = useShoppingStore.getState().collapsedCategories;
+    expect(collapsed.seasonings).toBe(true);
+    expect(collapsed.pantry_staples).toBe(true);
+    expect(collapsed.proteins).toBe(false);
+    expect(collapsed.vegetables).toBe(false);
+  });
+
   it("toggles category collapse", () => {
     useShoppingStore.getState().toggleCategoryCollapse("proteins");
     expect(useShoppingStore.getState().collapsedCategories.proteins).toBe(true);

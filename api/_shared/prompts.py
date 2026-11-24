@@ -54,7 +54,7 @@ class PromptBuilder:
 
         return (
             "You are a professional chef and dietitian tasked with creating a guideline for a weekly meal plan and shopping list based on user preferences and constraints.\n"
-            f"Result: give a rough meal outline for the week (main dish names only, no recipes yet) along with a draft shopping list of ~{ingredient_limit} unique non-pantry ingredients needed. "
+            f"Result: give a rough meal outline for the week (main dish names only, no recipes yet) along with a draft shopping list of AT MOST {ingredient_limit} unique non-pantry ingredients; fewer is better, so reuse ingredients across meals. "
             "Return ONLY JSON with two keys: mealOutline and draftShoppingList.\n"
             "Rules:\n"
             "1) NO leftovers, NO repeat main dishes across the week.\n"

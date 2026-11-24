@@ -14,9 +14,10 @@ interface ShoppingState {
 }
 
 export const useShoppingStore = create<ShoppingState>((set) => ({
+  // Seasonings and pantry staples are usually at home already, so they start folded.
   collapsedCategories: INGREDIENT_CATEGORIES.reduce(
     (acc, category) => {
-      acc[category] = false;
+      acc[category] = category === "seasonings" || category === "pantry_staples";
       return acc;
     },
     {} as Record<IngredientCategory, boolean>,
