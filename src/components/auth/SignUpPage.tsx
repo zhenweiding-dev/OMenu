@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,42 +11,23 @@ export function SignUpPage() {
   const [displayName, setDisplayName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const signUpWithEmail = useAuthStore((s) => s.signUpWithEmail);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
+      // Email confirmation is off in Supabase, so sign-up returns a signed-in session.
       await signUpWithEmail(email, password, displayName || undefined);
-      setSuccess(true);
+      navigate("/", { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sign up failed");
     } finally {
       setLoading(false);
     }
   };
-
-  if (success) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-paper-base px-4">
-        <Card className="w-full max-w-sm">
-          <CardHeader>
-            <h1 className="ui-title text-center">Check your email</h1>
-            <p className="ui-body text-center">
-              We sent a confirmation link to <strong>{email}</strong>. Click the link to activate your account.
-            </p>
-          </CardHeader>
-          <CardFooter className="justify-center">
-            <Link to="/login" className="ui-caption text-accent-base hover:underline">
-              Back to sign in
-            </Link>
-          </CardFooter>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-paper-base px-4">

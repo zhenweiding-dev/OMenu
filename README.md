@@ -4,7 +4,7 @@
 
 <h1 align="center">OMenu</h1>
 <p align="center"><strong>Planning, Shopping, Cooking for Every Family</strong></p>
-<p align="center">AI-powered weekly meal planner built with Gemini 3</p>
+<p align="center">AI-powered weekly meal planner built with Gemini</p>
 
 <p align="center">
   <a href="https://omenu.vercel.app/">Live Demo</a> ·
@@ -26,7 +26,7 @@
 
 ## What is OMenu?
 
-OMenu turns a few taps into a complete **Plan → Shop → Cook** loop, powered by Gemini 3. Users express preferences in natural language, pick a weekly schedule, and OMenu generates three deeply linked outputs:
+OMenu turns a few taps into a complete **Plan → Shop → Cook** loop, powered by Gemini. Users express preferences in natural language, pick a weekly schedule, and OMenu generates three deeply linked outputs:
 
 - **Menu Book** — a full week of meals, browsable by day
 - **Cooking Handbook** — tap any dish for exact ingredients with quantities matched to your household, step-by-step instructions, cook time, difficulty, and calories
@@ -38,7 +38,7 @@ Ask for a change in plain words and the AI edits only what you asked for. Add a 
 
 ## How It Works — The 2.5-Step AI Pipeline
 
-OMenu doesn't send a single prompt to Gemini 3. It runs a **2.5-step orchestrated pipeline** where each step solves a distinct hard problem, and each output precisely constrains the next:
+OMenu doesn't send a single prompt to Gemini. It runs a **2.5-step orchestrated pipeline** where each step solves a distinct hard problem, and each output precisely constrains the next:
 
 ```
 Creativity → Structure → Precision
@@ -46,11 +46,11 @@ Creativity → Structure → Precision
 
 **Step 1 — Creative Outline + Draft Shopping List**
 
-Deliberately unstructured — just dish names and ingredient names, no recipes or quantities. This frees Gemini 3 to focus its full reasoning on the multi-constraint optimization: taste, dislikes, budget, people, schedule, nutrition, variety, and ingredient reuse — all at once, within a capped ingredient count (~12–36 items).
+Deliberately unstructured — just dish names and ingredient names, no recipes or quantities. This frees Gemini to focus its full reasoning on the multi-constraint optimization: taste, dislikes, budget, people, schedule, nutrition, variety, and ingredient reuse — all at once, within a capped number of fresh ingredients (1.5 per meal, 8–15 for the week).
 
 **Step 2 — Structured Menu + Cooking Handbook**
 
-Step 1's output locks down the ingredient space. With the "what" decided, Gemini 3 concentrates on the "how" — exact quantities, step-by-step instructions, calorie estimates, cook times. Structured JSON output simultaneously produces the daily cookbook and lays the data foundation for Step 3.
+Step 1's output locks down the ingredient space. With the "what" decided, Gemini concentrates on the "how" — exact quantities, step-by-step instructions, calorie estimates, cook times. Structured JSON output simultaneously produces the daily cookbook and lays the data foundation for Step 3.
 
 **Step 2.5 — Shopping List Consolidation**
 
@@ -60,7 +60,7 @@ Each step is validated and normalized by a Python layer (valid categories, numer
 
 ---
 
-## Gemini 3 Integration
+## Gemini Integration
 
 | Config | Value |
 | --- | --- |
@@ -75,7 +75,7 @@ Each step is validated and normalized by a Python layer (valid categories, numer
 ## Features
 
 - **Natural-Language Preferences** — curated chips spanning diet, cuisine, time, lifestyle, taste, and ingredients, plus free text input
-- **AI Menu Generation** — Gemini 3 creates a complete weekly menu respecting all constraints
+- **AI Menu Generation** — Gemini creates a complete weekly menu respecting all constraints
 - **Day-by-Day View** — browse breakfast, lunch, and dinner with swipe navigation
 - **Cooking Handbook** — full recipe detail with exact quantities, instructions, time, calories
 - **Smart Shopping List** — auto-generated, categorized, consolidated across all recipes
@@ -95,7 +95,7 @@ Each step is validated and normalized by a Python layer (valid categories, numer
 | State | Zustand |
 | Routing | React Router v6 |
 | Auth & DB | Supabase (PostgreSQL + Auth) |
-| AI | Google Gemini 3 API (via Vercel Serverless Functions, Python) |
+| AI | Google Gemini API (via Vercel Serverless Functions, Python) |
 | Deployment | Vercel |
 
 ---
@@ -110,7 +110,7 @@ React + Vite + Tailwind + Zustand (mobile-first SPA)
 Serverless Python API (Vercel)
         ↓
 ┌─────────────────────────────────────────────────────┐
-│  GEMINI 3 PIPELINE — Creativity → Structure → Precision  │
+│ GEMINI PIPELINE: Creativity → Structure → Precision │
 │                                                     │
 │  Step 1: Creative Outline + Draft Shopping List     │
 │       ↓                                             │
@@ -156,8 +156,9 @@ Frontend Stores → Supabase Postgres (persistence)
 | `/api/generate-menu` | POST | Generate a weekly menu from user preferences (Steps 1 + 2) |
 | `/api/modify-menu` | POST | Modify an existing menu with natural-language requests |
 | `/api/generate-shopping-list` | POST | Consolidate ingredients into a categorized shopping list (Step 2.5) |
+| `/api/keepalive` | GET | Reads each app table once; an external scheduler (cron-job.org) calls it a few times a day so the free Supabase project is not paused for inactivity |
 
-All endpoints require a valid Supabase JWT in the `Authorization` header. Requests outside the app's own limits (1–10 people, $50–500 budget, change requests up to 200 characters, bodies up to 256 KB) are rejected with 400.
+The three generation endpoints require a valid Supabase JWT in the `Authorization` header. Requests outside the app's own limits (1–10 people, $50–500 budget, change requests up to 200 characters, bodies up to 256 KB) are rejected with 400.
 
 ---
 
